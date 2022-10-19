@@ -21,7 +21,7 @@ recommend clang 14.
 
 To build we recommend:
 
-   sudo apt install gcc clang make build-essential python3-pytest
+   sudo apt install gcc clang make
 
 To build and install the shared library files using the
 "Correct-by-Construction" fiat-crypto portable C backend:
