@@ -212,7 +212,7 @@ test_fillrandom(void)
 {
 	printf("fillrandom\n"); fflush(stdout);
 	uint8_t r1[8];
-	typeof(r1) r2;
+	uint8_t r2[8];
 	ctidh_fillrandom_default(&r1, sizeof(r1), 0);
 	memcpy(r2, r1, sizeof(r2));
 	assert(0 == memcmp(r1, r2, sizeof(r1)));
