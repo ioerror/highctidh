@@ -24,7 +24,7 @@ ifeq	($(PLATFORM),aarch64)
 endif
 
 ifeq	($(PLATFORM),armv7l)
-	CFLAGS+= $(BASE_CFLAGS) -fforce-enable-int128
+	CFLAGS+= $(BASE_CFLAGS) -fforce-enable-int128 -D__ARM32__
 	GCC := clang
 endif
 

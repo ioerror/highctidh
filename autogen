@@ -926,7 +926,7 @@ with open(fn+'.tmp','w') as f:
   f.write('\tCFLAGS+= $(BASE_CFLAGS) -march=native -mtune=native\n')
   f.write('endif\n\n')
   f.write('ifeq\t($(PLATFORM),armv7l)\n')
-  f.write('\tCFLAGS+= $(BASE_CFLAGS) -fforce-enable-int128\n')
+  f.write('\tCFLAGS+= $(BASE_CFLAGS) -fforce-enable-int128 -D__ARM32__\n')
   f.write('\tGCC := clang\n')
   f.write('endif\n\n')
   f.write('ifeq\t($(PLATFORM),loongarch64)\n')
