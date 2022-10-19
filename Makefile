@@ -23,6 +23,11 @@ ifeq	($(PLATFORM),aarch64)
 	CFLAGS+= $(BASE_CFLAGS) -march=native -mtune=native
 endif
 
+ifeq	($(PLATFORM),armv7l)
+	CFLAGS+= $(BASE_CFLAGS) -fforce-enable-int128 -D__ARM32__
+	GCC := clang
+endif
+
 ifeq	($(PLATFORM),loongarch64)
 	CFLAGS+= $(BASE_CFLAGS) -march=native -mtune=native
 endif

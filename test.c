@@ -8,7 +8,13 @@
 #include "csidh.h"
 #include "primes.h"
 
-#define dump_uintbig(X) {for (size_t i=0; i<sizeof((X).c)/sizeof((X).c[0]);i++) { printf("%#lxU, ", htole64((X).c[i])); };printf("\n"); }
+#ifdef __ARM32__
+#define DFMT "%#llxU, "
+#else
+#define DFMT "%#lxU, "
+#endif
+
+#define dump_uintbig(X) {for (size_t i=0; i<sizeof((X).c)/sizeof((X).c[0]);i++) { printf(DFMT, htole64((X).c[i])); };printf("\n"); }
 #define assert_uintbig_eq(X,Y) { \
 	for (size_t i = 0; i<sizeof(X.c)/sizeof(X.c[0]); i++) { \
 	if (X.c[i] != Y.c[i]) { \
@@ -212,7 +218,7 @@ test_fillrandom(void)
 {
 	printf("fillrandom\n"); fflush(stdout);
 	uint8_t r1[8];
-	typeof(r1) r2;
+	uint8_t r2[8];
 	ctidh_fillrandom_default(&r1, sizeof(r1), 0);
 	memcpy(r2, r1, sizeof(r2));
 	assert(0 == memcmp(r1, r2, sizeof(r1)));

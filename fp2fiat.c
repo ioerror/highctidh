@@ -111,9 +111,15 @@ uintbig_mul3_64(uintbig *const x, uintbig const *const y, const uint64_t z)
 	x->c[1] += carry_r10;
 	// add rax, r10,
 	// mov [rdi + 8], rax
-
-	#pragma GCC push_options
+#ifdef __gcc__
+#pragma GCC push_options
 #pragma GCC unroll(100)
+#else
+#ifdef __clang__
+#pragma unroll(100)
+#endif
+#endif
+
 	for (size_t idx = 2; idx < sizeof(x->c)/sizeof(x->c[0]); idx+=2) {
 	FIAT_BITS(mulx_u64)(&x->c[idx], &carry_r10, y->c[idx], z);
 	// mulx r10, rax, [rsi + 16]
@@ -129,7 +135,9 @@ uintbig_mul3_64(uintbig *const x, uintbig const *const y, const uint64_t z)
 	// adcx rax, r10
 	// mov [rdi + 24], rax
 	}
+#ifdef __gcc__
 	#pragma GCC pop_options
+#endif
 }
 
 /*
