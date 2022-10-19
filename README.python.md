@@ -7,8 +7,7 @@ Run the unit tests:
 Build and install the shared library, and then build and install the Python
 module:
 
-    ./autogen
-    make libhighctidh_511.so libhighctidh_512.so libhighctidh_1024.so libhighctidh_2048.so
+    make
     sudo make install
     sudo ldconfig
     python3 -m build

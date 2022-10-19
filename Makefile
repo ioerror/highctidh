@@ -68,9 +68,9 @@ endif
 SCC=$(GCC) $(CFLAGS)
 CC=$(GCC) $(CFLAGS)
 
-default: generic libhighctidh.so 511 512 1024 2048
+default: libhighctidh.so
 
-all: default timecop
+all: default timecop generic 511 512 1024 2048
 
 generic: testrandom.out
 
