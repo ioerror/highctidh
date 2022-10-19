@@ -1,5 +1,5 @@
 This is an unofficial fork of high-ctidh. This is highly experimental software
-and has not yet been reviewed for security considerations.
+and it has not yet been reviewed for security considerations.
 
 This fork enhances high-ctidh with additional Makefile targets including
 building high-ctidh as four shared libraries, one for each key size of 511,
@@ -19,9 +19,11 @@ performance numbers, look at `BENCHMARKS.md`. We recommend using gcc 10 or
 later as the compiler except on `mips64/mips64el` and `arm32/armv7l` where we
 recommend clang 14.
 
-To build we recommend:
+To build and install we recommend:
 
    sudo apt install gcc clang make
+   make
+   sudo make install
 
 To build and install the shared library files using the
 "Correct-by-Construction" fiat-crypto portable C backend:
@@ -29,11 +31,16 @@ To build and install the shared library files using the
     make libhighctidh.so HIGHCTIDH_PORTABLE=1
     sudo make install
 
-To build and install the shared library files using the `x86_64` assembler
-backend:
+The fiat-crypto portable C backend works on all platforms.
+
+To build and install the shared library files using the original artisanal
+`x86_64` assembler backend:
 
     make libhighctidh.so HIGHCTIDH_PORTABLE=0
     sudo make install
+
+The original artisanal assembler backend works only on the `x86_64` platform.
+Hand written assembler contributions for other platforms are welcome.
 
 By default `HIGHCTIDH_PORTABLE=1` is enabled for all platforms.
 
@@ -47,7 +54,10 @@ libhighctidh_{511,512,1024,2048}.so libraries is available in
 `example-ctidh512`, `example-ctidh1024`, and `example-ctidh2048` programs.
 
 A basic Python benchmarking program `highctidh-simple-benchmark.py` shows
-general performance numbers.
+general performance numbers. Python tests may be run with pytest and should be
+functional without pytest assuming the library is installed. If the library
+path includes the build directory as is done in `test.sh`, pytest or python
+should be able to run the tests without installation. 
 
 More information about the Python bindings including installation instructions
 are available in the `README.python.md` file.
