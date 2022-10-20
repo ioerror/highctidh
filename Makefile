@@ -923,6 +923,13 @@ docker-test: docker-setup
 		time ./docker-test-build.sh
 		ls -al docker_build_output/*/lib/*
 
+docker-fiat-setup:
+		./docker-setup-fiat.sh
+
+docker-fiat-generate: docker-fiat-setup
+		./docker-generate-fiat.sh
+		ls -l docker_build_output/fiat-crypto-generated-code/
+
 DESTDIR ?= /usr/local
 install: libhighctidh.so
 		install -d $(DESTDIR)/include/libhighctidh/
