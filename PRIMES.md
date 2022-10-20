@@ -5,6 +5,21 @@ resulting number have the desired number of bits. These are the parameters for
 running fiat-crypto's `word_by_word_mongomery` program to generate the portable
 backend.
 
+
+## Docker environment
+We have automated the creation of a Docker environment suitable for building
+the fiat-crypto`. To create the Docker environment and then synthesize
+
+```
+make docker-fiat-setup
+make docker-fiat-generate
+```
+
+The resulting `fiat_p512.c` and `fiat_p1024.c` files will be
+generated and located in `docker_build_output/fiat-crypto-generated-code`.
+Currently `fiat_p2048.c` won't be generated due to extreme RAM requirements and
+it is currently commented out in the `fiat-docker/generate-fields.sh` script.
+
 ## Setup
 The fiat-crypto synthesis was done on a POWER9 machine using git commit
 `64aa176060d7575426c3161d39c2f3e9713682d0` of the fiat-crypto repository. It
@@ -28,7 +43,7 @@ It should also build with fiat-crypto git commit
 
 Steps to roughly reproduce the synthesis environment:
 ```
-sudo apt install coq ocaml-findlib libcoq-ocaml-dev jq
+sudo apt install coq ocaml-findlib libcoq-ocaml-dev jq opam
 opam switch create 4.13.1
 opam update && opam install -y coq
 eval $(opam env)
