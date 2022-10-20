@@ -2,6 +2,7 @@
 
 .PHONY: clean
 PLATFORM := $(shell uname -m)
+PLATFORM_SIZE:= $(shell getconf LONG_BIT)
 BASE_CFLAGS := -fpie -fPIC -Wall -Wextra -pedantic -O3 -Os -fwrapv -DGETRANDOM
 # Default to using fiat crypto, safe and portable but slow backend
 HIGHCTIDH_PORTABLE := 1
@@ -38,7 +39,7 @@ ifeq	($(PLATFORM),mips64)
 endif
 
 ifeq	($(PLATFORM),ppc64le)
-	CFLAGS+= $(BASE_CFLAGS) -mcpu=native -mtune=native
+	CFLAGS+= $(BASE_CFLAGS) -mtune=native
 endif
 
 ifeq	($(PLATFORM),ppc64)
@@ -62,7 +63,12 @@ ifeq	($(PLATFORM),unknown)
 endif
 
 ifeq	($(PLATFORM),x86_64)
+ifeq	($(PLATFORM_SIZE),32)
+	CFLAGS+= $(BASE_CFLAGS) -fforce-enable-int128 -D__i386__
+	GCC := clang
+else
 	CFLAGS+= $(BASE_CFLAGS) -march=native -mcpu=native -mtune=native
+endif
 endif
 
 SCC=$(GCC) $(CFLAGS)
@@ -910,11 +916,17 @@ examples: example511 example512 example1024 example2048
 test: clean libhighctidh.so testrandom test511 test512 test1024 test2048
 		./test.sh
 
+docker-setup:
+		./docker-setup.sh
 
+docker-test: docker-setup
+		time ./docker-test-build.sh
+		ls -al docker_build_output/*/lib/*
 
 DESTDIR ?= /usr/local
-install:
+install: libhighctidh.so
 		install -d $(DESTDIR)/include/libhighctidh/
+		install -d $(DESTDIR)/lib/
 		install -v *.h $(DESTDIR)/include/libhighctidh/
 		install -v libhighctidh_*.so $(DESTDIR)/lib/
 
@@ -928,3 +940,4 @@ clean:
 		-rm -rf build/ deb_dist/ dist/
 		-rm -rf highctidh.egg-info/ highctidh/__pycache__/
 		-rm -rf tests/__pycache__/
+		-rm -rf docker_build_output/
