@@ -8,7 +8,7 @@
 #include "csidh.h"
 #include "primes.h"
 
-#ifdef __ARM32__
+#if defined(__ARM32__) || defined(__i386__)
 #define DFMT "%#llxU, "
 #else
 #define DFMT "%#lxU, "
