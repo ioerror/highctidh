@@ -21,6 +21,22 @@ typedef struct public_key {
 extern const public_key base;
 
 /*
+ * Initialize a public_key from a byte array of length sizeof(public_key).
+ * This is required to ensure interoperability between
+ * little- and big-endian systems, since the limbs internally
+ * must be in host/native order.
+ */
+void public_key_from_bytes(public_key *const pk, const char *const input);
+
+/*
+ * Serialize a public_key to a byte array of length sizeof(public_key).
+ * This is required to ensure interoperability between
+ * little- and big-endian systems, since the limbs internally
+ * must be in host/native order.
+ */
+void public_key_to_bytes(char *const output, const public_key *const pk);
+
+/*
  * The (ctidh_fillrandom) function signature for custom rng implementations.
  * The (context) parameter can be used to implement thread-safe deterministic
  * CSPRNGs, when (context) is unique for parallel calls.

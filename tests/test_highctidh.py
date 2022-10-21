@@ -587,6 +587,44 @@ class TestHighCTIDH(unittest.TestCase):
         assert bytes(priv_explicit5) == bytes(priv_explicit6), \
             (bytes(priv_explicit5), bytes(priv_explicit6))
 
+    def public_key_serialization(self, field_size):
+        ctidh_f = ctidh(field_size)
+        sk = ctidh_f.generate_secret_key()
+        pk = ctidh_f.derive_public_key(sk)
+        pk_bytes = bytes(pk)
+        pk2 = ctidh_f.public_key_from_bytes(pk_bytes)
+        assert bytes(pk2) == bytes(pk_bytes)
+
+        # bind public_key_to_bytes and check that we agree with the conversion:
+        c_pk_to_bytes = ctidh_f._lib.__getattr__(
+            'highctidh_' + str(field_size) + '_public_key_to_bytes'
+        )
+        c_pk_to_bytes.restype = None
+        c_pk_to_bytes.argtypes = [ ctypes.c_uint8 * ctidh_f.pk_size,
+                                   ctypes.POINTER(type(pk)) ]
+        cbytes_pk2 = c_pk_to_bytes.argtypes[0]()
+        c_pk_to_bytes(cbytes_pk2, pk2)
+        assert bytes(cbytes_pk2) == pk_bytes, '.so serializes PKs differently'
+
+        c_pk_from_bytes = ctidh_f._lib.__getattr__(
+            'highctidh_' + str(field_size) + '_public_key_from_bytes'
+        )
+        c_pk_from_bytes.restype = None
+        c_pk_from_bytes.argtypes = [ ctypes.POINTER(type(pk)),
+                                     ctypes.c_uint8 * ctidh_f.pk_size ]
+        c_pk2 = ctidh_f.public_key()
+        c_pk_from_bytes(c_pk2, cbytes_pk2)
+        assert bytes(c_pk2) == bytes(pk), '.so deserializes PKs differently'
+
+    def test_511_public_key_serialization(self):
+        self.public_key_serialization(511)
+    def test_512_public_key_serialization(self):
+        self.public_key_serialization(512)
+    def test_1024_public_key_serialization(self):
+        self.public_key_serialization(1024)
+    def test_2048_public_key_serialization(self):
+        self.public_key_serialization(2048)
+
     def test_511_blinding_static_golang_vectors(self):
         ctidh511 = ctidh(511)
         alice_private_key = ctidh511.private_key_from_bytes(

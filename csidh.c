@@ -11,6 +11,28 @@
 
 const public_key base = {0}; /* A = 0 */
 
+/*
+ * Initialize a public_key from a byte array, byteswapping for
+ * big-endian portability.
+ */
+void
+public_key_from_bytes(public_key *const pk, const char *const input)
+{
+	uint64_t *input_u64 = (uint64_t *)input;
+	for(size_t i=0; i < sizeof(pk->A.x.c)/sizeof(pk->A.x.c[0]); i++){
+		pk->A.x.c[i] = le64toh(*input_u64++);
+	}
+}
+
+void
+public_key_to_bytes(char *const output, const public_key *const pk)
+{
+	uint64_t *output_u64 = (uint64_t *)output;
+	for(size_t i=0; i < sizeof(pk->A.x.c)/sizeof(pk->A.x.c[0]); i++){
+		*output_u64++ = htole64(pk->A.x.c[i]);
+	}
+}
+
 static void clearpublicprimes(proj *P,const proj *A24,int outsideblock[primes_batches])
 {
   // clear powers of 2

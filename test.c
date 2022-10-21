@@ -391,6 +391,19 @@ test_deterministic_keygen()
 #endif /* BITS */
 	assert_uintbig_eq(pub_gh1.A.x, expected_pub_gh1);
 	assert_uintbig_eq(pub_gh3.A.x, expected_pub_gh3);
+
+	/* to_bytes / from_bytes are internally consistent: */
+	char serialized_gh3[sizeof(uintbig)] = {0};
+	public_key_to_bytes(serialized_gh3, &pub_gh3);
+	public_key deserialized_gh3 = {{{{0}}}};
+	public_key_from_bytes(&deserialized_gh3, serialized_gh3);
+	assert_uintbig_eq(pub_gh3.A.x, deserialized_gh3.A.x);
+	/* to_bytes is a no-op on little-endian archs, and not on big-endian: */
+# if __LITTLE_ENDIAN
+	assert(0 == memcmp((void*)&pub_gh3, serialized_gh3, sizeof(pub_gh3)));
+# else
+	assert(0 != memcmp((void*)&pub_gh3, serialized_gh3, sizeof(pub_gh3)));
+# endif
 }
 
 static void
