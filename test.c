@@ -73,10 +73,8 @@ test_uintbig_bit(void)
 	x.c[1] = 2ULL;
 	assert(66 == uintbig_bits_vartime(&x));
 	x.c[7] = -1ULL;
-    if (BITS >= 512) {
-        assert(512 == uintbig_bits_vartime(&x));
-    }
-	uintbig_set(&x, 5ULL);
+	assert(512 == uintbig_bits_vartime(&x));
+	uintbig_set(&x, 5ULL); /* should clear the high limbs */
 	assert(3 == uintbig_bits_vartime(&x));
 }
 

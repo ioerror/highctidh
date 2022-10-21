@@ -29,7 +29,7 @@ uintbig_mul3_64(uintbig *const x, uintbig const *const y, const uint64_t z);
 
 static inline long long uintbig_bits_vartime(const uintbig *const x)
 {
-  long long result = BITS;
+  long long result = (BITS == 511 ? 512 : BITS);
   while (result > 0 && !uintbig_bit(x,result-1)) --result;
   return result;
 }
