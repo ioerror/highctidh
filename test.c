@@ -155,16 +155,23 @@ static struct context_list {
 	uintptr_t ctx;
 	uint64_t state;
 	struct context_list *next;
-} test_fillrandom_context_list;
+} *test_fillrandom_context_list = NULL;
 
-static void
+/*
+ * Resets the state of each element in the linked list of contexts,
+ * returning the element count.
+ */
+static size_t
 test_fillrandom_context_list_reset()
 {
-	struct context_list *current = &test_fillrandom_context_list;
+	size_t count = 0;
+	struct context_list *current = test_fillrandom_context_list;
 	while(current) {
+		count++;
 		current->state = (uintptr_t) current->ctx;
 		current = current->next;
 	}
+	return count;
 }
 
 static uint64_t
@@ -197,16 +204,20 @@ static void
 test_fillrandom_impl_contextaware(void *const out, const size_t outsz,
     const uintptr_t context)
 {
-	struct context_list *current = &test_fillrandom_context_list;
+	struct context_list **newcurrent = &test_fillrandom_context_list;
+	struct context_list *current = *newcurrent;
 	while (current) {
 		if (current->ctx == context) break; /* found */
-		if (!current->next) {
-			current->next = malloc(sizeof(struct context_list));
-			current->next->ctx = context;
-			current->next->state = (uintptr_t) context;
-			current->next->next = NULL;
-		}
+		newcurrent = &current->next;
 		current = current->next;
+	}
+	if (!current) {
+		*newcurrent = malloc(sizeof(struct context_list));
+		current = *newcurrent;
+		assert(current);
+		current->ctx = context;
+		current->state = context;
+		current->next = NULL;
 	}
 	assert(current);
 
@@ -248,8 +259,8 @@ test_fillrandom(void)
 	private_key priv1 = {0};
 	private_key priv2 = {0};
 	assert(0 == memcmp(&priv1.e, &priv2.e, sizeof(priv1.e)));
-	csidh_private_withrng(&priv1, ctidh_fillrandom_default);
-	csidh_private_withrng(&priv2, ctidh_fillrandom_default);
+	csidh_private_withrng(&priv1, (uintptr_t) &priv1, ctidh_fillrandom_default);
+	csidh_private_withrng(&priv2, (uintptr_t) &priv2, ctidh_fillrandom_default);
 	assert(0 != memcmp(&priv1.e, &priv2.e, sizeof(priv1.e)));
 
 	/* ctidh_private with default rng works: */
@@ -264,20 +275,30 @@ test_fillrandom(void)
 	private_key priv5 = {0};
 	private_key priv6 = {0};
 	assert(0 == memcmp(&priv5.e, &priv6.e, sizeof(priv5.e)));
-	csidh_private_withrng(&priv5, test_fillrandom_impl_contextaware);
-	csidh_private_withrng(&priv6, test_fillrandom_impl_contextaware);
+	csidh_private_withrng(&priv5, (uintptr_t) &priv5, test_fillrandom_impl_contextaware);
+	csidh_private_withrng(&priv6, (uintptr_t) &priv6, test_fillrandom_impl_contextaware);
 	assert(0 != memcmp(&priv5.e, &priv6.e, sizeof(priv5.e)));
 	private_key priv7 = priv5;
 	assert(0 == memcmp(&priv7.e, &priv5.e, sizeof(priv5.e)));
 	/* same context, after reset, results in same key: */
-	test_fillrandom_context_list_reset();
-	csidh_private_withrng(&priv5, test_fillrandom_impl_contextaware);
+	assert(2 == test_fillrandom_context_list_reset());
+	csidh_private_withrng(&priv5, (uintptr_t) &priv5, test_fillrandom_impl_contextaware);
 	assert(0 == memcmp(&priv7.e, &priv5.e, sizeof(priv5.e)));
 	assert(0 != memcmp(&priv7.e, &priv6.e, sizeof(priv5.e)));
 	/* different context, after reset, results in different key: */
-	test_fillrandom_context_list_reset();
-	csidh_private_withrng(&priv6, test_fillrandom_impl_contextaware);
+	assert(2 == test_fillrandom_context_list_reset());
+	csidh_private_withrng(&priv6, (uintptr_t) &priv6, test_fillrandom_impl_contextaware);
 	assert(0 != memcmp(&priv7.e, &priv6.e, sizeof(priv5.e)));
+	assert(2 == test_fillrandom_context_list_reset());
+	csidh_private_withrng(&priv7, (uintptr_t) &priv6, test_fillrandom_impl_contextaware);
+	assert(0 == memcmp(&priv7.e, &priv6.e, sizeof(priv5.e)));
+	assert(2 == test_fillrandom_context_list_reset());
+	csidh_private_withrng(&priv7, (uintptr_t) &priv7, test_fillrandom_impl_contextaware);
+	assert(3 == test_fillrandom_context_list_reset());
+	csidh_private_withrng(&priv5, (uintptr_t) &priv7, test_fillrandom_impl_contextaware);
+	assert(0 == memcmp(&priv7.e, &priv5.e, sizeof(priv5.e)));
+	assert(0 != memcmp(&priv7.e, &priv6.e, sizeof(priv7.e)));
+	assert(3 == test_fillrandom_context_list_reset());
 
 	/* deterministic keygen using global hash state: */
 	private_key priv_gh1 = {0};
@@ -287,21 +308,21 @@ test_fillrandom(void)
 	private_key priv_gh5 = {0};
 	private_key priv_gh6 = {0};
 	test_fillrandom_global_hash = 0x123U;
-	csidh_private_withrng(&priv_gh1, test_fillrandom_impl_global);
+	csidh_private_withrng(&priv_gh1, (uintptr_t) &priv_gh1, test_fillrandom_impl_global);
 	test_fillrandom_global_hash = 0x123U;
-	csidh_private_withrng(&priv_gh2, test_fillrandom_impl_global); /* same seed */
-	csidh_private_withrng(&priv_gh3, test_fillrandom_impl_global); /* gh2 != gh3 */
+	csidh_private_withrng(&priv_gh2, (uintptr_t) &priv_gh2, test_fillrandom_impl_global); /* same seed */
+	csidh_private_withrng(&priv_gh3, (uintptr_t) &priv_gh3, test_fillrandom_impl_global); /* gh2 != gh3 */
 	assert(0 == memcmp(&priv_gh1, &priv_gh2, sizeof(priv_gh1)));
 	assert(0 != memcmp(&priv_gh1, &priv_gh3, sizeof(priv_gh1)));
 	test_fillrandom_global_hash = 0x5432167890abcU;
-	csidh_private_withrng(&priv_gh4, test_fillrandom_impl_global);
-	csidh_private_withrng(&priv_gh5, test_fillrandom_impl_global);
+	csidh_private_withrng(&priv_gh4, (uintptr_t) &priv_gh4, test_fillrandom_impl_global);
+	csidh_private_withrng(&priv_gh5, (uintptr_t) &priv_gh5, test_fillrandom_impl_global);
 	assert(0 != memcmp(&priv_gh4, &priv_gh1, sizeof(priv_gh4)));// diff seed
 	assert(0 != memcmp(&priv_gh4, &priv_gh2, sizeof(priv_gh4)));
 	assert(0 != memcmp(&priv_gh4, &priv_gh3, sizeof(priv_gh4)));
 	assert(0 != memcmp(&priv_gh4, &priv_gh5, sizeof(priv_gh4)));
 	test_fillrandom_global_hash = 0x5432167890abcU;
-	csidh_private_withrng(&priv_gh6, test_fillrandom_impl_global);
+	csidh_private_withrng(&priv_gh6, (uintptr_t) &priv_gh6, test_fillrandom_impl_global);
 	assert(0 == memcmp(&priv_gh4, &priv_gh6, sizeof(priv_gh4)));// same seed
 
 }
@@ -313,10 +334,10 @@ test_deterministic_keygen()
 	private_key priv_gh2 = {0};
 	private_key priv_gh3 = {0};
 	test_fillrandom_global_hash = 0x123456789abcdef0U;
-	csidh_private_withrng(&priv_gh1, test_fillrandom_impl_global);
+	csidh_private_withrng(&priv_gh1, (uintptr_t) &priv_gh1, test_fillrandom_impl_global);
 	test_fillrandom_global_hash = 0x123456789abcdef0U;
-	csidh_private_withrng(&priv_gh2, test_fillrandom_impl_global);
-	csidh_private_withrng(&priv_gh3, test_fillrandom_impl_global);
+	csidh_private_withrng(&priv_gh2, (uintptr_t) &priv_gh2, test_fillrandom_impl_global);
+	csidh_private_withrng(&priv_gh3, (uintptr_t) &priv_gh3, test_fillrandom_impl_global);
 	assert(0 == memcmp(&priv_gh1, &priv_gh2, sizeof(priv_gh1)));
 	assert(0 != memcmp(&priv_gh1, &priv_gh3, sizeof(priv_gh1)));
 #if 511 == BITS

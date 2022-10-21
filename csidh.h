@@ -23,8 +23,9 @@ extern const public_key base;
 /*
  * The (ctidh_fillrandom) function signature for custom rng implementations.
  * The (context) parameter can be used to implement thread-safe deterministic
- * CSPRNGs, with the guarantee that (context) is unique for parallel calls.
- * Note that to achieve reproducible key derivation, the rng must write
+ * CSPRNGs, when (context) is unique for parallel calls.
+ *
+ * Note that to achieve reproducible public_key derivation, the rng must write
  * the random bytes as an array of int32_t values with host-order/native
  * endianness. ie when it writes the following on a little-endian machine:
  * AA BB CC DD EE FF GG HH 11 22 33 44
@@ -45,20 +46,35 @@ extern ctidh_fillrandom ctidh_fillrandom_default;
 
 /*
  * generate a new private key using rng_callback and write the result to (priv).
- * (priv) is passed as (context) to the rng_callback.
+ * (context) is passed as context to the (rng_callback).
  */
-void csidh_private_withrng(private_key *priv, ctidh_fillrandom rng_callback);
+void csidh_private_withrng(private_key *priv, uintptr_t rng_context, ctidh_fillrandom rng_callback);
 
 /*
- * generate a new private key and write the result to (priv).
+ * Generate a new private key and write the result to (priv).
  */
 void csidh_private(private_key *const priv);
 
+/*
+ * Evaluates the group action (the "Diffie-Hellman"-like function).
+ * Returns:
+ * false: when (in) is not a valid public key. (out) filled with random bytes.
+ * true: when (in) is a valid key. (out) is the resulting field element.
+ */
 bool csidh(public_key *out, public_key const *in, private_key const *priv);
 
 int validate_cutofforder_v2(uintbig *order,const fp *P,const fp *A);
+
+/*
+ * Validates a public_key and returns true when valid; false when invalid.
+ */
 bool validate(public_key const *in);
 
+/*
+ * Evaluates the group action WITHOUT validating the (in) public_key.
+ * This function can be used instead of csidh() when the public_key has already
+ * been validated.
+ */
 void action(public_key *out, public_key const *in, private_key const *priv);
 
 #endif
