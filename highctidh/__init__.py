@@ -96,6 +96,7 @@ class ctidh(object):
         csidh_private_withrng.argtypes = [
             ctypes.POINTER(self.private_key),
             ctypes.c_void_p,
+            ctypes.c_void_p,
         ]
         self.csidh_private_withrng = csidh_private_withrng
 
@@ -154,13 +155,13 @@ class ctidh(object):
         else:
             raise CSIDHError
 
-    def generate_secret_key_inplace(self, sk, rng=None):
+    def generate_secret_key_inplace(self, sk, rng=None, context=None):
         """Generate a secret key *sk* without allocating memory, overwriting *sk*.
         Optionally takes a callable argument *rng* which is called with two
         arguments: rng(buf, context)
         Where *buf* is a bytearray() to be filled with random data and
         *context* is an int() context identifier to enable thread-safe calls.
-        The *context* is usually a pointer to the buffer.
+        If *context* is left blank, it is a pointer to the buffer.
         Note that in order to achieve portable reproducible results, a PRNG
         must fill buf as though it was an array of int32_t values in
         HOST-ENDIAN/NATIVE byte order, see comment in csidh.h:ctidh_fillrandom
@@ -175,24 +176,26 @@ class ctidh(object):
                     "B"
                 )  # uint8_t
                 rng(mv, context)
-
-            self.csidh_private_withrng(sk, rng_callback_wrapper)
+            if context is None:
+                context = ctypes.byref(sk.e)
+            self.csidh_private_withrng(sk, context, rng_callback_wrapper)
         else:
             self.csidh_private(sk)
         return sk
 
-    def generate_secret_key(self, rng=None):
+    def generate_secret_key(self, rng=None, context=None):
         """Generate a secret key *sk*, return it.
         Optionally takes a callable argument *rng* which is called with two
         arguments: rng(buf, context)
         Where *buf* is a bytearray() to be filled with random data and
         *context* is an int() context identifier to enable thread-safe calls.
-        The *context* is usually a pointer to the buffer.
+        If *context* is left blank, it is a pointer to the buffer.
         Note that in order to achieve portable reproducible results, a PRNG
         must fill buf as though it was an array of int32_t values in
         HOST-ENDIAN/NATIVE byte order, see comment in csidh.h:ctidh_fillrandom
         """
-        return self.generate_secret_key_inplace(self.private_key(), rng=rng)
+        return self.generate_secret_key_inplace(
+            self.private_key(), rng=rng, context=context)
 
     def derive_public_key(self, sk):
         """Given a secret key *sk*, return the corresponding public key *pk*."""

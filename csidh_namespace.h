@@ -1,5 +1,7 @@
 #define action NAMESPACEBITS(action)
 #define base NAMESPACEBITS(base)
+#define public_key_from_bytes NAMESPACEBITS(public_key_from_bytes)
+#define public_key_to_bytes NAMESPACEBITS(public_key_to_bytes)
 #define csidh NAMESPACEBITS(csidh)
 #define csidh_private NAMESPACEBITS(csidh_private)
 #define csidh_private_withrng NAMESPACEBITS(csidh_private_withrng)
