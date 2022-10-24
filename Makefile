@@ -928,7 +928,6 @@ docker-fiat-setup:
 
 docker-fiat-generate: docker-fiat-setup
 		./docker-generate-fiat.sh
-		ls -l docker_build_output/fiat-crypto-generated-code/
 
 DESTDIR ?= /usr/local
 install: libhighctidh.so
