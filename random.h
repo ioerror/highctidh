@@ -20,4 +20,6 @@ void random_boundedl1(int8_t *e,long long w,long long S, uintptr_t rng_context, 
 // assuming 0 <= num <= den, 0 < den < 2^63
 int64_t random_coin(uint64_t num,uint64_t den);
 
+void random_boundedl1(int8_t *e, const long long w,const long long S, uintptr_t rng_context, ctidh_fillrandom rng_callback);
+
 #endif
