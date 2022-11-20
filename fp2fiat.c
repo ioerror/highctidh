@@ -13,9 +13,8 @@
 /*
  * These are replacements for uintbig512.S:
  */
-const uintbig highctidh_511_uintbig_1 = {.c = {1,0}};
-const uintbig highctidh_512_uintbig_1 = {.c = {1,0}};
 #if 511 == BITS || 512 == BITS
+const uintbig uintbig_1 = {.c = {1,0}};
 const uintbig uintbig_p = {.c = {
 		0x1b81b90533c6c87bU, 0xc2721bf457aca835U,
 		0x516730cc1f0b4f25U, 0xa7aac6c567f35507U,
@@ -372,28 +371,6 @@ fp_cswap(fp *const restrict a, fp *const restrict b, long long condition)
 
 	FIAT_BITS(selectznz)(a->x.c, condition, a->x.c, b->x.c);
 	FIAT_BITS(selectznz)(b->x.c, condition, b->x.c,  (const uint64_t *)&old_a.x.c);
-
-	/*
-	 * #[test]
-fn test_fp_cswap()
-{
-    let mut x1 = FP_1;
-    let mut y1 = FP_1;
-    fp_cswap(&mut x1, &mut y1, 1);
-    assert_eq!(x1, FP_1);
-    assert_eq!(y1, FP_1);
-    fp_cswap(&mut x1, &mut y1, 0);
-    assert_eq!(x1, FP_1);
-    assert_eq!(y1, FP_1);
-    let mut y2 = FP_2;
-    fp_cswap(&mut x1, &mut y2, 0);
-    assert_eq!(FP_2, y2);
-    assert_eq!(FP_1, x1);
-    fp_cswap(&mut x1, &mut y2, 1);
-    assert_eq!(FP_2, x1);
-    assert_eq!(FP_1, y2);
-}
-	 */
 }
 
 /*
@@ -464,53 +441,6 @@ __attribute__((nonnull))
 //__attribute__ ((access(read_only,2)))
 fp_mul2(fp *const x, fp const *z) {
 	fp_mul3(x, x, z);
-}
-
-/*
- * x := y * z
- */
-void ATTR_INITIALIZE_1st
-__attribute__((nonnull))
-__attribute__((flatten))
-xfp_mul3(fp *const x, fp const *const y, fp const *const z)
-{
-	//fp_mulsq_count += 1;
-	FIAT_BITS(mul)(x->x.c, y->x.c, z->x.c);
-	/*
-	 * test:
-	 *   fp_mul3(x, fp0, z)
-	 *   fp_isequal(fp0, x)
-	 *
-	 * test:
-	 *   fp_mul3(x, z, fp0)
-	 *   fp_isequal(fp0, x)
-	 *
-	 * test:
-	 *  fp_mul3(x, y, fp1)
-	 *  fp_isequal(x,y)
-	 *  fp_mul3(x2, fp1, y)
-	 *  fp_isequal(x, x2)   // y*1 == 1*y
-	 *
-	 * test:
-	 * pick small random n
-	 * n_mont = to_montgomery(n)
-	 * fp_mul3(x, y, n_mont)
-	 * x2 = fp0
-	 * for i in n:
-	 *   fp_add2(x2, fp1)
-	 * fp_isequal(x,x2) // mul is equivalent to repeated fp1 addition
-	 */
-}
-
-/*
- * a := 0 - b
- * TODO: this is currently implemented using fp_sub in fp.h
- */
-void
-__attribute__((nonnull))
-TODO_fp_neg2(fp *const a, const fp *const b)
-{
-	FIAT_BITS(opp)(a->x.c, b->x.c);
 }
 
 /*

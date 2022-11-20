@@ -16,6 +16,17 @@
 #define fp_sq_count NAMESPACEBITS(fp_sq_count)
 #define fp_sub2 NAMESPACEBITS(fp_sub2)
 #define fp_sub3 NAMESPACEBITS(fp_sub3)
+#define fp_neg1 NAMESPACEBITS(fp_neg1)
+#define fp_neg2 NAMESPACEBITS(fp_neg2)
+#define fp_sq1_rep NAMESPACEBITS(fp_sq1_rep)
+#define fp_random NAMESPACEBITS(fp_random)
+#define fp_isequal NAMESPACEBITS(fp_isequal)
+#define fp_iszero NAMESPACEBITS(fp_iszero)
+#define fp_double1 NAMESPACEBITS(fp_double1)
+#define fp_double2 NAMESPACEBITS(fp_double2)
+#define fp_quadruple1 NAMESPACEBITS(fp_quadruple1)
+#define fp_quadruple2 NAMESPACEBITS(fp_quadruple2)
+#define fp NAMESPACEBITS(fp)
 
 // fp_inv*.c:
 #define fp_inv NAMESPACEBITS(fp_inv)

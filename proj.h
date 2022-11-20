@@ -4,6 +4,11 @@
 #include <string.h>
 #include "fp.h"
 
+#define proj NAMESPACEBITS(proj)
+#define proj_cswap NAMESPACEBITS(proj_cswap)
+#define proj_cmov NAMESPACEBITS(proj_cmov)
+#define proj_equal NAMESPACEBITS(proj_equal)
+
 /* P^1 over fp. */
 typedef struct proj {
     fp x;

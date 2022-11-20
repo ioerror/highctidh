@@ -1,12 +1,14 @@
 #ifndef FP_H
 #define FP_H
 
-#include "uintbig.h"
 #include "fp_namespace.h"
+#include "uintbig.h"
 #include "annotations.h"
 
 #ifdef HIGHCTIDH_PORTABLE /* begin HIGHCTIDH_PORTABLE */
-#if 511 == BITS || 512 == BITS
+#if 511 == BITS
+#include "fiat_p511.h"
+#elif 512 == BITS
 #include "fiat_p512.h"
 #elif 1024 == BITS
 #include "fiat_p1024.h"
@@ -21,11 +23,7 @@
  */
 #define FIAT_PASTER(x,y,z) x ## y ## _ ## z
 #define FIAT_EVALUATOR(x,y, z) FIAT_PASTER(x,y, z)
-#if 511 == BITS
-#define FIAT_BITS(actual) FIAT_EVALUATOR(fiat_p, 512, actual)
-#else
 #define FIAT_BITS(actual) FIAT_EVALUATOR(fiat_p, BITS, actual)
-#endif // 511 == BITS
 #endif /* end HIGHCTIDH_PORTABLE */
 
 #ifndef FIAT_BITS
@@ -100,9 +98,14 @@ static inline void fp_neg1(fp *const x)
   fp_sub3(x,&fp_0,x);
 }
 
-static inline void fp_neg2(fp *const x,const fp *const y)
+/*
+ * a := 0 - b
+ */
+static inline
+__attribute__((nonnull))
+void fp_neg2(fp *const x,const fp *const y)
 {
-  fp_sub3(x,&fp_0,y);
+	FIAT_BITS(opp)(x->x.c, y->x.c);
 }
 
 static inline void fp_double1(fp *const x)

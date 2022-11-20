@@ -19,14 +19,13 @@ else
 	libhighctidh_2048_OBJS := uintbig2048.o fp2048.o
 endif
 
-GCC=gcc
 ifeq	($(PLATFORM),aarch64)
 	CFLAGS+= $(BASE_CFLAGS) -march=native -mtune=native
 endif
 
 ifeq	($(PLATFORM),armv7l)
 	CFLAGS+= $(BASE_CFLAGS) -fforce-enable-int128 -D__ARM32__
-	GCC := clang
+	CC ?= clang
 endif
 
 ifeq	($(PLATFORM),loongarch64)
@@ -35,7 +34,7 @@ endif
 
 ifeq	($(PLATFORM),mips64)
 	CFLAGS+= $(BASE_CFLAGS) -fforce-enable-int128
-	GCC := clang
+	CC ?= clang
 endif
 
 ifeq	($(PLATFORM),ppc64le)
@@ -65,14 +64,13 @@ endif
 ifeq	($(PLATFORM),x86_64)
 ifeq	($(PLATFORM_SIZE),32)
 	CFLAGS+= $(BASE_CFLAGS) -fforce-enable-int128 -D__i386__
-	GCC := clang
+	CC ?= clang
 else
 	CFLAGS+= $(BASE_CFLAGS) -march=native -mcpu=native -mtune=native
 endif
 endif
-
-SCC=$(GCC) $(CFLAGS)
-CC=$(GCC) $(CFLAGS)
+SCC ?= $(CC) $(CFLAGS)
+CC += $(CFLAGS)
 
 default: libhighctidh.so
 
@@ -416,20 +414,16 @@ libhighctidh_2048.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 # ----- libhighctidh_tune{mults,cycles}:
 
 libhighctidh_tunemults511.a: steps_tunemults511.o Makefile
-	ar cr libhighctidh_tunemults511.a steps_tunemults511.o
-	ranlib libhighctidh_tunemults511.a
+	$(AR) crs libhighctidh_tunemults511.a steps_tunemults511.o
 
 libhighctidh_tunemults512.a: steps_tunemults512.o Makefile
-	ar cr libhighctidh_tunemults512.a steps_tunemults512.o
-	ranlib libhighctidh_tunemults512.a
+	$(AR) crs libhighctidh_tunemults512.a steps_tunemults512.o
 
 libhighctidh_tunemults1024.a: steps_tunemults1024.o Makefile
-	ar cr libhighctidh_tunemults1024.a steps_tunemults1024.o
-	ranlib libhighctidh_tunemults1024.a
+	$(AR) crs libhighctidh_tunemults1024.a steps_tunemults1024.o
 
 libhighctidh_tunemults2048.a: steps_tunemults2048.o Makefile
-	ar cr libhighctidh_tunemults2048.a steps_tunemults2048.o
-	ranlib libhighctidh_tunemults2048.a
+	$(AR) crs libhighctidh_tunemults2048.a steps_tunemults2048.o
 
 steps_tunemults511.o: steps_tunemults511.c steps.h Makefile
 	$(CC) -DBITS=511 -D'NAMESPACEBITS(x)=highctidh_511_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
@@ -500,20 +494,16 @@ libhighctidh_2048.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 		libhighctidh_2048.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 
 libhighctidh_tunecycles511.a: steps_tunecycles511.o Makefile
-	ar cr libhighctidh_tunecycles511.a steps_tunecycles511.o
-	ranlib libhighctidh_tunecycles511.a
+	$(AR) crs libhighctidh_tunecycles511.a steps_tunecycles511.o
 
 libhighctidh_tunecycles512.a: steps_tunecycles512.o Makefile
-	ar cr libhighctidh_tunecycles512.a steps_tunecycles512.o
-	ranlib libhighctidh_tunecycles512.a
+	$(AR) crs libhighctidh_tunecycles512.a steps_tunecycles512.o
 
 libhighctidh_tunecycles1024.a: steps_tunecycles1024.o Makefile
-	ar cr libhighctidh_tunecycles1024.a steps_tunecycles1024.o
-	ranlib libhighctidh_tunecycles1024.a
+	$(AR) crs libhighctidh_tunecycles1024.a steps_tunecycles1024.o
 
 libhighctidh_tunecycles2048.a: steps_tunecycles2048.o Makefile
-	ar cr libhighctidh_tunecycles2048.a steps_tunecycles2048.o
-	ranlib libhighctidh_tunecycles2048.a
+	$(AR) crs libhighctidh_tunecycles2048.a steps_tunecycles2048.o
 
 steps_tunecycles511.o: steps_tunecycles511.c steps.h Makefile
 	$(CC) -D'NAMESPACEGENERIC(x)=highctidh_##x' \
@@ -586,20 +576,19 @@ libhighctidh_2048.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 # ----- libhighctidh_{511,512,1024,2048}, size-dependent functions:
 
 libhighctidh_511.a: $(libhighctidh_511_OBJS) fp_inv511.o fp_sqrt511.o primes511.o poly511.o mont511.o elligator511.o skgen511.o validate511.o csidh511.o Makefile
-	ar cr libhighctidh_511.a $(libhighctidh_511_OBJS) fp_inv511.o fp_sqrt511.o primes511.o poly511.o mont511.o elligator511.o skgen511.o validate511.o csidh511.o
-	ranlib libhighctidh_511.a
+	$(AR) crs libhighctidh_511.a $(libhighctidh_511_OBJS) fp_inv511.o fp_sqrt511.o primes511.o poly511.o mont511.o elligator511.o skgen511.o validate511.o csidh511.o
 
 libhighctidh_512.a: $(libhighctidh_512_OBJS) fp_inv512.o fp_sqrt512.o primes512.o poly512.o mont512.o elligator512.o skgen512.o validate512.o csidh512.o Makefile
-	ar cr libhighctidh_512.a $(libhighctidh_512_OBJS) fp_inv512.o fp_sqrt512.o primes512.o poly512.o mont512.o elligator512.o skgen512.o validate512.o csidh512.o
-	ranlib libhighctidh_512.a
+	$(AR) crs libhighctidh_512.a $(libhighctidh_512_OBJS) fp_inv512.o fp_sqrt512.o primes512.o poly512.o mont512.o elligator512.o skgen512.o validate512.o csidh512.o
 
 libhighctidh_1024.a: $(libhighctidh_1024_OBJS) fp_inv1024.o fp_sqrt1024.o primes1024.o poly1024.o mont1024.o elligator1024.o skgen1024.o validate1024.o csidh1024.o Makefile
-	ar cr libhighctidh_1024.a $(libhighctidh_1024_OBJS) fp_inv1024.o fp_sqrt1024.o primes1024.o poly1024.o mont1024.o elligator1024.o skgen1024.o validate1024.o csidh1024.o
-	ranlib libhighctidh_1024.a
+	$(AR) crs libhighctidh_1024.a $(libhighctidh_1024_OBJS) fp_inv1024.o fp_sqrt1024.o primes1024.o poly1024.o mont1024.o elligator1024.o skgen1024.o validate1024.o csidh1024.o
 
 libhighctidh_2048.a: $(libhighctidh_2048_OBJS) fp_inv2048.o fp_sqrt2048.o primes2048.o poly2048.o mont2048.o elligator2048.o skgen2048.o validate2048.o csidh2048.o Makefile
-	ar cr libhighctidh_2048.a $(libhighctidh_2048_OBJS) fp_inv2048.o fp_sqrt2048.o primes2048.o poly2048.o mont2048.o elligator2048.o skgen2048.o validate2048.o csidh2048.o
-	ranlib libhighctidh_2048.a
+	$(AR) crs libhighctidh_2048.a $(libhighctidh_2048_OBJS) fp_inv2048.o fp_sqrt2048.o primes2048.o poly2048.o mont2048.o elligator2048.o skgen2048.o validate2048.o csidh2048.o
+
+libhighctidh.a: crypto_classify.o crypto_declassify.o csidh1024.o csidh2048.o csidh511.o csidh512.o elligator1024.o elligator2048.o elligator511.o elligator512.o fiat_p1024.o fiat_p2048.o fiat_p511.o fiat_p512.o fp2fiat1024.o fp2fiat2048.o  fp2fiat512.o  fp2fiat511.o fp_inv1024.o fp_inv2048.o fp_inv511.o fp_inv512.o fp_sqrt1024.o fp_sqrt2048.o fp_sqrt511.o fp_sqrt512.o int32_sort.o mont1024.o mont2048.o mont511.o mont512.o poly1024.o poly2048.o poly511.o poly512.o primes1024.o primes2048.o primes511.o primes512.o randombytes.o random.o skgen1024.o skgen2048.o skgen511.o skgen512.o steps.o steps_untuned.o validate1024.o validate2048.o validate511.o validate512.o
+	$(AR) rcs libhighctidh.a $^
 
 csidh511.o: csidh.c csidh.h uintbig.h uintbig_namespace.h annotations.h fp.h fp_namespace.h fiat_p512.h fiat_p1024.h fiat_p2048.h randombytes.h crypto_declassify.h mont.h proj.h mont_namespace.h primes.h primes_namespace.h csidh_namespace.h int64mask.h elligator.h elligator_namespace.h random.h random_namespace.h Makefile
 	$(CC) -DBITS=511 -D'NAMESPACEBITS(x)=highctidh_511_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
@@ -808,8 +797,7 @@ fp2fiat2048.o: fp2fiat.c fiat_p2048.h fiat_p2048.o fp.h fp_namespace.h uintbig.h
 # ----- libhighctidh_untuned, size-independent but normally replaced by tuned functions:
 
 libhighctidh_untuned.a: steps_untuned.o Makefile
-	ar cr libhighctidh_untuned.a steps_untuned.o
-	ranlib libhighctidh_untuned.a
+	$(AR) crs libhighctidh_untuned.a steps_untuned.o
 
 steps_untuned.o: steps_untuned.c steps.h Makefile
 	$(CC) -D'NAMESPACEGENERIC(x)=highctidh_##x' \
@@ -818,8 +806,7 @@ steps_untuned.o: steps_untuned.c steps.h Makefile
 # ----- libhighctidh_base, size-independent functions:
 
 libhighctidh_base.a: steps.o random.o Makefile
-	ar cr libhighctidh_base.a steps.o random.o
-	ranlib libhighctidh_base.a
+	$(AR) crs libhighctidh_base.a steps.o random.o
 
 steps.o: steps.c steps.h Makefile
 	$(CC) -D'NAMESPACEGENERIC(x)=highctidh_##x' \
@@ -832,8 +819,7 @@ random.o: random.c random.h int32_sort.h randombytes.h Makefile
 # ----- functions that libhighctidh wants from a core crypto library:
 
 libtest.a: crypto_classify.o crypto_declassify.o randombytes.o int32_sort.o Makefile
-	ar cr libtest.a crypto_classify.o crypto_declassify.o randombytes.o int32_sort.o
-	ranlib libtest.a
+	$(AR) crs libtest.a crypto_classify.o crypto_declassify.o randombytes.o int32_sort.o
 
 randombytes.o: randombytes.c randombytes.h Makefile
 	$(CC) -D'NAMESPACEGENERIC(x)=highctidh_##x' \
@@ -913,6 +899,9 @@ example2048: libhighctidh_2048.so
 examples: example511 example512 example1024 example2048
 		ls -l example-ctidh511 example-ctidh512 example-ctidh1024 example-ctidh2048
 
+examples-static: examples_static.c libhighctidh.a *.h
+	$(CC) -static -Wall -Werror -Wpedantic examples_static.c -Wl,-Bstatic -L. -l:libhighctidh.a -o examples-static
+
 test: clean libhighctidh.so testrandom test511 test512 test1024 test2048
 		./test.sh
 
@@ -930,12 +919,12 @@ docker-fiat-generate: docker-fiat-setup
 		./docker-generate-fiat.sh
 
 DESTDIR ?= /usr/local
-install: libhighctidh.so
+install: libhighctidh.so libhighctidh.a
 		install -d $(DESTDIR)/include/libhighctidh/
 		install -d $(DESTDIR)/lib/
 		install -v *.h $(DESTDIR)/include/libhighctidh/
 		install -v libhighctidh_*.so $(DESTDIR)/lib/
-
+		install -v libhighctidh.a $(DESTDIR)/lib/
 
 clean:
 		-rm -f *.a *.o *.out *.so
@@ -947,3 +936,4 @@ clean:
 		-rm -rf highctidh.egg-info/ highctidh/__pycache__/
 		-rm -rf tests/__pycache__/
 		-rm -rf docker_build_output/
+		-rm -f examples-static
