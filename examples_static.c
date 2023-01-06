@@ -1,6 +1,7 @@
+#include "highctidh.h"
 #include <stdio.h>
 #include <assert.h>
-#include "highctidh.h"
+#include <string.h>
 
 int
 main(int argc, char **argv)
