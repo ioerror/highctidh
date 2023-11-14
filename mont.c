@@ -310,8 +310,10 @@ void xISOG_matryoshka(proj *A, proj *P, long long Plen, proj const *K, long long
     A24.x = Aed.x;
     fp_double2(&A24.z,&Aed.z);
     fp_sub3(&Aed.z, &A->x, &Aed.z);
-   
-    int Minit[kupper];
+
+    // mark as unused or -Wunused-but-set-variable warns with gcc, no warning
+    // with clang
+    int Minit[kupper] __attribute__((unused));
     proj M[kupper]; /* XXX: use less space */
 
     for (long long s = 0;s < kupper;++s) Minit[s] = 0;

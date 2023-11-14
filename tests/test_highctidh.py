@@ -7,7 +7,16 @@ from struct import pack
 
 import ctypes
 
+#
+# NOTE:
+# The Golang blinding vectors are from the early elixxir/ctidh_go blinding api.
+# The Golang vector data is from this commit:
+# https://git.xx.network/elixxir/ctidh_cgo/-/commit/aaaa57d66c604830d50a7a8a5d080fb38d5258c8
+# The newer blinding api in golang with hkdf+sha2 is not tested here.
+#
+
 # Golang static 511 vectors
+
 # From https://git.xx.network/elixxir/ctidh_cgo/-/blob/master/vectors511_test.go
 golang_alice_sk_511_vector = bytes.fromhex(
     "fd020202fb01ff020001fbffff0003020502ff020500fefefe02010501fb01fcfffc03010001000101fb000400fe000100fc030100000301fcfe0001ffff01ff00fe00ff000300ffff00"
@@ -685,7 +694,7 @@ class TestHighCTIDH(unittest.TestCase):
         self.assertEqual(bytes(x).hex(), bytes(y).hex())
 
     def test_511_failed_csidh(self):
-        with self.assertRaises(CSIDHError):
+        with self.assertRaises(InvalidPublicKey):
             ctidh511 = ctidh(511)
             bob_private_key = ctidh511.private_key()
             # This is 'p'
@@ -724,9 +733,8 @@ class TestHighCTIDH(unittest.TestCase):
                 250291945332690752,
             ]
         )
-        alice_public_key = ctidh511.public_key_from_bytes(failure)
         with self.assertRaises(InvalidPublicKey):
-            ctidh511.validate(alice_public_key)
+            alice_public_key = ctidh511.public_key_from_bytes(failure)
 
     def test_511_invalid_public_key_minus_two(self):
         ctidh511 = ctidh(511)
@@ -745,9 +753,8 @@ class TestHighCTIDH(unittest.TestCase):
                 7078347295084591743,
             ]
         )
-        alice_public_key = ctidh511.public_key_from_bytes(failure)
         with self.assertRaises(InvalidPublicKey):
-            ctidh511.validate(alice_public_key)
+            alice_public_key = ctidh511.public_key_from_bytes(failure)
 
     def test_511_invalid_public_key_p(self):
         ctidh511 = ctidh(511)
@@ -766,9 +773,8 @@ class TestHighCTIDH(unittest.TestCase):
                 0x32DA4747BA07C4DF,
             ]
         )
-        alice_public_key = ctidh511.public_key_from_bytes(failure)
         with self.assertRaises(InvalidPublicKey):
-            ctidh511.validate(alice_public_key)
+            alice_public_key = ctidh511.public_key_from_bytes(failure)
 
     def test_511_invalid_public_key_p_minus_one(self):
         ctidh511 = ctidh(511)
@@ -787,9 +793,8 @@ class TestHighCTIDH(unittest.TestCase):
                 7203493267750937119,
             ]
         )
-        alice_public_key = ctidh511.public_key_from_bytes(failure)
         with self.assertRaises(InvalidPublicKey):
-            ctidh511.validate(alice_public_key)
+            alice_public_key = ctidh511.public_key_from_bytes(failure)
 
     def test_511_invalid_public_key_p_plus_one(self):
         ctidh511 = ctidh(511)
@@ -808,9 +813,8 @@ class TestHighCTIDH(unittest.TestCase):
                 125145972666345376,
             ]
         )
-        alice_public_key = ctidh511.public_key_from_bytes(failure)
         with self.assertRaises(InvalidPublicKey):
-            ctidh511.validate(alice_public_key)
+            alice_public_key = ctidh511.public_key_from_bytes(failure)
 
     def test_511_base_len(self):
         ctidh511 = ctidh(511)

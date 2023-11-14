@@ -2,10 +2,17 @@
 
 import ctypes
 import ctypes.util
-from ctypes import LibraryLoader
 import hashlib
 import struct
+import pathlib
+from importlib import util, metadata
+from importlib.metadata import PackageNotFoundError
+from .__version__ import version as highctidh_version
 
+try:
+    __version__ = metadata.version('highctidh')
+except PackageNotFoundError:
+    __version__ = highctidh_version
 
 class InvalidFieldSize(Exception):
     """Raised when a field is not one of (511, 512, 1024, 2048)."""
@@ -18,6 +25,10 @@ class InvalidPublicKey(Exception):
 
     pass
 
+class DecodingError(Exception):
+    '''Raised when a serialized value is not in the expected format.'''
+
+    pass
 
 class CSIDHError(Exception):
     """Raised when csidh() fails to return True."""
@@ -35,6 +46,7 @@ class ctidh(object):
     def __init__(self, field_size):
         self._ctidh_sizes = (511, 512, 1024, 2048)
         self.field_size = field_size
+        ctidh_self = self
         if self.field_size not in self._ctidh_sizes:
             raise InvalidFieldSize(f"Unsupported size: {repr(self.field_size)}")
         if self.field_size == 511:
@@ -58,6 +70,47 @@ class ctidh(object):
                 ("e", ctypes.c_ubyte * self.sk_size),
             ]
 
+            def __bytes__(self) -> bytes:
+                """canonical byte representation"""
+                return bytes(self.e)
+
+            def __repr__(self):
+                return f'<highctidh.ctidh({ctidh_self.field_size}).private_key>'
+
+            @classmethod
+            def frombytes(cls, byt:bytes):
+                '''restore bytes(private_key_object) in canonical byte
+                representation as a private_key() instance'''
+                if type(byt) is not bytes:
+                    raise DecodingError("Private key is not bytes")
+                if len(byt) != ctypes.sizeof(cls):
+                    raise DecodingError(f"Serialized private key should be {self.sk_size}, is {len(byt)}")
+                return cls.from_buffer(ctypes.create_string_buffer(byt))
+
+            @classmethod
+            def fromhex(cls, h:str):
+                '''restore bytes(private_key_object).hex() in canonical byte
+                representation as a private_key() instance'''
+                if type(h) is not str:
+                    raise DecodingError("Private key is not str")
+                try:
+                    h = bytes.fromhex(h)
+                except Exception as e:
+                    raise DecodingError(e)
+                if len(h) != ctypes.sizeof(cls):
+                    # This gets bad if len(h) < sizeof
+                    raise DecodingError(f"Private key must be {ctypes.sizeof(private_key)} bytes, is {len(h)}")
+                return cls.from_buffer(ctypes.create_string_buffer(h))
+
+            def derive_public_key(self):
+                """Compute return the corresponding public key *pk*."""
+                pk = ctidh_self.public_key()
+                ctidh_self.csidh(pk, ctidh_self.base, self)
+                return pk
+
+        assert self.sk_size == ctypes.sizeof(private_key), (
+            self.sk_size, ctypes.sizeof(private_key),)
+
         self.private_key = private_key
 
         class public_key(ctypes.Structure):
@@ -67,17 +120,46 @@ class ctidh(object):
             _fields_ = [("A", ctypes.c_uint64 * (self.pk_size // 8))]
 
             def __bytes__(self):
-                """pack to little-endian for transfer"""
+                """pack to canonical little-endian representation"""
                 return struct.pack("<" + "Q" * (ctypes.sizeof(self) // 8), *self.A)
 
+            def __repr__(self):
+                return f'<highctidh.ctidh({ctidh_self.field_size}).public_key>'
+
+            @classmethod
+            def frombytes(cls, byt:bytes, validate=True):
+                '''Restores a public_key instance from canonical little-endian representation.
+                If the optional validate= parameter is True, the public key is validated.
+                If not, the caller must ensure that the public key is valid and
+                comes from a trusted source.
+                '''
+                if type(byt) is not bytes:
+                    raise DecodingError("Public key is not bytes")
+                # public keys are transferred in little-endian; we might have to
+                # byteswap to get them in native order in pk.A:
+                pk = self.public_key()
+                try:
+                    pk.A[:] = struct.unpack("<" + "Q" * (self.pk_size // 8), byt)
+                except struct.error as e:
+                    raise DecodingError(e)
+                if validate:
+                    assert ctidh_self.validate(pk)
+                return pk
+
+            @classmethod
+            def fromhex(cls, h:str):
+                return cls.frombytes(bytes.fromhex(h))
+
         self.public_key = public_key
+
+        assert self.pk_size == ctypes.sizeof(public_key), (
+            self.pk_size, ctypes.sizeof(public_key))
+
         self.base = self.public_key()
         try:
             flib = f"highctidh_{self.field_size}"
-            libname = ctypes.util.find_library(flib)
-            if not libname:
-                libname = f"lib{flib}.so"
-            self._lib = ctypes.CDLL(libname)
+            flib = util.find_spec(flib).origin
+            self._lib = ctypes.CDLL(flib)
         except OSError as e:
             print("Unable to load highctidh_" + str(self.field_size) + ".so".format(e))
             raise LibraryNotFound
@@ -116,31 +198,18 @@ class ctidh(object):
         self._validate = validate
 
     def private_key_from_bytes(self, h):
-        if type(h) is not bytes:
-            raise Exception("Private key is not bytes")
-        return self.private_key.from_buffer(ctypes.create_string_buffer(h))
+        return self.private_key.frombytes(h)
 
-    def public_key_from_bytes(self, h):
-        if type(h) is not bytes:
-            raise Exception("Private key is not bytes")
-        # public keys are transferred in little-endian; we might have to
-        # byteswap to get them in native order in pk.A:
-        pk = self.public_key()
-        pk.A[:] = struct.unpack("<" + "Q" * (self.pk_size // 8), h)
-        return pk
+    def public_key_from_bytes(self, h:bytes):
+        '''Restores a public_key instance from bytes in the canonical
+        (little-endian) representation'''
+        return self.public_key.frombytes(h)
 
     def private_key_from_hex(self, h):
-        if type(h) is not str:
-            raise Exception("Private key is not str")
-        h = bytes.fromhex(h)
-        return ctypes.cast(
-            ctypes.create_string_buffer(h), ctypes.POINTER(self.private_key)
-        ).contents
+        return self.private_key.fromhex(h)
 
     def public_key_from_hex(self, h):
-        if type(h) is not str:
-            raise Exception("Private key is not str")
-        return self.public_key_from_bytes(bytes.fromhex(h))
+        return self.public_key.fromhex(h)
 
     def validate(self, pk):
         """self._validate returns 1 if successful, 0 if invalid."""
@@ -199,9 +268,7 @@ class ctidh(object):
 
     def derive_public_key(self, sk):
         """Given a secret key *sk*, return the corresponding public key *pk*."""
-        pk = self.public_key()
-        self.csidh(pk, self.base, sk)
-        return pk
+        return sk.derive_public_key()
 
     def dh(
         self,
@@ -217,16 +284,18 @@ class ctidh(object):
         The size of the hash output is dependent on the field size. The *_hash*
         may be overloaded as needed.
         """
+        assert type(pk) is self.public_key
+        assert type(sk) is self.private_key
         shared_key = self.public_key()
         self.csidh(shared_key, pk, sk)
         return _hash(bytes(shared_key), self.pk_size)
 
-    def blind(self, blinding_factor, pk):
+    def blind(self, blinding_factor_sk, pk):
         blinded_key = self.public_key()
-        self.csidh(blinded_key, pk, blinding_factor)
+        self.csidh(blinded_key, pk, blinding_factor_sk)
         return blinded_key
 
-    def blind_dh(self, blind, sk, pk):
+    def blind_dh(self, blind_sk, sk, pk):
         """
         This is a Diffie-Hellman function for use with blinding factors. This
         is a specialized function that should only be use with very specific
@@ -242,7 +311,7 @@ class ctidh(object):
         shared_key = self.public_key()
         blinded_result = self.public_key()
         if self.csidh(shared_key, pk, sk):
-            self.csidh(blinded_result, shared_key, blind)
+            self.csidh(blinded_result, shared_key, blind_sk)
             return blinded_result
         else:
             raise CSIDHError

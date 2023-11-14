@@ -4,7 +4,7 @@
 #include "mont.h"
 #include "poly.h"
 
-int main()
+int main(void)
 {
   long long t = fp_mulsq_count;
 

@@ -1,5 +1,6 @@
 #include <string.h>
 #include <assert.h>
+#include <endian.h>
 
 #include "csidh.h"
 #include "fp.h"

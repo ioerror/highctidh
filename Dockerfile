@@ -3,7 +3,10 @@ ARG ARCH=
 FROM ${ARCH}/debian:sid-slim
 RUN set -eux; \
 	apt update; \
-	apt install -y --no-install-recommends make gcc clang 2>&1 > /dev/null; \
+	DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends make gcc clang git \
+        python3 python3-build python3-setuptools python3-stdeb \
+        build-essential python3-venv python3-wheel python3-pip \
+        dh-python python3-all-dev flit 2>&1 > /dev/null; \
     apt clean; rm -rf /var/lib/apt/lists/*;
 WORKDIR /highctidh/
 COPY . /highctidh/

@@ -1,4 +1,8 @@
 #if defined(__x86_64__)
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wlanguage-extension-token"
+#endif
 #define int32_MINMAX(a,b)			\
 do { \
   int32 temp1; \
@@ -20,4 +24,8 @@ do { \
   a = small; \
   b = big; \
 } while (0);
+#ifdef __clang__
+#pragma clang diagnostic pop
 #endif
+#endif
+typedef int no_empty_translation_units; // -> "warning: ISO C forbids an empty translation unit"

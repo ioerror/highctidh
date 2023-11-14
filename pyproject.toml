@@ -1,15 +1,22 @@
 [project]
-name = 'highctidh'
-version = '2023.06.22'
-description = 'ctype bindings for highctidh'
-readme = 'README.md'
-requires-python = '>=3.10.4'
-keywords = ['post-quantum cryptography', 'cryptography', 'csidh', 'ctidh']
-authors = [ {email = 'jacob@appelbaum.net'}, {name = 'Jacob Appelbaum'} ]
-maintainers = [ {email = 'jacob@appelbaum.net'}, {name = 'Jacob Appelbaum'} ]
+name = "highctidh"
+dynamic = ["version"]
+description = "ctype bindings for highctidh"
+readme = "README.md"
+requires-python = ">=3.10.4"
+keywords = ["post-quantum cryptography", "cryptography", "csidh", "ctidh"]
+authors = [ {email = "jacob@appelbaum.net"}, {name = "Jacob Appelbaum"} ]
+maintainers = [ {email = "jacob@appelbaum.net"}, {name = "Jacob Appelbaum"} ]
 dependencies = [ ]
-license = { text = 'Public Domain' }
+license = { text = "Public Domain" }
 
 [build-system]
-requires = ["setuptools>=61", "wheel"]
+requires = ["setuptools", "wheel", "build"]
 build-backend = "setuptools.build_meta"
+
+[project.optional-dependencies]
+test = ['pytest']
+
+[project.urls]
+Documentation = "https://codeberg.org/vula/highctidh"
+Source = "https://codeberg.org/vula/highctidh"

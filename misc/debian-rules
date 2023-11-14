@@ -1,0 +1,13 @@
+#!/usr/bin/make -f
+
+export PYBUILD_NAME=highctidh
+export DH_VERBOSE=1
+export PYBUILD_SYSTEM=custom
+export PYBUILD_BUILD_ARGS=CC=${CC} python3 setup.py build_ext --compiler=unix
+export PYBUILD_INSTALL_ARGS=CC=${CC} python3 setup.py install --root debian/python3-highctidh/
+
+%:
+	dh $@ --with python3 --buildsystem=pybuild
+
+override_dh_auto_install:
+	CC=$(CC) dh_auto_install --destdir=debian/python3-highctidh/ -O--buildsystem=pybuild

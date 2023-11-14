@@ -306,31 +306,31 @@ long long fp_addsub_count = 0;
 #include <stdio.h>
 #define dump_fp(fp2) {for (size_t i=0; i<sizeof(fp2.x.c)/sizeof(fp2.x.c[0]);i++) { printf("%#lxU, ", fp2.x.c[i]); };printf("\n"); }
 
-/*
- * Constructor function to initialize fp0, fp1, fp2 at program start.
- */
-#include <stdio.h>
-static void
-#if 0
-__attribute__((constructor (0)))
-#else
-__attribute__((unused))
-#endif /* constructor */
-constructor()
-{
-	fp fp0 = {0};
-	fp fp1 = {0};
-	fp fp2 = {0};
-	FIAT_BITS(set_one)((uint64_t *)&fp1.x.c); // fp1 := 1
-	fp_add3(&fp2, &fp1, &fp1); // fp2 := fp1 + fp1
-	// TODO: we either need to hardcode these for each p512, p1024, p2048,
-	// or alternatively we can use this function to dump out the constants.
-	//dump_fp(fp1);
-	//dump_fp(fp2);
-	assert(0 == memcmp(fp0.x.c, fp_0.x.c, sizeof(fp0.x.c)));
-	assert(0 == memcmp(fp1.x.c, fp_1.x.c, sizeof(fp1.x.c)));
-	assert(0 == memcmp(fp2.x.c, fp_2.x.c, sizeof(fp2.x.c)));
-}
+//  /*
+//   * Constructor function to initialize fp0, fp1, fp2 at program start.
+//   */
+//  #include <stdio.h>
+//  static void
+//  #if 0
+//  __attribute__((constructor (0)))
+//  #else
+//  __attribute__((unused))
+//  #endif /* constructor */
+//  constructor(void)
+//  {
+//      fp fp0 = {0};
+//      fp fp1 = {0};
+//      fp fp2 = {0};
+//      FIAT_BITS(set_one)((uint64_t *)&fp1.x.c); // fp1 := 1
+//      fp_add3(&fp2, &fp1, &fp1); // fp2 := fp1 + fp1
+//      // TODO: we either need to hardcode these for each p512, p1024, p2048,
+//      // or alternatively we can use this function to dump out the constants.
+//      //dump_fp(fp1);
+//      //dump_fp(fp2);
+//      assert(0 == memcmp(fp0.x.c, fp_0.x.c, sizeof(fp0.x.c)));
+//      assert(0 == memcmp(fp1.x.c, fp_1.x.c, sizeof(fp1.x.c)));
+//      assert(0 == memcmp(fp2.x.c, fp_2.x.c, sizeof(fp2.x.c)));
+//  }
 
 void
 fp_copy(fp *a, fp *b)

@@ -507,10 +507,13 @@ void poly_mul_selfreciprocal(fp *c,const fp *a,long long alen,const fp *b,long l
     for (long long i = 1;i < len0+len0-1;++i)
       fp_sub2(&c01[i],&c01[i-1]);
 
+#ifdef DEBUG
+// -Wunused-variable
     long long clen = alen+blen-1;
     assert(2*(len0+len0-2) < clen);
     assert(2*(len0+len0-3)+1 < clen);
     assert(2*(len1+len1-2)+2 < clen);
+#endif
     for (long long i = 0;i < len0+len0-1;++i) c[2*i] = c0[i];
     for (long long i = 0;i < len0+len0-2;++i) c[2*i+1] = c01[i];
     for (long long i = 0;i < len1+len1-1;++i) fp_add2(&c[2*i+2],&c1[i]);

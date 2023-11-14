@@ -922,7 +922,7 @@ with open(fn+'.tmp','w') as f:
   f.write('\tlibhighctidh_2048_OBJS := uintbig2048.o fp2048.o\n')
   f.write('endif\n')
   f.write('\n')
-  f.write('ifeq\t($(PLATFORM),aarch64)\n')
+  f.write('ifeq\t($(PLATFORM), $(filter $(PLATFORM), arm64 aarch64))\n')
   f.write('\tCFLAGS+= $(BASE_CFLAGS) -march=native -mtune=native\n')
   f.write('endif\n\n')
   f.write('ifeq\t($(PLATFORM),armv7l)\n')
@@ -954,12 +954,16 @@ with open(fn+'.tmp','w') as f:
   f.write('ifeq\t($(PLATFORM),unknown)\n')
   f.write('\tCFLAGS+= $(BASE_CFLAGS)\n')
   f.write('endif\n\n')
-  f.write('ifeq\t($(PLATFORM),x86_64)\n')
+  f.write('ifeq\t($(PLATFORM), $(filter $(PLATFORM), amd64 x86_64))\n')
   f.write('ifeq\t($(PLATFORM_SIZE),32)\n')
   f.write('\tCFLAGS+= $(BASE_CFLAGS) -fforce-enable-int128 -D__i386__\n')
   f.write('\tCC ?= clang\n')
+  f.write('else\n\n')
+  f.write('ifeq    ($(CC),clang)\n')
+  f.write('\tCFLAGS+= $(BASE_CFLAGS) -march=native -mtune=native\n')
   f.write('else\n')
   f.write('\tCFLAGS+= $(BASE_CFLAGS) -march=native -mcpu=native -mtune=native\n')
+  f.write('endif\n\n')
   f.write('endif\n')
   f.write('endif\n\n')
   f.write('SCC ?= $(CC) $(CFLAGS)\n')
@@ -1137,6 +1141,15 @@ with open(fn+'.tmp','w') as f:
     f.write('\t$(AR) crs libhighctidh_{0}.a $(libhighctidh_{0}_OBJS) fp_inv{0}.o fp_sqrt{0}.o primes{0}.o poly{0}.o mont{0}.o elligator{0}.o skgen{0}.o validate{0}.o csidh{0}.o\n'.format(bits))
     f.write('\n')
 
+  # The big unified static lib:
+  f.write('libhighctidh.a: crypto_classify.o crypto_declassify.o randombytes.o random.o int32_sort.o steps.o steps_untuned.o')
+  for bits in databits:
+    f.write(' csidh{0}.o elligator{0}.o fiat_p{0}.o fp2fiat{0}.o'.format(bits))
+    f.write(' fp_inv{0}.o fp_sqrt{0}.o mont{0}.o poly{0}.o'.format(bits))
+    f.write(' primes{0}.o skgen{0}.o validate{0}.o'.format(bits))
+  f.write('\n') # end of libhighctidh.a dep list
+  f.write('\t$(AR) rcs libhighctidh.a $^\n\n')
+
   for c in ('csidh','validate','skgen','elligator','mont','poly'):
     for bits in databits:
       ch = ' '.join(includes(c+'.c'))
@@ -1242,6 +1255,9 @@ with open(fn+'.tmp','w') as f:
   f.write('examples: example511 example512 example1024 example2048\n')
   f.write('\t\tls -l example-ctidh511 example-ctidh512 example-ctidh1024 example-ctidh2048\n\n')
 
+  f.write('examples-static: examples_static.c libhighctidh.a *.h\n')
+  f.write('\t$(CC) -static -Wall -Werror -Wpedantic examples_static.c -Wl,-Bstatic -L. -l:libhighctidh.a -o examples-static\n')
+
   f.write('test: clean libhighctidh.so testrandom test511 test512 test1024 test2048\n')
   f.write('\t\t./test.sh\n\n')
 
@@ -1252,12 +1268,19 @@ with open(fn+'.tmp','w') as f:
   f.write('\t\ttime ./docker-test-build.sh\n')
   f.write('\t\tls -al docker_build_output/*/lib/*\n')
 
+  f.write('docker-fiat-setup:\n')
+  f.write('\t\t./docker-setup-fiat.sh\n\n')
+
+  f.write('docker-fiat-generate: docker-fiat-setup\n')
+  f.write('\t\t./docker-generate-fiat.sh\n\n')
+
   f.write('\nDESTDIR ?= /usr/local\n')
-  f.write('install: libhighctidh.so\n')
+  f.write('install: libhighctidh.so libhighctidh.a\n')
   f.write('\t\tinstall -d $(DESTDIR)/include/libhighctidh/\n')
   f.write('\t\tinstall -d $(DESTDIR)/lib/\n')
   f.write('\t\tinstall -v *.h $(DESTDIR)/include/libhighctidh/\n')
   f.write('\t\tinstall -v libhighctidh_*.so $(DESTDIR)/lib/\n')
+  f.write('\t\tinstall -v libhighctidh.a $(DESTDIR)/lib/\n')
 
   f.write('\n\nclean:\n')
   f.write('\t\t-rm -f *.a *.o *.out *.so\n')
@@ -1269,5 +1292,7 @@ with open(fn+'.tmp','w') as f:
   f.write('\t\t-rm -rf highctidh.egg-info/ highctidh/__pycache__/\n')
   f.write('\t\t-rm -rf tests/__pycache__/\n')
   f.write('\t\t-rm -rf docker_build_output/\n')
+  f.write('\t\t-rm -rf examples-static\n')
+  f.write('\t\t-rm -rf highctidh-*.tar.gz\n')
 
 maybeupdate(fn)

@@ -6,4 +6,4 @@
   a = small; \
   b = big; \
 } while (0);
-
+typedef int no_empty_translation_units; // -> "warning: ISO C forbids an empty translation unit"

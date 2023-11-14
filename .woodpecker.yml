@@ -1,0 +1,12 @@
+steps:
+  build:
+    group: compile
+    image: debian:bookworm-slim
+    commands:
+      - export CI=true
+      - PATH=$PATH:~/.local/bin
+      - apt update
+      - apt install -y --no-install-recommends make gcc clang git python3 python3-build python3-setuptools build-essential python3-venv python3-wheel python3-pip flit
+      - make -f Makefile.packages wheel
+      - ls -alh dist/*.whl
+      - sha256sum dist/*.whl

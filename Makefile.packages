@@ -1,0 +1,56 @@
+VERSION := $(shell cat VERSION)
+WORKDIR ?= /highctidh/
+export SOURCE_DATE_EPOCH := $(shell git log -1 --pretty=%ct)
+ARCH := $(shell uname -m)
+.PHONY: deb wheel test packages sdist
+DEB_NAME := ${WORKDIR}/deb_dist/python3-highctidh_${VERSION}-1_${ARCH}.deb
+WHEEL_NAME := ${WORKDIR}/dist/highctidh-${VERSION}-cp311-cp311-linux_${ARCH}.whl
+SDIST_GZ := ${WORKDIR}/dist/highctidh-${VERSION}.tar.gz
+
+version:
+	echo ${VERSION}
+
+deb: ${SDIST_GZ} ${DEB_NAME}
+${DEB_NAME}:
+	python3 setup.py --command-packages=stdeb.command sdist_dsc --compat=10 --dist-dir ${WORKDIR}/dist/ --use-premade-distfile=${DEB_NAME}
+	cp misc/debian-rules deb_dist/highctidh-$(VERSION)/debian/rules
+	cd deb_dist/highctidh-$(VERSION) && CC=${CC} dpkg-buildpackage -rfakeroot -uc -us
+
+wheel: ${SDIST_GZ} ${WHEEL_NAME}
+${WHEEL_NAME}:
+	SOURCE_DATE_EPOCH=${SOURCE_DATE_EPOCH} python3 -m build --wheel
+	ls -alh ${WHEEL_NAME}
+	sha256sum ${WHEEL_NAME}
+
+test:
+	python3 setup.py test
+
+sdist: ${SDIST_GZ}
+${SDIST_GZ}:
+	SOURCE_DATE_EPOCH=${SOURCE_DATE_EPOCH} flit build --format sdist
+	ls -alh ${SDIST_GZ}
+	sha256sum ${SDIST_GZ}
+
+sdist-non-deterministic: ${SDIST_GZ}
+${SDIST_GZ}:
+	SOURCE_DATE_EPOCH=${SOURCE_DATE_EPOCH} python3 setup.py sdist
+	ls -alh ${SDIST_GZ}
+	sha256sum ${SDIST_GZ}
+
+packages: wheel deb
+	echo "Finished building deb and wheel targets for ${ARCH}"
+	find .|grep .whl$
+	find .|grep .deb$
+
+docker-setup-multiarch:
+	echo "Please run ./docker-priv-setup.sh as root to prepare the system"
+	./docker-setup.sh
+
+docker-clean:
+	./docker-clean.sh
+
+# This target calls the other targets present in this makefile from within a Docker container.
+# Our use of QEMU means that the Docker container appears to be running on
+# ${ARCH} regardless of the host CPU architecture.
+multi-arch-build:
+	./docker-multi-arch-package-build.sh

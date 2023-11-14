@@ -1,5 +1,10 @@
+build/
+.eggs
 __pycache__/
+deb_dist/
 */__pycache__/
+dist/
+highctidh.egg-info/
 *.o
 *.pyc
 */*.pyc
