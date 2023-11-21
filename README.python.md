@@ -1,4 +1,6 @@
-This Python module requires Python 3.9.2 or later.
+This Python module requires Python 3.10 or later.
+
+To use this module with pip: `pip install highctidh`
 
 Run the unit tests in the root of the project:
 
@@ -64,4 +66,5 @@ Build packages for each supported architecture in Docker:
 
     ./docker-multi-arch-package-build.sh
 
-Future releases may be installable from pypi.
+The command `pip install highctidh` will build a wheel upon installation if
+binary wheels for your platform are not already available on pypi.

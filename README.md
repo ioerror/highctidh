@@ -67,3 +67,4 @@ The original authors of this software released high-ctidh in the public domain.
 All contributions made in this fork are also in the public domain.
 
 The original released README is `README.original.md`.
+The original website was https://ctidh.isogeny.org/software.html
