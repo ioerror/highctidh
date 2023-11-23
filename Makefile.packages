@@ -1,5 +1,5 @@
 VERSION := $(shell cat VERSION)
-WORKDIR ?= /highctidh/
+export WORKDIR ?= /highctidh
 export SOURCE_DATE_EPOCH := $(shell git log -1 --pretty=%ct)
 ARCH := $(shell uname -m)
 .PHONY: deb wheel test packages sdist pypi-upload prepare-artefacts-for-upload
@@ -19,8 +19,8 @@ ${DEB_NAME}:
 wheel: ${SDIST_GZ} ${WHEEL_NAME}
 ${WHEEL_NAME}:
 	SOURCE_DATE_EPOCH=${SOURCE_DATE_EPOCH} python3 -m build --wheel
-	ls -alh ${WHEEL_NAME}
-	sha256sum ${WHEEL_NAME}
+	-ls -alh ${WHEEL_NAME}
+	-sha256sum ${WHEEL_NAME}
 
 test:
 	python3 setup.py test
@@ -28,8 +28,8 @@ test:
 sdist: ${SDIST_GZ}
 ${SDIST_GZ}:
 	SOURCE_DATE_EPOCH=${SOURCE_DATE_EPOCH} flit build --format sdist
-	ls -alh ${SDIST_GZ}
-	sha256sum ${SDIST_GZ}
+	-ls -alh ${SDIST_GZ}
+	-sha256sum ${SDIST_GZ}
 
 sdist-non-deterministic: ${SDIST_GZ}
 ${SDIST_GZ}:
