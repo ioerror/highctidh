@@ -1,3 +1,5 @@
+![highctidh build status](https://ci.codeberg.org/api/badges/12808/status.svg "highctidh build status")
+
 This is an unofficial fork of high-ctidh. This is highly experimental software
 and it has not yet been reviewed for security considerations.
 
