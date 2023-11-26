@@ -2,7 +2,7 @@
 #define int32 int32_t
 
 #include <immintrin.h>
-#include "int32_minmax_x86.c"
+#include "int32_minmax.h"
 
 typedef __m256i int32x8;
 #define int32x8_load(z) _mm256_loadu_si256((__m256i *) (z))

@@ -1,9 +1,18 @@
-#ifdef HIGHCTIDH_PORTABLE /* begin HIGHCTIDH_PORTABLE */
+#ifndef HIGHCTIDH_INT32_SORT_H
+#define HIGHCTIDH_INT32_SORT_H
+
+#if defined(__AVX2__) && !defined(HIGHCTIDH_PORTABLE)
+
+// This is the original high-ctidh x86_64 sorting code
+#include "int32_sort_x86.c"
+
+#else /* fallback to portable C code: */
+
 // This is from the Public Domain release of djbsort-20190516
 #include "int32_sort.h"
 #define int32 int32_t
 
-#include "int32_minmax.c"
+#include "int32_minmax.h"
 
 void int32_sort(int32 *x,long long n)
 {
@@ -30,9 +39,6 @@ void int32_sort(int32 *x,long long n)
     }
   }
 }
-#else
-
-// This is the original high-ctidh x86_64 sorting code
-#include "int32_sort_x86.c"
 
 #endif /* end HIGHCTIDH_PORTABLE */
+#endif /* HIGHCTIDH_INT32_SORT_H */

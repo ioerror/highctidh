@@ -101,7 +101,7 @@ base_src = ["crypto_classify.c", "crypto_declassify.c", "csidh.c",
 
 cflags = get_config_var("CFLAGS").split()
 cflags += ["-Wextra", "-Wall", "-Wall", "-Wextra", "-fpie", "-fPIC",
-           "-fwrapv", "-pedantic", "-O3", "-Os"]
+           "-fwrapv", "-pedantic", "-O3", "-Os",]
 cflags += ["-DGETRANDOM", "-DHIGHCTIDH_PORTABLE", f"-DPLATFORM={PLATFORM}",
            f"-DPLATFORM_SIZE={PLATFORM_SIZE}"]
 
@@ -110,43 +110,43 @@ if CC == "clang":
 
 match PLATFORM:
     case "aarch64":
-        base_src += ["int32_sort.c", "int32_minmax.c"]
+        base_src += ["int32_sort.c",]
         cflags += ["-march=native", "-mtune=native"]
     case "armv7l":
         # clang required
-        base_src += ["int32_sort.c", "int32_minmax.c"]
+        base_src += ["int32_sort.c",]
         cflags += ["-fforce-enable-int128", "-D__ARM32__"]
     case "loongarch64":
-        base_src += ["int32_sort.c", "int32_minmax.c"]
+        base_src += ["int32_sort.c",]
         cflags += ["-march=native", "-mtune=native"]
     case "mips64":
         # clang required
-        base_src += ["int32_sort.c", "int32_minmax.c"]
+        base_src += ["int32_sort.c",]
         cflags += ["-fforce-enable-int128"]
     case "ppc64le":
-        base_src += ["int32_sort.c", "int32_minmax.c"]
+        base_src += ["int32_sort.c",]
         cflags += ["-mtune=native"]
     case "ppc64":
-        base_src += ["int32_sort.c", "int32_minmax.c"]
+        base_src += ["int32_sort.c",]
         cflags += ["-mtune=native"]
     case "riscv64":
-        base_src += ["int32_sort.c", "int32_minmax.c"]
+        base_src += ["int32_sort.c",]
     case "s390x":
-        base_src += ["int32_sort.c", "int32_minmax.c"]
+        base_src += ["int32_sort.c",]
         cflags += ["-march=native", "-mtune=native"]
     case "sparc64":
-        base_src += ["int32_sort.c", "int32_minmax.c"]
+        base_src += ["int32_sort.c",]
         cflags += ["-march=native", "-mtune=native"]
     case "x86_64":
         if PLATFORM_SIZE == 64:
-            base_src += ["int32_sort_x86.c", "int32_minmax_x86.c"]
+            base_src += ["int32_sort.c",]
             cflags += ["-march=native", "-mtune=native"]
         elif PLATFORM_SIZE == 32:
             # clang required
-            base_src += ["int32_sort.c", "int32_minmax.c"]
+            base_src += ["int32_sort.c",]
             cflags += ["-fforce-enable-int128", "-D__i386__"]
     case _:
-        base_src += ["int32_sort.c", "int32_minmax.c"]
+        base_src += ["int32_sort.c",]
 
 ldflags = ["-s", "-w"]
 
