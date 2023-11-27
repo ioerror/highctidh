@@ -152,8 +152,8 @@ highctidh_512_fp_add2:
     mov rdx, rdi
 .global highctidh_512_fp_add3
 highctidh_512_fp_add3:
-    movq rax, [rip + highctidh_512_fp_addsub_count@GOTPCREL]
-    addq [rax], 1
+    mov rax, [rip + highctidh_512_fp_addsub_count@GOTPCREL]
+    add qword ptr [rax], 1
     push rdi
     call highctidh_512_uintbig_add3
     pop rdi
@@ -165,8 +165,8 @@ highctidh_512_fp_sub2:
   xchg rsi, rdx
 .global highctidh_512_fp_sub3
 highctidh_512_fp_sub3:
-    movq rax, [rip + highctidh_512_fp_addsub_count@GOTPCREL]
-    addq [rax], 1
+    mov rax, [rip + highctidh_512_fp_addsub_count@GOTPCREL]
+    add qword ptr [rax], 1
     push rdi
     call highctidh_512_uintbig_sub3
     pop rdi
@@ -216,8 +216,8 @@ highctidh_512_fp_mul3:
 
     push rdi
 
-    movq rax, [rip + highctidh_512_fp_mulsq_count@GOTPCREL]
-    addq [rax], 1
+    mov rax, [rip + highctidh_512_fp_mulsq_count@GOTPCREL]
+    add qword ptr [rax], 1
 
     mov rdi, rsi
     mov rsi, rdx
@@ -355,6 +355,6 @@ highctidh_512_fp_sq1:
 highctidh_512_fp_sq2:
     /* TODO implement optimized Montgomery squaring */
     mov rdx, rsi
-    movq rax, [rip + highctidh_512_fp_sq_count@GOTPCREL]
-    addq [rax], 1
+    mov rax, [rip + highctidh_512_fp_sq_count@GOTPCREL]
+    add qword ptr [rax], 1
     jmp highctidh_512_fp_mul3

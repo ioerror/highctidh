@@ -135,76 +135,76 @@ highctidh_2048_fp_cswap:
 
     mov rdi, [rbp + 0]
     sub rdi, [rip + .uintbig_p_local + 0]
-    movq [rsp + 0], rdi
+    mov qword ptr [rsp + 0], rdi
     mov rsi, [rbp + 8]
     sbb rsi, [rip + .uintbig_p_local + 8]
-    movq [rsp + 8], rsi
+    mov qword ptr [rsp + 8], rsi
     mov rdx, [rbp + 16]
     sbb rdx, [rip + .uintbig_p_local + 16]
-    movq [rsp + 16], rdx
+    mov qword ptr [rsp + 16], rdx
     mov rcx, [rbp + 24]
     sbb rcx, [rip + .uintbig_p_local + 24]
-    movq [rsp + 24], rcx
+    mov qword ptr [rsp + 24], rcx
     mov r8,  [rbp + 32]
     sbb r8,  [rip + .uintbig_p_local + 32]
-    movq [rsp + 32], r8
+    mov qword ptr [rsp + 32], r8
     mov r9,  [rbp + 40]
     sbb r9,  [rip + .uintbig_p_local + 40]
-    movq [rsp + 40], r9
+    mov qword ptr [rsp + 40], r9
     mov r10, [rbp + 48]
     sbb r10, [rip + .uintbig_p_local + 48]
-    movq [rsp + 48], r10
+    mov qword ptr [rsp + 48], r10
     mov r11, [rbp + 56]
     sbb r11, [rip + .uintbig_p_local + 56]
-    movq [rsp + 56], r11
+    mov qword ptr [rsp + 56], r11
     mov rdi, [rbp + 64]
     sbb rdi, [rip + .uintbig_p_local + 64]
-    movq [rsp + 64], rdi
+    mov qword ptr [rsp + 64], rdi
     mov rsi, [rbp + 72]
     sbb rsi, [rip + .uintbig_p_local + 72]
-    movq [rsp + 72], rsi
+    mov qword ptr [rsp + 72], rsi
     mov rdx, [rbp + 80]
     sbb rdx, [rip + .uintbig_p_local + 80]
-    movq [rsp + 80], rdx
+    mov qword ptr [rsp + 80], rdx
     mov rcx, [rbp + 88]
     sbb rcx, [rip + .uintbig_p_local + 88]
-    movq [rsp + 88], rcx
+    mov qword ptr [rsp + 88], rcx
     mov r8,  [rbp + 96]
     sbb r8,  [rip + .uintbig_p_local + 96]
-    movq [rsp + 96], r8
+    mov qword ptr [rsp + 96], r8
     mov r9,  [rbp + 104]
     sbb r9,  [rip + .uintbig_p_local + 104]
-    movq [rsp + 104], r9
+    mov qword ptr [rsp + 104], r9
     mov r10, [rbp + 112]
     sbb r10, [rip + .uintbig_p_local + 112]
-    movq [rsp + 112], r10
+    mov qword ptr [rsp + 112], r10
     mov r11, [rbp + 120]
     sbb r11, [rip + .uintbig_p_local + 120]
-    movq [rsp + 120], r11
+    mov qword ptr [rsp + 120], r11
     mov rdi, [rbp + 128]
     sbb rdi, [rip + .uintbig_p_local + 128]
-    movq [rsp + 128], rdi
+    mov qword ptr [rsp + 128], rdi
     mov rsi, [rbp + 136]
     sbb rsi, [rip + .uintbig_p_local + 136]
-    movq [rsp + 136], rsi
+    mov qword ptr [rsp + 136], rsi
     mov rdx, [rbp + 144]
     sbb rdx, [rip + .uintbig_p_local + 144]
-    movq [rsp + 144], rdx
+    mov qword ptr [rsp + 144], rdx
     mov rcx, [rbp + 152]
     sbb rcx, [rip + .uintbig_p_local + 152]
-    movq [rsp + 152], rcx
+    mov qword ptr [rsp + 152], rcx
     mov r8,  [rbp + 160]
     sbb r8,  [rip + .uintbig_p_local + 160]
-    movq [rsp + 160], r8
+    mov qword ptr [rsp + 160], r8
     mov r9,  [rbp + 168]
     sbb r9,  [rip + .uintbig_p_local + 168]
-    movq [rsp + 168], r9
+    mov qword ptr [rsp + 168], r9
     mov r10, [rbp + 176]
     sbb r10, [rip + .uintbig_p_local + 176]
-    movq [rsp + 176], r10
+    mov qword ptr [rsp + 176], r10
     mov r11, [rbp + 184]
     sbb r11, [rip + .uintbig_p_local + 184]
-    movq [rsp + 184], r11
+    mov qword ptr [rsp + 184], r11
     mov rdi, [rbp + 192]
     sbb rdi, [rip + .uintbig_p_local + 192]
     mov rsi, [rbp + 200]
@@ -240,53 +240,53 @@ highctidh_2048_fp_cswap:
     cswap2 r9, [rbp + 232]
     cswap2 r10, [rbp + 240]
     cswap2 r11, [rbp + 248]
-    movq rdi, [rsp + 0]
+    mov rdi, [rsp + 0]
     cswap2 rdi, [rbp + 0]
-    movq rsi, [rsp + 8]
+    mov rsi, [rsp + 8]
     cswap2 rsi, [rbp + 8]
-    movq rdx, [rsp + 16]
+    mov rdx, [rsp + 16]
     cswap2 rdx, [rbp + 16]
-    movq rcx, [rsp + 24]
+    mov rcx, [rsp + 24]
     cswap2 rcx, [rbp + 24]
-    movq r8, [rsp + 32]
+    mov r8, [rsp + 32]
     cswap2 r8, [rbp + 32]
-    movq r9, [rsp + 40]
+    mov r9, [rsp + 40]
     cswap2 r9, [rbp + 40]
-    movq r10, [rsp + 48]
+    mov r10, [rsp + 48]
     cswap2 r10, [rbp + 48]
-    movq r11, [rsp + 56]
+    mov r11, [rsp + 56]
     cswap2 r11, [rbp + 56]
-    movq rdi, [rsp + 64]
+    mov rdi, [rsp + 64]
     cswap2 rdi, [rbp + 64]
-    movq rsi, [rsp + 72]
+    mov rsi, [rsp + 72]
     cswap2 rsi, [rbp + 72]
-    movq rdx, [rsp + 80]
+    mov rdx, [rsp + 80]
     cswap2 rdx, [rbp + 80]
-    movq rcx, [rsp + 88]
+    mov rcx, [rsp + 88]
     cswap2 rcx, [rbp + 88]
-    movq r8, [rsp + 96]
+    mov r8, [rsp + 96]
     cswap2 r8, [rbp + 96]
-    movq r9, [rsp + 104]
+    mov r9, [rsp + 104]
     cswap2 r9, [rbp + 104]
-    movq r10, [rsp + 112]
+    mov r10, [rsp + 112]
     cswap2 r10, [rbp + 112]
-    movq r11, [rsp + 120]
+    mov r11, [rsp + 120]
     cswap2 r11, [rbp + 120]
-    movq rdi, [rsp + 128]
+    mov rdi, [rsp + 128]
     cswap2 rdi, [rbp + 128]
-    movq rsi, [rsp + 136]
+    mov rsi, [rsp + 136]
     cswap2 rsi, [rbp + 136]
-    movq rdx, [rsp + 144]
+    mov rdx, [rsp + 144]
     cswap2 rdx, [rbp + 144]
-    movq rcx, [rsp + 152]
+    mov rcx, [rsp + 152]
     cswap2 rcx, [rbp + 152]
-    movq r8, [rsp + 160]
+    mov r8, [rsp + 160]
     cswap2 r8, [rbp + 160]
-    movq r9, [rsp + 168]
+    mov r9, [rsp + 168]
     cswap2 r9, [rbp + 168]
-    movq r10, [rsp + 176]
+    mov r10, [rsp + 176]
     cswap2 r10, [rbp + 176]
-    movq r11, [rsp + 184]
+    mov r11, [rsp + 184]
     cswap2 r11, [rbp + 184]
 
     add rsp, 192
@@ -298,8 +298,8 @@ highctidh_2048_fp_add2:
     mov rdx, rdi
 .global highctidh_2048_fp_add3
 highctidh_2048_fp_add3:
-    movq rax, [rip + highctidh_2048_fp_addsub_count@GOTPCREL]
-    addq [rax], 1
+    mov rax, [rip + highctidh_2048_fp_addsub_count@GOTPCREL]
+    add qword ptr [rax], 1
     push rdi
     call highctidh_2048_uintbig_add3
     pop rdi
@@ -311,8 +311,8 @@ highctidh_2048_fp_sub2:
   xchg rsi, rdx
 .global highctidh_2048_fp_sub3
 highctidh_2048_fp_sub3:
-    movq rax, [rip + highctidh_2048_fp_addsub_count@GOTPCREL]
-    addq [rax], 1
+    mov rax, [rip + highctidh_2048_fp_addsub_count@GOTPCREL]
+    add qword ptr [rax], 1
     push rdi
     call highctidh_2048_uintbig_sub3
     pop rdi
@@ -356,8 +356,8 @@ highctidh_2048_fp_mul3:
     push rbp
     push rbx
 
-  movq rax, [rip + highctidh_2048_fp_mulsq_count@GOTPCREL]
-  addq [rax], 1
+  mov rax, [rip + highctidh_2048_fp_mulsq_count@GOTPCREL]
+  add qword ptr [rax], 1
 
   sub rsp,272
   mov [rsp+264],rdi
@@ -922,6 +922,6 @@ highctidh_2048_fp_sq1:
 highctidh_2048_fp_sq2:
     /* TODO implement optimized Montgomery squaring */
     mov rdx, rsi
-    movq rax, [rip + highctidh_2048_fp_sq_count@GOTPCREL]
-    addq [rax], 1
+    mov rax, [rip + highctidh_2048_fp_sq_count@GOTPCREL]
+    add qword ptr [rax], 1
     jmp highctidh_2048_fp_mul3

@@ -536,7 +536,7 @@ for bits,primes,batchsize,batchbound in data:
       else:
         f.write('    sbb %s[rip + .uintbig_p_local + %d]\n' % (regi,i*8))
       if i < plimbs-8:
-        f.write('    movq [rsp + %d], %s\n' % (8*i,regs[i%len(regs)]))
+        f.write('    mov qword ptr [rsp + %d], %s\n' % (8*i,regs[i%len(regs)]))
 
     f.write('\n')
     f.write('    setnc al\n')
@@ -556,7 +556,7 @@ for bits,primes,batchsize,batchbound in data:
 
     for i in range(plimbs-8):
       regi = regs[i%len(regs)]
-      f.write('    movq %s, [rsp + %d]\n' % (regs[i%len(regs)],8*i))
+      f.write('    mov %s, [rsp + %d]\n' % (regs[i%len(regs)],8*i))
       f.write('    cswap2 %s, [rbp + %d]\n' % (regi,8*i))
     f.write('\n')
 
@@ -570,8 +570,8 @@ for bits,primes,batchsize,batchbound in data:
     f.write('    mov rdx, rdi\n')
     f.write('.global %sfp_add3\n' % prefix)
     f.write('%sfp_add3:\n' % prefix)
-    f.write('    movq rax, [rip + %sfp_addsub_count@GOTPCREL]\n' % prefix)
-    f.write('    addq [rax], 1\n')
+    f.write('    mov rax, [rip + %sfp_addsub_count@GOTPCREL]\n' % prefix)
+    f.write('    add qword ptr [rax], 1\n')
     f.write('    push rdi\n')
     f.write('    call %suintbig_add3\n' % prefix)
     f.write('    pop rdi\n')
@@ -583,8 +583,8 @@ for bits,primes,batchsize,batchbound in data:
     f.write('  xchg rsi, rdx\n')
     f.write('.global %sfp_sub3\n' % prefix)
     f.write('%sfp_sub3:\n' % prefix)
-    f.write('    movq rax, [rip + %sfp_addsub_count@GOTPCREL]\n' % prefix)
-    f.write('    addq [rax], 1\n')
+    f.write('    mov rax, [rip + %sfp_addsub_count@GOTPCREL]\n' % prefix)
+    f.write('    add qword ptr [rax], 1\n')
     f.write('    push rdi\n')
     f.write('    call %suintbig_sub3\n' % prefix)
     f.write('    pop rdi\n')
@@ -638,8 +638,8 @@ for bits,primes,batchsize,batchbound in data:
       f.write('\n')
       f.write('    push rdi\n')
       f.write('\n')
-      f.write('    movq rax, [rip + %sfp_mulsq_count@GOTPCREL]\n' % prefix)
-      f.write('    addq [rax], 1\n')
+      f.write('    mov rax, [rip + %sfp_mulsq_count@GOTPCREL]\n' % prefix)
+      f.write('    add qword ptr [rax], 1\n')
       f.write('\n')
       f.write('    mov rdi, rsi\n')
       f.write('    mov rsi, rdx\n')
@@ -768,8 +768,8 @@ for bits,primes,batchsize,batchbound in data:
       f.write('    pop r12\n')
     else:
       f.write('\n')
-      f.write('  movq rax, [rip + %sfp_mulsq_count@GOTPCREL]\n' % prefix)
-      f.write('  addq [rax], 1\n')
+      f.write('  mov rax, [rip + %sfp_mulsq_count@GOTPCREL]\n' % prefix)
+      f.write('  add qword ptr [rax], 1\n')
       f.write('\n')
       f.write('  sub rsp,%d\n' % (8*plimbs+16))
       f.write('  mov [rsp+%d],rdi\n' % (8*plimbs+8))
@@ -884,8 +884,8 @@ for bits,primes,batchsize,batchbound in data:
     f.write('%sfp_sq2:\n' % prefix)
     f.write('    /* TODO implement optimized Montgomery squaring */\n')
     f.write('    mov rdx, rsi\n')
-    f.write('    movq rax, [rip + %sfp_sq_count@GOTPCREL]\n' % prefix)
-    f.write('    addq [rax], 1\n')
+    f.write('    mov rax, [rip + %sfp_sq_count@GOTPCREL]\n' % prefix)
+    f.write('    add qword ptr [rax], 1\n')
     f.write('    jmp %sfp_mul3\n' % prefix)
 
   maybeupdate(fn)
