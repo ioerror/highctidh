@@ -22,11 +22,11 @@ ctidh_fillrandom ctidh_fillrandom_default;
 /* 511 */
 typedef struct highctidh_511_uintbig {
     uint64_t c[((511 +63)/64)];
-} highctidh_511_uintbig __attribute__((aligned(32)));
+} highctidh_511_uintbig;
 
 typedef struct highctidh_511_fp {
     highctidh_511_uintbig x;
-} highctidh_511_fp __attribute__((aligned(32)));
+} highctidh_511_fp;
 
 typedef struct highctidh_511_private_key {
     int8_t e[74];
@@ -51,10 +51,10 @@ void highctidh_511_action(highctidh_511_public_key *out, highctidh_511_public_ke
 
 typedef struct highctidh_512_uintbig {
     uint64_t c[((512 +63)/64)];
-} highctidh_512_uintbig __attribute__((aligned(32)));
+} highctidh_512_uintbig;
 typedef struct highctidh_512_fp {
     highctidh_512_uintbig x;
-} highctidh_512_fp __attribute__((aligned(32)));
+} highctidh_512_fp;
 typedef struct highctidh_512_private_key {
     int8_t e[74];
 } highctidh_512_private_key;
@@ -75,10 +75,10 @@ void highctidh_512_action(highctidh_512_public_key *out, highctidh_512_public_ke
 
 typedef struct highctidh_1024_uintbig {
     uint64_t c[((1024 +63)/64)];
-} highctidh_1024_uintbig __attribute__((aligned(32)));
+} highctidh_1024_uintbig;
 typedef struct highctidh_1024_fp {
     highctidh_1024_uintbig x;
-} highctidh_1024_fp __attribute__((aligned(32)));
+} highctidh_1024_fp;
 typedef struct highctidh_1024_private_key {
     int8_t e[130];
 } highctidh_1024_private_key;
@@ -104,10 +104,10 @@ void highctidh_1024_action(highctidh_1024_public_key *out, highctidh_1024_public
 
 typedef struct highctidh_2048_uintbig {
     uint64_t c[((2048 +63)/64)];
-} highctidh_2048_uintbig __attribute__((aligned(32)));
+} highctidh_2048_uintbig;
 typedef struct highctidh_2048_fp {
     highctidh_2048_uintbig x;
-} highctidh_2048_fp __attribute__((aligned(32)));
+} highctidh_2048_fp;
 typedef struct highctidh_2048_private_key {
     int8_t e[231];
 } highctidh_2048_private_key;

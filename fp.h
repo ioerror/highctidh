@@ -42,7 +42,7 @@
    enable compiler warnings when mixing up uintbig and fp. */
 typedef struct fp {
     uintbig x;
-} fp __attribute__((aligned(32)));
+} fp;
 
 extern const fp fp_0;
 extern const fp fp_1;

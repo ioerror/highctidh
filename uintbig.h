@@ -11,7 +11,7 @@
 
 typedef struct uintbig {
     uint64_t c[UINTBIG_LIMBS];
-} uintbig __attribute__((aligned(32)));
+} uintbig;
 
 extern const uintbig uintbig_p;
 extern const uintbig uintbig_1;
