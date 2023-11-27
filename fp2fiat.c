@@ -10,6 +10,18 @@
 #include "fp.h"
 #include "annotations.h"
 
+#if !defined(HIGHCTIDH_PORTABLE)
+#define highctidh_macro_stringize(x) #x
+#define highctidh_macro_str(y) highctidh_macro_stringize(y)
+__asm__ (".include \"uintbig" highctidh_macro_str(BITS)  ".S\"");
+__asm__ (".include \"fp" highctidh_macro_str(BITS) ".S\"");
+
+#else
+/*
+ * The definitions in this unit are only needed when they are not provided
+ * by the optimizied assembly units.
+ */
+
 /*
  * These are replacements for uintbig512.S:
  */
@@ -78,7 +90,7 @@ _Static_assert(sizeof(uintbig) == 256, "uintbig must be 256 bytes for p2048");
 const fp fp_1 = {{{0x994d7dbe41f62437U, 0x6aaf42d975b174b6U, 0x3f037f5ba7c4a965U, 0x5ccaed897fd53a00U, 0xd2973e879030fb33U, 0x8c3a6b0fcf19681U, 0x33301470a926eefdU, 0x33e715b0a4a9b9e9U, 0x8737cc516cf9ace5U, 0xf5464238325eccd4U, 0x393cd9de4f760e82U, 0x59880446fb9a315U, 0x8b19e3b333b22e4aU, 0x65ac4ae7830805faU, 0xd71b975ca89c8fcdU, 0x37314ebe2cf1f23bU, 0x565f6b8c9e61cfb9U, 0x87712cf7de06573fU, 0x6d8736050fb35ad2U, 0xe3efa60224957edbU, 0x444a4fc8b855012dU, 0xac7f2394665a0905U, 0xcff83c43b74af366U, 0x167df91c271503fdU, 0xd70947c16f7fc287U, 0x65069931a3a5d5b7U, 0xf713ec84671a7fceU, 0x6c8a0b9c659af905U, 0x6600692af35042c7U, 0x17670145e45b2b04U, 0x38030a4d47b3b374U, 0x355309fecf901ad2U}}};
 const fp fp_2 = {{{0xbb0a256699e8ff2bU, 0xf8ee46a6129e1054U, 0xe85d7e8087758b41U, 0xd8842a40d4f18755U, 0x40b63c91a5c79f77U, 0x69c884f24e33b484U, 0x221ada5c355ad84eU, 0x23c5dd46d58c0720U, 0xe62cdcbdfe46936cU, 0x91a3efd87587ddefU, 0xdae351b164137731U, 0xb7b92b4a5a067c86U, 0x99e7134ccdf516acU, 0x4292041c31bd6348U, 0xa095b682dec2a4dfU, 0xd61db7bbbe348a8bU, 0xc98950481c398f5aU, 0x915d68ed060ecb93U, 0xaa3b7e0bcf4d2940U, 0xbe84835a555cd2aaU, 0xf4ad64d458c65815U, 0x927dfdaf997cbfb6U, 0x3a988c9e010437efU, 0xdf25efec5b310950U, 0xf5c05218aed4c5e5U, 0x9664bac92882f2acU, 0x95d927df9b3dd4e1U, 0xfd421b1797beefb8U, 0xee00f56437bb467bU, 0xe145ada314d4b9b4U, 0xd8071809a74df80eU, 0x271717528efae93fU}}};
 
-#elif !defined(uintbig_p) // 2048 != BITSy
+#elif !defined(uintbig_p) // 2048 != BITS
 
 #error "unknown field size not p512 || p1024 || p2048"
 
@@ -465,3 +477,5 @@ fp_sq2(fp *const x, fp const *const y)
 	fp_sq_count += 1;
 	FIAT_BITS(square)(x->x.c, y->x.c);
 }
+
+#endif /* HIGHCTIDH_PORTABLE */

@@ -2,35 +2,35 @@
 
 .intel_syntax noprefix
 
-#include "uintbig_namespace.h"
+//#include "uintbig_namespace.h"
 
 .section .rodata
 
-.global uintbig_1
-uintbig_1:
+.global highctidh_511_uintbig_1
+highctidh_511_uintbig_1:
     .quad 1, 0, 0, 0
     .quad 0, 0, 0, 0
-    .size uintbig_1, 64
-    .type uintbig_1, @object
+    .size highctidh_511_uintbig_1, 64
+    .type highctidh_511_uintbig_1, @object
 
-.global uintbig_p
-uintbig_p:
+.global highctidh_511_uintbig_p
+highctidh_511_uintbig_p:
     .quad 0x1b81b90533c6c87b, 0xc2721bf457aca835, 0x516730cc1f0b4f25, 0xa7aac6c567f35507
     .quad 0x5afbfcc69322c9cd, 0xb42d083aedc88c42, 0xfc8ab0d15e3e4c4a, 0x65b48e8f740f89bf
-    .size uintbig_p, 64
-    .type uintbig_p, @object
+    .size highctidh_511_uintbig_p, 64
+    .type highctidh_511_uintbig_p, @object
 
-.global uintbig_four_sqrt_p
-uintbig_four_sqrt_p:
+.global highctidh_511_uintbig_four_sqrt_p
+highctidh_511_uintbig_four_sqrt_p:
     .quad 0x17895e71e1a20b3f, 0x38d0cd95f8636a56, 0x142b9541e59682cd, 0x856f1399d91d6592
     .quad 2, 0, 0, 0
-    .size uintbig_four_sqrt_p, 64
-    .type uintbig_four_sqrt_p, @object
+    .size highctidh_511_uintbig_four_sqrt_p, 64
+    .type highctidh_511_uintbig_four_sqrt_p, @object
 
 .section .text
 
-.global uintbig_set
-uintbig_set:
+.global highctidh_511_uintbig_set
+highctidh_511_uintbig_set:
     cld
     mov rax, rsi
     stosq
@@ -40,8 +40,8 @@ uintbig_set:
     ret
 
 
-.global uintbig_bit
-uintbig_bit:
+.global highctidh_511_uintbig_bit
+highctidh_511_uintbig_bit:
     mov rcx, rsi
     and rcx, 0x3f
     shr rsi, 6
@@ -51,8 +51,8 @@ uintbig_bit:
     ret
 
 
-.global uintbig_add3
-uintbig_add3:
+.global highctidh_511_uintbig_add3
+highctidh_511_uintbig_add3:
     mov rax, [rsi +  0]
     add rax, [rdx +  0]
     mov [rdi +  0], rax
@@ -67,8 +67,8 @@ uintbig_add3:
     movzx rax, al
     ret
 
-.global uintbig_sub3
-uintbig_sub3:
+.global highctidh_511_uintbig_sub3
+highctidh_511_uintbig_sub3:
     mov rax, [rsi +  0]
     sub rax, [rdx +  0]
     mov [rdi +  0], rax
@@ -84,8 +84,8 @@ uintbig_sub3:
     ret
 
 
-.global uintbig_mul3_64
-uintbig_mul3_64:
+.global highctidh_511_uintbig_mul3_64
+highctidh_511_uintbig_mul3_64:
 
     mulx r10, rax, [rsi +  0]
     mov [rdi +  0], rax

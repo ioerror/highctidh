@@ -2,12 +2,12 @@
 
 .intel_syntax noprefix
 
-#include "uintbig_namespace.h"
+//#include "uintbig_namespace.h"
 
 .section .rodata
 
-.global uintbig_1
-uintbig_1:
+.global highctidh_2048_uintbig_1
+highctidh_2048_uintbig_1:
     .quad 1, 0, 0, 0
     .quad 0, 0, 0, 0
     .quad 0, 0, 0, 0
@@ -16,11 +16,11 @@ uintbig_1:
     .quad 0, 0, 0, 0
     .quad 0, 0, 0, 0
     .quad 0, 0, 0, 0
-    .size uintbig_1, 256
-    .type uintbig_1, @object
+    .size highctidh_2048_uintbig_1, 256
+    .type highctidh_2048_uintbig_1, @object
 
-.global uintbig_p
-uintbig_p:
+.global highctidh_2048_uintbig_p
+highctidh_2048_uintbig_p:
     .quad 0x7790d615ea034943, 0xdc703f0cd8c4d918, 0x95a98036c813c788, 0xe111b0d22ab8ecaa
     .quad 0x6478407d7a9a56ee, 0xa7bec86fabaf787f, 0x44454e851cf305ab, 0x44084e1a73c76cb2
     .quad 0x2842bbe4dbacc65e, 0x58e89497ef35bbb9, 0x9796620b3ad8a5d4, 0x5377d53e856cc9a3
@@ -29,11 +29,11 @@ uintbig_p:
     .quad 0x93e73abd17e3aa46, 0xc680497933375253, 0x6557ebe96d91aedd, 0x4dd6024bf2f8feab
     .quad 0xb8523d6a302abf28, 0x33a8779a1ec8b8c2, 0x584eb12932f72abb, 0xdbd1fc2133770253
     .quad 0xddffdcf1aee53f12, 0x4d8854e8b3e19c53, 0x97fefc90e8196ed9, 0x438efcab10254c64
-    .size uintbig_p, 256
-    .type uintbig_p, @object
+    .size highctidh_2048_uintbig_p, 256
+    .type highctidh_2048_uintbig_p, @object
 
-.global uintbig_four_sqrt_p
-uintbig_four_sqrt_p:
+.global highctidh_2048_uintbig_four_sqrt_p
+highctidh_2048_uintbig_four_sqrt_p:
     .quad 0x713138678208efe5, 0x99b865c7a60b9d15, 0xcb9d5709a6d520ec, 0x8ba25da98b117e65
     .quad 0xb53f431fbbbc1b57, 0xa182b3a2a32514ca, 0xbd8509d767f7a86c, 0x50d56ce140ad8057
     .quad 0xf15c586b92287b69, 0x89a81119287fc51f, 0x5721ecd10a5f822a, 0xbc1272d7e7a1d02c
@@ -42,13 +42,13 @@ uintbig_four_sqrt_p:
     .quad 0, 0, 0, 0
     .quad 0, 0, 0, 0
     .quad 0, 0, 0, 0
-    .size uintbig_four_sqrt_p, 256
-    .type uintbig_four_sqrt_p, @object
+    .size highctidh_2048_uintbig_four_sqrt_p, 256
+    .type highctidh_2048_uintbig_four_sqrt_p, @object
 
 .section .text
 
-.global uintbig_set
-uintbig_set:
+.global highctidh_2048_uintbig_set
+highctidh_2048_uintbig_set:
     cld
     mov rax, rsi
     stosq
@@ -58,8 +58,8 @@ uintbig_set:
     ret
 
 
-.global uintbig_bit
-uintbig_bit:
+.global highctidh_2048_uintbig_bit
+highctidh_2048_uintbig_bit:
     mov rcx, rsi
     and rcx, 0x3f
     shr rsi, 6
@@ -69,8 +69,8 @@ uintbig_bit:
     ret
 
 
-.global uintbig_add3
-uintbig_add3:
+.global highctidh_2048_uintbig_add3
+highctidh_2048_uintbig_add3:
     mov rax, [rsi +  0]
     add rax, [rdx +  0]
     mov [rdi +  0], rax
@@ -85,8 +85,8 @@ uintbig_add3:
     movzx rax, al
     ret
 
-.global uintbig_sub3
-uintbig_sub3:
+.global highctidh_2048_uintbig_sub3
+highctidh_2048_uintbig_sub3:
     mov rax, [rsi +  0]
     sub rax, [rdx +  0]
     mov [rdi +  0], rax
@@ -102,8 +102,8 @@ uintbig_sub3:
     ret
 
 
-.global uintbig_mul3_64
-uintbig_mul3_64:
+.global highctidh_2048_uintbig_mul3_64
+highctidh_2048_uintbig_mul3_64:
 
     mulx r10, rax, [rsi +  0]
     mov [rdi +  0], rax

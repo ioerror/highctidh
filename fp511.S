@@ -2,8 +2,8 @@
 
 .intel_syntax noprefix
 
-#include "uintbig_namespace.h"
-#include "fp_namespace.h"
+//#include "uintbig_namespace.h"
+//#include "fp_namespace.h"
 
 .section .rodata
 
@@ -14,56 +14,56 @@
     .quad 0x1b81b90533c6c87b, 0xc2721bf457aca835, 0x516730cc1f0b4f25, 0xa7aac6c567f35507
     .quad 0x5afbfcc69322c9cd, 0xb42d083aedc88c42, 0xfc8ab0d15e3e4c4a, 0x65b48e8f740f89bf
 
-.inv_min_p_mod_r: /* -p^-1 mod 2^64 */
+.highctidh_511_inv_min_p_mod_r: /* -p^-1 mod 2^64 */
     .quad 0x66c1301f632e294d
 
-.global fp_0
-fp_0:
+.global highctidh_511_fp_0
+highctidh_511_fp_0:
     .zero 64
-    .size fp_0, 64
-    .type fp_0, @object
+    .size highctidh_511_fp_0, 64
+    .type highctidh_511_fp_0, @object
 
-.global fp_1
-fp_1: /* 2^512 mod p */
+.global highctidh_511_fp_1
+highctidh_511_fp_1: /* 2^512 mod p */
     .quad 0xc8fc8df598726f0a, 0x7b1bc81750a6af95, 0x5d319e67c1e961b4, 0xb0aa7275301955f1
     .quad 0x4a080672d9ba6c64, 0x97a5ef8a246ee77b, 0x06ea9e5d4383676a, 0x3496e2e117e0ec80
-    .size fp_1, 64
-    .type fp_1, @object
+    .size highctidh_511_fp_1, 64
+    .type highctidh_511_fp_1, @object
 
-.global fp_2
-fp_2: /* 2^513 mod p */
+.global highctidh_511_fp_2
+highctidh_511_fp_2: /* 2^513 mod p */
     .quad 0x767762e5fd1e1599, 0x33c5743a49a0b6f6, 0x68fc0c0364c77443, 0xb9aa1e24f83f56db
     .quad 0x3914101f20520efb, 0x7b1ed6d95b1542b4, 0x114a8be928c8828a, 0x03793732bbb24f40
-    .size fp_2, 64
-    .type fp_2, @object
+    .size highctidh_511_fp_2, 64
+    .type highctidh_511_fp_2, @object
 
-.r_squared_mod_p: /* (2^512)^2 mod p */
+.highctidh_511_r_squared_mod_p: /* (2^512)^2 mod p */
     .quad 0x36905b572ffc1724, 0x67086f4525f1f27d, 0x4faf3fbfd22370ca, 0x192ea214bcc584b1
     .quad 0x5dae03ee2f5de3d0, 0x1e9248731776b371, 0xad5f166e20e4f52d, 0x4ed759aea6f3917e
 
 .section .data
-.global fp_mulsq_count
-fp_mulsq_count:
+.global highctidh_511_fp_mulsq_count
+highctidh_511_fp_mulsq_count:
     .quad 0
-.global fp_sq_count
-fp_sq_count:
+.global highctidh_511_fp_sq_count
+highctidh_511_fp_sq_count:
     .quad 0
-.global fp_addsub_count
-fp_addsub_count:
+.global highctidh_511_fp_addsub_count
+highctidh_511_fp_addsub_count:
     .quad 0
 
 .section .text
 .p2align 4,,15
 
-.global fp_copy
-fp_copy:
+.global highctidh_511_fp_copy
+highctidh_511_fp_copy:
     cld
     mov rcx, plimbs
     rep movsq
     ret
 
-.global fp_cmov
-fp_cmov:
+.global highctidh_511_fp_cmov
+highctidh_511_fp_cmov:
     movzx rax, dl
     neg rax
     .set k, 0
@@ -81,8 +81,8 @@ fp_cmov:
     .endr
     ret
 
-.global fp_cswap
-fp_cswap:
+.global highctidh_511_fp_cswap
+highctidh_511_fp_cswap:
     movzx rax, dl
     neg rax
     .set k, 0
@@ -104,7 +104,7 @@ fp_cswap:
     .endr
     ret
 
-.reduce_once:
+.highctidh_511_reduce_once:
     push rbp
     mov rbp, rdi
 
@@ -147,28 +147,28 @@ fp_cswap:
     pop rbp
     ret
 
-.global fp_add2
-fp_add2:
+.global highctidh_511_fp_add2
+highctidh_511_fp_add2:
     mov rdx, rdi
-.global fp_add3
-fp_add3:
-    movq rax, [rip + fp_addsub_count@GOTPCREL]
+.global highctidh_511_fp_add3
+highctidh_511_fp_add3:
+    movq rax, [rip + highctidh_511_fp_addsub_count@GOTPCREL]
     addq [rax], 1
     push rdi
-    call uintbig_add3
+    call highctidh_511_uintbig_add3
     pop rdi
-    jmp .reduce_once
+    jmp .highctidh_511_reduce_once
 
-.global fp_sub2
-fp_sub2:
+.global highctidh_511_fp_sub2
+highctidh_511_fp_sub2:
   mov rdx, rdi
   xchg rsi, rdx
-.global fp_sub3
-fp_sub3:
-    movq rax, [rip + fp_addsub_count@GOTPCREL]
+.global highctidh_511_fp_sub3
+highctidh_511_fp_sub3:
+    movq rax, [rip + highctidh_511_fp_addsub_count@GOTPCREL]
     addq [rax], 1
     push rdi
-    call uintbig_sub3
+    call highctidh_511_uintbig_sub3
     pop rdi
     neg rax
 
@@ -202,11 +202,11 @@ fp_sub3:
 
 /* Montgomery arithmetic */
 
-.global fp_mul2
-fp_mul2:
+.global highctidh_511_fp_mul2
+highctidh_511_fp_mul2:
   mov rdx, rdi
-.global fp_mul3
-fp_mul3:
+.global highctidh_511_fp_mul3
+highctidh_511_fp_mul3:
     push rbp
     push rbx
     push r12
@@ -216,7 +216,7 @@ fp_mul3:
 
     push rdi
 
-    movq rax, [rip + fp_mulsq_count@GOTPCREL]
+    movq rax, [rip + highctidh_511_fp_mulsq_count@GOTPCREL]
     addq [rax], 1
 
     mov rdi, rsi
@@ -239,7 +239,7 @@ fp_mul3:
     mov rdx, [rsi +  0]
     mulx rcx, rdx, [rdi + 8*\k]
     add rdx, \r0
-    mulx rcx, rdx, [rip + .inv_min_p_mod_r]
+    mulx rcx, rdx, [rip + .highctidh_511_inv_min_p_mod_r]
 
     xor rax, rax /* clear flags */
 
@@ -346,15 +346,15 @@ fp_mul3:
     pop r12
     pop rbx
     pop rbp
-    jmp .reduce_once
+    jmp .highctidh_511_reduce_once
 
-.global fp_sq1
-fp_sq1:
+.global highctidh_511_fp_sq1
+highctidh_511_fp_sq1:
     mov rsi, rdi
-.global fp_sq2
-fp_sq2:
+.global highctidh_511_fp_sq2
+highctidh_511_fp_sq2:
     /* TODO implement optimized Montgomery squaring */
     mov rdx, rsi
-    movq rax, [rip + fp_sq_count@GOTPCREL]
+    movq rax, [rip + highctidh_511_fp_sq_count@GOTPCREL]
     addq [rax], 1
-    jmp fp_mul3
+    jmp highctidh_511_fp_mul3

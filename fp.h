@@ -5,7 +5,14 @@
 #include "uintbig.h"
 #include "annotations.h"
 
-#ifdef HIGHCTIDH_PORTABLE /* begin HIGHCTIDH_PORTABLE */
+#if defined(HIGHCTIDH_PORTABLE) || !(defined(__x86_64__) || defined(_M_X64))
+/* we only have optimizations for amd64 so far, so on other platforms we
+ * default to the portable code by defining HIGHCTIDH_PORTABLE:
+ */
+#ifndef HIGHCTIDH_PORTABLE
+#define HIGHCTIDH_PORTABLE
+#endif
+
 #if 511 == BITS
 #include "fiat_p511.h"
 #elif 512 == BITS
@@ -105,7 +112,11 @@ static inline
 __attribute__((nonnull))
 void fp_neg2(fp *const x,const fp *const y)
 {
+#ifdef HIGHCTIDH_PORTABLE
 	FIAT_BITS(opp)(x->x.c, y->x.c);
+#else
+	fp_sub3(x, &fp_0, y);
+#endif
 }
 
 static inline void fp_double1(fp *const x)

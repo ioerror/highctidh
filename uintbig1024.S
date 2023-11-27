@@ -2,41 +2,41 @@
 
 .intel_syntax noprefix
 
-#include "uintbig_namespace.h"
+//#include "uintbig_namespace.h"
 
 .section .rodata
 
-.global uintbig_1
-uintbig_1:
+.global highctidh_1024_uintbig_1
+highctidh_1024_uintbig_1:
     .quad 1, 0, 0, 0
     .quad 0, 0, 0, 0
     .quad 0, 0, 0, 0
     .quad 0, 0, 0, 0
-    .size uintbig_1, 128
-    .type uintbig_1, @object
+    .size highctidh_1024_uintbig_1, 128
+    .type highctidh_1024_uintbig_1, @object
 
-.global uintbig_p
-uintbig_p:
+.global highctidh_1024_uintbig_p
+highctidh_1024_uintbig_p:
     .quad 0xdbe34c5460e36453, 0xa1d81eebbc3d344d, 0x514ba72cb8d89fd3, 0xc2cab6a0e287f1bd
     .quad 0x642aca4d5a313709, 0x6b317c5431541f40, 0xb97c56d1de81ede5, 0x0978dbeed90a2b58
     .quad 0x7611ad4f90441c80, 0xf811d9c419ec8329, 0x4d6c594a8ad82d2d, 0xf06de2471cf9386e
     .quad 0x0683cf25db31ad5b, 0x216c22bc86f21a08, 0xd89dec879007ebd7, 0x0ece55ed427012a9
-    .size uintbig_p, 128
-    .type uintbig_p, @object
+    .size highctidh_1024_uintbig_p, 128
+    .type highctidh_1024_uintbig_p, @object
 
-.global uintbig_four_sqrt_p
-uintbig_four_sqrt_p:
+.global highctidh_1024_uintbig_four_sqrt_p
+highctidh_1024_uintbig_four_sqrt_p:
     .quad 0xeba75c5815bb0d57, 0xfec8564a9ae457c6, 0xe362e1c2334bd738, 0x56f74a246ef0a30e
     .quad 0x4a598c9571aeb858, 0xc5617b211ccad355, 0x4fb69e4928ccc442, 0xf643475c7915859c
     .quad 0, 0, 0, 0
     .quad 0, 0, 0, 0
-    .size uintbig_four_sqrt_p, 128
-    .type uintbig_four_sqrt_p, @object
+    .size highctidh_1024_uintbig_four_sqrt_p, 128
+    .type highctidh_1024_uintbig_four_sqrt_p, @object
 
 .section .text
 
-.global uintbig_set
-uintbig_set:
+.global highctidh_1024_uintbig_set
+highctidh_1024_uintbig_set:
     cld
     mov rax, rsi
     stosq
@@ -46,8 +46,8 @@ uintbig_set:
     ret
 
 
-.global uintbig_bit
-uintbig_bit:
+.global highctidh_1024_uintbig_bit
+highctidh_1024_uintbig_bit:
     mov rcx, rsi
     and rcx, 0x3f
     shr rsi, 6
@@ -57,8 +57,8 @@ uintbig_bit:
     ret
 
 
-.global uintbig_add3
-uintbig_add3:
+.global highctidh_1024_uintbig_add3
+highctidh_1024_uintbig_add3:
     mov rax, [rsi +  0]
     add rax, [rdx +  0]
     mov [rdi +  0], rax
@@ -73,8 +73,8 @@ uintbig_add3:
     movzx rax, al
     ret
 
-.global uintbig_sub3
-uintbig_sub3:
+.global highctidh_1024_uintbig_sub3
+highctidh_1024_uintbig_sub3:
     mov rax, [rsi +  0]
     sub rax, [rdx +  0]
     mov [rdi +  0], rax
@@ -90,8 +90,8 @@ uintbig_sub3:
     ret
 
 
-.global uintbig_mul3_64
-uintbig_mul3_64:
+.global highctidh_1024_uintbig_mul3_64
+highctidh_1024_uintbig_mul3_64:
 
     mulx r10, rax, [rsi +  0]
     mov [rdi +  0], rax
