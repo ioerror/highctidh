@@ -16,10 +16,16 @@ portable backend was generated using the `fiat-crypto` project which uses a
 "Correct-by-Construction" approach; see `PRIMES.md` for more information.
 Tested architectures include: `amd64`, `arm32/armv7l`, `arm64/aarch64`, `i386`,
 `loongarch64/Loongson`, `mips64/mips64el`, `POWER8/ppc64`, `POWER9/ppc64le`,
-`riscv64`, `s390x`, `sparc64`, and `x86_64`. To see rough performance numbers,
+`riscv64`, `s390x`, `sparc64`, and `x86_64` (with and without avx2).
+To see rough performance numbers,
 look at `BENCHMARKS.md`. We recommend using gcc 10 or later as the compiler
 except on `arm32/armv7l`, `i386`, and `mips64/mips64el` where we recommend
 clang 14.
+
+The library has been tested on the following operating systems:
+- Debian Bookworm (GNU libc)
+- Alpine v.3.18 (musl libc)
+- HardenedBSD (FreeBSD libc).
 
 To build and install we recommend:
 ```
@@ -43,9 +49,12 @@ To build and install the shared library files using the original artisanal
     sudo make install
 ```
 The original artisanal assembler backend works only on the `x86_64` platform.
+It has been modified slightly for compatibility with LLVM-`as`/`clang`.
 Hand written assembler contributions for other platforms are welcome.
 
-By default `HIGHCTIDH_PORTABLE=1` is enabled for all platforms.
+By default `HIGHCTIDH_PORTABLE=1` is enabled for all platforms unless
+the library is installed via the Python package, in which case optimized
+implementations will be used where possible.
 
 To test without installing run the `test` target:
 ```
