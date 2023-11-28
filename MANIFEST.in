@@ -1,3 +1,4 @@
 include *.h
 include *.S
+include *.c
 include VERSION
