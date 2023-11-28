@@ -1,5 +1,5 @@
 steps:
-  build:
+  build-debian-bookworm:
     group: compile
     image: debian:bookworm-slim
     commands:
@@ -9,5 +9,21 @@ steps:
       - apt update
       - apt install -y --no-install-recommends make gcc clang git python3 python3-build python3-setuptools build-essential python3-venv python3-wheel python3-pip flit
       - make -f Makefile.packages wheel
+      - make
       - ls -alh dist/*.whl
       - sha256sum dist/*.whl
+      - sha256sum *.so
+  build-alpine-3.14:
+    group: compile
+    image: alpine:3.18
+    commands:
+      - export CI=true
+      - PATH=$PATH:~/.local/bin
+      - export WORKDIR=`pwd`
+      - apk update
+      - apk add --no-cache alpine-sdk python3 python3-dev py3-build py3-flit py3-setuptools py3-wheel
+      - make -f Makefile.packages wheel
+      - make
+      - ls -alh dist/*.whl
+      - sha256sum dist/*.whl
+      - sha256sum *.so
