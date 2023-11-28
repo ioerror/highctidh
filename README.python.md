@@ -1,5 +1,16 @@
 This Python module requires Python 3.10 or later.
 
+## HardenedBSD
+Note that on HardenedBSD it is currently necessary to disable
+the `MPROTECT` hardening feature for `python` to avoid a segfault
+when `csidh_private_withrng()` is used:
+
+```
+hbsdcontrol pax disable mprotect /usr/local/bin/python3.11
+```
+
+## Installation and unit tests
+
 To use this module with pip: `pip install highctidh`
 
 Run the unit tests in the root of the project:
@@ -27,6 +38,8 @@ Use the Python module in a venv:
     $ pip install /home/user/c/highctidh
     $ python3 -c 'import highctidh'
 
+## Usage
+
 Use the Python module:
 
     $ python3
@@ -38,12 +51,14 @@ Use the Python module:
 Detailed Python module usage and test vectors are available in
 `tests/test_highctidh.py` with examples for all four field sizes.
 
+## Debian
+
 To build a Debian package that includes the Python module and the relevant .so
 files for internal Python use, run:
 
     python3 setup.py bdist_deb
 
-Alternatively use `make deb`
+## Binary packages
 
 To build an `x86_64` wheel:
 
