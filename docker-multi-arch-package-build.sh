@@ -10,6 +10,12 @@ export ARCHES_CLANG="arm32v5 arm32v7 mips64le i386";
 echo "Starting building of libhighctidh packages: `date -R`";
 echo "Currently skipping builds for $ARCHES_UNSUPPORTED";
 
+if [ -d docker_build_output ];
+then
+    echo "Moving old docker_build_output...";
+    mv docker_build_output docker_build_output.old-`date +%s`;
+fi
+
 for arch in $ARCHES_CLANG
 do
   echo "Building artifacts on $arch with clang";
