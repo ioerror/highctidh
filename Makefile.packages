@@ -2,13 +2,14 @@ VERSION := $(shell cat VERSION)
 export WORKDIR ?= /highctidh
 export SOURCE_DATE_EPOCH := $(shell git log -1 --pretty=%ct)
 ARCH := $(shell uname -m)
-.PHONY: deb wheel test packages sdist pypi-upload prepare-artefacts-for-upload
+.PHONY: deb wheel test packages sdist pypi-upload prepare-artifacts-for-upload
+KERNEL := $(shell uname -s|tr A-Z a-z)
 DEB_NAME := ${WORKDIR}/deb_dist/python3-highctidh_${VERSION}-1_${ARCH}.deb
-WHEEL_NAME := ${WORKDIR}/dist/highctidh-${VERSION}-cp311-cp311-linux_${ARCH}.whl
+WHEEL_NAME := ${WORKDIR}/dist/highctidh-${VERSION}-cp311-cp311-${KERNEL}_${ARCH}.whl
 SDIST_GZ := ${WORKDIR}/dist/highctidh-${VERSION}.tar.gz
 
 version:
-	echo ${VERSION}
+	echo ${VERSION} on ${ARCH}/${KERNEL}
 
 deb: ${SDIST_GZ} ${DEB_NAME}
 ${DEB_NAME}:
@@ -56,27 +57,27 @@ pypi-upload:
 	python3 -m twine check ${WORKDIR}/docker_build_output/upload/*$(VERSION)*.tar.gz
 	python3 -m twine upload --repository pypi ${WORKDIR}/docker_build_output/upload/*$(VERSION)*.tar.gz
 
-prepare-artefacts-for-upload:
-	mkdir -p ${WORKDIR}/docker_build_output/upload/build-artefacts;
-	for arch in $(shell ls -1  ${WORKDIR}/docker_build_output |grep -v upload); do \
+prepare-artifacts-for-upload:
+	mkdir -p ${WORKDIR}/docker_build_output/upload/build-artifacts;
+	for arch in $(shell ls -1  ${WORKDIR}/docker_build_output |grep -v upload|grep -v .log); do \
 		echo "Copying deb and whl builds..."; \
 		cp -v ${WORKDIR}/docker_build_output/$$arch/dist/*.deb \
-			${WORKDIR}/docker_build_output/upload/build-artefacts/ && \
+			${WORKDIR}/docker_build_output/upload/build-artifacts/ && \
 		cp -v ${WORKDIR}/docker_build_output/$$arch/dist/*.whl \
-			${WORKDIR}/docker_build_output/upload/build-artefacts/; \
+			${WORKDIR}/docker_build_output/upload/build-artifacts/; \
 	done
-	for arch in $(shell ls -1  ${WORKDIR}/docker_build_output |grep -v upload); do \
+	for arch in $(shell ls -1  ${WORKDIR}/docker_build_output |grep -v upload|grep -v .log); do \
 		cd ${WORKDIR}/docker_build_output/$$arch/dist/ && \
 		echo "Creating $$arch artefact tar.gz..." && \
 		tar -cvzf \
-		highctidh_1.0.2023112000-$$arch-src.tar.gz.new \
+		highctidh_${VERSION}-$$arch-src.tar.gz.new \
 		*.buildinfo \
 		*.changes \
 		*.dsc \
 		*.tar.gz \
 		*.tar.xz && \
-		mv -v highctidh_1.0.2023112000-$$arch-src.tar.gz.new \
-			../../upload/build-artefacts/highctidh_1.0.2023112000-$$arch-src.tar.gz && \
+		mv -v highctidh_${VERSION}-$$arch-src.tar.gz.new \
+			../../upload/build-artifacts/highctidh_${VERSION}-$$arch-src.tar.gz && \
 		cd ../../../; \
 	done
 
@@ -85,3 +86,8 @@ prepare-artefacts-for-upload:
 # ${ARCH} regardless of the host CPU architecture.
 multi-arch-build:
 	./docker-multi-arch-package-build.sh
+
+deb-and-wheel-in-podman:
+	echo "Building ${VERSION} for ${ARCH}...";
+	podman run -v `pwd`:/highctidh --workdir /highctidh --rm -it debian:bookworm bash -c '/highctidh/misc/install-debian-deps.sh && make -f Makefile.packages sdist wheel deb && sha256sum dist/*.{deb,tar.gz,whl} && exit';
+	echo "Built ${VERSION} for ${ARCH}";

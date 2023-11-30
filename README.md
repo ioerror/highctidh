@@ -79,3 +79,8 @@ All contributions made in this fork are also in the public domain.
 
 The original released README is `README.original.md`.
 The original website was https://ctidh.isogeny.org/software.html
+
+This project is funded through the [NGI Assure Fund](https://nlnet.nl/assure),
+a fund established by [NLnet](https://nlnet.nl) with financial support from the
+European Commission's [Next Generation Internet](https://ngi.eu) program. Learn
+more on the [NLnet project page](https://nlnet.nl/project/Vula#ack).
