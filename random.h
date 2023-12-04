@@ -1,6 +1,10 @@
 #ifndef RANDOM_H
 #define RANDOM_H
 
+#ifdef CGONUTS
+#include "cgo.h"
+#endif // CGONUTS
+
 #include <inttypes.h>
 #include <stdint.h>
 #include <stddef.h>

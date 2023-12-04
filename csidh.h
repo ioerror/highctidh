@@ -1,6 +1,10 @@
 #ifndef CSIDH_H
 #define CSIDH_H
 
+#ifdef CGONUTS
+#include "cgo.h"
+#endif // CGONUTS
+
 #include "uintbig.h"
 #include "fp.h"
 #include "mont.h"

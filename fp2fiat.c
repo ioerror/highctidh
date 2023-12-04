@@ -10,11 +10,14 @@
 #include "fp.h"
 #include "annotations.h"
 
-#if !defined(HIGHCTIDH_PORTABLE)
+#if !defined(HIGHCTIDH_PORTABLE) && !defined(CGONUTS)
 #define highctidh_macro_stringize(x) #x
 #define highctidh_macro_str(y) highctidh_macro_stringize(y)
 __asm__ (".include \"uintbig" highctidh_macro_str(BITS)  ".S\"");
 __asm__ (".include \"fp" highctidh_macro_str(BITS) ".S\"");
+
+#elif defined(CGONUTS)
+#define DONTMINDIFIDO
 
 #else
 /*

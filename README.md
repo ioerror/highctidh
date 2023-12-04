@@ -7,20 +7,20 @@ This fork enhances high-ctidh with additional Makefile targets including
 building high-ctidh as four shared libraries, one for each key size of 511,
 512, 1024, and 2048. Python bindings are additionally added, as well as
 optional Debian packaging of both the shared library object files and the
-Python module.  The Python bindings were made in concert with the author of the
-highctidh [ctidh_cgo](https://git.xx.network/elixxir/ctidh_cgo/) Golang
-bindings. Both bindings were built around the same shared objects for cross
-verification purposes. Currently this library is fast on the `x86_64` CPU
-architecture and functional but much slower with other CPU architectures. The
-portable backend was generated using the `fiat-crypto` project which uses a
-"Correct-by-Construction" approach; see `PRIMES.md` for more information.
-Tested architectures include: `amd64`, `arm32/armv7l`, `arm64/aarch64`, `i386`,
-`loongarch64/Loongson`, `mips64/mips64el`, `POWER8/ppc64`, `POWER9/ppc64le`,
-`riscv64`, `s390x`, `sparc64`, and `x86_64` (with and without avx2).
-To see rough performance numbers,
-look at `BENCHMARKS.md`. We recommend using gcc 10 or later as the compiler
-except on `arm32/armv7l`, `i386`, and `mips64/mips64el` where we recommend
-clang 14.
+Python module. The Python bindings were made in concert with the author of the
+Golang bindings which are now included. Both bindings were built around the
+same shared objects for cross verification purposes. Currently this library is
+fast on the `x86_64` CPU architecture and functional but much slower with other
+CPU architectures. The portable backend was generated using the `fiat-crypto`
+project which uses a "Correct-by-Construction" approach; see `PRIMES.md` for
+more information.  Tested architectures include: `amd64`, `arm32/armv7l`,
+`arm64/aarch64`, `i386`, `loongarch64/Loongson`, `mips64/mips64el`,
+`POWER8/ppc64`, `POWER9/ppc64le`, `riscv64`, `s390x`, `sparc64`, and `x86_64`
+(with and without avx2).
+
+To see rough performance numbers, look at `BENCHMARKS.md`. We recommend using
+gcc 10 or later as the compiler except on `arm32/armv7l`, `i386`, and
+`mips64/mips64el` where we recommend clang 14.
 
 The library has been tested on the following operating systems:
 - Debian Bookworm (GNU libc)
@@ -73,6 +73,8 @@ should be able to run the tests without installation.
 
 More information about the Python bindings including installation instructions
 are available in the `README.python.md` file.
+
+The Golang bindings behave as any normal Golang module/package.
 
 The original authors of this software released high-ctidh in the public domain.
 All contributions made in this fork are also in the public domain.

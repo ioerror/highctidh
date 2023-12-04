@@ -11,6 +11,12 @@ SDIST_GZ := ${WORKDIR}/dist/highctidh-${VERSION}.tar.gz
 version:
 	echo ${VERSION} on ${ARCH}/${KERNEL}
 
+go:
+	cd ctidh511 && go test -v;
+	cd ctidh512 && go test -v;
+	cd ctidh1024 && go test -v;
+	cd ctidh2048 && go test -v;
+
 deb: ${SDIST_GZ} ${DEB_NAME}
 ${DEB_NAME}:
 	python3 setup.py --command-packages=stdeb.command sdist_dsc --compat=10 --dist-dir=${WORKDIR}/dist/ --use-premade-distfile=${SDIST_GZ}

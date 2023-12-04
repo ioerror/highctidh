@@ -1,3 +1,4 @@
+#ifndef HIGHCTIDH_PORTABLE
 #include "int32_sort.h"
 #define int32 int32_t
 
@@ -1182,3 +1183,4 @@ void int32_sort(int32 *x,long long n)
   if (j + 2 <= n)
     int32_MINMAX(x[j],x[j+1]);
 }
+#endif
