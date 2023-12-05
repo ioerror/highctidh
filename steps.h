@@ -1,6 +1,10 @@
 #ifndef STEPS_H
 #define STEPS_H
 
+#ifdef CGONUTS
+#include "cgo.h"
+#endif // CGONUTS
+
 #include "steps_namespace.h"
 
 /* assumes l >= 3, l odd */
