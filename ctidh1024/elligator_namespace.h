@@ -1,1 +1,1 @@
-../elligator_namespace.h
+#define elligator NAMESPACEBITS(elligator)
