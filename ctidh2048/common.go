@@ -2,7 +2,7 @@ package ctidh2048
 
 /*
 
- #cgo CFLAGS: -DBITS=2048 -DGETRANDOM -DCGONUTS -Wformat -Werror=format-security -D_FORTIFY_SOURCE=2 -fstack-protector-all -O3 -fpie -fPIC -Wextra -O3 -Os
+ #cgo CFLAGS: -DBITS=2048 -DGETRANDOM -DCGONUTS -Wformat -Werror=format-security -D_FORTIFY_SOURCE=2 -fstack-protector-all -fpie -fPIC -Wextra -O3 -Os
  #cgo LDFLAGS: -Wl,-z,noexecstack -Wl,-z,relro
 
  // The following should work as native builds and as cross compiled builds.

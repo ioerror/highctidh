@@ -104,6 +104,8 @@ cflags += ["-Wextra", "-Wall", "-Wall", "-Wextra", "-fpie", "-fPIC",
            "-fwrapv", "-pedantic", "-O3", "-Os",]
 cflags += ["-DGETRANDOM", f"-DPLATFORM={PLATFORM}",
            f"-DPLATFORM_SIZE={PLATFORM_SIZE}"]
+cflags += ["-Wformat", "-Werror=format-security", "-D_FORTIFY_SOURCE=2",
+           "-fstack-protector-all"]
 
 if CC == "clang":
     cflags += ["-Wno-ignored-optimization-argument"]
@@ -148,7 +150,7 @@ match PLATFORM:
     case _:
         base_src += ["int32_sort.c",]
 
-ldflags = ["-s", "-w"]
+ldflags = ["-s", "-w", "-Wl,-z,noexecstack", "-Wl,-z,relro", "-Wl,-z,now"]
 
 if __name__ == "__main__":
     setup(
