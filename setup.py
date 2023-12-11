@@ -97,7 +97,7 @@ if PLATFORM_SIZE != 64:
 base_src = ["crypto_classify.c", "crypto_declassify.c", "csidh.c",
             "elligator.c", "fp2fiat.c", "mont.c", "poly.c", "randombytes.c",
             "random.c", "skgen.c", "steps.c", "steps_untuned.c", "umults.c",
-            "validate.c"]
+            "validate.c", "int32_sort.c"]
 
 cflags = get_config_var("CFLAGS").split()
 cflags += ["-Wextra", "-Wall", "-Wall", "-Wextra", "-fpie", "-fPIC",
@@ -112,43 +112,56 @@ if CC == "clang":
 
 match PLATFORM:
     case "aarch64":
-        base_src += ["int32_sort.c",]
-        cflags += ["-march=native", "-mtune=native"]
+        cflags += ["-DPLATFORM=aarch64", "-DPLATFORM_SIZE=64",]
+        cflags += ["-march=native", "-mtune=native", "-DHIGHCTIDH_PORTABLE"]
     case "armv7l":
         # clang required
-        base_src += ["int32_sort.c",]
-        cflags += ["-fforce-enable-int128", "-D__ARM32__"]
+        cflags += ["-DPLATFORM=armv7l", "-DPLATFORM_SIZE=32"]
+        cflags += ["-fforce-enable-int128", "-D__ARM32__", "-DHIGHCTIDH_PORTABLE"]
     case "loongarch64":
-        base_src += ["int32_sort.c",]
-        cflags += ["-march=native", "-mtune=native"]
+        cflags += ["-DPLATFORM=loongarch64", "-DPLATFORM_SIZE=64",]
+        cflags += ["-march=native", "-mtune=native", "-DHIGHCTIDH_PORTABLE"]
     case "mips64":
-        # clang required
-        base_src += ["int32_sort.c",]
-        cflags += ["-fforce-enable-int128"]
+        # clang or mips64-linux-gnuabi64-gcc cross compile required
+        cflags += ["-DPLATFORM=mips64", "-DPLATFORM_SIZE=64",]
+        cflags += ["-fforce-enable-int128", "-DHIGHCTIDH_PORTABLE"]
     case "ppc64le":
-        base_src += ["int32_sort.c",]
-        cflags += ["-mtune=native"]
+        cflags += ["-DPLATFORM=ppc64le", "-DPLATFORM_SIZE=64",]
+        cflags += ["-mtune=native", "-DHIGHCTIDH_PORTABLE"]
     case "ppc64":
-        base_src += ["int32_sort.c",]
-        cflags += ["-mtune=native"]
+        cflags += ["-DPLATFORM=ppc64", "-DPLATFORM_SIZE=64",]
+        cflags += ["-mtune=native", "-DHIGHCTIDH_PORTABLE"]
     case "riscv64":
-        base_src += ["int32_sort.c",]
+        cflags += ["-DPLATFORM=riscv64", "-DPLATFORM_SIZE=64",]
+        cflags += ["-DHIGHCTIDH_PORTABLE"]
     case "s390x":
-        base_src += ["int32_sort.c",]
-        cflags += ["-march=native", "-mtune=native"]
+        cflags += ["-DPLATFORM=s390x", "-DPLATFORM_SIZE=64",]
+        cflags += ["-march=native", "-mtune=native", "-DHIGHCTIDH_PORTABLE"]
     case "sparc64":
-        base_src += ["int32_sort.c",]
-        cflags += ["-march=native", "-mtune=native"]
+        cflags += ["-DPLATFORM=sparc64", "-DPLATFORM_SIZE=64",]
+        cflags += ["-march=native", "-mtune=native", "-DHIGHCTIDH_PORTABLE"]
     case "x86_64":
         if PLATFORM_SIZE == 64:
-            base_src += ["int32_sort.c",]
+            cflags += ["-DPLATFORM=x86_64", "-DPLATFORM_SIZE=64"]
             cflags += ["-march=native", "-mtune=native", "-D__x86_64__"]
         elif PLATFORM_SIZE == 32:
             # clang required
-            base_src += ["int32_sort.c",]
-            cflags += ["-fforce-enable-int128", "-D__i386__"]
+            cflags += ["-DPLATFORM=i386", "-DPLATFORM_SIZE=32",]
+            cflags += ["-fforce-enable-int128", "-D__i386__", "-DHIGHCTIDH_PORTABLE"]
     case _:
-        base_src += ["int32_sort.c",]
+        cflags += ["-DHIGHCTIDH_PORTABLE"]
+
+base_src_511 = base_src + ["fp_inv511.c", "fp_sqrt511.c", "primes511.c",]
+base_src_512 = base_src + ["fp_inv512.c", "fp_sqrt512.c", "primes512.c",]
+base_src_1024 = base_src + ["fp_inv1024.c", "fp_sqrt1024.c", "primes1024.c",]
+base_src_2048 = base_src + ["fp_inv2048.c", "fp_sqrt2048.c", "primes2048.c",]
+
+# We default to fiat as the backend for all platforms except x86_64
+if PLATFORM != "x86_64":
+    base_src_511 += [ "fiat_p511.c"]
+    base_src_512 += [ "fiat_p512.c"]
+    base_src_1024 += [ "fiat_p1024.c"]
+    base_src_2048 += [ "fiat_p2048.c"]
 
 ldflags = ["-s", "-w", "-Wl,-z,noexecstack", "-Wl,-z,relro", "-Wl,-z,now"]
 
@@ -171,8 +184,7 @@ if __name__ == "__main__":
                 include_dirs = dir_include,
                 language = 'c',
                 library_dirs = lib_include,
-                sources = base_src + [ "fiat_p511.c", "fp_inv511.c",
-                    "fp_sqrt511.c", "primes511.c", ],
+                sources = base_src_511,
             ),
             Extension("highctidh_512",
                 extra_compile_args = cflags + ["-DBITS=512",
@@ -182,8 +194,7 @@ if __name__ == "__main__":
                 include_dirs = dir_include,
                 language = 'c',
                 library_dirs = lib_include,
-                sources = base_src + [ "fiat_p512.c", "fp_inv512.c",
-                    "fp_sqrt512.c", "primes512.c", ],
+                sources = base_src_512,
             ),
             Extension("highctidh_1024",
                 extra_compile_args = cflags + ["-DBITS=1024",
@@ -193,8 +204,7 @@ if __name__ == "__main__":
                 include_dirs = dir_include,
                 language = 'c',
                 library_dirs = lib_include,
-                sources = base_src + [ "fiat_p1024.c", "fp_inv1024.c",
-                    "fp_sqrt1024.c", "primes1024.c", ],
+                sources = base_src_1024,
             ),
             Extension("highctidh_2048",
                 extra_compile_args = cflags + ["-DBITS=2048",
@@ -204,8 +214,7 @@ if __name__ == "__main__":
                 include_dirs = dir_include,
                 language ='c',
                 library_dirs = lib_include,
-                sources = base_src + [ "fiat_p2048.c", "fp_inv2048.c",
-                    "fp_sqrt2048.c", "primes2048.c", ],
+                sources = base_src_2048,
             ),
         ]
 

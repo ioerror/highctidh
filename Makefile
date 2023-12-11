@@ -6,7 +6,7 @@ PLATFORM_SIZE:= $(shell getconf LONG_BIT)
 SEC_CFLAGS := -Wformat -Werror=format-security -D_FORTIFY_SOURCE=2 -fstack-protector-all
 BASE_CFLAGS := -fpie -fPIC -Wall -Wextra -pedantic -O3 -Os -fwrapv -DGETRANDOM
 BASE_CFLAGS+=$(BASE_CFLAGS) $(SEC_CFLAGS)
-LDFLAGS := -Wl,-Bsymbolic-functions -flto=auto -ffat-lto-objects
+LDFLAGS := -Wl,-Bsymbolic-functions
 LDFLAGS+=-Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now
 # Default to using fiat crypto, safe and portable but slow backend
 HIGHCTIDH_PORTABLE := 1

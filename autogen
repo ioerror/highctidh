@@ -922,7 +922,7 @@ with open(fn+'.tmp','w') as f:
   f.write('SEC_CFLAGS := -Wformat -Werror=format-security -D_FORTIFY_SOURCE=2 -fstack-protector-all\n')
   f.write('BASE_CFLAGS := -fpie -fPIC -Wall -Wextra -pedantic -O3 -Os -fwrapv -DGETRANDOM\n')
   f.write('BASE_CFLAGS+=$(BASE_CFLAGS) $(SEC_CFLAGS)\n')
-  f.write('LDFLAGS := -Wl,-Bsymbolic-functions -flto=auto -ffat-lto-objects\n')
+  f.write('LDFLAGS := -Wl,-Bsymbolic-functions\n')
   f.write('LDFLAGS+=-Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now\n')
   f.write('# Default to using fiat crypto, safe and portable but slow backend\n')
   f.write('HIGHCTIDH_PORTABLE := 1\n')
