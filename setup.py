@@ -140,7 +140,7 @@ match PLATFORM:
     case "x86_64":
         if PLATFORM_SIZE == 64:
             base_src += ["int32_sort.c",]
-            cflags += ["-march=native", "-mtune=native"]
+            cflags += ["-march=native", "-mtune=native", "-D__x86_64__"]
         elif PLATFORM_SIZE == 32:
             # clang required
             base_src += ["int32_sort.c",]

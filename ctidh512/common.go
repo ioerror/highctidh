@@ -1,17 +1,43 @@
 package ctidh512
 
 /*
- #cgo CFLAGS: -DBITS=512 -DGETRANDOM -DCGONUTS
- #cgo aarch64 CFLAGS: -DPLATFORM=aarch64 -DPLATFORM_SIZE=64 -march=native -mtune=native -DHIGHCTIDH_PORTABLE
- #cgo armv7l CFLAGS: -DPLATFORM=armv7l -DPLATFORM_SIZE=32 -fforce-enable-int128 -D__ARM32__ -DHIGHCTIDH_PORTABLE
- #cgo loongarch64 CFLAGS: -DPLATFORM=loongarch64 -DPLATFORM_SIZE=64 -march=native -mtune=native -DHIGHCTIDH_PORTABLE
- #cgo mips64 CFLAGS: -DPLATFORM=mips64 -DPLATFORM_SIZE=64 -fforce-enable-int128 -DHIGHCTIDH_PORTABLE
- #cgo ppc64le CFLAGS: -DPLATFORM=ppc64le -DPLATFORM_SIZE=64 -mtune=native -DHIGHCTIDH_PORTABLE
+
+ #cgo CFLAGS: -DBITS=512 -DGETRANDOM -DCGONUTS -Wformat -Werror=format-security -D_FORTIFY_SOURCE=2 -fstack-protector-all -O3 -fpie -fPIC -Wextra -O3 -Os
+ #cgo LDFLAGS: -Wl,-z,noexecstack -Wl,-z,relro
+
+ // The following should work as native builds and as cross compiled builds.
+ // Example cross compile build lines are provided as examples.
+
+ // CC=aarch64-linux-gnu-gcc CGO_ENABLED=1 GOOS=linux GOARCH=arm64 go build -v
+ #cgo arm64 CFLAGS: -DPLATFORM=aarch64 -DPLATFORM_SIZE=64 -DHIGHCTIDH_PORTABLE
+
+ // CC=gcc CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -v 
+ #cgo amd64 CFLAGS: -DPLATFORM=x86_64 -DPLATFORM_SIZE=64 -march=native -mtune=native
+
+ // CC=powerpc64le-linux-gnu-gcc CGO_ENABLED=1 GOOS=linux GOARCH=ppc64le go build -v 
+ #cgo ppc64le CFLAGS: -DPLATFORM=ppc64le -DPLATFORM_SIZE=64 -DHIGHCTIDH_PORTABLE
+
+ // CC=riscv64-linux-gnu-gcc CGO_ENABLED=1 GOOS=linux GOARCH=riscv64 go build -v 
  #cgo riscv64 CFLAGS: -DPLATFORM=riscv64 -DPLATFORM_SIZE=64 -DHIGHCTIDH_PORTABLE
- #cgo s390x CFLAGS: -DPLATFORM=s390x -DPLATFORM_SIZE=64 -march=native -mtune=native -DHIGHCTIDH_PORTABLE
+
+ // CC=s390x-linux-gnu-gcc CGO_ENABLED=1 GOOS=linux GOARCH=s390x go build -v 
+ #cgo s390x CFLAGS: -DPLATFORM=s390x -DPLATFORM_SIZE=64 -DHIGHCTIDH_PORTABLE
+
+ // CC=mips64-linux-gnuabi64-gcc CGO_ENABLED=1 GOOS=linux GOARCH=mips64  go build
+ // With clang, -fforce-enable-int128 must be added to the CFLAGS
+ #cgo mips64 CFLAGS: -DPLATFORM=mips64 -DPLATFORM_SIZE=64 -DHIGHCTIDH_PORTABLE
+
+ // The following should work as native builds with clang:
+
+ #cgo arm CFLAGS: -DPLATFORM=armv7l -DPLATFORM_SIZE=32 -fforce-enable-int128 -D__ARM32__ -DHIGHCTIDH_PORTABLE
+ #cgo loong64 CFLAGS: -DPLATFORM=loongarch64 -DPLATFORM_SIZE=64 -march=native -mtune=native -DHIGHCTIDH_PORTABLE
  #cgo sparc64 CFLAGS: -DPLATFORM=sparc64 -DPLATFORM_SIZE=64 -march=native -mtune=native -DHIGHCTIDH_PORTABLE
- #cgo amd64 386 CFLAGS: -DPLATFORM=x86_64 -DPLATFORM_SIZE=64 -march=native -mtune=native
+
+ // The following likely will not work as a cgo extension at this time:
+ //  CC=clang CGO_ENABLED=1 GOOS=linux GOARCH=386  go build
+ //  Results in: "common.go:57:18: cannot use _Ctype_ulong(size) (value of type _Ctype_ulong) as _Ctype_uint value in argument to (_Cfunc__CMalloc)"
  #cgo 386 CFLAGS: -DPLATFORM=i386 -DPLATFORM_SIZE=32 -fforce-enable-int128 -D__i386__ -DHIGHCTIDH_PORTABLE
+
  #include <stdlib.h>
  #include <stdint.h>
  #include "binding512.h"

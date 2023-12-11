@@ -1,11 +1,16 @@
-#!/bin/sh -x
+#!/bin/bash
 
-export LD_LIBRARY_PATH=.
-export PYTHONPATH=$PYTHONPATH:`pwd`
-python3 tests/test_highctidh.py
+set -e;
+set -x;
+
+python3 -m venv venv
+source venv/bin/activate
+python3 -m build
+pip install --force-reinstall dist/highctidh-*.whl
+python3 -m unittest -v
+python3 highctidh-simple-benchmark.py
 ./test511
 ./test512
 ./test1024
 ./test2048
 ./testrandom
-python3 highctidh-simple-benchmark.py
