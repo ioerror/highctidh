@@ -27,16 +27,14 @@ package ctidh511
  // With clang, -fforce-enable-int128 must be added to the CFLAGS
  #cgo mips64 CFLAGS: -DPLATFORM=mips64 -DPLATFORM_SIZE=64 -DHIGHCTIDH_PORTABLE
 
+ // i386
+ // on Debian you need: apt install libc6-dev-i386
  // Cross compile works but only with CGO_CFLAGS_ALLOW set:
  // export CGO_CFLAGS_ALLOW="-fforce-enable-int128";
  // CC=clang CGO_ENABLED=1 GOOS=linux GOARCH=386  go build
  #cgo 386 CFLAGS: -DPLATFORM=i386 -DPLATFORM_SIZE=32 -fforce-enable-int128 -D__i386__ -DHIGHCTIDH_PORTABLE
 
  // The following should work as native builds with clang:
-
- // export CGO_CFLAGS_ALLOW="-fforce-enable-int128";
- // CC=clang CGO_ENABLED=1 GOOS=linux GOARCH=arm ARMVER=7  go build
- #cgo arm CFLAGS: -DPLATFORM=armv7l -DPLATFORM_SIZE=32 -fforce-enable-int128 -D__ARM32__ -DHIGHCTIDH_PORTABLE
 
  // export CGO_CFLAGS_ALLOW="-fforce-enable-int128";
  // CC=clang CGO_ENABLED=1 GOOS=linux GOARCH=arm ARMVER=5  go build
@@ -59,19 +57,15 @@ import (
 	gopointer "github.com/mattn/go-pointer"
 )
 
-func test_go_fillrandom(context unsafe.Pointer, outptr unsafe.Pointer, outsz int) {
-	go_fillrandom(context, outptr, C.size_t(outsz))
+//
+// This function wraps go_fillrandom, so we can emulate the calls from the
+// C library and test the results
+//
+func test_go_fillrandom(context unsafe.Pointer, outptr []byte) {
+	go_fillrandom(context, unsafe.Pointer(&outptr[0]), C.size_t(len(outptr)))
 }
 
-func test_free(p unsafe.Pointer) {
-	C.free(p)
-}
-
-func test_GoString(x unsafe.Pointer, size int) string {
-	ret := C.GoBytes(x, C.int(size))
-	return string(ret)
-}
-
+// This is called from the C library, DO NOT CHANGE THE FUNCTION INTERFACE
 //export go_fillrandom
 func go_fillrandom(context unsafe.Pointer, outptr unsafe.Pointer, outsz C.size_t) {
 	rng := gopointer.Restore(context).(io.Reader)

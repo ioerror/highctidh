@@ -35,20 +35,28 @@ func Test2048BitVectors(t *testing.T) {
 	alicePrivateKeyBytes, err := hex.DecodeString(alicePrivateKeyHex)
 	require.NoError(t, err)
 	alicePrivateKey := new(PrivateKey)
-	alicePrivateKey.FromBytes(alicePrivateKeyBytes)
+	err = alicePrivateKey.FromBytes(alicePrivateKeyBytes)
+	require.NoError(t, err)
+	alicePrivateKey_reencoded := alicePrivateKey.Bytes()
+	// Ensure that we encode it canonically (check endianness handling):
+	require.Equal(t, alicePrivateKeyBytes, alicePrivateKey_reencoded)
 
 	alicePublicKeyHex := "21e57c6198f94739d91dfd3ce3bf73c0a272309c49a6495f47d14b8facf7abcf2f20668e9c3eb8c1630d8259596a035c17e153825b93fa1df44bc172e7b48d6b79291ce4fa4cc54a7e52c1f466d9de824d71a4164c2b0e50d61cbf44aa16a3e3ff8f9d39f92a4835c144f1f64e34a72561648c8b7d447681c1b8c97e36c9f73d9666b3749515a32a9f293ac30d1a3fe0d3e4c8ef4907ae1d074a1ee994adf35242c4a743bc47215c816539ff11691dd2f20be8f81b499696f01c5053437a594f1c1f30ed0caca6c4966b6c4115b343b18af1d6648725d5746ed45bc78b010217b172c400f2a7608ee5a991b3a03990709754f0f4e2870d921e16a80920b8c300"
 	alicePublicKeyBytes, err := hex.DecodeString(alicePublicKeyHex)
 	alicePublicKey := new(PublicKey)
 	err = alicePublicKey.FromBytes(alicePublicKeyBytes)
 	require.NoError(t, err)
+	alicePublicKey_reencoded := alicePublicKey.Bytes()
+	// Ensure that we encode it canonically (check endianness handling):
+	require.Equal(t, alicePublicKeyBytes, alicePublicKey_reencoded)
 
 	// Bob
 	bobPrivateKeyHex := "0000000000000000000100010000000100000000000000ff01ff0000ff000001ff0000000000fe01000000ff00000000ff0000000000010000ff0000000100000000fe0000000000ff000000ff000000000000000000000000ff00000000ff0001000000000002000000ff0000000000ff00ff00ff00000000fe0000ff00000000ff000001ff0000ff00000000ff00ff00000000000000ff00000001000002000000000000ff000100ff00000000010000000000ff0000ffff000000000000ff0001000000ff000001000000000000ff000000000000000000000000010000000000000000ff00"
 	bobPrivateKeyBytes, err := hex.DecodeString(bobPrivateKeyHex)
 	require.NoError(t, err)
 	bobPrivateKey := new(PrivateKey)
-	bobPrivateKey.FromBytes(bobPrivateKeyBytes)
+	err = bobPrivateKey.FromBytes(bobPrivateKeyBytes)
+	require.NoError(t, err)
 
 	bobPublicKeyHex := "4c494a11faa365e6b22bce7f3074b3285668f5ed99e83492f3860e4957a65ca0da1ce5e8a86e880bdc8b91cb57962114d3ae94de4399953345ec6a8e7a76e9c34b6b7bde647e7339e48a19ca05fcc0b69c25369588f85e41cbbee54543e3886a2f6213d7d1fd04892420501df582cc2ce974a13d2c71131b8d36aa304c5222532b064ef0a06886bfeffae4049672fcbb1f92ee4cf99b4cb83d3efa0e5a461b425d900147570e09610159d6af16628957dc781b5c84e8f198d6041ffdaf5a67e11f054f1876981fa52cea9a796a20052d1c68df0aa51b682c5ebbf9c2464fdfa90ac0e619097c2f713ced9dd0a2c4fabdd373626936a282281110fde352da7729"
 	bobPublicKeyBytes, err := hex.DecodeString(bobPublicKeyHex)
@@ -75,7 +83,8 @@ func TestPython2048BitVectors(t *testing.T) {
 	alicePrivateKeyBytes, err := hex.DecodeString(alicePrivateKeyHex)
 	require.NoError(t, err)
 	alicePrivateKey := new(PrivateKey)
-	alicePrivateKey.FromBytes(alicePrivateKeyBytes)
+	err = alicePrivateKey.FromBytes(alicePrivateKeyBytes)
+	require.NoError(t, err)
 
 	alicePublicKeyHex := "b2af3db1d3070879a0a0f4dbabd8c4d4e44536ad3caa22a1e212fffaa9886611b09904ba5e2d889e7aa54186d9b134e01a06da93f5c61b5c035a3d738388a121e3b6774f298fedaca36edfc4f1c5c10153ad40fa8a116f9668189bbbae25c09d42d34703756076e3326c6302dade803bbcdbb6a66650bf3115c72b40d9e71eca2309298a5b2c0469d62c1fa46a956287617395e04e7e3842f71e060ca73738461bb30f2ca3329c2c8bbdce4b4f4b47ef3c851799144003cab417d55988ddbe23920fd92692d00eb3aa1e63d04651ca4e10a885c7af948ebf93dae875152ca10a47feb67d79c7536c941122996a5d81e8ed3306056b2c31048edd3e8bbfa28c38"
 	alicePublicKeyBytes, err := hex.DecodeString(alicePublicKeyHex)
@@ -88,7 +97,8 @@ func TestPython2048BitVectors(t *testing.T) {
 	bobPrivateKeyBytes, err := hex.DecodeString(bobPrivateKeyHex)
 	require.NoError(t, err)
 	bobPrivateKey := new(PrivateKey)
-	bobPrivateKey.FromBytes(bobPrivateKeyBytes)
+	err = bobPrivateKey.FromBytes(bobPrivateKeyBytes)
+	require.NoError(t, err)
 
 	bobPublicKeyHex := "135d73849ad45f7e14134b5b550e9700923cdd2f2c6eba69a6a34317120c0fcba202b171924ff08eaa6b0c7635b457e9d5e3ce2a09ea562704166d59ca57fb3ae8046a0aa330c60978add40ea6e3c386c4ca3c7b33ef02f8aec3f166c31949e93a30e665c971588faa4eb4ef07f3143fb6c0efd4f7264f1dde8fdb6d277657b2129439b7f01aba57b82efa2c2fe12a637b99a5f974ae08c3ae24a2f70eff86947dbde7f7624b082143ea3e4864afbb3d1a40af0f2e1acc09eb07922d05f99072fdd534f3d96edd09dc642cbc452345a49d0f30b515078a76696bed53c175b436c58bbcfb95893b99f252896bb3d29bb711d401a89969aeaf7b88409c76b4e834"
 	bobPublicKeyBytes, err := hex.DecodeString(bobPublicKeyHex)
