@@ -24,7 +24,7 @@ update-golang-modules: update-golang-ctidh511 update-golang-ctidh512 update-gola
 	echo "Upstream sync finished; do not forget to git add and commit";
 
 go-test-cross:
-	./test-golang-cross.sh
+	./misc/test-golang-cross.sh
 
 go:
 	cd ctidh511 && go test -v;
