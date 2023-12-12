@@ -2,7 +2,7 @@ package ctidh2048
 
 /*
 
- #cgo CFLAGS: -DBITS=2048 -DGETRANDOM -DCGONUTS -Wformat -Werror=format-security -D_FORTIFY_SOURCE=2 -fstack-protector-all -fpie -fPIC -Wextra -O3 -Os
+ #cgo CFLAGS: -DBITS=2048 -DGETRANDOM -DCGONUTS -Wformat -Werror=format-security -D_FORTIFY_SOURCE=2 -fstack-protector-all -fpie -fPIC -O3 -Os
  #cgo LDFLAGS: -Wl,-z,noexecstack -Wl,-z,relro
 
  // The following should work as native builds and as cross compiled builds.
@@ -27,16 +27,24 @@ package ctidh2048
  // With clang, -fforce-enable-int128 must be added to the CFLAGS
  #cgo mips64 CFLAGS: -DPLATFORM=mips64 -DPLATFORM_SIZE=64 -DHIGHCTIDH_PORTABLE
 
+ // Cross compile works but only with CGO_CFLAGS_ALLOW set:
+ // export CGO_CFLAGS_ALLOW="-fforce-enable-int128";
+ // CC=clang CGO_ENABLED=1 GOOS=linux GOARCH=386  go build
+ #cgo 386 CFLAGS: -DPLATFORM=i386 -DPLATFORM_SIZE=32 -fforce-enable-int128 -D__i386__ -DHIGHCTIDH_PORTABLE
+
  // The following should work as native builds with clang:
 
+ // export CGO_CFLAGS_ALLOW="-fforce-enable-int128";
+ // CC=clang CGO_ENABLED=1 GOOS=linux GOARCH=arm ARMVER=7  go build
  #cgo arm CFLAGS: -DPLATFORM=armv7l -DPLATFORM_SIZE=32 -fforce-enable-int128 -D__ARM32__ -DHIGHCTIDH_PORTABLE
- #cgo loong64 CFLAGS: -DPLATFORM=loongarch64 -DPLATFORM_SIZE=64 -march=native -mtune=native -DHIGHCTIDH_PORTABLE
- #cgo sparc64 CFLAGS: -DPLATFORM=sparc64 -DPLATFORM_SIZE=64 -march=native -mtune=native -DHIGHCTIDH_PORTABLE
 
- // The following likely will not work as a cgo extension at this time:
- //  CC=clang CGO_ENABLED=1 GOOS=linux GOARCH=386  go build
- //  Results in: "common.go:57:18: cannot use _Ctype_ulong(size) (value of type _Ctype_ulong) as _Ctype_uint value in argument to (_Cfunc__CMalloc)"
- #cgo 386 CFLAGS: -DPLATFORM=i386 -DPLATFORM_SIZE=32 -fforce-enable-int128 -D__i386__ -DHIGHCTIDH_PORTABLE
+ // export CGO_CFLAGS_ALLOW="-fforce-enable-int128";
+ // CC=clang CGO_ENABLED=1 GOOS=linux GOARCH=arm ARMVER=5  go build
+ #cgo arm CFLAGS: -DPLATFORM=armv7l -DPLATFORM_SIZE=32 -fforce-enable-int128 -D__ARM32__ -DHIGHCTIDH_PORTABLE
+
+ #cgo loong64 CFLAGS: -DPLATFORM=loongarch64 -DPLATFORM_SIZE=64 -march=native -mtune=native -DHIGHCTIDH_PORTABLE
+
+ #cgo sparc64 CFLAGS: -DPLATFORM=sparc64 -DPLATFORM_SIZE=64 -march=native -mtune=native -DHIGHCTIDH_PORTABLE
 
  #include <stdlib.h>
  #include <stdint.h>
@@ -53,10 +61,6 @@ import (
 
 func test_go_fillrandom(context unsafe.Pointer, outptr unsafe.Pointer, outsz int) {
 	go_fillrandom(context, outptr, C.size_t(outsz))
-}
-
-func test_c_buf(size int) unsafe.Pointer {
-	return C.malloc(C.ulong(size))
 }
 
 func test_free(p unsafe.Pointer) {
