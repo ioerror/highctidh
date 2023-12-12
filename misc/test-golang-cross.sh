@@ -6,7 +6,21 @@ set -e;
 
 export GOOS=linux;
 export CGO_ENABLED=1;
+export HOST_ARCH=`uname -m`;
 CHECKMARK="\xE2\x9C\x94";
+
+echo "Running tests on $HOST_ARCH";
+for BITS in 511 512 1024 2048;
+do
+    cd ctidh$BITS;
+
+    export GOARCH=amd64;
+    echo -n "$GOARCH $BITS bits:";
+    go test -v;
+    echo -e "$CHECKMARK";
+
+    cd ../;
+done
 
 echo "Cross compile for $GOOS with CGO_ENABLED=$CGO_ENABLED...";
 for BITS in 511 512 1024 2048;
