@@ -75,6 +75,16 @@ else:
     environ['SOURCE_DATE_EPOCH'] = str(int(time()))
     sda = str(int(environ["SOURCE_DATE_EPOCH"]))
     print(f"SOURCE_DATE_EPOCH={sda}")
+    LLVM_PARALLEL_LINK_JOBS=1
+if "LLVM_PARALLEL_LINK_JOBS" in environ:
+    sdb = str(int(environ["LLVM_PARALLEL_LINK_JOBS"]))
+    print("LLVM_PARALLEL_LINK_JOBS is set:")
+    print(f"LLVM_PARALLEL_LINK_JOBS={sdb}")
+else:
+    print("LLVM_PARALLEL_LINK_JOBS is unset, setting to 1")
+    environ['LLVM_PARALLEL_LINK_JOBS'] = str(int(1))
+    sdb = str(int(environ["LLVM_PARALLEL_LINK_JOBS"]))
+    print(f"LLVM_PARALLEL_LINK_JOBS={sdb}")
 # Set umask to ensure consistent file permissions inside build artifacts such
 # as `.whl` files
 umask(0o022)
@@ -100,69 +110,72 @@ base_src = ["crypto_classify.c", "crypto_declassify.c", "csidh.c",
             "validate.c", "int32_sort.c"]
 
 cflags = get_config_var("CFLAGS").split()
-cflags += ["-Wall", "-fpie", "-fPIC", "-fwrapv", "-pedantic", "-O3", "-Os",]
+cflags += ["-Wextra", "-Wall", "-fpie", "-fPIC", "-fwrapv", "-pedantic", "-O3",
+           "-Os", "-g0", "-Wno-ignored-optimization-argument",]
 cflags += ["-DGETRANDOM", f"-DPLATFORM={PLATFORM}",
            f"-DPLATFORM_SIZE={PLATFORM_SIZE}"]
 cflags += ["-Wformat", "-Werror=format-security", "-D_FORTIFY_SOURCE=2",
-           "-fstack-protector-all"]
+           "-fstack-protector-strong"]
+ldflags = ["-Wl,-Bsymbolic-functions", "-s", "-w", "-Wl,-z,noexecstack",
+           "-Wl,-z,relro", "-Wl,-z,now",
+           "-Wl,--reduce-memory-overheads", "-Wl,--no-keep-memory",]
 
 if CC == "clang":
     cflags += ["-Wno-ignored-optimization-argument"]
 
-match PLATFORM:
-    case "aarch64":
-        cflags += ["-DPLATFORM=aarch64", "-DPLATFORM_SIZE=64",]
-        cflags += ["-march=native", "-mtune=native", "-DHIGHCTIDH_PORTABLE"]
-    case "armv7l":
-        # clang required
-        cflags += ["-DPLATFORM=armv7l", "-DPLATFORM_SIZE=32"]
-        cflags += ["-fforce-enable-int128", "-D__ARM32__", "-DHIGHCTIDH_PORTABLE"]
-    case "loongarch64":
-        cflags += ["-DPLATFORM=loongarch64", "-DPLATFORM_SIZE=64",]
-        cflags += ["-march=native", "-mtune=native", "-DHIGHCTIDH_PORTABLE"]
-    case "mips64":
-        # clang or mips64-linux-gnuabi64-gcc cross compile required
-        cflags += ["-DPLATFORM=mips64", "-DPLATFORM_SIZE=64",]
-        cflags += ["-fforce-enable-int128", "-DHIGHCTIDH_PORTABLE"]
-    case "ppc64le":
-        cflags += ["-DPLATFORM=ppc64le", "-DPLATFORM_SIZE=64",]
-        cflags += ["-mtune=native", "-DHIGHCTIDH_PORTABLE"]
-    case "ppc64":
-        cflags += ["-DPLATFORM=ppc64", "-DPLATFORM_SIZE=64",]
-        cflags += ["-mtune=native", "-DHIGHCTIDH_PORTABLE"]
-    case "riscv64":
-        cflags += ["-DPLATFORM=riscv64", "-DPLATFORM_SIZE=64",]
-        cflags += ["-DHIGHCTIDH_PORTABLE"]
-    case "s390x":
-        cflags += ["-DPLATFORM=s390x", "-DPLATFORM_SIZE=64",]
-        cflags += ["-march=native", "-mtune=native", "-DHIGHCTIDH_PORTABLE"]
-    case "sparc64":
-        cflags += ["-DPLATFORM=sparc64", "-DPLATFORM_SIZE=64",]
-        cflags += ["-march=native", "-mtune=native", "-DHIGHCTIDH_PORTABLE"]
-    case "x86_64":
-        if PLATFORM_SIZE == 64:
-            cflags += ["-DPLATFORM=x86_64", "-DPLATFORM_SIZE=64"]
-            cflags += ["-march=native", "-mtune=native", "-D__x86_64__"]
-        elif PLATFORM_SIZE == 32:
-            # clang required
-            cflags += ["-DPLATFORM=i386", "-DPLATFORM_SIZE=32",]
-            cflags += ["-fforce-enable-int128", "-D__i386__", "-DHIGHCTIDH_PORTABLE"]
-    case _:
-        cflags += ["-DHIGHCTIDH_PORTABLE"]
+print(f"Building for platform: {PLATFORM}")
+if PLATFORM == "aarch64":
+  cflags += ["-march=native", "-mtune=native", "-DHIGHCTIDH_PORTABLE"]
+elif PLATFORM == "armv7l":
+  # clang required
+  cflags += ["-fforce-enable-int128", "-D__ARM32__",
+             "-DHIGHCTIDH_PORTABLE",]
+elif PLATFORM == "loongarch64":
+  cflags += ["-march=native", "-mtune=native", "-DHIGHCTIDH_PORTABLE"]
+elif PLATFORM == "mips64":
+  # clang or mips64-linux-gnuabi64-gcc cross compile required
+  cflags += ["-fforce-enable-int128", "-DHIGHCTIDH_PORTABLE"]
+elif PLATFORM == "ppc64le":
+  cflags += ["-mtune=native", "-DHIGHCTIDH_PORTABLE"]
+elif PLATFORM == "ppc64":
+  cflags += ["-mtune=native", "-DHIGHCTIDH_PORTABLE"]
+elif PLATFORM == "riscv64":
+  cflags += ["-DHIGHCTIDH_PORTABLE"]
+elif PLATFORM == "s390x":
+  cflags += ["-march=native", "-mtune=native", "-DHIGHCTIDH_PORTABLE"]
+elif PLATFORM == "sparc64":
+  cflags += ["-march=native", "-mtune=native", "-DHIGHCTIDH_PORTABLE"]
+elif PLATFORM == "x86_64":
+  if PLATFORM_SIZE == 64:
+    cflags += ["-march=native", "-mtune=native", "-D__x86_64__"]
+  elif PLATFORM_SIZE == 32:
+    # clang required
+    cflags += ["-fforce-enable-int128", "-D__i386__", "-DHIGHCTIDH_PORTABLE"]
+else:
+  cflags += ["-DHIGHCTIDH_PORTABLE"]
 
-base_src_511 = base_src + ["fp_inv511.c", "fp_sqrt511.c", "primes511.c",]
-base_src_512 = base_src + ["fp_inv512.c", "fp_sqrt512.c", "primes512.c",]
-base_src_1024 = base_src + ["fp_inv1024.c", "fp_sqrt1024.c", "primes1024.c",]
-base_src_2048 = base_src + ["fp_inv2048.c", "fp_sqrt2048.c", "primes2048.c",]
+print("cflags: ")
+print(cflags)
+print("ldflags: ")
+print(ldflags)
+for v in ['CC', 'CXX', 'CFLAGS', 'CCSHARED', 'LDSHARED', 'SHLIB_SUFFIX', 'AR',
+          'ARFLAGS']:
+    if v in environ:
+        print(f"{v}={environ[v]}")
+    else:
+        print(f"{v} not found in environ")
 
 # We default to fiat as the backend for all platforms except x86_64
 if PLATFORM != "x86_64":
-    base_src_511 += [ "fiat_p511.c"]
-    base_src_512 += [ "fiat_p512.c"]
-    base_src_1024 += [ "fiat_p1024.c"]
-    base_src_2048 += [ "fiat_p2048.c"]
+    base_src_511 = base_src + [ "fiat_p511.c"]
+    base_src_512 = base_src + [ "fiat_p512.c"]
+    base_src_1024 = base_src + [ "fiat_p1024.c"]
+    base_src_2048 = base_src + [ "fiat_p2048.c"]
 
-ldflags = ["-s", "-w", "-Wl,-z,noexecstack", "-Wl,-z,relro", "-Wl,-z,now"]
+base_src_511 +=  ["fp_inv511.c", "fp_sqrt511.c", "primes511.c",]
+base_src_512 +=  ["fp_inv512.c", "fp_sqrt512.c", "primes512.c",]
+base_src_1024 +=  ["fp_inv1024.c", "fp_sqrt1024.c", "primes1024.c",]
+base_src_2048 +=  ["fp_inv2048.c", "fp_sqrt2048.c", "primes2048.c",]
 
 if __name__ == "__main__":
     setup(
