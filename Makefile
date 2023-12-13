@@ -3,13 +3,17 @@
 .PHONY: clean
 PLATFORM := $(shell uname -m)
 PLATFORM_SIZE:= $(shell getconf LONG_BIT)
-SEC_CFLAGS := -Wformat -Werror=format-security -D_FORTIFY_SOURCE=2 -fstack-protector-all
+override CFLAGS +=-Wall
+SEC_CFLAGS := -Wformat -Werror=format-security -D_FORTIFY_SOURCE=2 -fstack-protector-strong
 BASE_CFLAGS := -fpie -fPIC -Wall -Wextra -pedantic -O3 -Os -fwrapv -DGETRANDOM
+BASE_CFLAGS+=-DPLATFORM=${PLATFORM} -DPLATFORM_SIZE=${PLATFORM_SIZE}
 BASE_CFLAGS+=$(BASE_CFLAGS) $(SEC_CFLAGS)
 LDFLAGS := -Wl,-Bsymbolic-functions
+LDFLAGS+=-s -w
 LDFLAGS+=-Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now
+LDFLAGS+=-Wl,--reduce-memory-overheads -Wl,--no-keep-memory
 # Default to using fiat crypto, safe and portable but slow backend
-HIGHCTIDH_PORTABLE := 1
+HIGHCTIDH_PORTABLE ?= 1
 ifeq	($(HIGHCTIDH_PORTABLE),1)
 BASE_CFLAGS += -DHIGHCTIDH_PORTABLE
 	libhighctidh_511_OBJS := fp2fiat511.o fiat_p511.o

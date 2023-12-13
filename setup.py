@@ -75,11 +75,9 @@ else:
     environ['SOURCE_DATE_EPOCH'] = str(int(time()))
     sda = str(int(environ["SOURCE_DATE_EPOCH"]))
     print(f"SOURCE_DATE_EPOCH={sda}")
-    LLVM_PARALLEL_LINK_JOBS=1
 if "LLVM_PARALLEL_LINK_JOBS" in environ:
     sdb = str(int(environ["LLVM_PARALLEL_LINK_JOBS"]))
-    print("LLVM_PARALLEL_LINK_JOBS is set:")
-    print(f"LLVM_PARALLEL_LINK_JOBS={sdb}")
+    print(f"LLVM_PARALLEL_LINK_JOBS is set: {sdb}")
 else:
     print("LLVM_PARALLEL_LINK_JOBS is unset, setting to 1")
     environ['LLVM_PARALLEL_LINK_JOBS'] = str(int(1))
@@ -166,17 +164,33 @@ for v in ['CC', 'CXX', 'CFLAGS', 'CCSHARED', 'LDSHARED', 'SHLIB_SUFFIX', 'AR',
         print(f"{v} not found in environ")
 
 # We default to fiat as the backend for all platforms except x86_64
-if PLATFORM != "x86_64":
-    base_src_511 = base_src + [ "fiat_p511.c"]
-    base_src_512 = base_src + [ "fiat_p512.c"]
-    base_src_1024 = base_src + [ "fiat_p1024.c"]
-    base_src_2048 = base_src + [ "fiat_p2048.c"]
+if PLATFORM == "x86_64":
+    src_511 =  base_src + ["fp_inv511.c", "fp_sqrt511.c", "primes511.c",]
+    src_512 =  base_src + ["fp_inv512.c", "fp_sqrt512.c", "primes512.c",]
+    src_1024 = base_src + ["fp_inv1024.c", "fp_sqrt1024.c", "primes1024.c",]
+    src_2048 = base_src + ["fp_inv2048.c", "fp_sqrt2048.c", "primes2048.c",]
+else:
+    src_511 = base_src + ["fiat_p511.c", "fp_inv511.c", "fp_sqrt511.c", "primes511.c",]
+    src_512 = base_src + ["fiat_p512.c", "fp_inv512.c", "fp_sqrt512.c", "primes512.c",]
+    src_1024 = base_src + ["fiat_p1024.c", "fp_inv1024.c", "fp_sqrt1024.c", "primes1024.c",]
+    src_2048 = base_src + ["fiat_p2048.c", "fp_inv2048.c", "fp_sqrt2048.c", "primes2048.c",]
 
-base_src_511 +=  ["fp_inv511.c", "fp_sqrt511.c", "primes511.c",]
-base_src_512 +=  ["fp_inv512.c", "fp_sqrt512.c", "primes512.c",]
-base_src_1024 +=  ["fp_inv1024.c", "fp_sqrt1024.c", "primes1024.c",]
-base_src_2048 +=  ["fp_inv2048.c", "fp_sqrt2048.c", "primes2048.c",]
-
+extra_compile_args_511 = cflags + ["-DBITS=511",
+        "-DNAMESPACEBITS(x)=highctidh_511_##x",
+        "-DNAMESPACEGENERIC(x)=highctidh_##x"]
+print(extra_compile_args_511)
+extra_compile_args_512 = cflags + ["-DBITS=512",
+        "-DNAMESPACEBITS(x)=highctidh_512_##x",
+        "-DNAMESPACEGENERIC(x)=highctidh_##x"]
+print(extra_compile_args_512)
+extra_compile_args_1024 = cflags + ["-DBITS=1024",
+        "-DNAMESPACEBITS(x)=highctidh_1024_##x",
+        "-DNAMESPACEGENERIC(x)=highctidh_##x"]
+print(extra_compile_args_1024)
+extra_compile_args_2048 = cflags + ["-DBITS=2048",
+        "-DNAMESPACEBITS(x)=highctidh_2048_##x",
+        "-DNAMESPACEGENERIC(x)=highctidh_##x"]
+print(extra_compile_args_2048)
 if __name__ == "__main__":
     setup(
         name = "highctidh",
@@ -189,44 +203,36 @@ if __name__ == "__main__":
         cmdclass = dict(bdist_deb=bdist_deb, sdist_dsc=sdist_dsc),
         ext_modules = [
             Extension("highctidh_511",
-                extra_compile_args = cflags + ["-DBITS=511",
-                    "-DNAMESPACEBITS(x)=highctidh_511_##x",
-                    "-DNAMESPACEGENERIC(x)=highctidh_##x"],
+                extra_compile_args = extra_compile_args_511,
                 extra_link_args = ldflags,
                 include_dirs = dir_include,
                 language = 'c',
                 library_dirs = lib_include,
-                sources = base_src_511,
+                sources = src_511,
             ),
             Extension("highctidh_512",
-                extra_compile_args = cflags + ["-DBITS=512",
-                    "-DNAMESPACEBITS(x)=highctidh_512_##x",
-                    "-DNAMESPACEGENERIC(x)=highctidh_##x"],
+                extra_compile_args = extra_compile_args_512,
                 extra_link_args = ldflags,
                 include_dirs = dir_include,
                 language = 'c',
                 library_dirs = lib_include,
-                sources = base_src_512,
+                sources = src_512,
             ),
             Extension("highctidh_1024",
-                extra_compile_args = cflags + ["-DBITS=1024",
-                    "-DNAMESPACEBITS(x)=highctidh_1024_##x",
-                    "-DNAMESPACEGENERIC(x)=highctidh_##x"],
+                extra_compile_args = extra_compile_args_1024,
                 extra_link_args = ldflags,
                 include_dirs = dir_include,
                 language = 'c',
                 library_dirs = lib_include,
-                sources = base_src_1024,
+                sources = src_1024,
             ),
             Extension("highctidh_2048",
-                extra_compile_args = cflags + ["-DBITS=2048",
-                    "-DNAMESPACEBITS(x)=highctidh_2048_##x",
-                    "-DNAMESPACEGENERIC(x)=highctidh_##x"],
+                extra_compile_args = extra_compile_args_2048,
                 extra_link_args = ldflags,
                 include_dirs = dir_include,
                 language ='c',
                 library_dirs = lib_include,
-                sources = base_src_2048,
+                sources = src_2048,
             ),
         ]
 

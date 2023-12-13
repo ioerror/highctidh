@@ -10,6 +10,15 @@ steps:
       - apt install -y --no-install-recommends make gcc clang git python3 python3-build python3-setuptools build-essential python3-venv python3-wheel python3-pip flit
       - make
       - sha256sum *.so
+  build-debian-sid-cross:
+    group: compile
+    image: debian:sid-slim
+    commands:
+      - export CI=true
+      - PATH=$PATH:~/.local/bin
+      - export WORKDIR=`pwd`
+      - ./misc/install-debian-sid-cross-deps.sh
+      - ./misc/test-c-lib-cross.sh
   build-debian-bookworm-python:
     group: compile
     image: debian:bookworm
@@ -18,6 +27,7 @@ steps:
       - PATH=$PATH:~/.local/bin
       - export WORKDIR=`pwd`
       - ./misc/install-debian-deps.sh
+      - mkdir -p {dist/source,build/tmp}
       - make -f Makefile.packages packages
       - dpkg -i dist/python3-highctidh_*.deb
       - pytest-3 -v -n`nproc` --doctest-modules
@@ -32,9 +42,8 @@ steps:
       - export CI=true
       - PATH=$PATH:~/.local/bin
       - export WORKDIR=`pwd`
-      - apk update
-      - apk add --no-cache alpine-sdk python3 python3-dev py3-build py3-flit py3-setuptools py3-wheel
-      - make -f Makefile.packages wheel
+      - ./misc/install-arch-deps.sh
+      - CC=clang make -f Makefile.packages wheel
       - make
       - ls -alh dist/*.whl
       - sha256sum dist/*.whl
