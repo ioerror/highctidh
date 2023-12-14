@@ -11,7 +11,7 @@ CHECKMARK="\xE2\x9C\x94";
 export AR CC CC_MARCH CFLAGS LD PLATFORM PLATFORM_SIZE prefix
 
 make_and_clean() {
-    echo -n "${PLATFORM} ${CC_MARCH} (${PLATFORM_SIZE} bit) ctidh-$BITS:";
+    echo -n "${PLATFORM} ${CC_MARCH:-} (${PLATFORM_SIZE} bit) ctidh-$BITS:";
     make;
     sha256sum *.so;
     rm *.o *.so;
