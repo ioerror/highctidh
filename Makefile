@@ -3,7 +3,11 @@
 .PHONY: clean
 PLATFORM := $(shell uname -m)
 PLATFORM_SIZE:= $(shell getconf LONG_BIT)
-override CFLAGS +=-Wall
+
+#override CFLAGS +=-Wall
+# TODO fix me this broke the builds and it's already included
+# in BASE_CFLAGS below so likely not necessary here.
+
 SEC_CFLAGS := -Wformat -Werror=format-security -D_FORTIFY_SOURCE=2 -fstack-protector-strong
 BASE_CFLAGS := -fpie -fPIC -Wall -Wextra -pedantic -O3 -Os -fwrapv -DGETRANDOM
 BASE_CFLAGS+=-DPLATFORM=${PLATFORM} -DPLATFORM_SIZE=${PLATFORM_SIZE}
