@@ -1,5 +1,5 @@
 steps:
-  build-debian-bookworm:
+  build-debian-bookworm-gcc:
     group: compile
     image: debian:bookworm-slim
     commands:
@@ -7,8 +7,19 @@ steps:
       - PATH=$PATH:~/.local/bin
       - export WORKDIR=`pwd`
       - apt update
-      - apt install -y --no-install-recommends make gcc clang git build-essential
-      - make
+      - apt install -y --no-install-recommends make gcc git build-essential
+      - CC=gcc make
+      - sha256sum *.so
+  build-debian-bookworm-clang:
+    group: compile
+    image: debian:bookworm-slim
+    commands:
+      - export CI=true
+      - PATH=$PATH:~/.local/bin
+      - export WORKDIR=`pwd`
+      - apt update
+      - apt install -y --no-install-recommends make clang git build-essential
+      - CC=clang make
       - sha256sum *.so
   build-debian-sid-cross:
     group: compile
