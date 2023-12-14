@@ -11,8 +11,6 @@ ifeq	(HOST_PLATFORM,PLATFORM)
 CC_MARCH ?= native
 # Default to 'march=native -mtune=native' when not cross-building
 # https://lemire.me/blog/2018/07/25/it-is-more-complicated-than-i-thought-mtune-march-in-gcc/
-else
-CC_MARCH ?= generic
 endif
 CC_MTUNE ?= $(CC_MARCH)
 
@@ -20,7 +18,7 @@ SEC_CFLAGS := -Wformat -Werror=format-security -D_FORTIFY_SOURCE=2 -fstack-prote
 BASE_CFLAGS := -fpie -fPIC -Wall -Wextra -pedantic -O3 -Os -fwrapv -DGETRANDOM
 BASE_CFLAGS+=-DPLATFORM=${PLATFORM} -DPLATFORM_SIZE=${PLATFORM_SIZE}
 BASE_CFLAGS+=$(SEC_CFLAGS)
-BASE_CFLAGS+=-march=$(CC_MARCH) -mtune=$(CC_MTUNE)
+BASE_CFLAGS+=$(if $(strip $(CC_MARCH)),-march=$(CC_MARCH) -mtune=$(CC_MTUNE),)
 LDFLAGS := -Wl,-Bsymbolic-functions
 LDFLAGS+=-s -w
 LDFLAGS+=-Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now
