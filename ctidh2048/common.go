@@ -1,7 +1,6 @@
 package ctidh2048
 
 /*
-
  #cgo CFLAGS: -DBITS=2048 -DGETRANDOM -DCGONUTS -Wformat -Werror=format-security -D_FORTIFY_SOURCE=2 -fstack-protector-all -fpie -fPIC -O3 -Os
  #cgo LDFLAGS: -Wl,-z,noexecstack -Wl,-z,relro
 
@@ -11,11 +10,18 @@ package ctidh2048
  // CC=aarch64-linux-gnu-gcc CGO_ENABLED=1 GOOS=linux GOARCH=arm64 go build -v
  #cgo arm64 CFLAGS: -DPLATFORM=aarch64 -DPLATFORM_SIZE=64 -DHIGHCTIDH_PORTABLE
 
+ // export CGO_CFLAGS_ALLOW="-fforce-enable-int128";
+ // CC=clang CGO_ENABLED=1 GOOS=linux GOARCH=arm ARMVER=7  go build
+ #cgo arm CFLAGS: -DPLATFORM=arm -DPLATFORM_SIZE=32 -D__ARM32__ -DHIGHCTIDH_PORTABLE
+
  // CC=gcc CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -v
  #cgo amd64 CFLAGS: -DPLATFORM=x86_64 -DPLATFORM_SIZE=64 -march=native -mtune=native
 
  // CC=powerpc64le-linux-gnu-gcc CGO_ENABLED=1 GOOS=linux GOARCH=ppc64le go build -v
  #cgo ppc64le CFLAGS: -DPLATFORM=ppc64le -DPLATFORM_SIZE=64 -DHIGHCTIDH_PORTABLE
+
+ // CC=powerpc64-linux-gnu-gcc CGO_ENABLED=1 GOOS=linux GOARCH=ppc64 go build -v
+ #cgo ppc64 CFLAGS: -DPLATFORM=ppc64 -DPLATFORM_SIZE=64 -DHIGHCTIDH_PORTABLE
 
  // CC=riscv64-linux-gnu-gcc CGO_ENABLED=1 GOOS=linux GOARCH=riscv64 go build -v
  #cgo riscv64 CFLAGS: -DPLATFORM=riscv64 -DPLATFORM_SIZE=64 -DHIGHCTIDH_PORTABLE
@@ -27,16 +33,23 @@ package ctidh2048
  // With clang, -fforce-enable-int128 must be added to the CFLAGS
  #cgo mips64 CFLAGS: -DPLATFORM=mips64 -DPLATFORM_SIZE=64 -DHIGHCTIDH_PORTABLE
 
- // Cross compile works but only with CGO_CFLAGS_ALLOW set:
+ // CC=mips64-linux-gnuabi64-gcc CGO_ENABLED=1 GOOS=linux GOARCH=mips64  go build
+ // With clang, -fforce-enable-int128 must be added to the CFLAGS
+ #cgo mips64le CFLAGS: -DPLATFORM=mips64le -DPLATFORM_SIZE=64 -DHIGHCTIDH_PORTABLE
+
+ // CC=mipsel-linux-gnu-gcc CGO_ENABLED=1 GOOS=linux GOARCH=mipsle  go build
+ // With clang, -fforce-enable-int128 must be added to the CFLAGS
+ #cgo mipsle CFLAGS: -DPLATFORM=mipsle -DPLATFORM_SIZE=32 -DHIGHCTIDH_PORTABLE
+
+ // CC=mips-linux-gnu-gcc CGO_ENABLED=1 GOOS=linux GOARCH=mips  go build
+ // With clang, -fforce-enable-int128 must be added to the CFLAGS
+ #cgo mips CFLAGS: -DPLATFORM=mips -DPLATFORM_SIZE=32 -DHIGHCTIDH_PORTABLE
+
  // export CGO_CFLAGS_ALLOW="-fforce-enable-int128";
  // CC=clang CGO_ENABLED=1 GOOS=linux GOARCH=386  go build
  #cgo 386 CFLAGS: -DPLATFORM=i386 -DPLATFORM_SIZE=32 -fforce-enable-int128 -D__i386__ -DHIGHCTIDH_PORTABLE
 
  // The following should work as native builds with clang:
-
- // export CGO_CFLAGS_ALLOW="-fforce-enable-int128";
- // CC=clang CGO_ENABLED=1 GOOS=linux GOARCH=arm ARMVER=5  go build
- #cgo arm CFLAGS: -DPLATFORM=armv7l -DPLATFORM_SIZE=32 -fforce-enable-int128 -D__ARM32__ -DHIGHCTIDH_PORTABLE
 
  #cgo loong64 CFLAGS: -DPLATFORM=loongarch64 -DPLATFORM_SIZE=64 -march=native -mtune=native -DHIGHCTIDH_PORTABLE
 

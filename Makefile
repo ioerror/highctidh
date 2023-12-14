@@ -9,7 +9,7 @@ PLATFORM_SIZE ?= $(shell getconf LONG_BIT)
 
 ifeq	(HOST_PLATFORM,PLATFORM)
 CC_MARCH ?= native
-# Default to 'march=native -mtune=native' when not cross-building
+# Default to "march=native -mtune=native" when not cross-building
 # https://lemire.me/blog/2018/07/25/it-is-more-complicated-than-i-thought-mtune-march-in-gcc/
 endif
 CC_MTUNE ?= $(CC_MARCH)
@@ -53,11 +53,19 @@ ifeq	($(PLATFORM),loongarch64)
 	CFLAGS+= $(BASE_CFLAGS)
 endif
 
+ifeq	($(PLATFORM),mips)
+	CFLAGS+= $(BASE_CFLAGS) -D__MIPS__
+	ifeq ($(CC),clang)
+		CFLAGS+= -fforce-enable-int128
+	endif
+endif
+
 ifeq	($(PLATFORM),mips64)
 	CFLAGS+= $(BASE_CFLAGS) -D__MIPS64__
-	ifeq ($(CC),clang)
-		CFLAGS+=  -fforce-enable-int128
-	endif
+endif
+
+ifeq	($(PLATFORM),mips64el)
+	CFLAGS+= $(BASE_CFLAGS) -D__MIPS64el__
 endif
 
 ifeq	($(PLATFORM),ppc64le)
@@ -73,7 +81,10 @@ ifeq	($(PLATFORM),riscv64)
 endif
 
 ifeq	($(PLATFORM),s390x)
-	CFLAGS+= $(BASE_CFLAGS)
+	CFLAGS+= $(BASE_CFLAGS) -D__s390x__
+	ifeq ($(CC),clang)
+		CFLAGS+= -march=z10 -mtune=z10
+	endif
 endif
 
 ifeq	($(PLATFORM),sparc64)
@@ -91,7 +102,9 @@ ifeq	($(PLATFORM_SIZE),32)
 		CFLAGS+= -fforce-enable-int128
 	endif
 else
+
 	CFLAGS+= $(BASE_CFLAGS) -D__x86_64__
+
 endif
 endif
 
@@ -929,19 +942,6 @@ examples-static: examples_static.c libhighctidh.a *.h
 	$(CC) -static -Wall -Werror -Wpedantic examples_static.c -Wl,-Bstatic -L. -l:libhighctidh.a -o examples-static
 test: clean libhighctidh.so testrandom test511 test512 test1024 test2048
 		./test.sh
-
-docker-setup:
-		./docker-setup.sh
-
-docker-test: docker-setup
-		time ./docker-test-build.sh
-		ls -al docker_build_output/*/lib/*
-docker-fiat-setup:
-		./docker-setup-fiat.sh
-
-docker-fiat-generate: docker-fiat-setup
-		./docker-generate-fiat.sh
-
 
 DESTDIR ?= /usr/local
 install: libhighctidh.so libhighctidh.a

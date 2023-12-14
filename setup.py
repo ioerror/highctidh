@@ -109,7 +109,7 @@ base_src = ["crypto_classify.c", "crypto_declassify.c", "csidh.c",
 
 cflags = get_config_var("CFLAGS").split()
 cflags += ["-Wextra", "-Wall", "-fpie", "-fPIC", "-fwrapv", "-pedantic", "-O3",
-           "-Os", "-g0", "-Wno-ignored-optimization-argument",]
+           "-Os", "-g0", "-Wno-ignored-optimization-argument", "-fno-lto"]
 cflags += ["-DGETRANDOM", f"-DPLATFORM={PLATFORM}",
            f"-DPLATFORM_SIZE={PLATFORM_SIZE}"]
 cflags += ["-Wformat", "-Werror=format-security", "-D_FORTIFY_SOURCE=2",
@@ -123,16 +123,29 @@ if CC == "clang":
 
 print(f"Building for platform: {PLATFORM}")
 if PLATFORM == "aarch64":
-  cflags += ["-march=native", "-mtune=native", "-DHIGHCTIDH_PORTABLE"]
+  if CC == "clang":
+      cflags += ["-DHIGHCTIDH_PORTABLE"]
+  if CC == "gcc":
+      cflags += ["-march=native", "-mtune=native", "-DHIGHCTIDH_PORTABLE"]
 elif PLATFORM == "armv7l":
   # clang required
-  cflags += ["-fforce-enable-int128", "-D__ARM32__",
-             "-DHIGHCTIDH_PORTABLE",]
+  if CC == "clang":
+      cflags += ["-fforce-enable-int128", "-D__ARM32__",
+                 "-DHIGHCTIDH_PORTABLE",]
+  if CC == "gcc":
+      cflags += ["-D__ARM32__", "-DHIGHCTIDH_PORTABLE"]
 elif PLATFORM == "loongarch64":
   cflags += ["-march=native", "-mtune=native", "-DHIGHCTIDH_PORTABLE"]
-elif PLATFORM == "mips64":
+elif PLATFORM == "mips":
   # clang or mips64-linux-gnuabi64-gcc cross compile required
-  cflags += ["-fforce-enable-int128", "-DHIGHCTIDH_PORTABLE"]
+  if CC == "clang":
+      cflags += ["-fforce-enable-int128", "-DHIGHCTIDH_PORTABLE"]
+  if CC == "gcc":
+      cflags += ["-DHIGHCTIDH_PORTABLE"]
+elif PLATFORM == "mips64":
+  cflags += ["-DHIGHCTIDH_PORTABLE"]
+elif PLATFORM == "mips64le":
+  cflags += ["-DHIGHCTIDH_PORTABLE"]
 elif PLATFORM == "ppc64le":
   cflags += ["-mtune=native", "-DHIGHCTIDH_PORTABLE"]
 elif PLATFORM == "ppc64":
@@ -140,7 +153,10 @@ elif PLATFORM == "ppc64":
 elif PLATFORM == "riscv64":
   cflags += ["-DHIGHCTIDH_PORTABLE"]
 elif PLATFORM == "s390x":
-  cflags += ["-march=native", "-mtune=native", "-DHIGHCTIDH_PORTABLE"]
+  if CC == "clang":
+      cflags += ["-march=z10", "-mtune=z10", "-DHIGHCTIDH_PORTABLE"]
+  if CC == "gcc":
+      cflags += ["-march=z10", "-mtune=z10", "-DHIGHCTIDH_PORTABLE"]
 elif PLATFORM == "sparc64":
   cflags += ["-march=native", "-mtune=native", "-DHIGHCTIDH_PORTABLE"]
 elif PLATFORM == "x86_64":
@@ -152,19 +168,8 @@ elif PLATFORM == "x86_64":
 else:
   cflags += ["-DHIGHCTIDH_PORTABLE"]
 
-print("cflags: ")
-print(cflags)
-print("ldflags: ")
-print(ldflags)
-for v in ['CC', 'CXX', 'CFLAGS', 'CCSHARED', 'LDSHARED', 'SHLIB_SUFFIX', 'AR',
-          'ARFLAGS']:
-    if v in environ:
-        print(f"{v}={environ[v]}")
-    else:
-        print(f"{v} not found in environ")
-
 # We default to fiat as the backend for all platforms except x86_64
-if PLATFORM == "x86_64":
+if PLATFORM == "x86_64" and PLATFORM_SIZE == 64:
     src_511 =  base_src + ["fp_inv511.c", "fp_sqrt511.c", "primes511.c",]
     src_512 =  base_src + ["fp_inv512.c", "fp_sqrt512.c", "primes512.c",]
     src_1024 = base_src + ["fp_inv1024.c", "fp_sqrt1024.c", "primes1024.c",]
@@ -178,19 +183,15 @@ else:
 extra_compile_args_511 = cflags + ["-DBITS=511",
         "-DNAMESPACEBITS(x)=highctidh_511_##x",
         "-DNAMESPACEGENERIC(x)=highctidh_##x"]
-print(extra_compile_args_511)
 extra_compile_args_512 = cflags + ["-DBITS=512",
         "-DNAMESPACEBITS(x)=highctidh_512_##x",
         "-DNAMESPACEGENERIC(x)=highctidh_##x"]
-print(extra_compile_args_512)
 extra_compile_args_1024 = cflags + ["-DBITS=1024",
         "-DNAMESPACEBITS(x)=highctidh_1024_##x",
         "-DNAMESPACEGENERIC(x)=highctidh_##x"]
-print(extra_compile_args_1024)
 extra_compile_args_2048 = cflags + ["-DBITS=2048",
         "-DNAMESPACEBITS(x)=highctidh_2048_##x",
         "-DNAMESPACEGENERIC(x)=highctidh_##x"]
-print(extra_compile_args_2048)
 if __name__ == "__main__":
     setup(
         name = "highctidh",

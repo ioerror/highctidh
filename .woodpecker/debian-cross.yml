@@ -1,0 +1,22 @@
+matrix:
+  platform:
+    - linux/amd64
+  CC:
+    - clang
+    - gcc
+  DIST:
+    - sid
+  ARCH:
+    - amd64
+
+steps:
+  debian-${DIST}-cross-${CC}:
+    group: compile-debian-${DIST}-cross
+    image: debian:${DIST}
+    commands:
+      - export CI=true
+      - PATH=$PATH:~/.local/bin
+      - export WORKDIR=`pwd`
+      - export CC=${CC}
+      - ./misc/install-debian-${DIST}-cross-deps.sh
+      - ./misc/test-c-lib-cross-${CC}.sh

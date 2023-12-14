@@ -1,13 +1,27 @@
 VERSION := $(shell cat VERSION)
 export WORKDIR ?= $(shell pwd)
 export SOURCE_DATE_EPOCH := $(shell git log -1 --pretty=%ct)
+export PODMAN_ARCH ?= amd64
 CC ?=gcc
 DIST :=sid
 ARCH := $(shell uname -m)
+PLATFORM_SIZE ?= $(shell getconf LONG_BIT)
+export DEB_BUILD_OPTIONS=nocheck
+
+ifeq    ($(ARCH), $(filter $(ARCH), x86_64))
+ifeq	($(PLATFORM_SIZE),32)
+	DEB_ARCH:=i386
+else
+	DEB_ARCH:=amd64
+endif
+else
+	DEB_ARCH:=$(ARCH)
+endif
+
 PODMAN_ARCH ?= ${ARCH}
-.PHONY: deb wheel test packages sdist pypi-upload prepare-artifacts-for-upload
+.PHONY: deb test packages sdist pypi-upload prepare-artifacts-for-upload
 KERNEL := $(shell uname -s|tr A-Z a-z)
-DEB_NAME := ${WORKDIR}/deb_dist/python3-highctidh_${VERSION}-1_${ARCH}.deb
+DEB_NAME := ${WORKDIR}/dist/python3-highctidh_${VERSION}-1_${DEB_ARCH}.deb
 WHEEL_NAME := ${WORKDIR}/dist/highctidh-${VERSION}-cp311-cp311-${KERNEL}_${ARCH}.whl
 SDIST_GZ := ${WORKDIR}/dist/highctidh-${VERSION}.tar.gz
 
@@ -26,8 +40,11 @@ update-golang-ctidh2048:
 update-golang-modules: update-golang-ctidh511 update-golang-ctidh512 update-golang-ctidh1024 update-golang-ctidh2048
 	echo "Upstream sync finished; do not forget to git add and commit";
 
-go-test-cross:
-	./misc/test-golang-cross.sh
+go-test-cross-gcc:
+	./misc/test-golang-cross-gcc.sh
+
+go-test-cross-clang:
+	./misc/test-golang-cross-clang.sh
 
 go:
 	cd ctidh511 && go test -v;
@@ -42,16 +59,16 @@ ${DEB_NAME}:
 	python3 setup.py --command-packages=stdeb.command sdist_dsc --compat=10 --dist-dir=${WORKDIR}/dist/ --use-premade-distfile=${SDIST_GZ}
 	cp ${WORKDIR}/misc/debian-rules ${WORKDIR}/dist/highctidh-$(VERSION)/debian/rules
 	cd ${WORKDIR}/dist/highctidh-$(VERSION) && DEB_BUILD_OPTIONS=nocheck CC=${CC} dpkg-buildpackage -rfakeroot -uc -us
-	-ls -alh ${DEB_NAME}
-	-sha256sum ${DEB_NAME}
+	-ls -alh ${WORKDIR}/dist/*.deb
+	-sha256sum ${WORKDIR}/dist/*.deb
 
 wheel: ${SDIST_GZ} ${WHEEL_NAME}
 ${WHEEL_NAME}:
 	mkdir -p dist/source
 	mkdir -p build/tmp
 	SOURCE_DATE_EPOCH=${SOURCE_DATE_EPOCH} python3 -m build --wheel
-	-ls -alh ${WHEEL_NAME}
-	-sha256sum ${WHEEL_NAME}
+	-ls -alh ${WORKDIR}/dist/*.whl
+	-sha256sum ${WORKDIR}/dist/*.whl
 
 test:
 	python3 setup.py test
@@ -71,11 +88,17 @@ packages: wheel deb
 	find .|grep .deb$
 
 docker-setup-multiarch:
-	echo "Please run ./docker-priv-setup.sh as root to prepare the system"
-	./docker-setup.sh
+	echo "Please run ./misc/docker-priv-setup.sh as root to prepare the system"
+	./misc/docker-setup.sh
 
 docker-clean:
-	./docker-clean.sh
+	./misc/docker-clean.sh
+
+docker-fiat-setup:
+	./misc/docker-setup-fiat.sh
+
+docker-fiat-generate: docker-fiat-setup
+	./misc/docker-generate-fiat.sh
 
 # NOTE:
 #   twine accepts our whl files but pypi does not due to not using the

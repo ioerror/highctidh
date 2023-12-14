@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e;
 
 apk update > /dev/null 2>&1;
 echo "Installing required packages...";

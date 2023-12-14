@@ -1,3 +1,11 @@
+Port to new targets supported by golang:
+
+  go tool dist list
+
+Port to new targets supported by clang:
+
+  clang --print-targets
+
 fix warning:
 
     clang: warning: argument unused during compilation: '-fstack-clash-protection' [-Wunused-command-line-argument]

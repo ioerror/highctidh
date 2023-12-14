@@ -80,7 +80,7 @@ libhighctidh_{511,512,1024,2048}.so libraries is available in
 `example-ctidh.c`. Use the `make examples` target to build `example-ctidh511`,
 `example-ctidh512`, `example-ctidh1024`, and `example-ctidh2048` programs.
 
-A basic Python benchmarking program `highctidh-simple-benchmark.py` shows
+A basic Python benchmarking program `misc/highctidh-simple-benchmark.py` shows
 general performance numbers. Python tests may be run with pytest and should be
 functional without pytest assuming the library is installed. If the library
 path includes the build directory as is done in `test.sh`, pytest or python

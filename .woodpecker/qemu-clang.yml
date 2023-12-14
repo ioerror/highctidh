@@ -1,0 +1,35 @@
+matrix:
+  CC:
+    - clang
+  DIST:
+    - sid
+  ARCH:
+    - amd64
+    - riscv64
+    - s390x
+    - i386
+    - ppc64le
+    - mips64le
+
+steps:
+  debian-${DIST}-${ARCH}-${CC}:
+    group: compile-debian-${DIST}-${ARCH}-${CC}
+    image: ${ARCH}/debian:${DIST}
+    environment:
+      - DEBIAN_FRONTEND=noninteractive
+      - DEB_BUILD_OPTIONS=nocheck
+    commands:
+      - export CI=true
+      - PATH=$PATH:~/.local/bin
+      - export WORKDIR=`pwd`
+      - ./misc/install-debian-sid-deps.sh
+      - ./misc/docker-fixup.sh
+      - export SOURCE_DATE_EPOCH=`git log -1 --pretty=%ct`
+      - export CC=${CC}
+      - CC=${CC} make clean
+      - CC=${CC} make -f Makefile.packages deb
+      - dpkg -i dist/python3-highctidh_*.deb
+      - pytest-3 -v -n`nproc` --doctest-modules
+      - echo "compile-debian-${DIST}-${ARCH}-${CC}:"
+      - ls -alh dist/*.deb
+      - sha256sum dist/*.deb
