@@ -2,99 +2,76 @@
 #
 # Test cross compile of c library using gcc and clang cross compilers
 #
-set -e;
+set -eu;
 
 export HOST_ARCH=`uname -m`;
 CHECKMARK="\xE2\x9C\x94";
+
+# these are passed on to `make`:
+export AR CC CC_MARCH CFLAGS LD PLATFORM PLATFORM_SIZE prefix
+
+make_and_clean() {
+    echo -n "${PLATFORM} ${CC_MARCH} (${PLATFORM_SIZE} bit) ctidh-$BITS:";
+    make;
+    sha256sum *.so;
+    rm *.o *.so;
+    echo -e "$CHECKMARK";
+}
 
 echo "Cross compile for GNU/Linux on $HOST_ARCH...";
 for BITS in 511 512 1024 2048;
 do
     # clang
-    export ARCH=amd64;
-    echo -n "$ARCH $BITS bits:";
+    PLATFORM=amd64 PLATFORM_SIZE=64 \
     CC=clang \
-    CFLAGS="-fPIC --target=$ARCH-pc-linux-gnu" \
-    make;
-    sha256sum *.so;
-    rm *.o *.so;
-    echo -e "$CHECKMARK";
+    CFLAGS="--target=$PLATFORM-pc-linux-gnu" \
+    make_and_clean
 
-    # gcc-13 
-    export ARCH=x86_64;
-    echo -n "$ARCH $BITS bits:";
+    # gcc-13 TODO missing --target for this
+    PLATFORM=x86_64 PLATFORM_SIZE=64 \
     CC=x86_64-linux-gnu-gcc \
-    CFLAGS=-fPIC \
-    make;
-    sha256sum *.so;
-    rm *.o *.so;
-    echo -e "$CHECKMARK";
+    make_and_clean
 
     # gcc-13-aarch64-linux-gnu
     # binutils-aarch64-linux-gnu
-    export ARCH=arm64;
-    echo -n "$ARCH $BITS bits:";
-    CFLAGS="-fPIC" \
+    PLATFORM=arm64 PLATFORM_SIZE=64 \
     CC=aarch64-linux-gnu-gcc \
     AR=/usr/bin/aarch64-linux-gnu-ar \
     LD=/usr/bin/aarch64-linux-gnu-ld.gold \
     prefix=/usr/aarch64-linux-gnu/ \
-    make;
-    sha256sum *.so;
-    rm *.o *.so;
-    echo -e "$CHECKMARK";
+    make_and_clean
 
     # gcc-13-powerpc64-linux-gnu
-    export ARCH=ppc64le;
-    echo -n "$ARCH $BITS bits:";
     #target=ppc64le \
+    PLATFORM=ppc64le PLATFORM_SIZE=64 \
     CC=powerpc64le-linux-gnu-gcc \
     LD=/usr/bin/powerpc64le-linux-gnu-ld.gold \
-    make;
-    sha256sum *.so;
-    rm *.o *.so;
-    echo -e "$CHECKMARK";
+    make_and_clean
 
     # gcc-13-riscv64-linux-gnu
-    export ARCH=riscv64;
-    echo -n "$ARCH $BITS bits:";
-    CC=$ARCH-linux-gnu-gcc \
+    PLATFORM=riscv64 PLATFORM_SIZE=64 \
+    CC=$PLATFORM-linux-gnu-gcc \
     LD=/usr/bin/riscv64-linux-gnu-ld.gold \
-    make;
-    sha256sum *.so;
-    rm *.o *.so;
-    echo -e "$CHECKMARK";
+    make_and_clean
 
     # gcc-13-s390x-linux-gnu
-    export ARCH=s390x;
-    echo -n "$ARCH $BITS bits:";
-    CC=$ARCH-linux-gnu-gcc \
+    PLATFORM=s390x PLATFORM_SIZE=64 \
+    CC=$PLATFORM-linux-gnu-gcc \
     LD=/usr/bin/s390x-linux-gnu-ld.gold \
-    make;
-    sha256sum *.so;
-    rm *.o *.so;
-    echo -e "$CHECKMARK";
+    make_and_clean
 
     # gcc-mips64-linux-gnuabi64
     # binutils-mips64-linux-gnuabi64
-    export ARCH=mips64;
-    echo -n "$ARCH $BITS bits:";
-    CC=$ARCH-linux-gnuabi64-gcc \
+    PLATFORM=mips64 PLATFORM_SIZE=64 \
+    CC=$PLATFORM-linux-gnuabi64-gcc \
     LD=/usr/bin/mips64-linux-gnu-ld.gold \
-    make;
-    sha256sum *.so;
-    rm *.o *.so;
-    echo -e "$CHECKMARK";
+    make_and_clean
 
     # clang
-    export ARCH=i386;
-    echo -n "$ARCH $BITS bits:";
+    PLATFORM=i386 PLATFORM_SIZE=32 \
     CC=clang \
-    CFLAGS="--target=$ARCH-pc-linux-gnu -fforce-enable-int128" \
-    make;
-    sha256sum *.so;
-    rm *.o *.so;
-    echo -e "$CHECKMARK";
+    CC_MARCH=i686 CFLAGS="--target=$PLATFORM-pc-linux-gnu" \
+    make_and_clean
 
 done;
 echo "Cross compile for successful.";
