@@ -6,7 +6,7 @@ steps:
       - export CI=true
       - PATH=$PATH:~/.local/bin
       - export WORKDIR=`pwd`
-      - apt update && apt install -y --no-install-recommends make gcc git build-essential 2>&1 > /dev/null
+      - ./misc/install-debian-minimal-deps.sh
       - CC=gcc make
       - sha256sum *.so
   build-debian-bookworm-clang:
@@ -16,7 +16,7 @@ steps:
       - export CI=true
       - PATH=$PATH:~/.local/bin
       - export WORKDIR=`pwd`
-      - apt update && apt install -y --no-install-recommends make clang git build-essential 2>&1 > /dev/null
+      - ./misc/install-debian-minimal-deps.sh
       - CC=clang make
       - sha256sum *.so
   build-debian-sid-cross:
@@ -26,7 +26,7 @@ steps:
       - export CI=true
       - PATH=$PATH:~/.local/bin
       - export WORKDIR=`pwd`
-      - ./misc/install-debian-sid-cross-deps.sh 2>&1 > /dev/null
+      - ./misc/install-debian-sid-cross-deps.sh
       - ./misc/test-c-lib-cross.sh
   build-debian-bookworm-python:
     group: compile
@@ -35,8 +35,7 @@ steps:
       - export CI=true
       - PATH=$PATH:~/.local/bin
       - export WORKDIR=`pwd`
-      - ./misc/install-debian-deps.sh 2>&1 > /dev/null
-      - mkdir -p {dist/source,build/tmp}
+      - ./misc/install-debian-deps.sh
       - make -f Makefile.packages packages
       - dpkg -i dist/python3-highctidh_*.deb
       - pytest-3 -v -n`nproc` --doctest-modules
@@ -51,9 +50,11 @@ steps:
       - export CI=true
       - PATH=$PATH:~/.local/bin
       - export WORKDIR=`pwd`
-      - ./misc/install-arch-deps.sh 2>&1 > /dev/null
+      - ./misc/install-arch-deps.sh
       - CC=clang make -f Makefile.packages wheel
-      - make
+      - CC=clang make
+      - CC=gcc make -f Makefile.packages wheel
+      - CC=gcc make
       - ls -alh dist/*.whl
       - sha256sum dist/*.whl
       - sha256sum *.so
@@ -64,5 +65,5 @@ steps:
       - export CI=true
       - PATH=$PATH:~/.local/bin
       - export WORKDIR=`pwd`
-      - ./misc/install-debian-go-deps.sh 2>&1 > /dev/null
+      - ./misc/install-debian-go-deps.sh
       - make -f Makefile.packages go-test-cross

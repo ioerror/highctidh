@@ -2,6 +2,10 @@
 #
 # Test cross compile of c library using gcc and clang cross compilers
 #
+# XXX TODO:
+# 
+#  This should cross compile _each_ target with clang and also with gcc
+#
 set -eu;
 
 export HOST_ARCH=`uname -m`;
@@ -13,8 +17,9 @@ export AR CC CC_MARCH CFLAGS LD PLATFORM PLATFORM_SIZE prefix
 make_and_clean() {
     echo -n "${PLATFORM} ${CC_MARCH:-} (${PLATFORM_SIZE} bit) ctidh-$BITS:";
     make;
-    sha256sum *.so;
-    rm *.o *.so;
+    rm *.o;
+    mkdir -p cross/$PLATFORM/$PLATFORM_SIZE/;
+    mv *.so cross/$PLATFORM/$PLATFORM_SIZE/;
     echo -e "$CHECKMARK";
 }
 
@@ -74,4 +79,5 @@ do
     make_and_clean
 
 done;
+    sha256sum cross/*/*.so;
 echo "Cross compile for successful.";

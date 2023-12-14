@@ -84,7 +84,7 @@ ifeq	($(PLATFORM),unknown)
 	CFLAGS+= $(BASE_CFLAGS)
 endif
 
-ifeq	($(PLATFORM), $(filter $(PLATFORM), amd64 x86_64))
+ifeq	($(PLATFORM), $(filter $(PLATFORM), amd64 x86_64 i386 i686))
 ifeq	($(PLATFORM_SIZE),32)
 	CFLAGS+= $(BASE_CFLAGS) -D__i386__
 	ifeq ($(CC),clang)
@@ -93,7 +93,6 @@ ifeq	($(PLATFORM_SIZE),32)
 else
 	CFLAGS+= $(BASE_CFLAGS) -D__x86_64__
 endif
-
 endif
 
 SCC ?= $(CC) $(CFLAGS) $(LDFLAGS)
