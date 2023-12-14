@@ -43,10 +43,9 @@ ifeq	($(PLATFORM), $(filter $(PLATFORM), arm64 aarch64))
 endif
 
 ifeq	($(PLATFORM),armv7l)
+	CFLAGS+= $(BASE_CFLAGS) -D__ARM32__
 	ifeq ($(CC),clang)
-		CFLAGS+= $(BASE_CFLAGS) -fforce-enable-int128 -D__ARM32__
-	else
-		CFLAGS+= $(BASE_CFLAGS) -D__ARM32__
+		CFLAGS+= -fforce-enable-int128
 	endif
 endif
 
@@ -55,10 +54,9 @@ ifeq	($(PLATFORM),loongarch64)
 endif
 
 ifeq	($(PLATFORM),mips64)
+	CFLAGS+= $(BASE_CFLAGS) -D__MIPS64__
 	ifeq ($(CC),clang)
-		CFLAGS+= $(BASE_CFLAGS) -fforce-enable-int128 -D__MIPS64__
-	else
-		CFLAGS+= $(BASE_CFLAGS) -D__MIPS64__
+		CFLAGS+=  -fforce-enable-int128
 	endif
 endif
 
@@ -88,10 +86,9 @@ endif
 
 ifeq	($(PLATFORM), $(filter $(PLATFORM), amd64 x86_64))
 ifeq	($(PLATFORM_SIZE),32)
+	CFLAGS+= $(BASE_CFLAGS) -D__i386__
 	ifeq ($(CC),clang)
-		CFLAGS+= $(BASE_CFLAGS) -fforce-enable-int128 -D__i386__
-	else
-		CFLAGS+= $(BASE_CFLAGS) -D__i386__
+		CFLAGS+= -fforce-enable-int128
 	endif
 else
 	CFLAGS+= $(BASE_CFLAGS) -D__x86_64__
