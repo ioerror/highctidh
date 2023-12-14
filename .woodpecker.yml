@@ -7,7 +7,7 @@ steps:
       - PATH=$PATH:~/.local/bin
       - export WORKDIR=`pwd`
       - apt update
-      - apt install -y --no-install-recommends make gcc clang git python3 python3-build python3-setuptools build-essential python3-venv python3-wheel python3-pip flit
+      - apt install -y --no-install-recommends make gcc clang git build-essential
       - make
       - sha256sum *.so
   build-debian-sid-cross:
