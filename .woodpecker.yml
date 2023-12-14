@@ -43,7 +43,20 @@ steps:
       - ls -alh dist/*.deb
       - sha256sum dist/*.whl
       - ls -alh dist/*.whl
-  build-alpine-3.18:
+  build-alpine-3.18-gcc:
+    group: compile
+    image: alpine:3.18
+    commands:
+      - export CI=true
+      - PATH=$PATH:~/.local/bin
+      - export WORKDIR=`pwd`
+      - ./misc/install-arch-deps.sh
+      - CC=gcc make -f Makefile.packages wheel
+      - CC=gcc make
+      - ls -alh dist/*.whl
+      - sha256sum dist/*.whl
+      - sha256sum *.so
+  build-alpine-3.18-clang:
     group: compile
     image: alpine:3.18
     commands:
@@ -53,8 +66,32 @@ steps:
       - ./misc/install-arch-deps.sh
       - CC=clang make -f Makefile.packages wheel
       - CC=clang make
+      - ls -alh dist/*.whl
+      - sha256sum dist/*.whl
+      - sha256sum *.so
+  build-alpine-3.19-gcc:
+    group: compile
+    image: alpine:3.19
+    commands:
+      - export CI=true
+      - PATH=$PATH:~/.local/bin
+      - export WORKDIR=`pwd`
+      - ./misc/install-arch-deps.sh
       - CC=gcc make -f Makefile.packages wheel
       - CC=gcc make
+      - ls -alh dist/*.whl
+      - sha256sum dist/*.whl
+      - sha256sum *.so
+  build-alpine-3.19-clang:
+    group: compile
+    image: alpine:3.19
+    commands:
+      - export CI=true
+      - PATH=$PATH:~/.local/bin
+      - export WORKDIR=`pwd`
+      - ./misc/install-arch-deps.sh
+      - CC=clang make -f Makefile.packages wheel
+      - CC=clang make
       - ls -alh dist/*.whl
       - sha256sum dist/*.whl
       - sha256sum *.so
