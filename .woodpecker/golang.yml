@@ -1,0 +1,19 @@
+matrix:
+  CC:
+    - clang
+
+steps:
+
+  debian-${DIST}-golang-${CC}:
+    group: compile-debian-${DIST}-golang-cross-${CC}
+    image: golang:1.21
+    commands:
+      - export CI=true
+      - PATH=$PATH:~/.local/bin
+      - export WORKDIR=`pwd`
+      - export CC=${CC}
+      - ./misc/install-debian-go-deps.sh
+      - CC=$CC make -f Makefile.packages go-test-cross-${CC}
+    when:
+      - path:
+          include: ["ctidh511/*", "ctidh512/*", "ctidh1024/*", "ctidh2048/*"]

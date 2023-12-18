@@ -1,0 +1,26 @@
+matrix:
+  platform:
+    - linux/amd64
+    - linux/arm64
+  CC:
+    - clang
+    - gcc
+  DIST:
+    - mantic
+    - noble
+
+steps:
+  ubuntu-${DIST}-python-${CC}:
+    group: compile-ubuntu-${DIST}-${CC}-python
+    image: ubuntu:${DIST}
+    commands:
+      - export CI=true
+      - PATH=$PATH:~/.local/bin
+      - export WORKDIR=`pwd`
+      - ./misc/install-debian-${DIST}-deps.sh
+      - export CC=${CC}
+      - CC=${CC} CFLAGS="-fno-lto" make -f Makefile.packages deb
+      - dpkg -i dist/python3-highctidh_*.deb
+      - pytest-3 -v -n`nproc` --doctest-modules
+      - sha256sum dist/*.deb
+      - ls -alh dist/*.deb

@@ -75,6 +75,14 @@ else:
     environ['SOURCE_DATE_EPOCH'] = str(int(time()))
     sda = str(int(environ["SOURCE_DATE_EPOCH"]))
     print(f"SOURCE_DATE_EPOCH={sda}")
+if "LLVM_PARALLEL_LINK_JOBS" in environ:
+    sdb = str(int(environ["LLVM_PARALLEL_LINK_JOBS"]))
+    print(f"LLVM_PARALLEL_LINK_JOBS is set: {sdb}")
+else:
+    print("LLVM_PARALLEL_LINK_JOBS is unset, setting to 1")
+    environ['LLVM_PARALLEL_LINK_JOBS'] = str(int(1))
+    sdb = str(int(environ["LLVM_PARALLEL_LINK_JOBS"]))
+    print(f"LLVM_PARALLEL_LINK_JOBS={sdb}")
 # Set umask to ensure consistent file permissions inside build artifacts such
 # as `.whl` files
 umask(0o022)
@@ -100,70 +108,90 @@ base_src = ["crypto_classify.c", "crypto_declassify.c", "csidh.c",
             "validate.c", "int32_sort.c"]
 
 cflags = get_config_var("CFLAGS").split()
-cflags += ["-Wall", "-fpie", "-fPIC", "-fwrapv", "-pedantic", "-O3", "-Os",]
+cflags += ["-Wextra", "-Wall", "-fpie", "-fPIC", "-fwrapv", "-pedantic", "-O3",
+           "-Os", "-g0", "-Wno-ignored-optimization-argument", "-fno-lto"]
 cflags += ["-DGETRANDOM", f"-DPLATFORM={PLATFORM}",
            f"-DPLATFORM_SIZE={PLATFORM_SIZE}"]
 cflags += ["-Wformat", "-Werror=format-security", "-D_FORTIFY_SOURCE=2",
-           "-fstack-protector-all"]
+           "-fstack-protector-strong"]
+ldflags = ["-Wl,-Bsymbolic-functions", "-s", "-w", "-Wl,-z,noexecstack",
+           "-Wl,-z,relro", "-Wl,-z,now",
+           "-Wl,--reduce-memory-overheads", "-Wl,--no-keep-memory",]
 
 if CC == "clang":
     cflags += ["-Wno-ignored-optimization-argument"]
 
-match PLATFORM:
-    case "aarch64":
-        cflags += ["-DPLATFORM=aarch64", "-DPLATFORM_SIZE=64",]
-        cflags += ["-march=native", "-mtune=native", "-DHIGHCTIDH_PORTABLE"]
-    case "armv7l":
-        # clang required
-        cflags += ["-DPLATFORM=armv7l", "-DPLATFORM_SIZE=32"]
-        cflags += ["-fforce-enable-int128", "-D__ARM32__", "-DHIGHCTIDH_PORTABLE"]
-    case "loongarch64":
-        cflags += ["-DPLATFORM=loongarch64", "-DPLATFORM_SIZE=64",]
-        cflags += ["-march=native", "-mtune=native", "-DHIGHCTIDH_PORTABLE"]
-    case "mips64":
-        # clang or mips64-linux-gnuabi64-gcc cross compile required
-        cflags += ["-DPLATFORM=mips64", "-DPLATFORM_SIZE=64",]
-        cflags += ["-fforce-enable-int128", "-DHIGHCTIDH_PORTABLE"]
-    case "ppc64le":
-        cflags += ["-DPLATFORM=ppc64le", "-DPLATFORM_SIZE=64",]
-        cflags += ["-mtune=native", "-DHIGHCTIDH_PORTABLE"]
-    case "ppc64":
-        cflags += ["-DPLATFORM=ppc64", "-DPLATFORM_SIZE=64",]
-        cflags += ["-mtune=native", "-DHIGHCTIDH_PORTABLE"]
-    case "riscv64":
-        cflags += ["-DPLATFORM=riscv64", "-DPLATFORM_SIZE=64",]
-        cflags += ["-DHIGHCTIDH_PORTABLE"]
-    case "s390x":
-        cflags += ["-DPLATFORM=s390x", "-DPLATFORM_SIZE=64",]
-        cflags += ["-march=native", "-mtune=native", "-DHIGHCTIDH_PORTABLE"]
-    case "sparc64":
-        cflags += ["-DPLATFORM=sparc64", "-DPLATFORM_SIZE=64",]
-        cflags += ["-march=native", "-mtune=native", "-DHIGHCTIDH_PORTABLE"]
-    case "x86_64":
-        if PLATFORM_SIZE == 64:
-            cflags += ["-DPLATFORM=x86_64", "-DPLATFORM_SIZE=64"]
-            cflags += ["-march=native", "-mtune=native", "-D__x86_64__"]
-        elif PLATFORM_SIZE == 32:
-            # clang required
-            cflags += ["-DPLATFORM=i386", "-DPLATFORM_SIZE=32",]
-            cflags += ["-fforce-enable-int128", "-D__i386__", "-DHIGHCTIDH_PORTABLE"]
-    case _:
-        cflags += ["-DHIGHCTIDH_PORTABLE"]
-
-base_src_511 = base_src + ["fp_inv511.c", "fp_sqrt511.c", "primes511.c",]
-base_src_512 = base_src + ["fp_inv512.c", "fp_sqrt512.c", "primes512.c",]
-base_src_1024 = base_src + ["fp_inv1024.c", "fp_sqrt1024.c", "primes1024.c",]
-base_src_2048 = base_src + ["fp_inv2048.c", "fp_sqrt2048.c", "primes2048.c",]
+print(f"Building for platform: {PLATFORM}")
+if PLATFORM == "aarch64":
+  if CC == "clang":
+      cflags += ["-DHIGHCTIDH_PORTABLE"]
+  if CC == "gcc":
+      cflags += ["-march=native", "-mtune=native", "-DHIGHCTIDH_PORTABLE"]
+elif PLATFORM == "armv7l":
+  # clang required
+  if CC == "clang":
+      cflags += ["-fforce-enable-int128", "-D__ARM32__",
+                 "-DHIGHCTIDH_PORTABLE",]
+  if CC == "gcc":
+      cflags += ["-D__ARM32__", "-DHIGHCTIDH_PORTABLE"]
+elif PLATFORM == "loongarch64":
+  cflags += ["-march=native", "-mtune=native", "-DHIGHCTIDH_PORTABLE"]
+elif PLATFORM == "mips":
+  # clang or mips64-linux-gnuabi64-gcc cross compile required
+  if CC == "clang":
+      cflags += ["-fforce-enable-int128", "-DHIGHCTIDH_PORTABLE"]
+  if CC == "gcc":
+      cflags += ["-DHIGHCTIDH_PORTABLE"]
+elif PLATFORM == "mips64":
+  cflags += ["-DHIGHCTIDH_PORTABLE"]
+elif PLATFORM == "mips64le":
+  cflags += ["-DHIGHCTIDH_PORTABLE"]
+elif PLATFORM == "ppc64le":
+  cflags += ["-mtune=native", "-DHIGHCTIDH_PORTABLE"]
+elif PLATFORM == "ppc64":
+  cflags += ["-mtune=native", "-DHIGHCTIDH_PORTABLE"]
+elif PLATFORM == "riscv64":
+  cflags += ["-DHIGHCTIDH_PORTABLE"]
+elif PLATFORM == "s390x":
+  if CC == "clang":
+      cflags += ["-march=z10", "-mtune=z10", "-DHIGHCTIDH_PORTABLE"]
+  if CC == "gcc":
+      cflags += ["-march=z10", "-mtune=z10", "-DHIGHCTIDH_PORTABLE"]
+elif PLATFORM == "sparc64":
+  cflags += ["-march=native", "-mtune=native", "-DHIGHCTIDH_PORTABLE"]
+elif PLATFORM == "x86_64":
+  if PLATFORM_SIZE == 64:
+    cflags += ["-march=native", "-mtune=native", "-D__x86_64__"]
+  elif PLATFORM_SIZE == 32:
+    # clang required
+    cflags += ["-fforce-enable-int128", "-D__i386__", "-DHIGHCTIDH_PORTABLE"]
+else:
+  cflags += ["-DHIGHCTIDH_PORTABLE"]
 
 # We default to fiat as the backend for all platforms except x86_64
-if PLATFORM != "x86_64":
-    base_src_511 += [ "fiat_p511.c"]
-    base_src_512 += [ "fiat_p512.c"]
-    base_src_1024 += [ "fiat_p1024.c"]
-    base_src_2048 += [ "fiat_p2048.c"]
+if PLATFORM == "x86_64" and PLATFORM_SIZE == 64:
+    src_511 =  base_src + ["fp_inv511.c", "fp_sqrt511.c", "primes511.c",]
+    src_512 =  base_src + ["fp_inv512.c", "fp_sqrt512.c", "primes512.c",]
+    src_1024 = base_src + ["fp_inv1024.c", "fp_sqrt1024.c", "primes1024.c",]
+    src_2048 = base_src + ["fp_inv2048.c", "fp_sqrt2048.c", "primes2048.c",]
+else:
+    src_511 = base_src + ["fiat_p511.c", "fp_inv511.c", "fp_sqrt511.c", "primes511.c",]
+    src_512 = base_src + ["fiat_p512.c", "fp_inv512.c", "fp_sqrt512.c", "primes512.c",]
+    src_1024 = base_src + ["fiat_p1024.c", "fp_inv1024.c", "fp_sqrt1024.c", "primes1024.c",]
+    src_2048 = base_src + ["fiat_p2048.c", "fp_inv2048.c", "fp_sqrt2048.c", "primes2048.c",]
 
-ldflags = ["-s", "-w", "-Wl,-z,noexecstack", "-Wl,-z,relro", "-Wl,-z,now"]
-
+extra_compile_args_511 = cflags + ["-DBITS=511",
+        "-DNAMESPACEBITS(x)=highctidh_511_##x",
+        "-DNAMESPACEGENERIC(x)=highctidh_##x"]
+extra_compile_args_512 = cflags + ["-DBITS=512",
+        "-DNAMESPACEBITS(x)=highctidh_512_##x",
+        "-DNAMESPACEGENERIC(x)=highctidh_##x"]
+extra_compile_args_1024 = cflags + ["-DBITS=1024",
+        "-DNAMESPACEBITS(x)=highctidh_1024_##x",
+        "-DNAMESPACEGENERIC(x)=highctidh_##x"]
+extra_compile_args_2048 = cflags + ["-DBITS=2048",
+        "-DNAMESPACEBITS(x)=highctidh_2048_##x",
+        "-DNAMESPACEGENERIC(x)=highctidh_##x"]
 if __name__ == "__main__":
     setup(
         name = "highctidh",
@@ -176,44 +204,36 @@ if __name__ == "__main__":
         cmdclass = dict(bdist_deb=bdist_deb, sdist_dsc=sdist_dsc),
         ext_modules = [
             Extension("highctidh_511",
-                extra_compile_args = cflags + ["-DBITS=511",
-                    "-DNAMESPACEBITS(x)=highctidh_511_##x",
-                    "-DNAMESPACEGENERIC(x)=highctidh_##x"],
+                extra_compile_args = extra_compile_args_511,
                 extra_link_args = ldflags,
                 include_dirs = dir_include,
                 language = 'c',
                 library_dirs = lib_include,
-                sources = base_src_511,
+                sources = src_511,
             ),
             Extension("highctidh_512",
-                extra_compile_args = cflags + ["-DBITS=512",
-                    "-DNAMESPACEBITS(x)=highctidh_512_##x",
-                    "-DNAMESPACEGENERIC(x)=highctidh_##x"],
+                extra_compile_args = extra_compile_args_512,
                 extra_link_args = ldflags,
                 include_dirs = dir_include,
                 language = 'c',
                 library_dirs = lib_include,
-                sources = base_src_512,
+                sources = src_512,
             ),
             Extension("highctidh_1024",
-                extra_compile_args = cflags + ["-DBITS=1024",
-                    "-DNAMESPACEBITS(x)=highctidh_1024_##x",
-                    "-DNAMESPACEGENERIC(x)=highctidh_##x"],
+                extra_compile_args = extra_compile_args_1024,
                 extra_link_args = ldflags,
                 include_dirs = dir_include,
                 language = 'c',
                 library_dirs = lib_include,
-                sources = base_src_1024,
+                sources = src_1024,
             ),
             Extension("highctidh_2048",
-                extra_compile_args = cflags + ["-DBITS=2048",
-                    "-DNAMESPACEBITS(x)=highctidh_2048_##x",
-                    "-DNAMESPACEGENERIC(x)=highctidh_##x"],
+                extra_compile_args = extra_compile_args_2048,
                 extra_link_args = ldflags,
                 include_dirs = dir_include,
                 language ='c',
                 library_dirs = lib_include,
-                sources = base_src_2048,
+                sources = src_2048,
             ),
         ]
 

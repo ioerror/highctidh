@@ -1,3 +1,4 @@
+#ifdef CGONUTS
 #include <stdlib.h>
 #include <stdint.h>
 
@@ -9,3 +10,4 @@ void fillrandom_custom(
 {
   extern void go_fillrandom(const uintptr_t context, void *const outptr, const size_t outsz);
 }
+#endif

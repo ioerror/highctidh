@@ -16,31 +16,26 @@ project which uses a "Correct-by-Construction" approach; see `PRIMES.md` for
 more information.  Tested architectures for the C library include: `amd64`,
 `arm32/armv7l`, `arm64/aarch64`, `i386`, `loongarch64/Loongson`,
 `mips64/mips64el`, `POWER8/ppc64`, `POWER9/ppc64le`, `riscv64`, `s390x`,
-`sparc64`, and `x86_64` (with and without avx2). The `arm32/armv7l`
-architecture may not be functional when being built with clang at this time.
+`sparc64`, and `x86_64` (with and without avx2).
 
-The Golang bindings build and should be functional on `amd64`, `arm32/armv7l`,
-`arm64`, `i386`, `ppc64le`, `riscv64`, `s390x`, and `mips64`. The
-`misc/test-golang-cross.sh` script runs tests on the host build architecture
-and then attempts to cross-compile for each listed architecture. Native builds
-for the Golang bindings should be functional on `loong64` and `sparc64` but
-this is currently untested.
+The Golang bindings compile and should be functional on `amd64`,
+`arm32/armv7l`, `arm64`, `i386`, `ppc64le`, `riscv64`, `s390x`, and `mips64`.
+The `misc/test-golang-cross.sh` script runs tests on the host build
+architecture and then attempts to cross-compile for each listed architecture.
+Native builds for the Golang bindings should be functional on `loong64` and
+`sparc64` but this is currently untested.
 
-The Python bindings build and should be functional on `amd64`, `arm64`, `i386`,
-`ppc64le`, `riscv64`, `s390x`, and `mips64el`. The Python module on
-`arm32/armv7l` and `arm32/armv5` are not building due to an LLVM/clang error
-with the 2048 bit field sizes.
+The Python bindings build and should be functional on `amd64`, `arm32/armv7l`,
+`arm32/armv5`, `arm64`, `i386`, `ppc64le`, `riscv64`, `s390x`, and `mips64el`.
 
 Debian packages and Python wheels that contain everything needed to use
 `highctidh` build with the `make -f Makefile.packages packages` Makefile target
-for `amd64`, `arm64`, `i386`, `mips64el`, `ppc64el`, `riscv64`, and `s390x`.
-
-If `arm32` support is required for your use, please use the `v1.0.2023112802`
-tag.
+for `amd64`, `arm32/armv7l`, `arm32/armv5`, `arm64`, `i386`, `mips64el`,
+`ppc64el`, `riscv64`, and `s390x`.
 
 To see rough performance numbers, look at `BENCHMARKS.md`. We recommend using
-gcc 10 or later as the compiler except on `arm32/armv7l`, `i386`, and
-`mips64/mips64el` where we recommend clang 14.
+gcc 10 or later as the compiler except on `arm32/armv5`, `arm32/armv7l`,
+`i386`, and `mips64/mips64el` where we recommend clang 14.
 
 The library has been tested on the following operating systems:
 - Debian Bookworm (GNU libc)
@@ -85,7 +80,7 @@ libhighctidh_{511,512,1024,2048}.so libraries is available in
 `example-ctidh.c`. Use the `make examples` target to build `example-ctidh511`,
 `example-ctidh512`, `example-ctidh1024`, and `example-ctidh2048` programs.
 
-A basic Python benchmarking program `highctidh-simple-benchmark.py` shows
+A basic Python benchmarking program `misc/highctidh-simple-benchmark.py` shows
 general performance numbers. Python tests may be run with pytest and should be
 functional without pytest assuming the library is installed. If the library
 path includes the build directory as is done in `test.sh`, pytest or python
