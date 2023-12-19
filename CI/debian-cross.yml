@@ -11,7 +11,7 @@ matrix:
 
 steps:
   debian-${DIST}-cross-${CC}:
-    group: compile-debian-${DIST}-cross
+    group: debian-${DIST}-cross-${CC}
     image: debian:${DIST}
     commands:
       - export CI=true
@@ -20,3 +20,8 @@ steps:
       - export CC=${CC}
       - ./misc/install-debian-${DIST}-cross-deps.sh
       - ./misc/test-c-lib-cross-${CC}.sh
+
+depends_on:
+  - debian
+
+runs_on: [ success, failure ]

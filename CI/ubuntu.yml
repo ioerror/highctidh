@@ -10,8 +10,8 @@ matrix:
     - noble
 
 steps:
-  ubuntu-${DIST}-python-${CC}:
-    group: compile-ubuntu-${DIST}-${CC}-python
+  ubuntu-${DIST}-${CC}-deb-python:
+    group: ubuntu-${DIST}-${CC}-deb-python
     image: ubuntu:${DIST}
     commands:
       - export CI=true
@@ -24,3 +24,9 @@ steps:
       - pytest-3 -v -n`nproc` --doctest-modules
       - sha256sum dist/*.deb
       - ls -alh dist/*.deb
+
+depends_on:
+  - debian
+  - debian-cross
+
+runs_on: [ success, failure ]

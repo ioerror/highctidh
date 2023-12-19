@@ -1,0 +1,45 @@
+matrix:
+  CC:
+    - clang
+  DIST:
+    - bookworm
+  ARCH:
+    - amd64
+    - arm64v8
+    - arm32v5
+    - arm32v7
+    - s390x
+    - i386
+    - ppc64le
+    - mips64le
+  PYVER:
+    - 3.12
+    - 3.11
+    - 3.10
+    - 3.9
+  FIELD_SIZE:
+    - 511
+    - 512
+    - 1024
+    - 2048
+
+steps:
+  debian-${DIST}-python-${ARCH}-${CC}-test:
+    group: compile-debian-python-${DIST}-${ARCH}-${CC}
+    image: ${ARCH}/python:${PYVER}-${DIST}
+    environment:
+      - DEBIAN_FRONTEND=noninteractive
+      - CI=true
+    commands:
+      - export PATH=$PATH:~/.local/bin
+      - export WORKDIR=`pwd`
+      - ./misc/install-debian-bookworm-python-deps.sh
+      - ./misc/docker-fixup.sh
+      - export SOURCE_DATE_EPOCH=`git log -1 --pretty=%ct`
+      - export TMP=build/tmp
+      - ./misc/setup-qemu-python.sh
+      - ./misc/test-qemu-python.sh ${FIELD_SIZE}
+depends_on:
+  - qemu-python-clang-setup
+
+runs_on: [ success, failure ]

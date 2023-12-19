@@ -12,8 +12,8 @@ matrix:
     - mips64le
 
 steps:
-  debian-${DIST}-${ARCH}-${CC}:
-    group: compile-debian-python-${DIST}-${ARCH}-${CC}
+  debian-${DIST}-${ARCH}-${CC}-deb-pytest:
+    group: debian-${DIST}-${ARCH}-${CC}-deb-pytest
     image: ${ARCH}/debian:${DIST}
     environment:
       - DEBIAN_FRONTEND=noninteractive
@@ -33,3 +33,8 @@ steps:
       - echo "compile-debian-${DIST}-${ARCH}-${CC}:"
       - ls -alh dist/*.deb
       - sha256sum dist/*.deb
+
+depends_on:
+  - debian-cross
+
+runs_on: [ success, failure ]
