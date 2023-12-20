@@ -1,0 +1,32 @@
+name: Makefile CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        CC: ["clang", "gcc"]
+        PORTABLE: ["0", "1"]
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install Python deps for testing
+      run: sudo bash -c ./misc/install-debian-deps.sh
+
+    - name: Build Debian package with assembler backend
+      run: CC=${{ matrix.CC }} CFLAGS="-fno-lto" HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make -f Makefile.packages deb
+
+    - name: Install Debian package
+      run: sudo dpkg -i dist/python3-highctidh_*.deb
+
+    - name: Run pytest
+      run: pytest-3 -v -n`nproc` --doctest-modules
+
+    - name: Print hashes
+      run: sha256sum dist/*.deb && ls -alh dist/*.deb
