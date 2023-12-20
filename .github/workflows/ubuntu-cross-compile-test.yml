@@ -1,0 +1,25 @@
+name: Ubuntu C library cross compile
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        CC: ["clang", "gcc"]
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Display compiler version
+      run: ${{ matrix.CC }} -v
+
+    - name: Install cross compiler deps
+      run: sudo ./misc/install-ubuntu-latest-cross-deps.sh
+
+    - name: Build with cross compiler
+      run: CFLAGS="-fno-lto" ./misc/test-c-lib-cross-${{ matrix.CC }}.sh

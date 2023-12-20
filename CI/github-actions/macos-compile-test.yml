@@ -1,0 +1,22 @@
+name: MacOS C library compile
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        CC: ["clang", "gcc"]
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Display compiler version
+      run: ${{ matrix.CC }} -v
+
+    - name: Build c library
+      run: CC=${{ matrix.CC }} make

@@ -3,8 +3,11 @@
 # Test cross compile of c library using clang cross compilers
 #
 set -eu;
+set -x;
 
 export HOST_ARCH=`uname -m`;
+export CODENAME=`lsb_release -c|grep Codename`;
+echo "Building on: $HOST_ARCH";
 CHECKMARK="\xE2\x9C\x94";
 
 # these are passed on to `make`:
@@ -56,21 +59,31 @@ LD=/usr/bin/$PLATFORM-linux-gnu-ld \
 CC="clang --target=$PLATFORM-pc-linux-gnu -fuse-ld=$LD" \
 make_and_clean;
 
+if [ $CODENAME == "Codename:	mantic" ];
+then
 PLATFORM=sparcv9 PLATFORM_SIZE=64 \
 AR=/usr/bin/sparc64-linux-gnu-ar \
 LD=/usr/bin/sparc64-linux-gnu-ld \
-CC="clang --target=$PLATFORM-pc-linux-gnu -fuse-ld=$LD" \
+CC="clang --target=$PLATFORM-pc-linux-gnu -fuse-ld=$LD -I /usr/sparc64-linux-gnu/" \
 make_and_clean;
+else
+    echo "Skipping sparc 64-bit";
+fi
 
 PLATFORM=mips64 PLATFORM_SIZE=64 \
 LD=/usr/bin/$PLATFORM-linux-gnuabi$PLATFORM_SIZE-ld \
 CC="clang --target=$PLATFORM-pc-linux-gnu -fuse-ld=$LD" \
 make_and_clean;
 
+if [ $CODENAME == "Codename:	mantic" ];
+then
 PLATFORM=mips64el PLATFORM_SIZE=64 \
 LD=/usr/bin/$PLATFORM-linux-gnuabi$PLATFORM_SIZE-ld \
 CC="clang --target=$PLATFORM-pc-linux-gnu -fuse-ld=$LD" \
 make_and_clean;
+else
+    echo "Skipping mips64el 64-bit";
+fi
 
 PLATFORM=i386 PLATFORM_SIZE=32 \
 CC_MARCH=i686 \

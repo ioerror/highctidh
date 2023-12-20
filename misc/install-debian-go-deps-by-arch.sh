@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -e;
 
 ARCH=$1;
 # This BASE_PACKAGES list assumes a Docker image with golang installed
@@ -62,6 +62,9 @@ then
     then
         PACKAGES="$BASE_PACKAGES libc6-dev-s390x-cross";
     fi
+else
+    echo "ARCH appears to be unset: ARCH=$ARCH";
+    exit 1;
 fi
 
 apt update > /dev/null 2>&1;

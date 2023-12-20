@@ -3,6 +3,7 @@
 # Test cross compile of c library using gcc cross compilers
 #
 set -eu;
+set -x;
 
 export HOST_ARCH=`uname -m`;
 CHECKMARK="\xE2\x9C\x94";

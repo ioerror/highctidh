@@ -1,4 +1,4 @@
-name: Makefile CI
+name: Build Debian GNU/Linux package and run pytest
 
 on:
   push:
