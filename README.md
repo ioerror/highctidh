@@ -1,7 +1,9 @@
 ![highctidh build status](https://ci.codeberg.org/api/badges/vula/highctidh/status.svg "highctidh build status")
 
 This is an unofficial fork of high-ctidh. This is highly experimental software
-and it has not yet been reviewed for security considerations.
+and it has not yet been reviewed for security considerations. We encourage
+users of this software to assume that there are vulnerabilities until a review
+confirms otherwise.
 
 This fork enhances high-ctidh with additional Makefile targets including
 building high-ctidh as four shared libraries, one for each key size of 511,
@@ -10,23 +12,30 @@ optional Debian packaging of both the shared library object files and the
 Python module. The Python bindings were made in concert with the author of the
 Golang bindings which are now included. Both bindings were built around the
 same shared objects for cross verification purposes. Currently this library is
-fast on the `x86_64` CPU architecture and functional but much slower with other
-CPU architectures. The portable backend was generated using the `fiat-crypto`
-project which uses a "Correct-by-Construction" approach; see `PRIMES.md` for
-more information.  Tested architectures for the C library include: `amd64`,
-`arm32/armv7l`, `arm64/aarch64`, `i386`, `loongarch64/Loongson`,
-`mips64/mips64el`, `POWER8/ppc64`, `POWER9/ppc64le`, `riscv64`, `s390x`,
-`sparc64`, and `x86_64` (with and without avx2).
+fast on the `amd64`/`x86_64` CPU architecture and functional but much slower
+with other CPU architectures. The portable backend was generated using the
+`fiat-crypto` project which uses a "Correct-by-Construction" approach; see
+`PRIMES.md` for more information.  Tested architectures for the C library
+include: `amd64`/`x86_64`  (with and without avx2), `arm32v5`, `arm32v6`,
+`arm32v7`, `arm64v8`/`aarch64`/`arm64`, `i386`, `loongarch64/Loongson`, `mips`,
+`mipsel`, `mips64`, `mips64el`, `POWER8/ppc64`, `POWER9/ppc64le`, `riscv64`,
+`s390x`, and `sparc64`.
 
-The Golang bindings compile and should be functional on `amd64`,
-`arm32/armv7l`, `arm64`, `i386`, `ppc64le`, `riscv64`, `s390x`, and `mips64`.
-The `misc/test-golang-cross.sh` script runs tests on the host build
-architecture and then attempts to cross-compile for each listed architecture.
-Native builds for the Golang bindings should be functional on `loong64` and
-`sparc64` but this is currently untested.
+The Golang bindings compile and should be functional on `amd64`/`x86_64`,
+`arm32v5`, `arm32v6`, `arm32v7`, arm64v8`/`aarch64`/`arm64`, `i386`, `ppc64`,
+`ppc64le`, `riscv64`, `s390x`, `mips`, `mipsle`, `mips64`, `mips64le`.  The
+`misc/test-golang-cross.sh` script runs tests on the host build architecture
+and then attempts to cross-compile for each listed architecture.  The
+`.woodpecker/golang.yml` attempts to perform a cross-compile for all listed
+golang versions and enumerated architectures.  Native builds for the Golang
+bindings should be functional on `loong64` and `sparc64` but this is currently
+untested. Go version 1.21 is used to build and test in
+`.woodpecker/golang.yml`.
 
 The Python bindings build and should be functional on `amd64`, `arm32/armv7l`,
-`arm32/armv5`, `arm64`, `i386`, `ppc64le`, `riscv64`, `s390x`, and `mips64el`.
+`arm32v5`, `arm32v6`, `arm32v7`, `arm64`, `i386`, `ppc64le`, `riscv64`,
+`s390x`, and `mips64el`. Python 3.9, 3.10, 3.11, and 3.12 are used to build and
+test in `.woodpecker/qemu-python-clang.yml`.
 
 Debian packages and Python wheels that contain everything needed to use
 `highctidh` build with the `make -f Makefile.packages packages` Makefile target
@@ -34,13 +43,23 @@ for `amd64`, `arm32/armv7l`, `arm32/armv5`, `arm64`, `i386`, `mips64el`,
 `ppc64el`, `riscv64`, and `s390x`.
 
 To see rough performance numbers, look at `BENCHMARKS.md`. We recommend using
-gcc 10 or later as the compiler except on `arm32/armv5`, `arm32/armv7l`,
-`i386`, and `mips64/mips64el` where we recommend clang 14.
+gcc 10 or later as the compiler except on 32-bit platforms where we recommend
+clang 14.
+
+We attempt to comprehensively test changes to this software in a continuous
+integration environment. Testing includes `clang`, `gcc`, native builds on
+`linux/amd64` and `linux/arm64`, as well as `qemu` builds for almost all other
+supported architectures. Please consult the relevant configuration files in
+`.woodpecker/` for more information.
 
 The library has been tested on the following operating systems:
+- Alpine v3.18 (musl libc)
+- Alpine v3.19 (musl libc)
+- Debian Sid (GNU libc)
 - Debian Bookworm (GNU libc)
-- Alpine v.3.18 (musl libc)
-- HardenedBSD (FreeBSD libc).
+- HardenedBSD (FreeBSD libc)
+- Ubuntu Mantic (GNU libc)
+- Ubuntu Noble (GNU libc)
 
 To build and install we recommend:
 ```

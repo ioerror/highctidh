@@ -1,13 +1,10 @@
 matrix:
   platform:
     - linux/amd64
-    - linux/arm64
   CC:
-    - clang
     - gcc
   DIST:
     - sid
-    - bookworm
   ARCH:
     - amd64
 
