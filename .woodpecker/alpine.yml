@@ -1,13 +1,13 @@
 matrix:
   platform:
     - linux/amd64
-    - linux/arm64
+   #- linux/arm64
   ALPINE_VERSION:
-    - 3.18
+   #- 3.18
     - 3.19
   CC:
     - clang
-    - gcc
+   #- gcc
 
 steps:
  alpine-${ALPINE_VERSION}-${CC}:

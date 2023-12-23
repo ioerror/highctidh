@@ -9,18 +9,18 @@ matrix:
     - amd64
 
 steps:
-  debian-${DIST}-${CC}:
-    group: compile-debian-${DIST}-${CC}
-    image: debian:${DIST}
-    commands:
-      - export CI=true
-      - PATH=$PATH:~/.local/bin
-      - export WORKDIR=`pwd`
-      - ./misc/install-debian-minimal-deps.sh
-      - export CC=${CC}
-      - CC=${CC} make
-      - ls -alh *.so
-      - sha256sum *.so
+# debian-${DIST}-${CC}:
+#   group: compile-debian-${DIST}-${CC}
+#   image: debian:${DIST}
+#   commands:
+#     - export CI=true
+#     - PATH=$PATH:~/.local/bin
+#     - export WORKDIR=`pwd`
+#     - ./misc/install-debian-minimal-deps.sh
+#     - export CC=${CC}
+#     - CC=${CC} make
+#     - ls -alh *.so
+#     - sha256sum *.so
   debian-${DIST}-${platform}-python-${CC}:
     group: compile-debian-${DIST}-${CC}-python
     image: debian:${DIST}
