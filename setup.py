@@ -109,17 +109,20 @@ base_src = ["crypto_classify.c", "crypto_declassify.c", "csidh.c",
 
 cflags = get_config_var("CFLAGS").split()
 cflags += ["-Wextra", "-Wall", "-fpie", "-fPIC", "-fwrapv", "-pedantic", "-O3",
-           "-Os", "-g0", "-Wno-ignored-optimization-argument", "-fno-lto"]
+           "-Os", "-g0", "-fno-lto"]
 cflags += ["-DGETRANDOM", f"-DPLATFORM={PLATFORM}",
            f"-DPLATFORM_SIZE={PLATFORM_SIZE}"]
 cflags += ["-Wformat", "-Werror=format-security", "-D_FORTIFY_SOURCE=2",
            "-fstack-protector-strong"]
-ldflags = ["-Wl,-Bsymbolic-functions", "-s", "-w", "-Wl,-z,noexecstack",
-           "-Wl,-z,relro", "-Wl,-z,now",
-           "-Wl,--reduce-memory-overheads", "-Wl,--no-keep-memory",]
+ldflags = ["-s", "-w"]
 
 if CC == "clang":
-    cflags += ["-Wno-ignored-optimization-argument"]
+    cflags += ["-Wno-ignored-optimization-argument", "-Wno-unreachable-code"]
+if CC == "gcc":
+    cflags += ["-Werror"]
+    ldflags += ["-Wl,-Bsymbolic-functions", "-Wl,-z,noexecstack",
+               "-Wl,-z,relro", "-Wl,-z,now", "-Wl,--reduce-memory-overheads",
+               "-Wl,--no-keep-memory",]
 
 print(f"Building for platform: {PLATFORM}")
 if PLATFORM == "aarch64":

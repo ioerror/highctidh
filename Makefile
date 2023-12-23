@@ -2,10 +2,22 @@
 
 .PHONY: clean
 HOST_PLATFORM := $(shell uname -m)
+HOST_OS := $(shell uname -s)
 
 ### override these for cross-building:
 PLATFORM ?= $(shell uname -m)
+ifeq	($(PLATFORM), $(filter $(PLATFORM), arm64 amd64 loongarch64 mips64 mips64el ppc64 ppc64le riscv64 s390x sparc64 x86_64))
+PLATFORM_SIZE ?= 64
+else ifeq ($(PLATFORM), $(filter $(PLATFORM), armv7l i386 i686 mips mipsel)) 
+PLATFORM_SIZE ?= 32
+else
 PLATFORM_SIZE ?= $(shell getconf LONG_BIT)
+endif
+
+ifndef PLATFORM_SIZE
+	$(error "Set PLATFORM_SIZE to 32 or 64 and try again")
+endif
+$(info PLATFORM_SIZE=$(PLATFORM_SIZE))
 
 ifeq	(HOST_PLATFORM,PLATFORM)
 CC_MARCH ?= native
@@ -15,14 +27,16 @@ endif
 CC_MTUNE ?= $(CC_MARCH)
 
 SEC_CFLAGS := -Wformat -Werror=format-security -D_FORTIFY_SOURCE=2 -fstack-protector-strong
-BASE_CFLAGS := -fpie -fPIC -Wall -Wextra -pedantic -O3 -Os -fwrapv -DGETRANDOM
+BASE_CFLAGS := -fpie -fPIC -Wall -Wextra -pedantic -O3 -Os -fwrapv -DGETRANDOM -Werror
 BASE_CFLAGS+=-DPLATFORM=${PLATFORM} -DPLATFORM_SIZE=${PLATFORM_SIZE}
 BASE_CFLAGS+=$(SEC_CFLAGS)
 BASE_CFLAGS+=$(if $(strip $(CC_MARCH)),-march=$(CC_MARCH) -mtune=$(CC_MTUNE),)
-LDFLAGS := -Wl,-Bsymbolic-functions
-LDFLAGS+=-s -w
+LDFLAGS := -s -w
+ifeq ($(HOST_OS),"Linux")
 LDFLAGS+=-Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now
+LDFLAGS+=-Wl,-Bsymbolic-functions
 LDFLAGS+=-Wl,--reduce-memory-overheads -Wl,--no-keep-memory
+endif
 # Default to using fiat crypto, safe and portable but slow backend
 HIGHCTIDH_PORTABLE ?= 1
 ifeq	($(HIGHCTIDH_PORTABLE),1)

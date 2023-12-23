@@ -22,7 +22,7 @@ include: `amd64`/`x86_64`  (with and without avx2), `arm32v5`, `arm32v6`,
 `s390x`, and `sparc64`.
 
 The Golang bindings compile and should be functional on `amd64`/`x86_64`,
-`arm32v5`, `arm32v6`, `arm32v7`, arm64v8`/`aarch64`/`arm64`, `i386`, `ppc64`,
+`arm32v5`, `arm32v6`, `arm32v7`, `arm64v8`/`aarch64`/`arm64`, `i386`, `ppc64`,
 `ppc64le`, `riscv64`, `s390x`, `mips`, `mipsle`, `mips64`, `mips64le`.  The
 `misc/test-golang-cross.sh` script runs tests on the host build architecture
 and then attempts to cross-compile for each listed architecture.  The
@@ -41,6 +41,9 @@ Debian packages and Python wheels that contain everything needed to use
 `highctidh` build with the `make -f Makefile.packages packages` Makefile target
 for `amd64`, `arm32/armv7l`, `arm32/armv5`, `arm64`, `i386`, `mips64el`,
 `ppc64el`, `riscv64`, and `s390x`.
+
+Building on CheriBSD, FreeBSD, and OpenBSD building is supported using the
+`gmake` command.
 
 To see rough performance numbers, look at `BENCHMARKS.md`. We recommend using
 gcc 10 or later as the compiler except on 32-bit platforms where we recommend

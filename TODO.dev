@@ -14,25 +14,19 @@ fix warning:
     clang -Wsign-compare -DNDEBUG -g -fwrapv -O2 -Wall -g -fstack-protector-strong -Wformat -Werror=format-security -g -fwrapv -O2 -g -O2 -ffile-prefix-map=/highctidh/dist/highctidh-1.0.2023112000=. -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -fPIC -I. -I/highctidh/dist/highctidh-1.0.2023112000 -I/usr/include/python3.11 -c steps.c -o build/temp.linux-arm-cpython-311/steps.o -Wsign-compare -DNDEBUG -g -fwrapv -O2 -Wall -g -fstack-protector-strong -Wformat -Werror=format-security -g -fwrapv -O2 -Wextra -Wall -Wall -Wextra -fpie -fPIC -fwrapv -pedantic -O3 -Os -DGETRANDOM -DHIGHCTIDH_PORTABLE -DPLATFORM=armv7l -DPLATFORM_SIZE=32 -Wno-ignored-optimization-argument -fforce-enable-int128 -D__ARM32__ -DBITS=512 -DNAMESPACEBITS(x)=highctidh_512_##x -DNAMESPACEGENERIC(x)=highctidh_##x
 
 
-Port to MacOS:
+On OpenBSD (mips64 - Big Endian) test.c is currently broken on cfarm231.
+On GNU/Linux (ppc64 - Big Endian) test.c is currently broken on
+cfarm110:
 
-    csidh.c needs:
+   fillrandom
+    test2048: test.c:277: void test_fillrandom(): Assertion `0 !=
+    memcmp(r1, r2, sizeof(r1))' failed.
+   Aborted
 
-    #ifdef DARWIN
-    #include <sys/types.h> // pick one here
-    #include <machine/endian.h> // or the other here
-    #else
-    #include <endian.h>
-    #endif
+On MacOS (arm64 - Little Endian) test.c fails for field size 2048 on
+cfarm104:
 
-    LDFLAGS need to be adjusted
-
-    Then the following symbols will need to be resolved
-    Undefined symbols for architecture x86_64:
-      "_getrandom", referenced from:
-          _randombytes in randombytes.o
-      "_htole64", referenced from:
-          _highctidh_511_public_key_to_bytes in csidh511.o
-      "_le64toh", referenced from:
-          _highctidh_511_public_key_from_bytes in csidh511.o
-    ld: symbol(s) not found for architecture x86_64
+    fillrandom
+    Assertion failed: (0 != memcmp(r1, r2, sizeof(r1))), function
+        test_fillrandom, file test.c, line 277.
+    Abort trap: 6
