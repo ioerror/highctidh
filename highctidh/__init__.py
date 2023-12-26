@@ -452,7 +452,7 @@ class ctidh(object):
         self,
         sk,
         pk,
-        _hash=lambda shared, size: hashlib.shake_256(bytes(shared)).digest(length=size),
+        _hash=lambda shared, size: hashlib.shake_256(bytes(shared)).digest(size),
     ):
         """
         This is a classic Diffie-Hellman function which takes a secret key

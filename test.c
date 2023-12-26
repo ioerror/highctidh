@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <endian.h>
+#include "naidne.h"
 #include "steps.h"
 #include "elligator.h"
 #include "csidh.h"
