@@ -6,15 +6,11 @@
 
 #if defined(__x86_64__) && !defined(HIGHCTIDH_PORTABLE)
 
-#ifdef __clang__
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wlanguage-extension-token"
-#endif /* __clang__ */
-
 #define int32_MINMAX(a,b)			\
 do { \
   int32 temp1; \
-  asm( \
+  __asm__( \
+    ".att_syntax prefix\n\t" \
     "cmpl %1,%0\n\t" \
     "mov %0,%2\n\t" \
     "cmovg %1,%0\n\t" \
@@ -24,10 +20,6 @@ do { \
     : "cc" \
   ); \
 } while(0)
-
-#ifdef __clang__
-#pragma clang diagnostic pop
-#endif /* __clang__ */
 
 #else /* portable */
 

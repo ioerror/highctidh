@@ -1,7 +1,7 @@
 #include <string.h>
 #include <assert.h>
-#include <endian.h>
 
+#include "naidne.h"
 #include "csidh.h"
 #include "fp.h"
 #include "primes.h"
