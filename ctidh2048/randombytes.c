@@ -6,7 +6,7 @@
 
 #include "crypto_classify.h"
 
-#ifdef GETRANDOM
+#if defined(GETRANDOM) && defined(__linux__)
 #include <sys/random.h>
 
 void randombytes(void *x, size_t l)
