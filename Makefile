@@ -8,7 +8,7 @@ HOST_OS := $(shell uname -s)
 PLATFORM ?= $(shell uname -m)
 ifeq	($(PLATFORM), $(filter $(PLATFORM), arm64 amd64 loongarch64 mips64 mips64el ppc64 ppc64le riscv64 s390x sparc64 x86_64))
 PLATFORM_SIZE ?= 64
-else ifeq ($(PLATFORM), $(filter $(PLATFORM), armv7l i386 i686 mips mipsel)) 
+else ifeq ($(PLATFORM), $(filter $(PLATFORM), armv7l i386 i686 mips mipsel))
 PLATFORM_SIZE ?= 32
 else
 PLATFORM_SIZE ?= $(shell getconf LONG_BIT)
@@ -17,7 +17,6 @@ endif
 ifndef PLATFORM_SIZE
 	$(error "Set PLATFORM_SIZE to 32 or 64 and try again")
 endif
-$(info PLATFORM_SIZE=$(PLATFORM_SIZE))
 
 ifeq	(HOST_PLATFORM,PLATFORM)
 CC_MARCH ?= native
@@ -643,19 +642,19 @@ libhighctidh_2048.a: $(libhighctidh_2048_OBJS) fp_inv2048.o fp_sqrt2048.o primes
 libhighctidh.a: crypto_classify.o crypto_declassify.o randombytes.o random.o int32_sort.o steps.o steps_untuned.o csidh511.o elligator511.o fiat_p511.o fp2fiat511.o fp_inv511.o fp_sqrt511.o mont511.o poly511.o primes511.o skgen511.o validate511.o csidh512.o elligator512.o fiat_p512.o fp2fiat512.o fp_inv512.o fp_sqrt512.o mont512.o poly512.o primes512.o skgen512.o validate512.o csidh1024.o elligator1024.o fiat_p1024.o fp2fiat1024.o fp_inv1024.o fp_sqrt1024.o mont1024.o poly1024.o primes1024.o skgen1024.o validate1024.o csidh2048.o elligator2048.o fiat_p2048.o fp2fiat2048.o fp_inv2048.o fp_sqrt2048.o mont2048.o poly2048.o primes2048.o skgen2048.o validate2048.o
 	$(AR) rcs libhighctidh.a $^
 
-csidh511.o: csidh.c csidh.h cgo.h binding511.h binding512.h binding1024.h binding2048.h uintbig.h uintbig_namespace.h annotations.h fp.h fp_namespace.h fiat_p511.h fiat_p512.h fiat_p1024.h fiat_p2048.h randombytes.h crypto_declassify.h mont.h proj.h mont_namespace.h primes.h primes_namespace.h csidh_namespace.h int64mask.h elligator.h elligator_namespace.h random.h random_namespace.h Makefile
+csidh511.o: csidh.c naidne.h csidh.h cgo.h binding511.h binding512.h binding1024.h binding2048.h uintbig.h uintbig_namespace.h annotations.h fp.h fp_namespace.h fiat_p511.h fiat_p512.h fiat_p1024.h fiat_p2048.h randombytes.h crypto_declassify.h mont.h proj.h mont_namespace.h primes.h primes_namespace.h csidh_namespace.h int64mask.h elligator.h elligator_namespace.h random.h random_namespace.h Makefile
 	$(CC) -DBITS=511 -D'NAMESPACEBITS(x)=highctidh_511_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
 		-o csidh511.o -c csidh.c
 
-csidh512.o: csidh.c csidh.h cgo.h binding511.h binding512.h binding1024.h binding2048.h uintbig.h uintbig_namespace.h annotations.h fp.h fp_namespace.h fiat_p511.h fiat_p512.h fiat_p1024.h fiat_p2048.h randombytes.h crypto_declassify.h mont.h proj.h mont_namespace.h primes.h primes_namespace.h csidh_namespace.h int64mask.h elligator.h elligator_namespace.h random.h random_namespace.h Makefile
+csidh512.o: csidh.c naidne.h csidh.h cgo.h binding511.h binding512.h binding1024.h binding2048.h uintbig.h uintbig_namespace.h annotations.h fp.h fp_namespace.h fiat_p511.h fiat_p512.h fiat_p1024.h fiat_p2048.h randombytes.h crypto_declassify.h mont.h proj.h mont_namespace.h primes.h primes_namespace.h csidh_namespace.h int64mask.h elligator.h elligator_namespace.h random.h random_namespace.h Makefile
 	$(CC) -DBITS=512 -D'NAMESPACEBITS(x)=highctidh_512_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
 		-o csidh512.o -c csidh.c
 
-csidh1024.o: csidh.c csidh.h cgo.h binding511.h binding512.h binding1024.h binding2048.h uintbig.h uintbig_namespace.h annotations.h fp.h fp_namespace.h fiat_p511.h fiat_p512.h fiat_p1024.h fiat_p2048.h randombytes.h crypto_declassify.h mont.h proj.h mont_namespace.h primes.h primes_namespace.h csidh_namespace.h int64mask.h elligator.h elligator_namespace.h random.h random_namespace.h Makefile
+csidh1024.o: csidh.c naidne.h csidh.h cgo.h binding511.h binding512.h binding1024.h binding2048.h uintbig.h uintbig_namespace.h annotations.h fp.h fp_namespace.h fiat_p511.h fiat_p512.h fiat_p1024.h fiat_p2048.h randombytes.h crypto_declassify.h mont.h proj.h mont_namespace.h primes.h primes_namespace.h csidh_namespace.h int64mask.h elligator.h elligator_namespace.h random.h random_namespace.h Makefile
 	$(CC) -DBITS=1024 -D'NAMESPACEBITS(x)=highctidh_1024_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
 		-o csidh1024.o -c csidh.c
 
-csidh2048.o: csidh.c csidh.h cgo.h binding511.h binding512.h binding1024.h binding2048.h uintbig.h uintbig_namespace.h annotations.h fp.h fp_namespace.h fiat_p511.h fiat_p512.h fiat_p1024.h fiat_p2048.h randombytes.h crypto_declassify.h mont.h proj.h mont_namespace.h primes.h primes_namespace.h csidh_namespace.h int64mask.h elligator.h elligator_namespace.h random.h random_namespace.h Makefile
+csidh2048.o: csidh.c naidne.h csidh.h cgo.h binding511.h binding512.h binding1024.h binding2048.h uintbig.h uintbig_namespace.h annotations.h fp.h fp_namespace.h fiat_p511.h fiat_p512.h fiat_p1024.h fiat_p2048.h randombytes.h crypto_declassify.h mont.h proj.h mont_namespace.h primes.h primes_namespace.h csidh_namespace.h int64mask.h elligator.h elligator_namespace.h random.h random_namespace.h Makefile
 	$(CC) -DBITS=2048 -D'NAMESPACEBITS(x)=highctidh_2048_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
 		-o csidh2048.o -c csidh.c
 
