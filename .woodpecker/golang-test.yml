@@ -12,7 +12,6 @@ matrix:
 
 steps:
   go-${GOVER}-${DIST}-${ARCH}-${CC}-test:
-    group: go-${GOVER}-${DIST}-${ARCH}-${CC}-test
     image: golang:${GOVER}-${DIST}
     commands:
       - export CI=true

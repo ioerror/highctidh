@@ -22,7 +22,6 @@ steps:
 #     - ls -alh *.so
 #     - sha256sum *.so
   debian-${DIST}-${platform}-python-${CC}:
-    group: compile-debian-${DIST}-${CC}-python
     image: debian:${DIST}
     commands:
       - export CI=true
