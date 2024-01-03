@@ -109,7 +109,7 @@ base_src = ["crypto_classify.c", "crypto_declassify.c", "csidh.c",
 
 cflags = get_config_var("CFLAGS").split()
 cflags += ["-Wextra", "-Wall", "-fpie", "-fPIC", "-fwrapv", "-pedantic", "-O3",
-           "-Os", "-g0", "-fno-lto"]
+           "-g0", "-fno-lto"]
 cflags += ["-DGETRANDOM", f"-DPLATFORM={PLATFORM}",
            f"-DPLATFORM_SIZE={PLATFORM_SIZE}"]
 cflags += ["-Wformat", "-Werror=format-security", "-D_FORTIFY_SOURCE=2",

@@ -938,7 +938,7 @@ with open(fn+'.tmp','w') as f:
   f.write('endif\n')
   f.write('CC_MTUNE ?= $(CC_MARCH)\n\n')
   f.write('SEC_CFLAGS := -Wformat -Werror=format-security -D_FORTIFY_SOURCE=2 -fstack-protector-strong\n')
-  f.write('BASE_CFLAGS := -fpie -fPIC -Wall -Wextra -pedantic -O3 -Os -fwrapv -DGETRANDOM -Werror\n')
+  f.write('BASE_CFLAGS := -fpie -fPIC -Wall -Wextra -pedantic -O3 -fwrapv -DGETRANDOM -Werror\n')
   f.write('BASE_CFLAGS+=-DPLATFORM=${PLATFORM} -DPLATFORM_SIZE=${PLATFORM_SIZE}\n')
   f.write('BASE_CFLAGS+=$(SEC_CFLAGS)\n')
   f.write('BASE_CFLAGS+=$(if $(strip $(CC_MARCH)),-march=$(CC_MARCH) -mtune=$(CC_MTUNE),)\n')
