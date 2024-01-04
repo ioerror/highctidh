@@ -135,21 +135,6 @@ static void test_sqrt(void)
 
 static char test_fillrandom_buf[16384] = {0};
 
-static void
-test_fillrandom_impl_looping(void *const out, const size_t outsz,
-    uintptr_t context)
-{
-	(void) context;
-	size_t written = 0;
-	while (written < outsz) {
-		*((char*)out+written) =
-		    ((uintptr_t)context)
-		    ^
-		    (test_fillrandom_buf[written % sizeof(test_fillrandom_buf)]);
-		written++;
-	}
-}
-
 static struct context_list {
 	uintptr_t ctx;
 	uint64_t state;
@@ -219,6 +204,22 @@ test_fillrandom_hash(uint64_t oldhash, char *outptr, size_t outsz)
 		*wptr++ = (int32_t)hash;
 	}
 	return hash;
+}
+
+/*
+ * Does not mutate global state, and will produce identical output
+ * for identical (context, outsz, test_fillrandom_buf) tuples.
+ */
+static void
+test_fillrandom_impl_looping(void *const out, const size_t outsz,
+    uintptr_t context)
+{
+	(void) test_fillrandom_hash((uint64_t) context, out, outsz);
+	size_t written = 0;
+	while (written < outsz) {
+		*((char*)out+written) ^= test_fillrandom_buf[written % sizeof(test_fillrandom_buf)];
+		written++;
+	}
 }
 
 static uint64_t test_fillrandom_global_hash = 0;
