@@ -1,4 +1,4 @@
-from os import getcwd, path, uname, environ, umask
+from os import getcwd, path, uname, environ, umask, stat, mkdir
 from subprocess import PIPE, Popen
 from sys import exit
 from sysconfig import get_config_var
@@ -87,6 +87,9 @@ else:
 # as `.whl` files
 umask(0o022)
 
+if not stat("build"):
+    mkdir("build")
+
 CC = None
 if "CC" in environ:
     CC = str(environ["CC"])
@@ -108,7 +111,7 @@ base_src = ["crypto_classify.c", "crypto_declassify.c", "csidh.c",
             "validate.c", "int32_sort.c"]
 
 cflags = get_config_var("CFLAGS").split()
-cflags += ["-Wextra", "-Wall", "-fpie", "-fPIC", "-fwrapv", "-pedantic", "-O3",
+cflags += ["-Wextra", "-Wall", "-fpie", "-fPIC", "-fwrapv", "-pedantic", "-O2",
            "-g0", "-fno-lto"]
 cflags += ["-DGETRANDOM", f"-DPLATFORM={PLATFORM}",
            f"-DPLATFORM_SIZE={PLATFORM_SIZE}"]
