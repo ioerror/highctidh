@@ -87,8 +87,10 @@ else:
 # as `.whl` files
 umask(0o022)
 
-if not stat("build"):
-    mkdir("build")
+try:
+  stat("build")
+except FileNotFoundError:
+  mkdir("build")
 
 CC = None
 if "CC" in environ:
