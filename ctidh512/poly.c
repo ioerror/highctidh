@@ -265,7 +265,7 @@ void poly_mul_low(fp *c,long long clen,const fp *a,long long alen,const fp *b,lo
     }
   }
 
-  if(1) { /* XXX: tune this */
+  if((1)) { /* XXX: tune this */
     long long a1len = alen/2;
     long long a0len = alen-a1len;
     fp a0[a0len];
