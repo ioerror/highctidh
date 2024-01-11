@@ -3,16 +3,15 @@
 package ctidh511
 
 import (
-	/*	"crypto/rand" */
+	"crypto/rand"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 )
 
-/*
-func TestCtidh511BlindingOperation(t *testing.T) {
-	mixPrivateKey, mixPublicKey := GenerateCtidh511KeyPair()
-	clientPrivateKey, clientPublicKey := GenerateCtidh511KeyPair()
+func TestBlindingOperation(t *testing.T) {
+	mixPrivateKey, mixPublicKey := GenerateKeyPair()
+	clientPrivateKey, clientPublicKey := GenerateKeyPair()
 
 	blindingFactor := GeneratePrivateKey(rand.Reader)
 	value1, err := Blind(blindingFactor, NewPublicKey(DeriveSecret(clientPrivateKey, mixPublicKey)))
@@ -23,20 +22,17 @@ func TestCtidh511BlindingOperation(t *testing.T) {
 
 	require.Equal(t, value1.Bytes(), value2)
 }
-*/
 
-/*
 func TestGenerateKeyPairWithRNG(t *testing.T) {
 	privateKey, publicKey := GenerateKeyPairWithRNG(rand.Reader)
 	zeros := make([]byte, PublicKeySize)
 	require.NotEqual(t, privateKey.Bytes(), zeros)
 	require.NotEqual(t, publicKey.Bytes(), zeros)
 }
-*/
 
 func TestPublicKeyReset(t *testing.T) {
 	zeros := make([]byte, PublicKeySize)
-	_, publicKey := GenerateCtidh511KeyPair()
+	_, publicKey := GenerateKeyPair()
 	require.NotEqual(t, publicKey.Bytes(), zeros)
 
 	publicKey.Reset()
@@ -45,7 +41,7 @@ func TestPublicKeyReset(t *testing.T) {
 
 func TestPrivateKeyReset(t *testing.T) {
 	zeros := make([]byte, PrivateKeySize)
-	privateKey, _ := GenerateCtidh511KeyPair()
+	privateKey, _ := GenerateKeyPair()
 	require.NotEqual(t, privateKey.Bytes(), zeros)
 
 	privateKey.Reset()
@@ -53,7 +49,7 @@ func TestPrivateKeyReset(t *testing.T) {
 }
 
 func TestPublicKeyMarshaling(t *testing.T) {
-	privKey, publicKey := GenerateCtidh511KeyPair()
+	privKey, publicKey := GenerateKeyPair()
 	publicKeyBytes := publicKey.Bytes()
 
 	publicKey2 := new(PublicKey)
@@ -69,8 +65,8 @@ func TestPublicKeyMarshaling(t *testing.T) {
 	require.Equal(t, publicKey3Bytes, publicKeyBytes)
 }
 
-func TestPrivateKeyBytesing(t *testing.T) {
-	privateKey, _ := GenerateCtidh511KeyPair()
+func TestPrivateKeyByteMarshaling(t *testing.T) {
+	privateKey, _ := GenerateKeyPair()
 	privateKeyBytes := privateKey.Bytes()
 
 	privateKey2 := new(PrivateKey)
@@ -80,9 +76,9 @@ func TestPrivateKeyBytesing(t *testing.T) {
 	require.Equal(t, privateKeyBytes, privateKey2Bytes)
 }
 
-func TestCtidh511NIKE(t *testing.T) {
-	alicePrivate, alicePublic := GenerateCtidh511KeyPair()
-	bobPrivate, bobPublic := GenerateCtidh511KeyPair()
+func TestNIKE(t *testing.T) {
+	alicePrivate, alicePublic := GenerateKeyPair()
+	bobPrivate, bobPublic := GenerateKeyPair()
 	bobSharedBytes := DeriveSecret(bobPrivate, alicePublic)
 	aliceSharedBytes := DeriveSecret(alicePrivate, bobPublic)
 	require.Equal(t, bobSharedBytes, aliceSharedBytes)

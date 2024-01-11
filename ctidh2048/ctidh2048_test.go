@@ -3,36 +3,32 @@
 package ctidh2048
 
 import (
-	/*	"crypto/rand" */
+	"crypto/rand"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 )
 
-/*
-func TestCtidh2048BlindingOperation(t *testing.T) {
+func TestBlindingOperation(t *testing.T) {
 	mixPrivateKey, mixPublicKey := GenerateKeyPair()
 	clientPrivateKey, clientPublicKey := GenerateKeyPair()
 
 	blindingFactor := GeneratePrivateKey(rand.Reader)
-	value1, err := BlindCtidh2048(blindingFactor, NewPublicKey(DeriveSecret(clientPrivateKey, mixPublicKey)))
+	value1, err := Blind(blindingFactor, NewPublicKey(DeriveSecret(clientPrivateKey, mixPublicKey)))
 	require.NoError(t, err)
-	blinded, err := BlindCtidh2048(blindingFactor, clientPublicKey)
+	blinded, err := Blind(blindingFactor, clientPublicKey)
 	require.NoError(t, err)
 	value2 := DeriveSecret(mixPrivateKey, blinded)
 
 	require.Equal(t, value1.Bytes(), value2)
 }
-*/
 
-/*
 func TestGenerateKeyPairWithRNG(t *testing.T) {
 	privateKey, publicKey := GenerateKeyPairWithRNG(rand.Reader)
 	zeros := make([]byte, PublicKeySize)
 	require.NotEqual(t, privateKey.Bytes(), zeros)
 	require.NotEqual(t, publicKey.Bytes(), zeros)
 }
-*/
 
 func TestPublicKeyReset(t *testing.T) {
 	zeros := make([]byte, PublicKeySize)
@@ -69,7 +65,7 @@ func TestPublicKeyMarshaling(t *testing.T) {
 	require.Equal(t, publicKey3Bytes, publicKeyBytes)
 }
 
-func TestPrivateKeyBytesing(t *testing.T) {
+func TestPrivateKeyByteMarshaling(t *testing.T) {
 	privateKey, _ := GenerateKeyPair()
 	privateKeyBytes := privateKey.Bytes()
 
@@ -80,7 +76,7 @@ func TestPrivateKeyBytesing(t *testing.T) {
 	require.Equal(t, privateKeyBytes, privateKey2Bytes)
 }
 
-func TestCtidh2048NIKE(t *testing.T) {
+func TestNIKE(t *testing.T) {
 	alicePrivate, alicePublic := GenerateKeyPair()
 	bobPrivate, bobPublic := GenerateKeyPair()
 	bobSharedBytes := DeriveSecret(bobPrivate, alicePublic)

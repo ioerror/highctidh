@@ -55,8 +55,6 @@ package ctidh511
 
  #cgo sparc64 CFLAGS: -DPLATFORM=sparc64 -DPLATFORM_SIZE=64 -march=native -mtune=native -DHIGHCTIDH_PORTABLE
 
- #include <stdlib.h>
- #include <stdint.h>
  #include "binding511.h"
 */
 import "C"

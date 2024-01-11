@@ -230,9 +230,9 @@ func DerivePublicKey(privKey *PrivateKey) *PublicKey {
 	return groupAction(privKey, baseKey)
 }
 
-// GenerateCtidh511KeyPair generates a new Ctidh511 private and then
+// GenerateKeyPair generates a new Ctidh511 private and then
 // attempts to compute the Ctidh511 public key.
-func GenerateCtidh511KeyPair() (*PrivateKey, *PublicKey) {
+func GenerateKeyPair() (*PrivateKey, *PublicKey) {
 	privKey := new(PrivateKey)
 	C.csidh_private(&privKey.privateKey)
 	return privKey, DerivePublicKey(privKey)
