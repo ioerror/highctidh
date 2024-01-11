@@ -10,7 +10,7 @@ import (
 
 func BenchmarkPublicKeySerializing(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		privKey, publicKey := GenerateCtidh511KeyPair()
+		privKey, publicKey := GenerateKeyPair()
 
 		publicKeyBytes := publicKey.Bytes()
 
@@ -29,7 +29,7 @@ func BenchmarkPublicKeySerializing(b *testing.B) {
 
 func BenchmarkPrivateKeySerializing(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		privateKey, _ := GenerateCtidh511KeyPair()
+		privateKey, _ := GenerateKeyPair()
 		privateKeyBytes := privateKey.Bytes()
 
 		privateKey2 := new(PrivateKey)
@@ -42,8 +42,8 @@ func BenchmarkPrivateKeySerializing(b *testing.B) {
 
 func BenchmarkNIKE(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		alicePrivate, alicePublic := GenerateCtidh511KeyPair()
-		bobPrivate, bobPublic := GenerateCtidh511KeyPair()
+		alicePrivate, alicePublic := GenerateKeyPair()
+		bobPrivate, bobPublic := GenerateKeyPair()
 
 		bobSharedBytes := DeriveSecret(bobPrivate, alicePublic)
 		aliceSharedBytes := DeriveSecret(alicePrivate, bobPublic)
@@ -53,8 +53,8 @@ func BenchmarkNIKE(b *testing.B) {
 }
 
 func BenchmarkDeriveSecret(b *testing.B) {
-	alicePrivate, alicePublic := GenerateCtidh511KeyPair()
-	bobPrivate, bobPublic := GenerateCtidh511KeyPair()
+	alicePrivate, alicePublic := GenerateKeyPair()
+	bobPrivate, bobPublic := GenerateKeyPair()
 
 	var aliceSharedBytes []byte
 	for n := 0; n < b.N; n++ {
@@ -67,6 +67,6 @@ func BenchmarkDeriveSecret(b *testing.B) {
 
 func BenchmarkGenerateKeyPair(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		_, _ = GenerateCtidh511KeyPair()
+		_, _ = GenerateKeyPair()
 	}
 }
