@@ -1,3 +1,4 @@
+// Deprecated: use codeberg.org/vula/highctidh/ctidh{511,512,1024,2048} instead.
 module codeberg.org/vula/highctidh
 
 go 1.21.1
