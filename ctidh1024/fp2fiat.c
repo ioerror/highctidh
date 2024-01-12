@@ -1,5 +1,5 @@
 /*
- * skeleton for expressing fp512.S in terms of fiat-crypto
+ * skeleton for expressing fp*.S in terms of fiat-crypto
  */
 #include <stdint.h>
 #include <assert.h>

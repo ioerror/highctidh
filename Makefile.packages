@@ -29,13 +29,13 @@ version:
 	echo ${VERSION} on ${ARCH}/${KERNEL}
 
 update-golang-ctidh511:
-	cd ctidh511 && ls -1|egrep -v ".go"|xargs -I'{}' cp ../'{}' .
+	cd ctidh511 && ls -1|egrep -v ".go|.mod|.sum|golang-misc.c"|xargs -I'{}' cp ../'{}' .
 update-golang-ctidh512:
-	cd ctidh512 && ls -1|egrep -v ".go"|xargs -I'{}' cp ../'{}' .
+	cd ctidh512 && ls -1|egrep -v ".go|.mod|.sum|golang-misc.c"|xargs -I'{}' cp ../'{}' .
 update-golang-ctidh1024:
-	cd ctidh1024 && ls -1|egrep -v ".go"|xargs -I'{}' cp ../'{}' .
+	cd ctidh1024 && ls -1|egrep -v ".go|.mod|.sum|golang-misc.c"|xargs -I'{}' cp ../'{}' .
 update-golang-ctidh2048:
-	cd ctidh2048 && ls -1|egrep -v ".go"|xargs -I'{}' cp ../'{}' .
+	cd ctidh2048 && ls -1|egrep -v ".go|.mod|.sum|golang-misc.c"|xargs -I'{}' cp ../'{}' .
 
 update-golang-modules: update-golang-ctidh511 update-golang-ctidh512 update-golang-ctidh1024 update-golang-ctidh2048
 	echo "Upstream sync finished; do not forget to git add and commit";

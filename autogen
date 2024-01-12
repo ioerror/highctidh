@@ -91,22 +91,24 @@ for bits,primes,batchsize,batchbound in data:
     f.write('// number of keys: %d\n' % keys)
     f.write('// approximately 2^%f\n' % math.log(keys,2))
     f.write('\n')
-    f.write('// average costs (calculated):\n')
-    x = distmults.average(primes,batchsize,batchbound)
-    f.write(costs.strstats(x,'// ','%.6f',primes,batchsize).strip()+'\n')
-    f.write('\n')
+   # XXX: As a matter of reproducability, we do not generate arbitrary timing
+   # data and put it in a C file:
+   #f.write('// average costs (calculated):\n')
+   #x = distmults.average(primes,batchsize,batchbound)
+   #f.write(costs.strstats(x,'// ','%.6f',primes,batchsize).strip()+'\n')
+   #f.write('\n')
 
-    trials = 4096
-    f.write('// average costs (%d simulated trials):\n' % trials)
-    y = {}
-    for trial in range(trials):
-      x = sim.trial(primes,batchsize,batchbound)
-      for cost in x:
-        if cost not in y: y[cost] = 0
-        y[cost] += x[cost]
-    for cost in y: y[cost] *= 1.0/trials
-    f.write(costs.strstats(y,'// ','%.6f',primes,batchsize).strip()+'\n')
-    f.write('\n')
+   #trials = 4096
+   #f.write('// average costs (%d simulated trials):\n' % trials)
+   #y = {}
+   #for trial in range(trials):
+   #  x = sim.trial(primes,batchsize,batchbound)
+   #  for cost in x:
+   #    if cost not in y: y[cost] = 0
+   #    y[cost] += x[cost]
+   #for cost in y: y[cost] *= 1.0/trials
+   #f.write(costs.strstats(y,'// ','%.6f',primes,batchsize).strip()+'\n')
+   #f.write('\n')
 
     f.write('const long long primes[primes_num] = {\n')
     f.write(' ')
