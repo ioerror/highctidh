@@ -113,6 +113,8 @@ are available in the `README.python.md` file.
 
 The Golang bindings behave as any normal Golang module/package.
 
+The `fiat-crypto` code synthesis is described in `fiat-docker/README.md`.
+
 The original authors of this software released high-ctidh in the public domain.
 All contributions made in this fork are also in the public domain.
 
