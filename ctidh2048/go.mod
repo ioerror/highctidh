@@ -1,4 +1,4 @@
-module codeberg.org/highctidh/ctidh2048
+module codeberg.org/vula/highctidh/ctidh2048
 
 go 1.21.1
 

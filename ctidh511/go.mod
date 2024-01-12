@@ -1,4 +1,4 @@
-module codeberg.org/highctidh/ctidh511
+module codeberg.org/vula/highctidh/ctidh511
 
 go 1.21.1
 
