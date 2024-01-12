@@ -1,9 +1,8 @@
-module codeberg.org/vula/highctidh
+module codeberg.org/vula/highctidh/ctidh511
 
-go 1.18
+go 1.21.1
 
 require (
-	github.com/joncalhoun/pipe v0.0.0-20170510025636-72505674a733
 	github.com/mattn/go-pointer v0.0.1
 	github.com/stretchr/testify v1.8.4
 )
