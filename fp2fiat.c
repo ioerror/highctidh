@@ -1,5 +1,5 @@
 /*
- * skeleton for expressing fp512.S in terms of fiat-crypto
+ * skeleton for expressing fp*.S in terms of fiat-crypto
  */
 #include <stdint.h>
 #include <assert.h>
@@ -10,7 +10,7 @@
 #include "fp.h"
 #include "annotations.h"
 
-#if !defined(HIGHCTIDH_PORTABLE) && !defined(CGONUTS)
+#if !defined(HIGHCTIDH_PORTABLE) && !defined(CGONUTS) && defined(__x86_64__)
 #define highctidh_macro_stringize(x) #x
 #define highctidh_macro_str(y) highctidh_macro_stringize(y)
 __asm__ (".include \"uintbig" highctidh_macro_str(BITS)  ".S\"");
