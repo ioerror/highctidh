@@ -21,7 +21,6 @@ _prep:
 	-mkdir src/dist;
 	-ln -s src/build build;
 	-ln -s src/dist dist;
-	-ln -s src/deb_dist deb_dist;
 
 clean:
 	-rm build;
