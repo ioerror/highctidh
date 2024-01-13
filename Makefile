@@ -40,4 +40,5 @@ _prep:
 clean:
 	-rm build;
 	-rm dist;
+	-rm -r docker_build_output;
 	-cd src; make clean;

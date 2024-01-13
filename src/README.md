@@ -200,15 +200,16 @@ are available in the `docs/README.python.md` file.
 
 The Golang bindings behave as any normal Golang module/package.
 
-The `fiat-crypto` code synthesis is described in `fiat-docker/README.md`.
-
-The original authors of this software released high-ctidh in the public domain.
-All contributions made in this fork are also in the public domain.
+The `fiat-crypto` code synthesis is described in `misc/fiat-docker/README.md`
+and the documentation provides instructions for reproducible C code generation.
 
 The original released README is `docs/README.original.md`.
 The original website was https://ctidh.isogeny.org/software.html
 
 # Acknowledgements
+
+The original authors of this software released high-ctidh in the public domain.
+All contributions made in this fork are also in the public domain.
 
 Please consult `docs/AUTHORS.md` for the original authorship informaton.
 
