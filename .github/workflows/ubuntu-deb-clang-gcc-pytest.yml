@@ -20,7 +20,7 @@ jobs:
       run: sudo bash -c ./misc/install-debian-deps.sh
 
     - name: Build Debian package with assembler backend
-      run: CC=${{ matrix.CC }} CFLAGS="-fno-lto" HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make -f Makefile.packages deb
+      run: CC=${{ matrix.CC }} CFLAGS="-fno-lto" HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make deb
 
     - name: Install Debian package
       run: sudo dpkg -i dist/python3-highctidh_*.deb
