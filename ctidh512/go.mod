@@ -1,6 +1,6 @@
 module codeberg.org/vula/highctidh/ctidh512
 
-go 1.21.1
+go 1.19
 
 require (
 	github.com/mattn/go-pointer v0.0.1

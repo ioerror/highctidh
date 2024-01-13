@@ -18,7 +18,11 @@ steps:
      - export WORKDIR=`pwd`
      - export CC=${CC}
      - ./misc/install-arch-deps.sh
+     - mkdir dist
      - CC=$CC make
-     - ls -alh *.so
-     - sha256sum *.so
+     - CC=$CC make install
+     - CC=$CC make examples
+     - CC=$CC make examples-run
+     - ls -alh dist/*.so
+     - sha256sum dist/*.so
 

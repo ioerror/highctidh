@@ -3,7 +3,7 @@ FROM debian:buster-slim
 RUN set -eux; \
 	apt update; \
     apt install -y --no-install-recommends ca-certificates git coq \
-    ocaml-findlib libcoq-ocaml-dev jq opam m4 lsb-release bsdextrautils; \
+    ocaml-findlib libcoq-ocaml-dev jq opam m4 lsb-release; \
     apt clean; rm -rf /var/lib/apt/lists/*;
 RUN apt update; apt install -y libgmp-dev;
 RUN opam init --disable-sandboxing -y;

@@ -15,8 +15,8 @@ make_and_clean() {
     rm -fv *.o *.so;
     echo "${PLATFORM} ${CC_MARCH:-} (${PLATFORM_SIZE}):";
     make;
-    mkdir -p cross/$PLATFORM/$PLATFORM_SIZE/;
-    mv -v *.so cross/$PLATFORM/$PLATFORM_SIZE/;
+    mkdir -p dist/cross/$PLATFORM/$PLATFORM_SIZE/;
+    mv -v dist/*.so dist/cross/$PLATFORM/$PLATFORM_SIZE/;
     echo -e "$CHECKMARK";
 }
 
@@ -97,4 +97,4 @@ CC="aarch64-linux-gnu-gcc -pipe" \
 make_and_clean;
 
 echo "Cross compile with gcc successful:";
-sha256sum cross/*/*/*.so;
+sha256sum dist/cross/*/*/*.so;

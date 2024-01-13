@@ -29,13 +29,13 @@ version:
 	echo ${VERSION} on ${ARCH}/${KERNEL}
 
 update-golang-ctidh511:
-	cd ctidh511 && ls -1|egrep -v ".go|.mod|.sum|golang-misc.c"|xargs -I'{}' cp ../'{}' .
+	cd ../ctidh511 && ls -1|egrep -v ".go|.mod|.sum|golang-misc.c"|xargs -I'{}' cp ../src/'{}' .
 update-golang-ctidh512:
-	cd ctidh512 && ls -1|egrep -v ".go|.mod|.sum|golang-misc.c"|xargs -I'{}' cp ../'{}' .
+	cd ../ctidh512 && ls -1|egrep -v ".go|.mod|.sum|golang-misc.c"|xargs -I'{}' cp ../src/'{}' .
 update-golang-ctidh1024:
-	cd ctidh1024 && ls -1|egrep -v ".go|.mod|.sum|golang-misc.c"|xargs -I'{}' cp ../'{}' .
+	cd ../ctidh1024 && ls -1|egrep -v ".go|.mod|.sum|golang-misc.c"|xargs -I'{}' cp ../src/'{}' .
 update-golang-ctidh2048:
-	cd ctidh2048 && ls -1|egrep -v ".go|.mod|.sum|golang-misc.c"|xargs -I'{}' cp ../'{}' .
+	cd ../ctidh2048 && ls -1|egrep -v ".go|.mod|.sum|golang-misc.c"|xargs -I'{}' cp ../src/'{}' .
 
 update-golang-modules: update-golang-ctidh511 update-golang-ctidh512 update-golang-ctidh1024 update-golang-ctidh2048
 	echo "Upstream sync finished; do not forget to git add and commit";
@@ -54,18 +54,18 @@ go:
 
 deb: ${SDIST_GZ} ${DEB_NAME}
 ${DEB_NAME}:
-	mkdir -p dist/source
-	mkdir -p build/tmp
+	-mkdir -p dist/source
+	-mkdir -p build/tmp
 	python3 setup.py --command-packages=stdeb.command sdist_dsc --compat=10 --dist-dir=${WORKDIR}/dist/ --use-premade-distfile=${SDIST_GZ}
-	cp ${WORKDIR}/misc/debian-rules ${WORKDIR}/dist/highctidh-$(VERSION)/debian/rules
+	cp debian-rules ${WORKDIR}/dist/highctidh-$(VERSION)/debian/rules
 	cd ${WORKDIR}/dist/highctidh-$(VERSION) && DEB_BUILD_OPTIONS=nocheck CC=${CC} dpkg-buildpackage -rfakeroot -uc -us
 	-ls -alh ${WORKDIR}/dist/*.deb
 	-sha256sum ${WORKDIR}/dist/*.deb
 
 wheel: ${SDIST_GZ} ${WHEEL_NAME}
 ${WHEEL_NAME}:
-	mkdir -p dist/source
-	mkdir -p build/tmp
+	-mkdir -p dist/source
+	-mkdir -p build/tmp
 	SOURCE_DATE_EPOCH=${SOURCE_DATE_EPOCH} python3 -m build --wheel
 	-ls -alh ${WORKDIR}/dist/*.whl
 	-sha256sum ${WORKDIR}/dist/*.whl
@@ -75,8 +75,8 @@ test:
 
 sdist: ${SDIST_GZ}
 ${SDIST_GZ}:
-	mkdir -p dist/source
-	mkdir -p build/tmp
+	-mkdir -p dist/source
+	-mkdir -p build/tmp
 	SOURCE_DATE_EPOCH=${SOURCE_DATE_EPOCH} flit build \
 			  --format sdist
 	-ls -alh ${SDIST_GZ}
@@ -160,3 +160,16 @@ deb-and-wheel-in-docker-arch-sid:
 		--rm -it debian-${PODMAN_ARCH}-${DIST}-libhighctidh \
 		bash -c 'git config --global --add safe.directory /highctidh && mkdir -p build && make -f Makefile.packages sdist wheel deb && sha256sum dist/*.{deb,tar.gz,whl} && exit';
 	echo "Built ${VERSION} for ${ARCH}";
+
+clean:
+	-rm -f *.a *.o *.out *.so
+	-rm -f bench1024cycles bench1024mults bench1024untuned bench2048cycles bench2048mults bench2048untuned bench511cycles bench511mults bench511untuned bench512cycles bench512mults bench512untuned
+	-rm -f checkct1024cycles checkct1024mults checkct1024untuned checkct2048cycles checkct2048mults checkct2048untuned checkct511cycles checkct511mults checkct511untuned checkct512cycles checkct512mults checkct512untuned costpoly1024 costpoly2048 costpoly511 example-ctidh1024 example-ctidh2048
+	-rm -f example-ctidh511 example-ctidh512 test1024 test2048 test511 test511 test512 test512-dyn test*-dyn testrandom tunecycles1024 tunecycles2048 tunecycles511 tunecycles512 tunemults1024 tunemults2048 tunemults511 tunemults512 ubench1024 ubench2048 ubench511 ubench512 umults1024 umults2048 umults511 umults512
+	-rm -rf UNKNOWN.egg-info/ __pycache__/
+	-rm -rf build/ deb_dist/ dist/
+	-rm -rf highctidh.egg-info/ highctidh/__pycache__/
+	-rm -rf tests/__pycache__/
+	-rm -rf docker_build_output/
+	-rm -rf examples-static
+	-rm -rf highctidh-*.tar.gz
