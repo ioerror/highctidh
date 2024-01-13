@@ -57,7 +57,7 @@ ${DEB_NAME}:
 	-mkdir -p dist/source
 	-mkdir -p build/tmp
 	python3 setup.py --command-packages=stdeb.command sdist_dsc --compat=10 --dist-dir=${WORKDIR}/dist/ --use-premade-distfile=${SDIST_GZ}
-	cp ${WORKDIR}/../misc/debian-rules ${WORKDIR}/dist/highctidh-$(VERSION)/debian/rules
+	cp ${WORKDIR}/debian-rules ${WORKDIR}/dist/highctidh-$(VERSION)/debian/rules
 	cd ${WORKDIR}/dist/highctidh-$(VERSION) && DEB_BUILD_OPTIONS=nocheck CC=${CC} dpkg-buildpackage -rfakeroot -uc -us
 	-ls -alh ${WORKDIR}/dist/*.deb
 	-sha256sum ${WORKDIR}/dist/*.deb
