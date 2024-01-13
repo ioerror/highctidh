@@ -6,16 +6,25 @@ packages: _prep
 	cd src/; make -f Makefile.packages packages;
 
 deb: _prep
-	cd src/; make -f Makefile.packages deb
+	cd src/; make -f Makefile.packages deb;
 
 wheel: _prep
-	cd src/; make -f Makefile.packages wheel
+	cd src/; make -f Makefile.packages wheel;
 
 pytest:
-	cd src; pytest-3 -v -n auto --doctest-modules
+	cd src; pytest-3 -v -n auto --doctest-modules;
 
 update-golang-modules:
-	cd src/; make -f Makefile.packages update-golang-modules
+	cd src/; make -f Makefile.packages update-golang-modules;
+
+install:
+	cd src; make install;
+
+test:
+	cd src; make test;
+
+examples:
+	cd src; make examples;
 
 _prep:
 	-mkdir src/dist;
@@ -25,4 +34,4 @@ _prep:
 clean:
 	-rm build;
 	-rm dist;
-	-cd src; make clean
+	-cd src; make clean;

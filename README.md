@@ -15,7 +15,7 @@ same shared objects for cross verification purposes. Currently this library is
 fast on the `amd64`/`x86_64` CPU architecture and functional but much slower
 with other CPU architectures. The portable backend was generated using the
 `fiat-crypto` project which uses a "Correct-by-Construction" approach; see
-`PRIMES.md` for more information.  Tested architectures for the C library
+`doc/PRIMES.md` for more information.  Tested architectures for the C library
 include: `amd64`/`x86_64`  (with and without avx2), `arm32v5`, `arm32v6`,
 `arm32v7`, `arm64v8`/`aarch64`/`arm64`, `i386`, `loongarch64/Loongson`, `mips`,
 `mipsel`, `mips64`, `mips64el`, `POWER8/ppc64`, `POWER9/ppc64le`, `riscv64`,
@@ -45,7 +45,7 @@ for `amd64`, `arm32/armv7l`, `arm32/armv5`, `arm64`, `i386`, `mips64el`,
 Building on CheriBSD, FreeBSD, and OpenBSD building is supported using the
 `gmake` command.
 
-To see rough performance numbers, look at `BENCHMARKS.md`. We recommend using
+To see rough performance numbers, look at `docs/BENCHMARKS.md`. We recommend using
 gcc 10 or later as the compiler except on 32-bit platforms where we recommend
 clang 14.
 
@@ -99,8 +99,8 @@ To test without installing run the `test` target:
 ```
 An example C program that can use any of the
 libhighctidh_{511,512,1024,2048}.so libraries is available in
-`example-ctidh.c`. Use the `make examples` target to build `example-ctidh511`,
-`example-ctidh512`, `example-ctidh1024`, and `example-ctidh2048` programs.
+`src/example-ctidh.c`. Use the `make examples` target to build `example-ctidh511`,
+`/example-ctidh512`, `example-ctidh1024`, and `example-ctidh2048` programs.
 
 A basic Python benchmarking program `misc/highctidh-simple-benchmark.py` shows
 general performance numbers. Python tests may be run with pytest and should be
@@ -109,7 +109,7 @@ path includes the build directory as is done in `test.sh`, pytest or python
 should be able to run the tests without installation. 
 
 More information about the Python bindings including installation instructions
-are available in the `README.python.md` file.
+are available in the `docs/README.python.md` file.
 
 The Golang bindings behave as any normal Golang module/package.
 
@@ -118,7 +118,7 @@ The `fiat-crypto` code synthesis is described in `fiat-docker/README.md`.
 The original authors of this software released high-ctidh in the public domain.
 All contributions made in this fork are also in the public domain.
 
-The original released README is `README.original.md`.
+The original released README is `docs/README.original.md`.
 The original website was https://ctidh.isogeny.org/software.html
 
 This project is funded through the [NGI Assure Fund](https://nlnet.nl/assure),
