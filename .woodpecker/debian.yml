@@ -31,7 +31,7 @@ steps:
       - export CC=${CC}
       - CC=${CC} make packages
       - dpkg -i dist/python3-highctidh_*.deb
-      - pytest-3 -v -n`nproc` --doctest-modules
+      - make pytest
       - apt remove -y python3-highctidh
       - sha256sum dist/*.deb
       - ls -alh dist/*.deb
