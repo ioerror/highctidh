@@ -20,6 +20,9 @@ steps:
      - ./misc/install-arch-deps.sh
      - mkdir dist
      - CC=$CC make
+     - CC=$CC make install
+     - CC=$CC make examples
+     - CC=$CC make examples-run
      - ls -alh dist/*.so
      - sha256sum dist/*.so
 
