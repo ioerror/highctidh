@@ -97,4 +97,4 @@ CC="aarch64-linux-gnu-gcc -pipe" \
 make_and_clean;
 
 echo "Cross compile with gcc successful:";
-sha256sum cross/*/*/*.so;
+sha256sum dist/cross/*/*/*.so;

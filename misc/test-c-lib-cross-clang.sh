@@ -97,4 +97,4 @@ CC="clang --target=$PLATFORM-pc-linux-gnu -fuse-ld=$LD" \
 make_and_clean;
 
 echo "Cross compile with clang successful:";
-sha256sum cross/*/*/*.so;
+sha256sum dist/cross/*/*/*.so;
