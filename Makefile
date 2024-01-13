@@ -1,18 +1,24 @@
-library:
+library: _prep
 	cd src; make;
 	cp -v src/*.so dist/;
 
-packages:
+packages: _prep
 	cd src/; make -f Makefile.packages packages;
 
-deb:
+deb: _prep
 	cd src/; make -f Makefile.packages deb
 
-wheel:
+wheel: _prep
 	cd src/; make -f Makefile.packages wheel
 
 update-golang-modules:
 	cd src/; make -f Makefile.packages update-golang-modules
+
+_prep:
+	-mkdir src/dist;
+	-ln -s src/build build;
+	-ln -s src/dist dist;
+	-ln -s src/deb_dist deb_dist;
 
 clean:
 	-rm build/*;
