@@ -24,6 +24,6 @@ _prep:
 	-ln -s src/deb_dist deb_dist;
 
 clean:
-	-rm build/*;
-	-rm dist/*;
+	-rm build;
+	-rm dist;
 	-cd src; make clean
