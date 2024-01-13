@@ -54,8 +54,8 @@ go:
 
 deb: ${SDIST_GZ} ${DEB_NAME}
 ${DEB_NAME}:
-	mkdir -p dist/source
-	mkdir -p build/tmp
+	-mkdir -p dist/source
+	-mkdir -p build/tmp
 	python3 setup.py --command-packages=stdeb.command sdist_dsc --compat=10 --dist-dir=${WORKDIR}/dist/ --use-premade-distfile=${SDIST_GZ}
 	cp ${WORKDIR}/../misc/debian-rules ${WORKDIR}/dist/highctidh-$(VERSION)/debian/rules
 	cd ${WORKDIR}/dist/highctidh-$(VERSION) && DEB_BUILD_OPTIONS=nocheck CC=${CC} dpkg-buildpackage -rfakeroot -uc -us
@@ -64,8 +64,8 @@ ${DEB_NAME}:
 
 wheel: ${SDIST_GZ} ${WHEEL_NAME}
 ${WHEEL_NAME}:
-	mkdir -p dist/source
-	mkdir -p build/tmp
+	-mkdir -p dist/source
+	-mkdir -p build/tmp
 	SOURCE_DATE_EPOCH=${SOURCE_DATE_EPOCH} python3 -m build --wheel
 	-ls -alh ${WORKDIR}/dist/*.whl
 	-sha256sum ${WORKDIR}/dist/*.whl
@@ -75,8 +75,8 @@ test:
 
 sdist: ${SDIST_GZ}
 ${SDIST_GZ}:
-	mkdir -p dist/source
-	mkdir -p build/tmp
+	-mkdir -p dist/source
+	-mkdir -p build/tmp
 	SOURCE_DATE_EPOCH=${SOURCE_DATE_EPOCH} flit build \
 			  --format sdist
 	-ls -alh ${SDIST_GZ}
