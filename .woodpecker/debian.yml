@@ -29,7 +29,7 @@ steps:
       - export WORKDIR=`pwd`
       - ./misc/install-debian-deps.sh
       - export CC=${CC}
-      - CC=${CC} make -f Makefile.packages packages
+      - CC=${CC} make packages
       - dpkg -i dist/python3-highctidh_*.deb
       - pytest-3 -v -n`nproc` --doctest-modules
       - apt remove -y python3-highctidh

@@ -90,7 +90,10 @@ umask(0o022)
 try:
   stat("build")
 except FileNotFoundError:
-  mkdir("build")
+  try:
+      mkdir("build")
+  except FileExistsError:
+      pass
 
 CC = None
 if "CC" in environ:

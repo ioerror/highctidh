@@ -16,7 +16,7 @@ make_and_clean() {
     echo "${PLATFORM} ${CC_MARCH:-} (${PLATFORM_SIZE}):";
     make;
     mkdir -p cross/$PLATFORM/$PLATFORM_SIZE/;
-    mv -v *.so cross/$PLATFORM/$PLATFORM_SIZE/;
+    mv -v dist/*.so cross/$PLATFORM/$PLATFORM_SIZE/;
     echo -e "$CHECKMARK";
 }
 

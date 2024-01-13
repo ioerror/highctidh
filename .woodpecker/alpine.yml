@@ -19,6 +19,6 @@ steps:
      - export CC=${CC}
      - ./misc/install-arch-deps.sh
      - CC=$CC make
-     - ls -alh *.so
-     - sha256sum *.so
+     - ls -alh dist/*.so
+     - sha256sum dist/*.so
 
