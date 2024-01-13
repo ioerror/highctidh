@@ -11,6 +11,9 @@ deb: _prep
 wheel: _prep
 	cd src/; make -f Makefile.packages wheel
 
+pytest:
+	cd src; pytest-3 -v -n auto --doctest-modules
+
 update-golang-modules:
 	cd src/; make -f Makefile.packages update-golang-modules
 

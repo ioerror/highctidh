@@ -26,7 +26,7 @@ jobs:
       run: sudo dpkg -i dist/python3-highctidh_*.deb
 
     - name: Run pytest
-      run: pytest-3 -v -n`nproc` --doctest-modules
+      run: make pytest
 
     - name: Print hashes
       run: sha256sum dist/*.deb && ls -alh dist/*.deb
