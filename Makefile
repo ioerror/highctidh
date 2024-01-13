@@ -26,6 +26,12 @@ test:
 examples:
 	cd src; make examples;
 
+examples-run:
+	cd src; time ./example-ctidh511
+	cd src; time ./example-ctidh512
+	cd src; time ./example-ctidh1024
+	cd src; time ./example-ctidh2048
+
 _prep:
 	-mkdir src/dist;
 	-ln -s src/build build;
