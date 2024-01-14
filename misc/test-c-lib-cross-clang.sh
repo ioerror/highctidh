@@ -17,8 +17,8 @@ make_and_clean() {
     rm -fv *.o *.so;
     echo "${PLATFORM} ${CC_MARCH:-} (${PLATFORM_SIZE}):";
     make;
-    mkdir -p cross/$PLATFORM/$PLATFORM_SIZE/;
-    mv -v *.so cross/$PLATFORM/$PLATFORM_SIZE/;
+    mkdir -p dist/cross/$PLATFORM/$PLATFORM_SIZE/;
+    mv -v dist/*.so dist/cross/$PLATFORM/$PLATFORM_SIZE/;
     echo -n "${PLATFORM} ${CC_MARCH:-} (${PLATFORM_SIZE}):";
     echo -e "$CHECKMARK";
 }
@@ -97,4 +97,4 @@ CC="clang --target=$PLATFORM-pc-linux-gnu -fuse-ld=$LD" \
 make_and_clean;
 
 echo "Cross compile with clang successful:";
-sha256sum cross/*/*/*.so;
+sha256sum dist/cross/*/*/*.so;

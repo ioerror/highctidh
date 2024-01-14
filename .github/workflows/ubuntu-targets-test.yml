@@ -21,5 +21,14 @@ jobs:
     - name: Install cross compiler deps
       run: sudo ./misc/install-ubuntu-latest-cross-deps.sh
 
-    - name: Build with cross compiler
-      run: CFLAGS="-fno-lto" ./misc/test-c-lib-cross-${{ matrix.CC }}.sh
+    - name: Build 
+      run: CC=${{ matrix.CC }} make
+
+    - name: Install
+      run: CC=${{ matrix.CC }} sudo make install && sudo ldconfig
+
+    - name: Build C library examples
+      run: CC=${{ matrix.CC }} make examples
+
+    - name: Run C library examples
+      run: make examples-run
