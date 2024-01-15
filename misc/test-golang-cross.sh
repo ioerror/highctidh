@@ -161,7 +161,7 @@ then
         then
             export GOARCH=$ARCH;
         fi
-        cd ctidh$BITS;
+        cd src/ctidh$BITS;
         for SUBARCH in $SUBARCHES
         do
            if [ "$ARCH" == "arm32v5" ] || [ "$ARCH" == "arm32v6" ] \
@@ -178,7 +178,7 @@ then
                go build;
            echo -e "$CHECKMARK";
         done
-        cd ../;
+        cd ../../;
     done
 
     if [ "$ARCH" == "amd64" ];
@@ -186,14 +186,14 @@ then
         echo "Running tests on $HOST_ARCH";
         for BITS in 511 512 1024 2048;
         do
-            cd ctidh$BITS;
+            cd src/ctidh$BITS;
             export GOARCH=amd64;
             echo "$GOARCH $BITS bits:";
             CC="clang $TARGET $EXTRA_FLAGS $EXTRA_INCLUDE" \
                 go test -v;
             echo -n "$GOARCH $BITS bits:";
             echo -e "$CHECKMARK";
-            cd ../;
+            cd ../../;
         done
     fi
 
