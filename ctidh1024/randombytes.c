@@ -5,6 +5,7 @@
 #include <fcntl.h>
 
 #include "crypto_classify.h"
+#include "random_namespace.h"
 
 #if defined(GETRANDOM) && defined(__linux__)
 #include <sys/random.h>

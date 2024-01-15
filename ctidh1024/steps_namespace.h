@@ -1,3 +1,3 @@
-#define steps NAMESPACEGENERIC(steps)
-#define steps_guess NAMESPACEGENERIC(steps_guess)
-#define steps_override NAMESPACEGENERIC(steps_override)
+#define steps NAMESPACEBITS(steps)
+#define steps_guess NAMESPACEBITS(steps_guess)
+#define steps_override NAMESPACEBITS(steps_override)

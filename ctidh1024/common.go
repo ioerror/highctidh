@@ -71,12 +71,12 @@ import (
 // C library and test the results
 //
 func test_go_fillrandom(context unsafe.Pointer, outptr []byte) {
-	go_fillrandom(context, unsafe.Pointer(&outptr[0]), C.size_t(len(outptr)))
+	highctidh_1024_go_fillrandom(context, unsafe.Pointer(&outptr[0]), C.size_t(len(outptr)))
 }
 
 // This is called from the C library, DO NOT CHANGE THE FUNCTION INTERFACE
-//export go_fillrandom
-func go_fillrandom(context unsafe.Pointer, outptr unsafe.Pointer, outsz C.size_t) {
+//export highctidh_1024_go_fillrandom
+func highctidh_1024_go_fillrandom(context unsafe.Pointer, outptr unsafe.Pointer, outsz C.size_t) {
 	rng := gopointer.Restore(context).(io.Reader)
 	buf := make([]byte, outsz)
 	count, err := rng.Read(buf)
