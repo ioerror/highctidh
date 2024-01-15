@@ -227,7 +227,7 @@ func DerivePublicKey(privKey *PrivateKey) *PublicKey {
 	var base C.public_key
 	baseKey := new(PublicKey)
 	baseKey.publicKey = base
-	return groupAction(privKey, baseKey)
+	return GroupAction(privKey, baseKey)
 }
 
 // GenerateKeyPair generates a new Ctidh2048 private and then
@@ -255,7 +255,7 @@ func GenerateKeyPairWithRNG(rng io.Reader) (*PrivateKey, *PublicKey) {
 	return privKey, DerivePublicKey(privKey)
 }
 
-func groupAction(privateKey *PrivateKey, publicKey *PublicKey) *PublicKey {
+func GroupAction(privateKey *PrivateKey, publicKey *PublicKey) *PublicKey {
 	sharedKey := new(PublicKey)
 	ok := C.csidh(&sharedKey.publicKey, &publicKey.publicKey, &privateKey.privateKey)
 	if !ok {
@@ -266,13 +266,13 @@ func groupAction(privateKey *PrivateKey, publicKey *PublicKey) *PublicKey {
 
 // DeriveSecret derives a shared secret.
 func DeriveSecret(privateKey *PrivateKey, publicKey *PublicKey) []byte {
-	sharedSecret := groupAction(privateKey, publicKey)
+	sharedSecret := GroupAction(privateKey, publicKey)
 	return sharedSecret.Bytes()
 }
 
 // Blind performs a blinding operation returning the blinded public key.
 func Blind(blindingFactor *PrivateKey, publicKey *PublicKey) (*PublicKey, error) {
-	return groupAction(blindingFactor, publicKey), nil
+	return GroupAction(blindingFactor, publicKey), nil
 }
 
 func init() {

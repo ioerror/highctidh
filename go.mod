@@ -1,23 +1,44 @@
-// Deprecated: use codeberg.org/vula/highctidh/ctidh{511,512,1024,2048} instead.
 module codeberg.org/vula/highctidh
 
 go 1.19
 
-retract (
-	v1.0.2024011200
-	v1.0.2024011100
-	v1.0.2024010701
-	v1.0.2024010700
-	v1.0.2023121800
-	v1.0.2023121101
-	v1.0.2023121100
-	v1.0.2023120600
-	v1.0.2023120500
-	v1.0.2023113000
-	v1.0.2023112802
-	v1.0.2023112801
-	v1.0.2023112800
-	v1.0.2023112000
+require codeberg.org/vula/highctidh/ctidh2048 v0.0.0 // XXX FIX ME LATER
+
+require codeberg.org/vula/highctidh/ctidh1024 v0.0.0 // XXX FIX ME LATER
+
+require codeberg.org/vula/highctidh/ctidh512 v0.0.0 // XXX FIX ME LATER
+
+require codeberg.org/vula/highctidh/ctidh511 v0.0.0 // XXX FIX ME LATER
+
+require codeberg.org/vula/highctidh/interfaces v0.0.0 // indirect; XXX FIX ME LATER
+
+require codeberg.org/vula/highctidh/schemes v0.0.0 // XXX FIX ME LATER
+
+require (
+	codeberg.org/vula/highctidh/unified v0.0.0-00010101000000-000000000000
+	github.com/stretchr/testify v1.8.4
 )
 
-require github.com/joncalhoun/pipe v0.0.0-20170510025636-72505674a733
+require (
+	codeberg.org/vula/highctidh/types v0.0.0-00010101000000-000000000000 // indirect
+	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/mattn/go-pointer v0.0.1 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
+)
+
+replace codeberg.org/vula/highctidh/ctidh2048 => ./ctidh2048 // XXX REMOVE ME LATER
+
+replace codeberg.org/vula/highctidh/ctidh1024 => ./ctidh1024 // XXX REMOVE ME LATER
+
+replace codeberg.org/vula/highctidh/ctidh512 => ./ctidh512 // XXX REMOVE ME LATER
+
+replace codeberg.org/vula/highctidh/ctidh511 => ./ctidh511 // XXX REMOVE ME LATER
+
+replace codeberg.org/vula/highctidh/interfaces => ./interfaces // XXX REMOVE ME LATER
+
+replace codeberg.org/vula/highctidh/schemes => ./schemes // XXX REMOVE ME LATER
+
+replace codeberg.org/vula/highctidh/types => ./types // XXX REMOVE ME LATER
+
+replace codeberg.org/vula/highctidh/unified => ./unified // XXX REMOVE ME LATER
