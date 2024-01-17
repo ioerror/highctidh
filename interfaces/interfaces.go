@@ -2,6 +2,10 @@ package interfaces
 
 import (
 	"io"
+    "codeberg.org/vula/highctidh/ctidh511"
+    "codeberg.org/vula/highctidh/ctidh512"
+    "codeberg.org/vula/highctidh/ctidh1024"
+    "codeberg.org/vula/highctidh/ctidh2048"
 )
 
 // CTIDH interface allows the usage of the CTIDH NIKE and it's key types.

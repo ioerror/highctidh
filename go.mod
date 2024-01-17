@@ -10,17 +10,16 @@ require codeberg.org/vula/highctidh/ctidh512 v0.0.0 // XXX FIX ME LATER
 
 require codeberg.org/vula/highctidh/ctidh511 v0.0.0 // XXX FIX ME LATER
 
-require codeberg.org/vula/highctidh/interfaces v0.0.0 // indirect; XXX FIX ME LATER
+require codeberg.org/vula/highctidh/interfaces v0.0.0 // XXX FIX ME LATER
 
 require codeberg.org/vula/highctidh/schemes v0.0.0 // XXX FIX ME LATER
 
-require (
-	codeberg.org/vula/highctidh/unified v0.0.0-00010101000000-000000000000
-	github.com/stretchr/testify v1.8.4
-)
+require codeberg.org/vula/highctidh/unified v0.0.0 // XXX FIX ME LATER
+
+require codeberg.org/vula/highctidh/types v0.0.0 // XXX FIX ME LATER
 
 require (
-	codeberg.org/vula/highctidh/types v0.0.0-00010101000000-000000000000 // indirect
+	github.com/stretchr/testify v1.8.4
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/mattn/go-pointer v0.0.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
