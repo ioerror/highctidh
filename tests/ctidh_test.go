@@ -13,53 +13,53 @@ import (
 )
 
 func TestNIKE511(t *testing.T) {
-	alicePrivate := ctidh511.GenerateSecretKey(rand.Reader)
+	alicePrivate := ctidh511.GeneratePrivateKey(rand.Reader)
 	alicePublic := ctidh511.DerivePublicKey(alicePrivate)
 
-	bobPrivate := ctidh511.GenerateSecretKey(rand.Reader)
+	bobPrivate := ctidh511.GeneratePrivateKey(rand.Reader)
 	bobPublic := ctidh511.DerivePublicKey(bobPrivate)
 
-	ss1 := ctidh511.DH(alicePrivate, bobPublic)
-	ss2 := ctidh511.DH(bobPrivate, alicePublic)
+	ss1 := ctidh511.DeriveSecret(alicePrivate, bobPublic)
+	ss2 := ctidh511.DeriveSecret(bobPrivate, alicePublic)
 
-	require.Equal(t, ss1.Bytes(), ss2.Bytes())
+	require.Equal(t, ss1, ss2)
 }
 
 func TestNIKE512(t *testing.T) {
-	alicePrivate := ctidh512.GenerateSecretKey(rand.Reader)
+	alicePrivate := ctidh512.GeneratePrivateKey(rand.Reader)
 	alicePublic := ctidh512.DerivePublicKey(alicePrivate)
 
-	bobPrivate := ctidh512.GenerateSecretKey(rand.Reader)
+	bobPrivate := ctidh512.GeneratePrivateKey(rand.Reader)
 	bobPublic := ctidh512.DerivePublicKey(bobPrivate)
 
-	ss1 := ctidh512.DH(alicePrivate, bobPublic)
-	ss2 := ctidh512.DH(bobPrivate, alicePublic)
+	ss1 := ctidh512.DeriveSecret(alicePrivate, bobPublic)
+	ss2 := ctidh512.DeriveSecret(bobPrivate, alicePublic)
 
-	require.Equal(t, ss1.Bytes(), ss2.Bytes())
+	require.Equal(t, ss1, ss2)
 }
 
 func TestNIKE1024(t *testing.T) {
-	alicePrivate := ctidh1024.GenerateSecretKey(rand.Reader)
+	alicePrivate := ctidh1024.GeneratePrivateKey(rand.Reader)
 	alicePublic := ctidh1024.DerivePublicKey(alicePrivate)
 
-	bobPrivate := ctidh1024.GenerateSecretKey(rand.Reader)
+	bobPrivate := ctidh1024.GeneratePrivateKey(rand.Reader)
 	bobPublic := ctidh1024.DerivePublicKey(bobPrivate)
 
-	ss1 := ctidh1024.DH(alicePrivate, bobPublic)
-	ss2 := ctidh1024.DH(bobPrivate, alicePublic)
+	ss1 := ctidh1024.DeriveSecret(alicePrivate, bobPublic)
+	ss2 := ctidh1024.DeriveSecret(bobPrivate, alicePublic)
 
-	require.Equal(t, ss1.Bytes(), ss2.Bytes())
+	require.Equal(t, ss1, ss2)
 }
 
 func TestNIKE2048(t *testing.T) {
-	alicePrivate := ctidh2048.GenerateSecretKey(rand.Reader)
+	alicePrivate := ctidh2048.GeneratePrivateKey(rand.Reader)
 	alicePublic := ctidh2048.DerivePublicKey(alicePrivate)
 
-	bobPrivate := ctidh2048.GenerateSecretKey(rand.Reader)
+	bobPrivate := ctidh2048.GeneratePrivateKey(rand.Reader)
 	bobPublic := ctidh2048.DerivePublicKey(bobPrivate)
 
-	ss1 := ctidh2048.DH(alicePrivate, bobPublic)
-	ss2 := ctidh2048.DH(bobPrivate, alicePublic)
+	ss1 := ctidh2048.DeriveSecret(alicePrivate, bobPublic)
+	ss2 := ctidh2048.DeriveSecret(bobPrivate, alicePublic)
 
-	require.Equal(t, ss1.Bytes(), ss2.Bytes())
+	require.Equal(t, ss1, ss2)
 }
