@@ -19,10 +19,10 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-replace codeberg.org/vula/highctidh/ctidh2048 => ./ctidh2048 // XXX REMOVE ME LATER
+replace codeberg.org/vula/highctidh/ctidh2048 => ./src/ctidh2048 // XXX REMOVE ME LATER
 
-replace codeberg.org/vula/highctidh/ctidh1024 => ./ctidh1024 // XXX REMOVE ME LATER
+replace codeberg.org/vula/highctidh/ctidh1024 => ./src/ctidh1024 // XXX REMOVE ME LATER
 
-replace codeberg.org/vula/highctidh/ctidh512 => ./ctidh512 // XXX REMOVE ME LATER
+replace codeberg.org/vula/highctidh/ctidh512 => ./src/ctidh512 // XXX REMOVE ME LATER
 
-replace codeberg.org/vula/highctidh/ctidh511 => ./ctidh511 // XXX REMOVE ME LATER
+replace codeberg.org/vula/highctidh/ctidh511 => ./src/ctidh511 // XXX REMOVE ME LATER
