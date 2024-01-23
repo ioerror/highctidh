@@ -1,7 +1,7 @@
 name: Build Debian GNU/Linux package and run pytest
 
 on:
-  push
+  push:
   pull_request:
     branches: [ "main" ]
 
