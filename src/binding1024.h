@@ -9,9 +9,9 @@
 #if 1024 == BITS
 
 void fillrandom_custom( void *const outptr, const size_t outsz, const uintptr_t context);
-void go_fillrandom(void *, void *, size_t);
+void highctidh_1024_go_fillrandom(void *, void *, size_t);
 #define NAMESPACEBITS(x) highctidh_1024_##x
-#define NAMESPACEGENERIC(x) highctidh_##x
+#define NAMESPACEGENERIC(x) highctidh_1024_##x
 
 #endif
 

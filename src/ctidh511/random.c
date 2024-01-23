@@ -2,7 +2,6 @@
 
 #include "random.h"
 #include "randombytes.h"
-
 #include "crypto_declassify.h"
 
 #include "int32_sort.h"

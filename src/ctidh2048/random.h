@@ -3,12 +3,12 @@
 
 #ifdef CGONUTS
 #include "cgo.h"
+#include "random_namespace.h"
 #endif // CGONUTS
 
 #include <inttypes.h>
 #include <stdint.h>
 #include <stddef.h>
-#include "random_namespace.h"
 
 typedef void ((ctidh_fillrandom)(
   void *const outbuf,

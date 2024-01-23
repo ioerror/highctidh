@@ -1,9 +1,11 @@
 #ifndef crypto_declassify_h
 #define crypto_declassify_h
 
-#include "binding1024.h"
+#if defined(CGONUTS)
+#include "cgo.h"
 #include "crypto_declassify_namespace.h"
+#endif
 
-extern void crypto_declassify(void *,unsigned long long);
+void crypto_declassify(void *,unsigned long long);
 
 #endif

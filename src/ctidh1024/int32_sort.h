@@ -2,13 +2,16 @@
 #define int32_sort_H
 
 #include <stdint.h>
-#include "binding1024.h"
+
+#ifdef CGONUTS
+#include "cgo.h"
+#define crypto_sort_int32 NAMESPACEBITS(crypto_sort_int32)
+#endif // CGONUTS
 
 #define int32_sort crypto_sort_int32
 #define int32_sort_implementation crypto_sort_int32_implementation
 #define int32_sort_version crypto_sort_int32_version
 #define int32_sort_compiler crypto_sort_int32_compiler
-#define crypto_sort_int32 NAMESPACEBITS(crypto_sort_int32)
 
 #ifdef __cplusplus
 extern "C" {

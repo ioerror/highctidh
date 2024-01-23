@@ -3,9 +3,8 @@
 
 #ifdef CGONUTS
 #include "cgo.h"
-#endif // CGONUTS
-
 #include "steps_namespace.h"
+#endif // CGONUTS
 
 /* assumes l >= 3, l odd */
 /* guarantees (b,g) = (0,0) _or_ the following: */

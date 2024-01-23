@@ -1,9 +1,11 @@
 #ifndef crypto_classify_h
 #define crypto_classify_h
 
-#include "binding2048.h"
+#if defined(CGONUTS)
+#include "cgo.h"
 #include "crypto_classify_namespace.h"
+#endif
 
-extern void crypto_classify(void *,unsigned long long);
+void crypto_classify(void *,unsigned long long);
 
 #endif
