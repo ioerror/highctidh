@@ -6,10 +6,10 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-    ctidh511 "codeberg.org/vula/highctidh/ctidh511"
-    ctidh512 "codeberg.org/vula/highctidh/ctidh512"
-    ctidh1024 "codeberg.org/vula/highctidh/ctidh1024"
-    ctidh2048 "codeberg.org/vula/highctidh/ctidh2048"
+    ctidh511 "codeberg.org/vula/highctidh/src/ctidh511"
+    ctidh512 "codeberg.org/vula/highctidh/src/ctidh512"
+    ctidh1024 "codeberg.org/vula/highctidh/src/ctidh1024"
+    ctidh2048 "codeberg.org/vula/highctidh/src/ctidh2048"
 )
 
 func TestNIKE511(t *testing.T) {
