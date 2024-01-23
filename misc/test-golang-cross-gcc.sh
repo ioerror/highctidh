@@ -12,20 +12,20 @@ CHECKMARK="\xE2\x9C\x94";
 echo "Running tests on $HOST_ARCH";
 for BITS in 511 512 1024 2048;
 do
-    cd ctidh$BITS;
+    cd src/ctidh$BITS;
 
     export GOARCH=amd64;
     echo -n "$GOARCH $BITS bits:";
     go test -v;
     echo -e "$CHECKMARK";
 
-    cd ../;
+    cd ../../;
 done
 
 echo "Cross compile for $GOOS with CGO_ENABLED=$CGO_ENABLED...";
 for BITS in 511 512 1024 2048;
 do
-    cd ctidh$BITS;
+    cd src/ctidh$BITS;
 
     export GOARCH=amd64;
     echo -n "$GOARCH $BITS bits:";
@@ -78,6 +78,6 @@ do
   # done
   # export GOARM="";
 
-    cd ../;
+    cd ../../;
 done;
 echo "Cross compile for $GOOS with CGO_ENABLED=$CGO_ENABLED successful.";
