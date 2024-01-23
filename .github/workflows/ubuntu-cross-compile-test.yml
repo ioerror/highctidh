@@ -1,10 +1,9 @@
 name: Ubuntu C library cross compile
 
 on:
-  push:
-    branches: [ "main", "mv-src" ]
+  push
   pull_request:
-    branches: [ "main", "mv-src" ]
+    branches: [ "main" ]
 
 jobs:
   build:
