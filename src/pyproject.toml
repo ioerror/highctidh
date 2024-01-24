@@ -1,10 +1,10 @@
 [project]
 name = "highctidh"
-version = "1.0.2024011202"
-description = "ctype bindings for highctidh"
+version = "1.0.2024012400"
+description = "highctidh bindings with included C library"
 readme = "README.md"
 requires-python = ">=3.9.6"
-keywords = ["post-quantum cryptography", "cryptography", "csidh", "ctidh"]
+keywords = ["post-quantum cryptography", "cryptography", "csidh", "ctidh", "C", "highctidh"]
 authors = [ {email = "jacob@appelbaum.net"}, {name = "Jacob Appelbaum"} ]
 maintainers = [ {email = "jacob@appelbaum.net"}, {name = "Jacob Appelbaum"} ]
 dependencies = [ ]
