@@ -67,9 +67,9 @@ required or by importing all four field sizes:
 ```
 import (
     ctidh511  "codeberg.org/vula/highctidh/src/ctidh511"
-    ctidh512  "codeberg.org/vula/highctidh/src/ctidh511"
-    ctidh1024 "codeberg.org/vula/highctidh/src/ctidh511"
-    ctidh2048 "codeberg.org/vula/highctidh/src/ctidh511"
+    ctidh512  "codeberg.org/vula/highctidh/src/ctidh512"
+    ctidh1024 "codeberg.org/vula/highctidh/src/ctidh1024"
+    ctidh2048 "codeberg.org/vula/highctidh/src/ctidh2048"
 ) 
 ```
 
