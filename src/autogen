@@ -945,7 +945,7 @@ with open(fn+'.tmp','w') as f:
   f.write('BASE_CFLAGS+=$(SEC_CFLAGS)\n')
   f.write('BASE_CFLAGS+=$(if $(strip $(CC_MARCH)),-march=$(CC_MARCH) -mtune=$(CC_MTUNE),)\n')
   f.write('LDFLAGS := -s -w\n')
-  f.write('ifeq ($(HOST_OS),"Linux")\n')
+  f.write('ifeq ($(HOST_OS),Linux)\n')
   f.write('LDFLAGS+=-Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now\n')
   f.write('LDFLAGS+=-Wl,-Bsymbolic-functions\n')
   f.write('LDFLAGS+=-Wl,--reduce-memory-overheads -Wl,--no-keep-memory\n')

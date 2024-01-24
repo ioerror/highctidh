@@ -2,9 +2,8 @@ name: Go cross compile
 
 on:
   push:
-    branches: [ "main", "mv-src" ]
   pull_request:
-    branches: [ "main", "mv-src" ]
+    branches: [ "main" ]
 
 jobs:
   build:

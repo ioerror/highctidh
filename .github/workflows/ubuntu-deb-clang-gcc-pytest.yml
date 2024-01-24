@@ -2,9 +2,8 @@ name: Build Debian GNU/Linux package and run pytest
 
 on:
   push:
-    branches: [ "main", "mv-src" ]
   pull_request:
-    branches: [ "main", "mv-src" ]
+    branches: [ "main" ]
 
 jobs:
   build:
