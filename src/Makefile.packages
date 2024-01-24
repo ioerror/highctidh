@@ -41,10 +41,10 @@ update-golang-modules: update-golang-ctidh511 update-golang-ctidh512 update-gola
 	echo "Upstream sync finished; do not forget to git add and commit";
 
 go-test-cross-gcc:
-	./misc/test-golang-cross-gcc.sh
+	../misc/test-golang-cross-gcc.sh
 
 go-test-cross-clang:
-	./misc/test-golang-cross-clang.sh
+	../misc/test-golang-cross-clang.sh
 
 go:
 	cd ctidh511 && go test -v;
@@ -89,16 +89,16 @@ packages: wheel deb
 
 docker-setup-multiarch:
 	echo "Please run ./misc/docker-priv-setup.sh as root to prepare the system"
-	./misc/docker-setup.sh
+	../misc/docker-setup.sh
 
 docker-clean:
-	./misc/docker-clean.sh
+	../misc/docker-clean.sh
 
 docker-fiat-setup:
-	./misc/docker-setup-fiat.sh
+	../misc/docker-setup-fiat.sh
 
 docker-fiat-generate: docker-fiat-setup
-	./misc/docker-generate-fiat.sh
+	../misc/docker-generate-fiat.sh
 
 # NOTE:
 #   twine accepts our whl files but pypi does not due to not using the
@@ -135,7 +135,7 @@ prepare-artifacts-for-upload:
 # Our use of QEMU means that the Docker container appears to be running on
 # ${ARCH} regardless of the host CPU architecture.
 multi-arch-build: sdist
-	./misc/docker-multi-arch-package-build.sh
+	../misc/docker-multi-arch-package-build.sh
 
 deb-and-wheel-in-podman:
 	echo "Building ${VERSION} for ${ARCH}...";
@@ -173,3 +173,4 @@ clean:
 	-rm -rf docker_build_output/
 	-rm -rf examples-static
 	-rm -rf highctidh-*.tar.gz
+	-rm -rf venv/
