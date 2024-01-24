@@ -6,7 +6,14 @@ release: clean _prep
 	cd src; make -f Makefile.packages sdist;
 	./misc/docker-multi-arch-package-build.sh;
 	echo "Watch the build process: tail -f docker_build_output/*/*/build.log";
-	echo "Please run: cd src/ && make -f Makefile.packages pypi-upload";
+	echo "When the build is finished, run: make release-upload";
+
+release-upload:
+	export WORKDIR=`pwd` && cd src/ && \
+		echo make -f Makefile.packages prepare-artifacts-for-upload \
+		pypi-upload;
+	echo "Please upload docker_build_output/upload/build-artifacts/*:"
+	ls -1 docker_build_output/upload/build-artifacts/;
 
 packages: _prep
 	cd src/; make -f Makefile.packages packages;
@@ -53,6 +60,8 @@ _prep:
 clean:
 	-rm -rf build;
 	-rm -rf dist;
+	-rm -rf deb_dist;
 	-rm -rf docker_build_output;
+	-rm -rf .pytest_cache;
 	-cd src; make clean;
 	-cd src; make -f Makefile.packages clean;

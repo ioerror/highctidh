@@ -104,13 +104,14 @@ docker-fiat-generate: docker-fiat-setup
 #   twine accepts our whl files but pypi does not due to not using the
 #   `manywheels` docker trusting trust container
 pypi-upload:
-	python3 -m twine check ${WORKDIR}/docker_build_output/upload/*$(VERSION)*.tar.gz
-	python3 -m twine upload --repository pypi ${WORKDIR}/docker_build_output/upload/*$(VERSION)*.tar.gz
+	python3 -m twine check ${WORKDIR}/docker_build_output/upload/build-artifacts/highctidh-$(VERSION).tar.gz
+	python3 -m twine upload --repository pypi ${WORKDIR}/docker_build_output/upload/build-artifacts/highctidh-$(VERSION).tar.gz
 
 prepare-artifacts-for-upload:
 	mkdir -p ${WORKDIR}/docker_build_output/upload/build-artifacts;
+	cp ${WORKDIR}/dist/highctidh-$(VERSION).tar.gz ${WORKDIR}/docker_build_output/upload/build-artifacts/
 	for arch in $(shell ls -1  ${WORKDIR}/docker_build_output |grep -v upload|grep -v .log); do \
-		echo "Copying deb and whl builds..."; \
+		echo "Copying deb and whl builds for $$arch..."; \
 		cp -v ${WORKDIR}/docker_build_output/$$arch/dist/*.deb \
 			${WORKDIR}/docker_build_output/upload/build-artifacts/ && \
 		cp -v ${WORKDIR}/docker_build_output/$$arch/dist/*.whl \
@@ -120,14 +121,14 @@ prepare-artifacts-for-upload:
 		cd ${WORKDIR}/docker_build_output/$$arch/dist/ && \
 		echo "Creating $$arch artefact tar.gz..." && \
 		tar -cvzf \
-		highctidh_${VERSION}-$$arch-src.tar.gz.new \
+		highctidh_${VERSION}-src-$$arch.tar.gz.new \
 		*.buildinfo \
 		*.changes \
 		*.dsc \
 		*.tar.gz \
 		*.tar.xz && \
-		mv -v highctidh_${VERSION}-$$arch-src.tar.gz.new \
-			../../upload/build-artifacts/highctidh_${VERSION}-$$arch-src.tar.gz && \
+		mv -v highctidh_${VERSION}-src-$$arch.tar.gz.new \
+			../../upload/build-artifacts/highctidh_${VERSION}-src-$$arch.tar.gz && \
 		cd ../../../; \
 	done
 
