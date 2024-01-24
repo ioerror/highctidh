@@ -59,10 +59,18 @@ sudo dpkg -i python3-highctidh_*.deb
 
 Add the golang bindings to a golang project:
 ```
-go get -u https://codeberg.org/vula/highctidh/ctidh511
-go get -u https://codeberg.org/vula/highctidh/ctidh512
-go get -u https://codeberg.org/vula/highctidh/ctidh1024
-go get -u https://codeberg.org/vula/highctidh/ctidh2048
+go get -u codeberg.org/vula/highctidh/
+```
+
+Use the golang bindings in a `.go` file by importing the field size that is
+required or by importing all four field sizes:
+```
+import (
+    ctidh511  "codeberg.org/vula/highctidh/src/ctidh511"
+    ctidh512  "codeberg.org/vula/highctidh/src/ctidh511"
+    ctidh1024 "codeberg.org/vula/highctidh/src/ctidh511"
+    ctidh2048 "codeberg.org/vula/highctidh/src/ctidh511"
+) 
 ```
 
 # highctidh improvements
