@@ -1,0 +1,26 @@
+image: python:3.10-bullseye
+
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_PIPELINE_SOURCE == 'push'
+    - if: $CI_PIPELINE_SOURCE == 'web'
+
+stages:
+  - build
+  - test
+
+build-job:
+  stage: build
+  image: debian:sid
+  script:
+    - sudo bash -c ./misc/install-debian-deps.sh
+    - make deb
+
+test-pytest:
+  stage: test
+  image: debian:sid
+  script:
+    - sudo dpkg -i dist/python3-highctidh_*.deb
+    - make pytest
+    - sha256sum dist/*.deb && ls -alh dist/*.deb
