@@ -63,7 +63,7 @@ go get -u codeberg.org/vula/highctidh/
 ```
 
 Use the golang bindings in a `.go` file by importing the field size that is
-required or by importing all four field sizes:
+desired or by importing any or all of the four field sizes:
 ```
 import (
     ctidh511  "codeberg.org/vula/highctidh/src/ctidh511"
