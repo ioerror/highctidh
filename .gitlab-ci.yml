@@ -14,13 +14,13 @@ build-job:
   stage: build
   image: debian:sid
   script:
-    - sudo bash -c ./misc/install-debian-deps.sh
+    - bash -c ./misc/install-debian-deps.sh
     - make deb
 
 test-pytest:
   stage: test
   image: debian:sid
   script:
-    - sudo dpkg -i dist/python3-highctidh_*.deb
+    - dpkg -i dist/python3-highctidh_*.deb
     - make pytest
     - sha256sum dist/*.deb && ls -alh dist/*.deb
