@@ -16,6 +16,10 @@ build-job:
   script:
     - bash -c ./misc/install-debian-deps.sh
     - make deb
+  artifacts:
+   name: deb
+   paths:
+     - dist/python3-highctidh_*.deb
 
 test-pytest:
   stage: test
@@ -24,3 +28,7 @@ test-pytest:
     - dpkg -i dist/python3-highctidh_*.deb
     - make pytest
     - sha256sum dist/*.deb && ls -alh dist/*.deb
+  artifacts:
+   name: deb
+   paths:
+     - dist/python3-highctidh_*.deb
