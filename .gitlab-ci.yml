@@ -10,11 +10,14 @@ stages:
   - build
   - test
 
+before_script:
+  - PATH=$PATH:~/.local/bin
+  - bash -c ./misc/install-debian-deps.sh
+
 build-job:
   stage: build
   image: debian:sid
   script:
-    - bash -c ./misc/install-debian-deps.sh
     - make deb
   artifacts:
    name: deb
