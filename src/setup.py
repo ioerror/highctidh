@@ -76,7 +76,10 @@ else:
     sda = str(int(environ["SOURCE_DATE_EPOCH"]))
     print(f"SOURCE_DATE_EPOCH={sda}")
 if "HIGHCTIDH_PORTABLE" in environ:
-    HIGHCTIDH_PORTABLE = str(int(environ.get("HIGHCTIDH_PORTABLE", 0)))
+    if environ.get("HIGHCTIDH_PORTABLE") == '':
+      HIGHCTIDH_PORTABLE = str(0)
+    else:
+      HIGHCTIDH_PORTABLE = str(int(environ.get("HIGHCTIDH_PORTABLE")))
     print(f"HIGHCTIDH_PORTABLE is set: {HIGHCTIDH_PORTABLE}")
 else:
     HIGHCTIDH_PORTABLE = None
