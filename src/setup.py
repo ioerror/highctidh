@@ -75,6 +75,12 @@ else:
     environ['SOURCE_DATE_EPOCH'] = str(int(time()))
     sda = str(int(environ["SOURCE_DATE_EPOCH"]))
     print(f"SOURCE_DATE_EPOCH={sda}")
+if "HIGHCTIDH_PORTABLE" in environ:
+    HIGHCTIDH_PORTABLE = str(int(environ["HIGHCTIDH_PORTABLE"]))
+    print(f"HIGHCTIDH_PORTABLE is set: {HIGHCTIDH_PORTABLE}")
+else:
+    HIGHCTIDH_PORTABLE = None
+    print(f"HIGHCTIDH_PORTABLE is unset")
 if "LLVM_PARALLEL_LINK_JOBS" in environ:
     sdb = str(int(environ["LLVM_PARALLEL_LINK_JOBS"]))
     print(f"LLVM_PARALLEL_LINK_JOBS is set: {sdb}")
@@ -173,6 +179,8 @@ elif PLATFORM == "sparc64":
 elif PLATFORM == "x86_64":
   if PLATFORM_SIZE == 64:
     cflags += ["-march=native", "-mtune=native", "-D__x86_64__"]
+    if HIGHCTIDH_PORTABLE:
+      cflags += ["-fforce-enable-int128", "-DHIGHCTIDH_PORTABLE" ]
   elif PLATFORM_SIZE == 32:
     # clang required
     cflags += ["-fforce-enable-int128", "-D__i386__", "-DHIGHCTIDH_PORTABLE"]
@@ -180,7 +188,7 @@ else:
   cflags += ["-DHIGHCTIDH_PORTABLE"]
 
 # We default to fiat as the backend for all platforms except x86_64
-if PLATFORM == "x86_64" and PLATFORM_SIZE == 64:
+if PLATFORM == "x86_64" and PLATFORM_SIZE == 64 and not HIGHCTIDH_PORTABLE:
     src_511 =  base_src + ["fp_inv511.c", "fp_sqrt511.c", "primes511.c",]
     src_512 =  base_src + ["fp_inv512.c", "fp_sqrt512.c", "primes512.c",]
     src_1024 = base_src + ["fp_inv1024.c", "fp_sqrt1024.c", "primes1024.c",]
