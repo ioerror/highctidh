@@ -180,7 +180,9 @@ elif PLATFORM == "x86_64":
   if PLATFORM_SIZE == 64:
     cflags += ["-march=native", "-mtune=native", "-D__x86_64__"]
     if HIGHCTIDH_PORTABLE:
-      cflags += ["-fforce-enable-int128", "-DHIGHCTIDH_PORTABLE" ]
+      if CC == "clang":
+        cflags += ["-fforce-enable-int128"]
+      cflags += ["-DHIGHCTIDH_PORTABLE" ]
   elif PLATFORM_SIZE == 32:
     # clang required
     cflags += ["-fforce-enable-int128", "-D__i386__", "-DHIGHCTIDH_PORTABLE"]
