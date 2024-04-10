@@ -21,6 +21,9 @@ packages: _prep
 deb: _prep
 	cd src/; make -f Makefile.packages deb;
 
+deb-and-wheel-in-podman:
+	podman run -v `pwd`:/highctidh --workdir /highctidh --rm -it debian:bookworm bash -c 'apt update && ./misc/install-debian-deps.sh && make wheel && CC=clang make deb'
+
 wheel: _prep
 	cd src/; make -f Makefile.packages wheel;
 
