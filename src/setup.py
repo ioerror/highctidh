@@ -182,7 +182,7 @@ elif PLATFORM == "sparc64":
 elif PLATFORM == "x86_64":
   if PLATFORM_SIZE == 64:
     cflags += ["-march=native", "-mtune=native", "-D__x86_64__"]
-    if HIGHCTIDH_PORTABLE:
+    if HIGHCTIDH_PORTABLE is not None and HIGHCTIDH_PORTABLE != 0:
       if CC == "clang":
         cflags += ["-fforce-enable-int128"]
       cflags += ["-DHIGHCTIDH_PORTABLE" ]
