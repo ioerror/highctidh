@@ -13,7 +13,7 @@ jobs:
         CC: ["clang", "gcc"]
         PORTABLE: ["0", "1"]
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Install Python deps for testing
       run: sudo bash -c ./misc/install-debian-deps.sh
