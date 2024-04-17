@@ -90,7 +90,7 @@ ifeq	($(PLATFORM),ppc64)
 endif
 
 ifeq	($(PLATFORM),riscv64)
-	CFLAGS+= $(BASE_CFLAGS)
+	CFLAGS+= $(BASE_CFLAGS) -D__riscv
 endif
 
 ifeq	($(PLATFORM),s390x)

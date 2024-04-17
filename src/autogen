@@ -996,7 +996,7 @@ with open(fn+'.tmp','w') as f:
   f.write('\tCFLAGS+= $(BASE_CFLAGS)\n')
   f.write('endif\n\n')
   f.write('ifeq\t($(PLATFORM),riscv64)\n')
-  f.write('\tCFLAGS+= $(BASE_CFLAGS)\n')
+  f.write('\tCFLAGS+= $(BASE_CFLAGS) -D__riscv\n')
   f.write('endif\n\n')
   f.write('ifeq\t($(PLATFORM),s390x)\n')
   f.write('\tCFLAGS+= $(BASE_CFLAGS) -D__s390x__\n')

@@ -171,7 +171,7 @@ elif PLATFORM == "ppc64le":
 elif PLATFORM == "ppc64":
   cflags += ["-mtune=native", "-DHIGHCTIDH_PORTABLE"]
 elif PLATFORM == "riscv64":
-  cflags += ["-DHIGHCTIDH_PORTABLE"]
+  cflags += ["-D__riscv", "-DHIGHCTIDH_PORTABLE"]
 elif PLATFORM == "s390x":
   if CC == "clang":
       cflags += ["-march=z10", "-mtune=z10", "-DHIGHCTIDH_PORTABLE"]
