@@ -7,7 +7,7 @@ HOST_OS := $(shell uname -s)
 
 ### override these for cross-building:
 PLATFORM ?= $(shell uname -m)
-ifeq	($(PLATFORM), $(filter $(PLATFORM), arm64 amd64 loongarch64 mips64 mips64el ppc64 ppc64le riscv64 s390x sparc64 sparc4v x86_64))
+ifeq	($(PLATFORM), $(filter $(PLATFORM), arm64 amd64 i86pc loongarch64 mips64 mips64el ppc64 ppc64le riscv64 s390x sparc64 sparc4v x86_64))
 PLATFORM_SIZE ?= 64
 else ifeq ($(PLATFORM), $(filter $(PLATFORM), armv7l i386 i686 mips mipsel))
 PLATFORM_SIZE ?= 32
@@ -112,12 +112,12 @@ endif
 ifeq	($(HOST_OS), $(filter $(HOST_OS), SunOS))
 ifeq	($(PLATFORM), $(filter $(PLATFORM), sparc sun4u sun4v sparc64 i86pc i386))
 	CFLAGS+= $(BASE_CFLAGS) -m64 -D__sun
+	LDFLAGS+= $(LDFLAGS)
+ifeq	($(PLATFORM), $(filter $(PLATFORM), sparc sun4u sun4v sparc64))
+	CFLAGS+=-DHIGHCTIDH_PORTABLE
 	ifeq ($(CC),gcc)
 		CFLAGS+=-mcpu=native -mtune=native -D_REENTRANT
 	endif
-	LDFLAGS+= $(LDFLAGS)# -Wl,-Bsymbolic-functions
-ifeq	($(PLATFORM), $(filter $(PLATFORM), sparc sun4u sun4v sparc64))
-	CFLAGS+=-DHIGHCTIDH_PORTABLE
 endif
 endif
 endif
