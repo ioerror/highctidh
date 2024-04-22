@@ -41,6 +41,9 @@ LDFLAGS+=-Wl,--reduce-memory-overheads -Wl,--no-keep-memory
 endif
 ifeq ($(HOST_OS),SunOS)
 BASE_CFLAGS+=-Wall #$(SAVETMP)
+ifeq ($(CC),gcc)
+BASE_CFLAGS+=-fforce-enable-int128
+endif
 endif
 # Default to using fiat crypto, safe and portable but slow backend
 HIGHCTIDH_PORTABLE ?= 1
