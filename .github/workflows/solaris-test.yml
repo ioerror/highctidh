@@ -1,0 +1,30 @@
+name: Test Solaris build with gcc
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: Solaris gcc build
+    env:
+      LD: "/usr/bin/ld"
+      CC: "gcc"
+      MAKE: "/usr/bin/gmake"
+      HIGHCTIDH_PORTABLE: "1"
+    steps:
+    - uses: actions/checkout@v4
+    - name: Test in Solaris
+      id: test
+      uses: vmactions/solaris-vm@v1
+      with:
+        envs: 'LD CC MAKE HIGHCTIDH_PORTABLE'
+        usesh: true
+        prepare: |
+          isainfo -v
+          pkgutil -U
+          pkgutil -y -i gmake
+          pkgutil -y -i gcc
+
+        run: |
+          gmake
+          gmake pytest

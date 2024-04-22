@@ -5,6 +5,7 @@
 #include "cgo.h"
 #endif // CGONUTS
 
+#include "naidne.h"
 #include "uintbig.h"
 #include "fp.h"
 #include "mont.h"

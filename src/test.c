@@ -1,8 +1,9 @@
+#include "naidne.h"
+
 #include <assert.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "naidne.h"
 #include "steps.h"
 #include "elligator.h"
 #include "csidh.h"
@@ -10,6 +11,9 @@
 #include "random.h"
 
 #if defined(__ARM32__) || defined(__i386__)
+#define DFMT "%#llxU, "
+#elif defined(__sun)
+#include <sys/byteorder.h>
 #define DFMT "%#llxU, "
 #else
 #define DFMT "%#lxU, "
@@ -182,13 +186,13 @@ test_fillrandom_context_echoback(void *const out, const size_t outsz,
 		current->state = context;
 		current->next = NULL;
 	}
-	assert(current);
-	size_t offset = current->state - context;
-	assert(offset + outsz < sizeof(test_fillrandom_buf)); // works for now
-	for (size_t i = 0; i < outsz; i++) {
-		((char*)out)[i] = test_fillrandom_buf[offset+i];
-	}
-	current->state += outsz;
+  assert(current);
+  size_t offset = current->state - context;
+  assert(offset + outsz < sizeof(test_fillrandom_buf)); // works for now
+  for (size_t i = 0; i < outsz; i++) {
+    ((char*)out)[i] = test_fillrandom_buf[offset+i];
+  }
+  current->state += outsz;
 }
 
 static uint64_t
@@ -405,12 +409,14 @@ static void test_random_boundedl1(void)
 		test_vector *t = &tests[t_idx];
 		test_fillrandom_context_list_reset();
 		for(size_t i = 0; i < t->w + t->s; i++){
-			int32_t tmp = htole32(t->r[i]);
+			//int32_t tmp = htole32(t->r[i]);
+			int32_t tmp = t->r[i];
 			memcpy(test_fillrandom_buf + i*sizeof(tmp),
 			    &tmp, sizeof(tmp));
 		}
 		for(size_t i = 0; i < sizeof(t->r2)/sizeof(t->r2[0]); i++){
-			int32_t tmp = htole32(t->r2[i]);
+			//int32_t tmp = htole32(t->r2[i]);
+			int32_t tmp = t->r2[i];
 			memcpy(test_fillrandom_buf
 			    + (t->w + t->s)*sizeof(int32_t)
 			    + i*sizeof(tmp),
@@ -420,6 +426,10 @@ static void test_random_boundedl1(void)
 		random_boundedl1(e,t->w,t->s, 0, test_fillrandom_context_echoback);
 		if (0 != memcmp(e, t->e, sizeof(e))) {
 			printf("=== testcase %zd\n", t_idx);
+      printf("initial e: [");
+      for(size_t i = 0; i < sizeof(e); i++) {
+        printf("%d,", e[i]);
+      } printf("]\n");
 			printf("r_end: [");
 			for(size_t i = 0; i < sizeof(t->r)/sizeof(t->r[0]); i++) {
 				printf("%d,", t->r[i]);
@@ -427,6 +437,10 @@ static void test_random_boundedl1(void)
 			printf("e: [");
 			for(size_t i = 0; i < sizeof(e); i++) {
 				printf("%d,", e[i]);
+			} printf("]\n");
+			printf("t->e: [");
+			for(size_t i = 0; i < sizeof(e); i++) {
+				printf("%d,", t->e[i]);
 			} printf("]\n");
 			assert(0);
 		}
@@ -509,7 +523,17 @@ test_deterministic_keygen()
 	public_key_from_bytes(&deserialized_gh3, serialized_gh3);
 	assert_uintbig_eq(pub_gh3.A.x, deserialized_gh3.A.x);
 	/* to_bytes is a no-op on little-endian archs, and not on big-endian: */
-# if __BYTE_ORDER == __LITTLE_ENDIAN
+
+// gcc -E -dM - </dev/null|grep -i __BYTE_ORDER  
+# if defined(PLATFORM) && PLATFORM == sun4v
+# if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+  assert(0 != memcmp((void*)&pub_gh3, serialized_gh3, sizeof(pub_gh3)));
+# else
+	assert(0 == memcmp((void*)&pub_gh3, serialized_gh3, sizeof(pub_gh3)));
+#endif
+#endif  
+
+# if !defined(__sun) && __BYTE_ORDER == __LITTLE_ENDIAN
 	assert(0 == memcmp((void*)&pub_gh3, serialized_gh3, sizeof(pub_gh3)));
 # else
 	assert(0 != memcmp((void*)&pub_gh3, serialized_gh3, sizeof(pub_gh3)));
