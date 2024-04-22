@@ -120,6 +120,7 @@ ifeq	($(PLATFORM), $(filter $(PLATFORM), sparc sun4u sun4v sparc64))
 	CFLAGS+=-DHIGHCTIDH_PORTABLE
 endif
 endif
+endif
 
 ifeq	($(PLATFORM),unknown)
 	CFLAGS+= $(BASE_CFLAGS)
