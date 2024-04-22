@@ -41,8 +41,10 @@ LDFLAGS+=-Wl,--reduce-memory-overheads -Wl,--no-keep-memory
 endif
 ifeq ($(HOST_OS),SunOS)
 BASE_CFLAGS+=-Wall #$(SAVETMP)
+ifneq ($(PLATFORM), i86pc)
 ifeq ($(CC),gcc)
 BASE_CFLAGS+=-fforce-enable-int128
+endif
 endif
 endif
 # Default to using fiat crypto, safe and portable but slow backend
@@ -126,6 +128,7 @@ ifeq	($(PLATFORM),unknown)
 	CFLAGS+= $(BASE_CFLAGS)
 endif
 
+ifneq	($(HOST_OS), $(filter $(HOST_OS), SunOS))
 ifeq	($(PLATFORM), $(filter $(PLATFORM), amd64 x86_64 i386 i686))
 ifeq	($(PLATFORM_SIZE),32)
 	CFLAGS+= $(BASE_CFLAGS) -D__i386__
@@ -136,6 +139,7 @@ else
 
 	CFLAGS+= $(BASE_CFLAGS) -D__x86_64__
 
+endif
 endif
 endif
 
