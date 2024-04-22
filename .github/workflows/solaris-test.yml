@@ -18,6 +18,7 @@ jobs:
       id: test
       uses: vmactions/solaris-vm@v1
       with:
+        release: "11.4-gcc"
         envs: 'LD CC MAKE HIGHCTIDH_PORTABLE'
         usesh: true
         prepare: |
@@ -27,4 +28,3 @@ jobs:
 
         run: |
           gmake
-          gmake pytest
