@@ -11,7 +11,7 @@ jobs:
       LD: "/usr/bin/ld"
       CC: "gcc"
       MAKE: "/usr/bin/gmake"
-      HIGHCTIDH_PORTABLE: "1"
+      HIGHCTIDH_PORTABLE: "0"
     steps:
     - uses: actions/checkout@v4
     - name: Test in Solaris
