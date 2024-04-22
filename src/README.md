@@ -150,7 +150,7 @@ The C library and bindings have been tested on the following operating systems:
 
 ## Notes on building
 
-Building on CheriBSD, FreeBSD, and OpenBSD building is supported using the
+Building on Solaris, CheriBSD, FreeBSD, and OpenBSD building is supported using the
 `gmake` command. GNU/Linux and MacOS are supported with the `make` command.
 
 ### Additional notes on building the C library

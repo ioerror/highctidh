@@ -24,6 +24,9 @@ jobs:
     - name: Install Debian package
       run: sudo dpkg -i dist/python3-highctidh_*.deb
 
+    - name: List Debian package contents
+      run: dpkg -L python3-highctidh
+
     - name: Run pytest
       run: make pytest
 
