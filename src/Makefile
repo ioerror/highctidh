@@ -110,7 +110,7 @@ ifeq	($(PLATFORM),s390x)
 endif
 
 ifeq	($(HOST_OS), $(filter $(HOST_OS), SunOS))
-ifeq	($(PLATFORM), $(filter $(PLATFORM), sparc sun4u sun4v sparc64 amd64))
+ifeq	($(PLATFORM), $(filter $(PLATFORM), sparc sun4u sun4v sparc64 i86pc i386))
 	CFLAGS+= $(BASE_CFLAGS) -m64 -D__sun
 	ifeq ($(CC),gcc)
 		CFLAGS+=-mcpu=native -mtune=native -D_REENTRANT
