@@ -191,6 +191,10 @@ elif PLATFORM == "sun4v":
   def get_config_vars_wrapper(*a):
     return [_config_vars.get(n) for n in args] if a else _config_vars
   _wrapped_distutils.get_config_vars = get_config_vars_wrapper
+
+  if CC == "gcc":
+      cflags += ["-fforce-enable-int128", "-DHIGHCTIDH_PORTABLE"]
+
   ldflags = ["-s"]
   ldflags += ["-Wl,-Bsymbolic-functions"]
   cflags = ["-O2", "-Werror", "-s", "-w"]
