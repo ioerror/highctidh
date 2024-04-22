@@ -180,7 +180,7 @@ elif PLATFORM == "s390x":
       cflags += ["-march=z10", "-mtune=z10", "-DHIGHCTIDH_PORTABLE"]
   if CC == "gcc":
       cflags += ["-march=z10", "-mtune=z10", "-DHIGHCTIDH_PORTABLE"]
-elif PLATFORM == "sun4v":
+elif PLATFORM == "sun4v" or PLATFORM == 'i86pc':
 # Solaris 11
   from distutils.sysconfig import get_config_vars as _get_config_vars
   import distutils.sysconfig as _wrapped_distutils
@@ -199,6 +199,8 @@ elif PLATFORM == "sun4v":
   ldflags += ["-Wl,-Bsymbolic-functions"]
   cflags = ["-O2", "-Werror", "-s", "-w"]
   cflags += ["-m64", "-DHIGHCTIDH_PORTABLE", "-D__sun"]
+  if PLATFORM == 'i86pc':
+    cflags += ["-D__i86pc__"]
   cflags += ["-Wextra", "-Wall", "-fpie", "-fPIC", "-fwrapv", "-pedantic"]
   cflags += ["-DGETRANDOM"]
   cflags += [f"-DPLATFORM={PLATFORM}",

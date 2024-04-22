@@ -115,6 +115,9 @@ ifeq	($(HOST_OS), $(filter $(HOST_OS), SunOS))
 ifeq	($(PLATFORM), $(filter $(PLATFORM), sparc sun4u sun4v sparc64 i86pc i386))
 	CFLAGS+= $(BASE_CFLAGS) -m64 -D__sun
 	LDFLAGS+= $(LDFLAGS)
+ifeq	($(PLATFORM), $(filter $(PLATFORM), i86pc))
+	CFLAGS+=-D__i86pc__
+endif
 ifeq	($(PLATFORM), $(filter $(PLATFORM), sparc sun4u sun4v sparc64))
 	CFLAGS+=-DHIGHCTIDH_PORTABLE
 	ifeq ($(CC),gcc)

@@ -5,7 +5,7 @@
 #include "uintbig.h"
 #include "annotations.h"
 
-#if defined(HIGHCTIDH_PORTABLE) || !(defined(__x86_64__) || defined(_M_X64))
+#if defined(HIGHCTIDH_PORTABLE) || !(defined(__x86_64__) || defined(_M_X64)) || defined(__i86pc__)
 /* we only have optimizations for amd64 so far, so on other platforms we
  * default to the portable code by defining HIGHCTIDH_PORTABLE:
  */
