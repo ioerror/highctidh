@@ -1,3 +1,6 @@
+#ifndef uintbig_namespace_h
+#define uintbig_namespace_h
+
 #ifdef CGONUTS
 #include "cgo.h"
 #endif // CGONUTS
@@ -16,3 +19,5 @@
 #define uintbig_uint64_iszero NAMESPACEBITS(uintbig_uint64_iszero)
 #define uintbig_isequal NAMESPACEBITS(uintbig_isequal)
 #define uintbig_iszero NAMESPACEBITS(uintbig_iszero)
+
+#endif

@@ -4,7 +4,7 @@
 #ifndef HIGHCTIDH_INT32_MINMAX_H
 #define HIGHCTIDH_INT32_MINMAX_H
 
-#if defined(__x86_64__) && !defined(HIGHCTIDH_PORTABLE)
+#if (defined(__x86_64__) || defined(__i86pc__)) && HIGHCTIDH_PORTABLE == 0
 
 #define int32_MINMAX(a,b)			\
 do { \

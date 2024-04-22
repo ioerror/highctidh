@@ -36,7 +36,8 @@ void print_hex_key(void *k, unsigned int l)
   fflush(stdout);
 }
 
-int main()
+int main(void);
+int main(void)
 {
   private_key sk_a, sk_b;
   public_key pk_a, pk_b;

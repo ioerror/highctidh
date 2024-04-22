@@ -4,9 +4,10 @@
 HOST_PLATFORM := $(shell uname -m)
 HOST_OS := $(shell uname -s)
 
+
 ### override these for cross-building:
 PLATFORM ?= $(shell uname -m)
-ifeq	($(PLATFORM), $(filter $(PLATFORM), arm64 amd64 loongarch64 mips64 mips64el ppc64 ppc64le riscv64 s390x sparc64 x86_64))
+ifeq	($(PLATFORM), $(filter $(PLATFORM), arm64 amd64 i86pc loongarch64 mips64 mips64el ppc64 ppc64le riscv64 s390x sparc64 sparc4v x86_64))
 PLATFORM_SIZE ?= 64
 else ifeq ($(PLATFORM), $(filter $(PLATFORM), armv7l i386 i686 mips mipsel))
 PLATFORM_SIZE ?= 32
@@ -26,25 +27,32 @@ endif
 CC_MTUNE ?= $(CC_MARCH)
 
 SEC_CFLAGS := -Wformat -Werror=format-security -D_FORTIFY_SOURCE=2 -fstack-protector-strong
-BASE_CFLAGS := -fpie -fPIC -Wall -Wextra -pedantic -O2 -fwrapv -DGETRANDOM -Werror
+BASE_CFLAGS := -fpie -fPIC -Wall -Wextra -pedantic -O2 -fwrapv -DGETRANDOM
 BASE_CFLAGS+=-DPLATFORM=${PLATFORM} -DPLATFORM_SIZE=${PLATFORM_SIZE}
-BASE_CFLAGS+=$(SEC_CFLAGS)
 BASE_CFLAGS+=$(if $(strip $(CC_MARCH)),-march=$(CC_MARCH) -mtune=$(CC_MTUNE),)
-LDFLAGS := -s -w
+LDFLAGS := 
 ifeq ($(HOST_OS),Linux)
+BASE_CFLAGS+=$(SEC_CFLAGS)
 LDFLAGS+=-Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now
 LDFLAGS+=-Wl,-Bsymbolic-functions
 LDFLAGS+=-Wl,--reduce-memory-overheads -Wl,--no-keep-memory
 endif
+ifeq ($(CC),gcc)
+BASE_CFLAGS+=
+endif
+ifeq ($(CC),clang)
+BASE_CFLAGS+=-Wno-unused-command-line-argument
+endif
 # Default to using fiat crypto, safe and portable but slow backend
 HIGHCTIDH_PORTABLE ?= 1
 ifeq	($(HIGHCTIDH_PORTABLE),1)
-BASE_CFLAGS += -DHIGHCTIDH_PORTABLE
+BASE_CFLAGS += -DHIGHCTIDH_PORTABLE=1
 	libhighctidh_511_OBJS := fp2fiat511.o fiat_p511.o
 	libhighctidh_512_OBJS := fp2fiat512.o fiat_p512.o
 	libhighctidh_1024_OBJS := fp2fiat1024.o fiat_p1024.o
 	libhighctidh_2048_OBJS := fp2fiat2048.o fiat_p2048.o
 else
+BASE_CFLAGS += -DHIGHCTIDH_PORTABLE=0
 	libhighctidh_511_OBJS := uintbig511.o fp511.o
 	libhighctidh_512_OBJS := uintbig512.o fp512.o
 	libhighctidh_1024_OBJS := uintbig1024.o fp1024.o
@@ -100,14 +108,37 @@ ifeq	($(PLATFORM),s390x)
 	endif
 endif
 
-ifeq	($(PLATFORM),sparc64)
-	CFLAGS+= $(BASE_CFLAGS)
+ifeq	($(HOST_OS), $(filter $(HOST_OS), SunOS))
+ifeq	($(PLATFORM), $(filter $(PLATFORM), sparc sun4u sun4v sparc64 i86pc i386))
+	BASE_CFLAGS+=$(SEC_CFLAGS)
+	CFLAGS+=$(BASE_CFLAGS) -m64 -D__sun
+	LDFLAGS+=$(LDFLAGS)
+ifeq	($(PLATFORM), $(filter $(PLATFORM), i86pc))
+	CFLAGS+=-D__i86pc__
+	ifeq ($(CC),gcc)
+	CFLAGS+=-mimpure-text
+	endif
+endif
+ifeq	($(PLATFORM), $(filter $(PLATFORM), i386))
+	CFLAGS+=-D__i386__
+	ifeq ($(CC),gcc)
+	CFLAGS+=-mimpure-text
+	endif
+endif
+ifeq	($(PLATFORM), $(filter $(PLATFORM), sparc sun4u sun4v sparc64))
+	CFLAGS+=-DHIGHCTIDH_PORTABLE=1
+	ifeq ($(CC),gcc)
+		CFLAGS+=-mcpu=native -mtune=native -D_REENTRANT
+	endif
+endif
+endif
 endif
 
 ifeq	($(PLATFORM),unknown)
 	CFLAGS+= $(BASE_CFLAGS)
 endif
 
+ifneq	($(HOST_OS), $(filter $(HOST_OS), SunOS))
 ifeq	($(PLATFORM), $(filter $(PLATFORM), amd64 x86_64 i386 i686))
 ifeq	($(PLATFORM_SIZE),32)
 	CFLAGS+= $(BASE_CFLAGS) -D__i386__
@@ -118,6 +149,7 @@ else
 
 	CFLAGS+= $(BASE_CFLAGS) -D__x86_64__
 
+endif
 endif
 endif
 
@@ -928,31 +960,36 @@ test2048-dyn: test2048 libhighctidh_2048.so
 libhighctidh.so: libhighctidh_511.so libhighctidh_512.so libhighctidh_1024.so libhighctidh_2048.so
 		ls -l libhighctidh_*.so
 
-example511: libhighctidh_511.so
+setup-examples:
+	-mkdir -p libhighctidh
+	-cp csidh.h libhighctidh/
+
+example511: setup-examples libhighctidh_511.so
 	$(CC) -DBITS=511 -D'NAMESPACEBITS(x)=highctidh_511_##x' \
 	-D'NAMESPACEGENERIC(x)=highctidh_##x' -o example-ctidh511 example-ctidh.c \
-	-l highctidh_511
+	-L. -I. -l highctidh_511
 
-example512: libhighctidh_512.so
+example512: setup-examples libhighctidh_512.so
 	$(CC) -DBITS=512 -D'NAMESPACEBITS(x)=highctidh_512_##x' \
 	-D'NAMESPACEGENERIC(x)=highctidh_##x' -o example-ctidh512 example-ctidh.c \
-	-l highctidh_512
+	-L. -I. -l highctidh_512
 
-example1024: libhighctidh_1024.so
+example1024: setup-examples libhighctidh_1024.so
 	$(CC) -DBITS=1024 -D'NAMESPACEBITS(x)=highctidh_1024_##x' \
 	-D'NAMESPACEGENERIC(x)=highctidh_##x' -o example-ctidh1024 example-ctidh.c \
-	-l highctidh_1024
+	-L. -I. -l highctidh_1024
 
-example2048: libhighctidh_2048.so
+example2048: setup-examples libhighctidh_2048.so
 	$(CC) -DBITS=2048 -D'NAMESPACEBITS(x)=highctidh_2048_##x' \
 	-D'NAMESPACEGENERIC(x)=highctidh_##x' -o example-ctidh2048 example-ctidh.c \
-	-l highctidh_2048
+	-L. -I. -l highctidh_2048
 
-examples: example511 example512 example1024 example2048
+examples: setup-examples example511 example512 example1024 example2048
 		ls -l example-ctidh511 example-ctidh512 example-ctidh1024 example-ctidh2048
 
 examples-static: examples_static.c libhighctidh.a *.h
 	$(CC) -static -Wall -Werror -Wpedantic examples_static.c -Wl,-Bstatic -L. -l:libhighctidh.a -o examples-static
+
 test: clean libhighctidh.so testrandom test511 test512 test1024 test2048
 		./test.sh
 
@@ -967,6 +1004,7 @@ install: libhighctidh.so libhighctidh.a
 
 clean:
 		-rm -f *.a *.o *.out *.so
+		-rm -f *.s *.bc
 		-rm -f bench1024cycles bench1024mults bench1024untuned bench2048cycles bench2048mults bench2048untuned bench511cycles bench511mults bench511untuned bench512cycles bench512mults bench512untuned
 		-rm -f checkct1024cycles checkct1024mults checkct1024untuned checkct2048cycles checkct2048mults checkct2048untuned checkct511cycles checkct511mults checkct511untuned checkct512cycles checkct512mults checkct512untuned costpoly1024 costpoly2048 costpoly511 example-ctidh1024 example-ctidh2048
 		-rm -f example-ctidh511 example-ctidh512 test1024 test2048 test511 test511 test512 test512-dyn test*-dyn testrandom tunecycles1024 tunecycles2048 tunecycles511 tunecycles512 tunemults1024 tunemults2048 tunemults511 tunemults512 ubench1024 ubench2048 ubench511 ubench512 umults1024 umults2048 umults511 umults512
@@ -975,5 +1013,6 @@ clean:
 		-rm -rf highctidh.egg-info/ highctidh/__pycache__/
 		-rm -rf tests/__pycache__/
 		-rm -rf docker_build_output/
+		-rm -rf libhighctidh/
 		-rm -rf examples-static
 		-rm -rf highctidh-*.tar.gz

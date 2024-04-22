@@ -1,6 +1,6 @@
 from os import getcwd, path, uname, environ, umask, stat, mkdir
 from subprocess import PIPE, Popen
-from sys import exit
+from sys import exit, platform
 from sysconfig import get_config_var
 from setuptools import Extension, setup, find_packages
 from setuptools.command.build_ext import build_ext
@@ -111,6 +111,7 @@ if "CC" in environ:
 
 VERSION = open('VERSION', 'r').read().strip()
 PLATFORM = uname().machine
+OS = uname().sysname
 r = Popen("getconf" + " LONG_BIT", shell=True, stdout=PIPE)
 PLATFORM_SIZE = int(r.stdout.read().strip())
 if PLATFORM_SIZE != 64:
@@ -125,23 +126,25 @@ base_src = ["crypto_classify.c", "crypto_declassify.c", "csidh.c",
             "validate.c", "int32_sort.c"]
 
 cflags = get_config_var("CFLAGS").split()
-cflags += ["-Wextra", "-Wall", "-fpie", "-fPIC", "-fwrapv", "-pedantic", "-O2",
-           "-g0", "-fno-lto"]
+cflags = ["-Wextra"]
+cflags += ["-Wall", "-fpie", "-fPIC", "-fwrapv", "-pedantic", "-O2", "-g0",
+           "-fno-lto"]
 cflags += ["-DGETRANDOM", f"-DPLATFORM={PLATFORM}",
            f"-DPLATFORM_SIZE={PLATFORM_SIZE}"]
 cflags += ["-Wformat", "-Werror=format-security", "-D_FORTIFY_SOURCE=2",
            "-fstack-protector-strong"]
-ldflags = ["-s", "-w"]
+ldflags = ["-s"]
 
 if CC == "clang":
-    cflags += ["-Wno-ignored-optimization-argument", "-Wno-unreachable-code"]
+  cflags += ["-Wno-ignored-optimization-argument", "-Wno-unreachable-code"]
 if CC == "gcc":
+  if OS == "Linux":
     cflags += ["-Werror"]
     ldflags += ["-Wl,-Bsymbolic-functions", "-Wl,-z,noexecstack",
                "-Wl,-z,relro", "-Wl,-z,now", "-Wl,--reduce-memory-overheads",
                "-Wl,--no-keep-memory",]
 
-print(f"Building for platform: {PLATFORM}")
+print(f"Building for platform: {PLATFORM} on {OS}")
 if PLATFORM == "aarch64":
   if CC == "clang":
       cflags += ["-DHIGHCTIDH_PORTABLE"]
@@ -177,8 +180,34 @@ elif PLATFORM == "s390x":
       cflags += ["-march=z10", "-mtune=z10", "-DHIGHCTIDH_PORTABLE"]
   if CC == "gcc":
       cflags += ["-march=z10", "-mtune=z10", "-DHIGHCTIDH_PORTABLE"]
-elif PLATFORM == "sparc64":
-  cflags += ["-march=native", "-mtune=native", "-DHIGHCTIDH_PORTABLE"]
+elif PLATFORM == "sun4v" or PLATFORM == 'i86pc':
+# Solaris 11
+  from distutils.sysconfig import get_config_vars as _get_config_vars
+  import distutils.sysconfig as _wrapped_distutils
+  _config_vars=_get_config_vars().copy()
+  cflags = '-DNDEBUG -Wall -m64 -fPIC -DPIC ' \
+         + '-O2 -ffile-prefix-map=..=. '
+  _config_vars['CFLAGS']=cflags
+  def get_config_vars_wrapper(*a):
+    return [_config_vars.get(n) for n in a] if a else _config_vars
+  _wrapped_distutils.get_config_vars = get_config_vars_wrapper
+
+  if CC == "gcc":
+      cflags += ["-fforce-enable-int128", "-DHIGHCTIDH_PORTABLE"]
+
+  ldflags = ["-s"]
+  ldflags += ["-Wl,-Bsymbolic-functions"]
+  cflags = ["-O2", "-Werror", "-s", "-w"]
+  cflags += ["-m64", "-DHIGHCTIDH_PORTABLE", "-D__sun"]
+  if PLATFORM == 'i86pc':
+    cflags += ["-D__i86pc__"]
+  cflags += ["-Wextra", "-Wall", "-fpie", "-fPIC", "-fwrapv", "-pedantic"]
+  cflags += ["-DGETRANDOM"]
+  cflags += [f"-DPLATFORM={PLATFORM}",
+             f"-DPLATFORM_SIZE={PLATFORM_SIZE}"]
+  if CC == "gcc":
+    cflags += ["-mcpu=native", "-mtune=native", "-fno-lto"]
+
 elif PLATFORM == "x86_64":
   if PLATFORM_SIZE == 64:
     cflags += ["-march=native", "-mtune=native", "-D__x86_64__"]
@@ -204,6 +233,7 @@ else:
     src_1024 = base_src + ["fiat_p1024.c", "fp_inv1024.c", "fp_sqrt1024.c", "primes1024.c",]
     src_2048 = base_src + ["fiat_p2048.c", "fp_inv2048.c", "fp_sqrt2048.c", "primes2048.c",]
 
+extra_compile_args = cflags
 extra_compile_args_511 = cflags + ["-DBITS=511",
         "-DNAMESPACEBITS(x)=highctidh_511_##x",
         "-DNAMESPACEGENERIC(x)=highctidh_##x"]
@@ -225,7 +255,7 @@ if __name__ == "__main__":
         author_email = "jacob@appelbaum.net",
         packages = ['highctidh'],
         install_requires = [],
-        cmdclass = dict(bdist_deb=bdist_deb, sdist_dsc=sdist_dsc),
+        cmdclass = dict(bdist_deb=bdist_deb, sdist_dsc=sdist_dsc, build_ext=build_ext_helper),
         ext_modules = [
             Extension("highctidh_511",
                 extra_compile_args = extra_compile_args_511,

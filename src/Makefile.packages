@@ -66,7 +66,7 @@ wheel: ${SDIST_GZ} ${WHEEL_NAME}
 ${WHEEL_NAME}:
 	-mkdir -p dist/source
 	-mkdir -p build/tmp
-	SOURCE_DATE_EPOCH=${SOURCE_DATE_EPOCH} python3 -m build --wheel
+	SOURCE_DATE_EPOCH=${SOURCE_DATE_EPOCH} python3 -m build --wheel -vvv
 	-ls -alh ${WORKDIR}/dist/*.whl
 	-sha256sum ${WORKDIR}/dist/*.whl
 
