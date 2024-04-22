@@ -22,6 +22,7 @@ jobs:
         envs: 'LD CC MAKE HIGHCTIDH_PORTABLE'
         usesh: true
         prepare: |
+          uname -a
           isainfo -v
           pkgutil -U
           pkgutil -y -i gmake
