@@ -532,13 +532,15 @@ test_deterministic_keygen(void)
   assert(0 != memcmp((void*)&pub_gh3, serialized_gh3, sizeof(pub_gh3)));
 # else
 	assert(0 == memcmp((void*)&pub_gh3, serialized_gh3, sizeof(pub_gh3)));
-#endif
-#endif
+# endif
+# endif
 
-# if !defined(__sun) && __BYTE_ORDER == __LITTLE_ENDIAN
+# if !defined(__sun)
+# if __BYTE_ORDER == __LITTLE_ENDIAN
 	assert(0 == memcmp((void*)&pub_gh3, serialized_gh3, sizeof(pub_gh3)));
 # else
 	assert(0 != memcmp((void*)&pub_gh3, serialized_gh3, sizeof(pub_gh3)));
+# endif
 # endif
 }
 
