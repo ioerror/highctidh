@@ -22,7 +22,6 @@ jobs:
         envs: 'LANG LD CC MAKE HIGHCTIDH_PORTABLE'
         usesh: true
         prepare: |
-          which clang
           uname -a
           isainfo -v
           pkgutil -U
