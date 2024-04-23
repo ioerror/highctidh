@@ -39,10 +39,10 @@ LDFLAGS+=-Wl,-Bsymbolic-functions
 LDFLAGS+=-Wl,--reduce-memory-overheads -Wl,--no-keep-memory
 endif
 ifeq ($(HOST_OS),SunOS)
-BASE_CFLAGS+=-Wall #$(SAVETMP)
+BASE_CFLAGS+=-Wall
 ifneq ($(PLATFORM), i86pc)
 ifeq ($(CC),gcc)
-BASE_CFLAGS+=-fforce-enable-int128
+BASE_CFLAGS+=
 endif
 endif
 endif
