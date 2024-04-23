@@ -56,6 +56,7 @@ BASE_CFLAGS += -DHIGHCTIDH_PORTABLE=1
 	libhighctidh_1024_OBJS := fp2fiat1024.o fiat_p1024.o
 	libhighctidh_2048_OBJS := fp2fiat2048.o fiat_p2048.o
 else
+BASE_CFLAGS += -DHIGHCTIDH_PORTABLE=0
 	libhighctidh_511_OBJS := uintbig511.o fp511.o
 	libhighctidh_512_OBJS := uintbig512.o fp512.o
 	libhighctidh_1024_OBJS := uintbig1024.o fp1024.o
