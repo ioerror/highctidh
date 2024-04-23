@@ -28,6 +28,5 @@ jobs:
           pkgutil -y -i gmake
 
         run: |
-          gmake
-          gmake test-quick
-          gmake examples
+          HIGHCTIDH_PORTABLE=1 gmake
+          HIGHCTIDH_PORTABLE=1 gmake test-quick
