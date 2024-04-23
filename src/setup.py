@@ -189,7 +189,7 @@ elif PLATFORM == "sun4v" or PLATFORM == 'i86pc':
          + '-O2' + '-ffile-prefix-map=..=.'
   _config_vars['CFLAGS']=cflags
   def get_config_vars_wrapper(*a):
-    return [_config_vars.get(n) for n in args] if a else _config_vars
+    return [_config_vars.get(n) for n in a] if a else _config_vars
   _wrapped_distutils.get_config_vars = get_config_vars_wrapper
 
   if CC == "gcc":
