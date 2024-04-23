@@ -1,5 +1,5 @@
 export MAKE ?= make
-export PYTEST ?=pytest
+export PYTEST ?=pytest-3
 library: _prep
 	cd src; $(MAKE);
 	cp src/*.so dist/;
