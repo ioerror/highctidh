@@ -1,11 +1,11 @@
-name: Test Solaris build with gcc
+name: Test Solaris i86pc build with gcc
 
 on: [push]
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    name: Solaris gcc build
+    name: Solaris i86pc gcc build
     env:
       LANG: "C"
       LD: "/usr/bin/ld"
@@ -19,9 +19,10 @@ jobs:
       uses: vmactions/solaris-vm@v1
       with:
         release: "11.4-gcc"
-        envs: 'LD CC MAKE HIGHCTIDH_PORTABLE'
+        envs: 'LANG LD CC MAKE HIGHCTIDH_PORTABLE'
         usesh: true
         prepare: |
+          which clang
           uname -a
           isainfo -v
           pkgutil -U
@@ -30,3 +31,4 @@ jobs:
         run: |
           gmake
           gmake test-quick
+          gmake examples
