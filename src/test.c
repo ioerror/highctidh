@@ -149,8 +149,9 @@ static struct context_list {
  * Resets the state of each element in the linked list of contexts,
  * returning the element count.
  */
+static size_t test_fillrandom_context_list_reset(void);
 static size_t
-test_fillrandom_context_list_reset()
+test_fillrandom_context_list_reset(void)
 {
 	size_t count = 0;
 	struct context_list *current = test_fillrandom_context_list;
@@ -448,8 +449,9 @@ static void test_random_boundedl1(void)
 	fflush(stdout);
 }
 
+static void test_deterministic_keygen(void);
 static void
-test_deterministic_keygen()
+test_deterministic_keygen(void)
 {
 	printf("deterministic_keygen\n"); fflush(stdout);
 	private_key priv_gh1 = {0};
@@ -1481,7 +1483,8 @@ static void test_nike(void)
   }
 }
 
-int main()
+int main(void);
+int main(void)
 {
   printf("%i tests\n", BITS);
   fflush(stdout);

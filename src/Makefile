@@ -47,6 +47,9 @@ BASE_CFLAGS+=-fforce-enable-int128
 endif
 endif
 endif
+ifeq ($(CC),clang)
+BASE_CFLAGS+=-Wno-unused-command-line-argument
+endif
 # Default to using fiat crypto, safe and portable but slow backend
 HIGHCTIDH_PORTABLE ?= 1
 ifeq	($(HIGHCTIDH_PORTABLE),1)
