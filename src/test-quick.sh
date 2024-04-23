@@ -5,7 +5,8 @@ set -x;
 
 python3 -m venv venv
 source venv/bin/activate
-pip3 install build pytest pytest-xdist
+pip3 install -U pip
+pip3 install build pytest pytest-xdist setuptools
 mkdir -p build/src
 mkdir -p dist/tmp
 python3 -m build
