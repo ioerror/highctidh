@@ -1,11 +1,11 @@
-name: Test Solaris i86pc build with gcc
+name: Test Solaris i86pc asm build with gcc
 
 on: [push]
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    name: Solaris i86pc gcc build
+    name: Solaris i86pc gcc build of asm backend
     env:
       LANG: "C"
       LD: "/usr/bin/ld"

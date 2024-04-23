@@ -26,12 +26,11 @@ CC_MARCH ?= native
 endif
 CC_MTUNE ?= $(CC_MARCH)
 
-SAVETMP:= -S -save-temps
 SEC_CFLAGS := -Wformat -Werror=format-security -D_FORTIFY_SOURCE=2 -fstack-protector-strong
 BASE_CFLAGS := -fpie -fPIC -Wall -Wextra -pedantic -O2 -fwrapv -DGETRANDOM
 BASE_CFLAGS+=-DPLATFORM=${PLATFORM} -DPLATFORM_SIZE=${PLATFORM_SIZE}
 BASE_CFLAGS+=$(if $(strip $(CC_MARCH)),-march=$(CC_MARCH) -mtune=$(CC_MTUNE),)
-#BASE_CFLAGS+=$(SEC_CFLAGS) #$(SAVETMP)
+#BASE_CFLAGS+=$(SEC_CFLAGS)
 LDFLAGS := 
 ifeq ($(HOST_OS),Linux)
 BASE_CFLAGS+=$(SEC_CFLAGS)
@@ -120,7 +119,7 @@ ifeq	($(PLATFORM), $(filter $(PLATFORM), sparc sun4u sun4v sparc64 i86pc i386))
 	CFLAGS+= $(BASE_CFLAGS) -m64 -D__sun
 	LDFLAGS+= $(LDFLAGS)
 ifeq	($(PLATFORM), $(filter $(PLATFORM), i86pc))
-	CFLAGS+=-D__i86pc__ -Wno-attributes -DHIGHCTIDH_PORTABLE=0
+	CFLAGS+=-D__i86pc__ -Wno-attributes
 endif
 ifeq	($(PLATFORM), $(filter $(PLATFORM), sparc sun4u sun4v sparc64))
 	CFLAGS+=-DHIGHCTIDH_PORTABLE=1
