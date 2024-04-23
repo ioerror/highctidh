@@ -186,7 +186,7 @@ elif PLATFORM == "sun4v" or PLATFORM == 'i86pc':
   import distutils.sysconfig as _wrapped_distutils
   _config_vars=_get_config_vars().copy()
   cflags = '-DNDEBUG -Wall -m64 -fPIC -DPIC ' \
-         + '-O2' + '-ffile-prefix-map=..=.'
+         + '-O2 -ffile-prefix-map=..=. '
   _config_vars['CFLAGS']=cflags
   def get_config_vars_wrapper(*a):
     return [_config_vars.get(n) for n in a] if a else _config_vars
