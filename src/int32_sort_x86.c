@@ -1,4 +1,4 @@
-#if HIGHCTIDH_PORTABLE
+#if HIGHCTIDH_PORTABLE == 0
 #ifdef __x86_64__ || __i86pc__
 #include "int32_sort.h"
 #define int32 int32_t
