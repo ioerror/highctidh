@@ -50,7 +50,7 @@ endif
 # Default to using fiat crypto, safe and portable but slow backend
 HIGHCTIDH_PORTABLE ?= 1
 ifeq	($(HIGHCTIDH_PORTABLE),1)
-BASE_CFLAGS += -DHIGHCTIDH_PORTABLE
+BASE_CFLAGS += -DHIGHCTIDH_PORTABLE=1
 	libhighctidh_511_OBJS := fp2fiat511.o fiat_p511.o
 	libhighctidh_512_OBJS := fp2fiat512.o fiat_p512.o
 	libhighctidh_1024_OBJS := fp2fiat1024.o fiat_p1024.o
@@ -116,10 +116,10 @@ ifeq	($(PLATFORM), $(filter $(PLATFORM), sparc sun4u sun4v sparc64 i86pc i386))
 	CFLAGS+= $(BASE_CFLAGS) -m64 -D__sun
 	LDFLAGS+= $(LDFLAGS)
 ifeq	($(PLATFORM), $(filter $(PLATFORM), i86pc))
-	CFLAGS+=-D__i86pc__ -Wno-attributes
+	CFLAGS+=-D__i86pc__ -Wno-attributes -DHIGHCTIDH_PORTABLE=0
 endif
 ifeq	($(PLATFORM), $(filter $(PLATFORM), sparc sun4u sun4v sparc64))
-	CFLAGS+=-DHIGHCTIDH_PORTABLE
+	CFLAGS+=-DHIGHCTIDH_PORTABLE=1
 	ifeq ($(CC),gcc)
 		CFLAGS+=-mcpu=native -mtune=native -D_REENTRANT
 	endif
