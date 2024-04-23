@@ -24,9 +24,4 @@
 #include <endian.h>
 #endif
 
-#define _htole32(x) htole32(x)
-#define _htole64(x) htole64(x)
-#define _le32toh(x) le32toh(x)
-#define _le64toh(x) le64toh(x)
-
 #endif

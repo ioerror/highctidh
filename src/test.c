@@ -409,13 +409,13 @@ static void test_random_boundedl1(void)
 		test_vector *t = &tests[t_idx];
 		test_fillrandom_context_list_reset();
 		for(size_t i = 0; i < t->w + t->s; i++){
-			//int32_t tmp = _htole32(t->r[i]);
+			//int32_t tmp = htole32(t->r[i]);
 			int32_t tmp = t->r[i];
 			memcpy(test_fillrandom_buf + i*sizeof(tmp),
 			    &tmp, sizeof(tmp));
 		}
 		for(size_t i = 0; i < sizeof(t->r2)/sizeof(t->r2[0]); i++){
-			//int32_t tmp = _htole32(t->r2[i]);
+			//int32_t tmp = htole32(t->r2[i]);
 			int32_t tmp = t->r2[i];
 			memcpy(test_fillrandom_buf
 			    + (t->w + t->s)*sizeof(int32_t)
