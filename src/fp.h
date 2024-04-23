@@ -81,7 +81,7 @@ fp_mul3(fp *const x, fp const *const y, fp const *const z)
 #define highctidh_512_fp_mul3(a,b,c) FIAT_BITS(mul)((uint64_t *)a,(const uint64_t*)b,(const uint64_t*)c)
 #define highctidh_1024_fp_mul3(a,b,c) FIAT_BITS(mul)((uint64_t *)a,(const uint64_t*)b,(const uint64_t*)c)
 #define highctidh_2048_fp_mul3(a,b,c) FIAT_BITS(mul)((uint64_t *)a,(const uint64_t*)b,(const uint64_t*)c)
-#else /* ndef HIGHCTIDH_PORTABLE */
+#else /* HIGHCTIDH_PORTABLE == 0 */
 void fp_mul3(fp *const a, const fp *const b, const fp *const c);
 #endif /* ndef HIGHCTIDH_PORTABLE */
 
