@@ -34,4 +34,8 @@ jobs:
           go get -u -v github.com/mattn/go-pointer
 
         run: |
+          export GOPATH=$HOME/go
+          mkdir -p $HOME/go
+          go get -u -v github.com/stretchr/testify
+          go get -u -v github.com/mattn/go-pointer
           GOPATH=$HOME/go HIGHCTIDH_PORTABLE=0 gmake test-go
