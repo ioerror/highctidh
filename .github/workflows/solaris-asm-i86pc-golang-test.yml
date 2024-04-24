@@ -29,4 +29,5 @@ jobs:
           pkg install --accept pkg://solaris/developer/golang
 
         run: |
+          cd src/ctidh512/ && go get -u -v && cd ../../
           HIGHCTIDH_PORTABLE=0 gmake test-go
