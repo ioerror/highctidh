@@ -27,6 +27,7 @@ jobs:
           pkgutil -U
           pkgutil -y -i gmake
           pkg install --accept pkg://solaris/developer/golang
+          export GOPATH=$HOME/go
           go get -u -v github.com/stretchr/testify
           go get -u -v github.com/mattn/go-pointer
 
