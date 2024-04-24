@@ -38,4 +38,8 @@ jobs:
           mkdir -p $HOME/go
           go get -u -v github.com/stretchr/testify
           go get -u -v github.com/mattn/go-pointer
-          GOPATH=$HOME/go HIGHCTIDH_PORTABLE=0 gmake test-go
+          cd /home/runner/work/highctidh/highctidh/src/ctidh511 && go test -v .
+          cd /home/runner/work/highctidh/highctidh/src/ctidh512 && go test -v .
+          cd /home/runner/work/highctidh/highctidh/src/ctidh1024 && go test -v .
+          cd /home/runner/work/highctidh/highctidh/src/ctidh2048 && go test -v .
+          #GOPATH=$HOME/go HIGHCTIDH_PORTABLE=0 gmake test-go
