@@ -12,6 +12,7 @@ jobs:
       CC: "gcc"
       MAKE: "/usr/bin/gmake"
       HIGHCTIDH_PORTABLE: "0"
+      GOPATH: "$HOME/go"
     steps:
     - uses: actions/checkout@v4
     - name: Test in Solaris
@@ -33,4 +34,4 @@ jobs:
           go get -u -v github.com/mattn/go-pointer
 
         run: |
-          HIGHCTIDH_PORTABLE=0 gmake test-go
+          GOPATH=$HOME/go HIGHCTIDH_PORTABLE=0 gmake test-go
