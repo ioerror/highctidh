@@ -115,7 +115,7 @@ ifeq   ($(PLATFORM), $(filter $(PLATFORM), sparc sun4u sun4v sparc64 i86pc i386)
 ifeq   ($(PLATFORM), $(filter $(PLATFORM), i86pc))
 	CFLAGS+=-D__i86pc__
 	ifeq ($(CC),gcc)
-		CFLAGS+=-mimpure-text
+		CFLAGS+=-mimpure-text -Wno-attributes
 	endif
 endif
 ifeq   ($(PLATFORM), $(filter $(PLATFORM), i386))
