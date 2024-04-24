@@ -1,5 +1,5 @@
-#ifndef uintbig_h
-#define uintbig_h
+#ifndef UINTBIG_H
+#define UINTBIG_H
 
 #include "uintbig_namespace.h"
 
