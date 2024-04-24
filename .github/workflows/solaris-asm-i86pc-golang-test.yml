@@ -26,7 +26,7 @@ jobs:
           isainfo -v
           pkgutil -U
           pkgutil -y -i gmake
-          pkg install --accept developer/golang
+          pkg install --accept pkg://solaris/developer/golang
 
         run: |
           HIGHCTIDH_PORTABLE=0 gmake test-go
