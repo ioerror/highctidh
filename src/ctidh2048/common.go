@@ -1,8 +1,10 @@
 package ctidh2048
 
 /*
- #cgo CFLAGS: -DBITS=2048 -DGETRANDOM -DCGONUTS -Wformat -Werror=format-security -D_FORTIFY_SOURCE=2 -fstack-protector-all -fpie -fPIC -O2
- #cgo LDFLAGS: -Wl,-z,noexecstack -Wl,-z,relro
+ #cgo CFLAGS: -DBITS=2048 -DGETRANDOM -DCGONUTS -fpie -fPIC -O2
+ #cgo LDFLAGS:
+ #cgo linux CFLAGS: -DBITS=2048 -DGETRANDOM -DCGONUTS -Wformat -Werror=format-security -D_FORTIFY_SOURCE=2 -fstack-protector-all -fpie -fPIC -O2
+ #cgo linux LDFLAGS: -Wl,-z,noexecstack -Wl,-z,relro
 
  // The following should work as native builds and as cross compiled builds.
  // Example cross compile build lines are provided as examples.
@@ -15,7 +17,7 @@ package ctidh2048
  #cgo arm CFLAGS: -DPLATFORM=arm -DPLATFORM_SIZE=32 -D__ARM32__ -DHIGHCTIDH_PORTABLE=1
 
  // CC=gcc CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -v
- #cgo amd64 CFLAGS: -DPLATFORM=x86_64 -DPLATFORM_SIZE=64 -march=native -mtune=native
+ #cgo linux/amd64 CFLAGS: -DPLATFORM=x86_64 -DPLATFORM_SIZE=64 -march=native -mtune=native
 
  // CC=powerpc64le-linux-gnu-gcc CGO_ENABLED=1 GOOS=linux GOARCH=ppc64le go build -v
  #cgo ppc64le CFLAGS: -DPLATFORM=ppc64le -DPLATFORM_SIZE=64 -DHIGHCTIDH_PORTABLE=1
@@ -25,6 +27,12 @@ package ctidh2048
 
  // CC=riscv64-linux-gnu-gcc CGO_ENABLED=1 GOOS=linux GOARCH=riscv64 go build -v
  #cgo riscv64 CFLAGS: -DPLATFORM=riscv64 -D__riscv -DPLATFORM_SIZE=64 -DHIGHCTIDH_PORTABLE=1
+
+  // CC=gcc CGO_ENABLED=1 GOOS=solaris GOARCH=amd64 go build
+ #cgo solaris/amd64 CFLAGS: -m64 -mimpure-text -Wno-attributes -DPLATFORM=i86pc -DPLATFORM_SIZE=64 -D__sun -D__i86pc__
+
+ // CC=gcc CGO_ENABLED=1 GOOS=solaris GOARCH=sparc64 go build
+ #cgo solaris/sparc64 CFLAGS: -m64 -DPLATFORM=sun4v -DPLATFORM_SIZE=64 -D__sun -DHIGHCTIDH_PORTABLE=1
 
  // CC=s390x-linux-gnu-gcc CGO_ENABLED=1 GOOS=linux GOARCH=s390x go build -v
  #cgo s390x CFLAGS: -DPLATFORM=s390x -DPLATFORM_SIZE=64 -DHIGHCTIDH_PORTABLE=1
@@ -52,8 +60,6 @@ package ctidh2048
  // The following should work as native builds with clang:
 
  #cgo loong64 CFLAGS: -DPLATFORM=loongarch64 -DPLATFORM_SIZE=64 -march=native -mtune=native -DHIGHCTIDH_PORTABLE=1
-
- #cgo sparc64 CFLAGS: -DPLATFORM=sparc64 -DPLATFORM_SIZE=64 -march=native -mtune=native -DHIGHCTIDH_PORTABLE=1 -D__sun
 
  #include "binding2048.h"
 */
