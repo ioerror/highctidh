@@ -1,5 +1,5 @@
-#ifndef uintbig_namespace_h
-#define uintbig_namespace_h
+#ifndef UINTBIG_NAMESPACE_H
+#define UINTBIG_NAMESPACE_H
 
 #ifdef CGONUTS
 #include "cgo.h"
