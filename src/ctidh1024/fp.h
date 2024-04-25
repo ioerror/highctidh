@@ -5,12 +5,12 @@
 #include "uintbig.h"
 #include "annotations.h"
 
-#if defined(HIGHCTIDH_PORTABLE) || !(defined(__x86_64__) || defined(_M_X64))
+#if HIGHCTIDH_PORTABLE == 1 || !(defined(__x86_64__) || defined(_M_X64))
 /* we only have optimizations for amd64 so far, so on other platforms we
  * default to the portable code by defining HIGHCTIDH_PORTABLE:
  */
 #ifndef HIGHCTIDH_PORTABLE
-#define HIGHCTIDH_PORTABLE
+#define HIGHCTIDH_PORTABLE 1
 #endif
 
 #if 511 == BITS
@@ -76,12 +76,14 @@ fp_mul3(fp *const x, fp const *const y, fp const *const z)
 	__attribute__ ((alias ("fiat_p512_mul")));
 */
 //void fp_mul3 () __attribute__ ((weak, alias ("fiat_p512_mul")));
-#ifdef HIGHCTIDH_PORTABLE
+#if HIGHCTIDH_PORTABLE == 1
 #define highctidh_511_fp_mul3(a,b,c) FIAT_BITS(mul)((uint64_t *)a,(const uint64_t*)b,(const uint64_t*)c)
 #define highctidh_512_fp_mul3(a,b,c) FIAT_BITS(mul)((uint64_t *)a,(const uint64_t*)b,(const uint64_t*)c)
 #define highctidh_1024_fp_mul3(a,b,c) FIAT_BITS(mul)((uint64_t *)a,(const uint64_t*)b,(const uint64_t*)c)
 #define highctidh_2048_fp_mul3(a,b,c) FIAT_BITS(mul)((uint64_t *)a,(const uint64_t*)b,(const uint64_t*)c)
-#else /* ndef HIGHCTIDH_PORTABLE */
+#endif
+
+#if HIGHCTIDH_PORTABLE == 0
 void fp_mul3(fp *const a, const fp *const b, const fp *const c);
 #endif /* ndef HIGHCTIDH_PORTABLE */
 
@@ -112,7 +114,7 @@ static inline
 __attribute__((nonnull))
 void fp_neg2(fp *const x,const fp *const y)
 {
-#ifdef HIGHCTIDH_PORTABLE
+#if HIGHCTIDH_PORTABLE == 1
 	FIAT_BITS(opp)(x->x.c, y->x.c);
 #else
 	fp_sub3(x, &fp_0, y);

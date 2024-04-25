@@ -1,7 +1,7 @@
 #ifndef HIGHCTIDH_INT32_SORT_H
 #define HIGHCTIDH_INT32_SORT_H
 
-#if defined(__AVX2__) && !defined(HIGHCTIDH_PORTABLE)
+#if defined(__AVX2__) && HIGHCTIDH_PORTABLE == 0
 
 // This is the original high-ctidh x86_64 sorting code
 #ifndef CGONUTS

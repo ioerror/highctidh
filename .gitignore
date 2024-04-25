@@ -16,6 +16,7 @@ highctidh.egg-info/
 src/dist/*
 src/deb_dist/*
 src/build/*
+src/libhighctidh/*
 test1024
 test2048
 test511
