@@ -29,9 +29,8 @@ jobs:
           pkg install developer/gcc51
           pkg install shell/bash
           gmake -v
-          pkg list -u
           pkg install developer/object-file developer/linker developer/build/gnu-make system/header system/library/math
-          ls -l /opt/*
+          ls -l /opt/bin/*
 
         run: |
           HIGHCTIDH_PORTABLE=1 gmake
