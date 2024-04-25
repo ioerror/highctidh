@@ -26,6 +26,7 @@ jobs:
           pkg install -y gmake
           pkg install -y llvm16-16.0.6_6 
           gmake -v
+          /usr/local/bin/clang16 -v
 
         run: |
           HIGHCTIDH_PORTABLE=1 gmake

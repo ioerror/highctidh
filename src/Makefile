@@ -33,7 +33,7 @@ BASE_CFLAGS+=$(if $(strip $(CC_MARCH)),-march=$(CC_MARCH) -mtune=$(CC_MTUNE),)
 ifeq    ($(HOST_OS), $(filter $(HOST_OS), OpenBSD, DragonFly))
 BASE_CFLAGS+=-D__$(HOST_OS)__
 endif
-LDFLAGS := -s
+LDFLAGS :=
 ifeq ($(HOST_OS),Linux)
 LDFLAGS+=-Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now
 LDFLAGS+=-Wl,-Bsymbolic-functions
