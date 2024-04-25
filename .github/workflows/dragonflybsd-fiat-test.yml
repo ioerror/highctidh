@@ -9,7 +9,7 @@ jobs:
     env:
       LANG: "C"
       LD: "/usr/bin/ld"
-      CC: "clang60"
+      CC: "/usr/local/bin/clang16"
       MAKE: "gmake"
       HIGHCTIDH_PORTABLE: "1"
     steps:
@@ -26,7 +26,6 @@ jobs:
           pkg install -y gmake
           pkg install -y llvm16-16.0.6_6 
           gmake -v
-          find /|grep clang
 
         run: |
           HIGHCTIDH_PORTABLE=1 gmake
