@@ -1,15 +1,15 @@
-name: FreeBSD fiat build with gcc
+name: FreeBSD fiat build with clang
 
 on: [push]
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    name: FreeBSD gcc build of fiat backend
+    name: FreeBSD clang build of fiat backend
     env:
       LANG: "C"
       LD: "/usr/bin/ld"
-      CC: "gcc"
+      CC: "clang"
       MAKE: "gmake"
       HIGHCTIDH_PORTABLE: "1"
     steps:
@@ -25,8 +25,8 @@ jobs:
           uname -a
           freebsd-version
           pkg install -y gmake
-          pkg install -y gcc
-          gcc -v
+          pkg install -y llvm-13
+          clang -v
           gmake -v
 
         run: |
