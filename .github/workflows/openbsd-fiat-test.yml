@@ -10,7 +10,7 @@ jobs:
       LANG: "C"
       LD: "/usr/bin/ld"
       CC: "gcc"
-      MAKE: "/usr/bin/gmake"
+      MAKE: "gmake"
       HIGHCTIDH_PORTABLE: "1"
     steps:
     - uses: actions/checkout@v4
@@ -24,7 +24,7 @@ jobs:
         prepare: |
           uname -a
           pkg_add gmake
-          pkg_add gcc
+          pkg_add gcc-11.2
 
         run: |
           HIGHCTIDH_PORTABLE=1 gmake

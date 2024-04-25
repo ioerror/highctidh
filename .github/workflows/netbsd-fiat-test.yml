@@ -24,7 +24,7 @@ jobs:
         prepare: |
           uname -a
           /usr/sbin/pkg_add gmake
-          /usr/sbin/pkg_add gcc
+          /usr/sbin/pkg_add gcc10
 
         run: |
           HIGHCTIDH_PORTABLE=1 gmake

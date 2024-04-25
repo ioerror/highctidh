@@ -10,7 +10,7 @@ jobs:
       LANG: "C"
       LD: "/usr/bin/ld"
       CC: "gcc"
-      MAKE: "/usr/bin/gmake"
+      MAKE: "gmake"
       HIGHCTIDH_PORTABLE: "1"
     steps:
     - uses: actions/checkout@v4
