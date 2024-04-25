@@ -3,5 +3,5 @@
 set -e;
 set -x;
 
-./test512
-./testrandom
+`pwd`/src/test512;
+`pwd`/src/testrandom;

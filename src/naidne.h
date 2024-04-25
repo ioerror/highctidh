@@ -14,6 +14,8 @@
 #define htole64(x) OSSwapHostToLittleInt64(x)
 #define le32toh(x) OSSwapLittleToHostInt32(x)
 #define le64toh(x) OSSwapLittleToHostInt64(x)
+#elif defined(__OpenBSD__)
+#include <endian.h>
 #elif defined(__sun)
 #include <sys/byteorder.h>
 #define htole32(x) LE_32(x)

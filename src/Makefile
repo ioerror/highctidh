@@ -3,6 +3,7 @@
 .PHONY: clean
 HOST_PLATFORM := $(shell uname -m)
 HOST_OS := $(shell uname -s)
+CFLAGS :=-D__$(HOST_OS)__
 
 ### override these for cross-building:
 PLATFORM ?= $(shell uname -m)
@@ -30,6 +31,7 @@ BASE_CFLAGS := -fpie -fPIC -Wall -Wextra -pedantic -O2 -fwrapv -DGETRANDOM -Werr
 BASE_CFLAGS+=-DPLATFORM=${PLATFORM} -DPLATFORM_SIZE=${PLATFORM_SIZE}
 BASE_CFLAGS+=$(SEC_CFLAGS)
 BASE_CFLAGS+=$(if $(strip $(CC_MARCH)),-march=$(CC_MARCH) -mtune=$(CC_MTUNE),)
+BASE_CFLAGS+=-D__$(HOST_OS)__
 LDFLAGS := -s
 ifeq ($(HOST_OS),Linux)
 LDFLAGS+=-Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now

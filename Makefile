@@ -43,7 +43,7 @@ test:
 
 test-quick:
 	cd src && $(MAKE) testrandom test512 && cd ../;
-	./src/test-quick.sh
+	`pwd`/src/test-quick.sh;
 
 test-go:
 	cd src; go test -v ./...;
