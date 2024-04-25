@@ -3,7 +3,8 @@
 .PHONY: clean
 HOST_PLATFORM := $(shell uname -m)
 HOST_OS := $(shell uname -s)
-ifndef __$(HOST_OS)__
+_D := __$(HOST_OS)__
+ifndef _D
 CFLAGS :=-D__$(HOST_OS)__
 endif
 
@@ -40,7 +41,7 @@ LDFLAGS+=-Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now
 LDFLAGS+=-Wl,-Bsymbolic-functions
 LDFLAGS+=-Wl,--reduce-memory-overheads -Wl,--no-keep-memory
 endif
-ifeq ($(HOST_OS),DragonflyBSD)
+ifeq ($(HOST_OS),DragonFly)
 ifeq ($(CC),clang)
 BASE_CFLAGS+=-Wno-unused-command-line-argument -Werror=no-attributes
 endif
