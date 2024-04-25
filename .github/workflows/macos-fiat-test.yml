@@ -3,23 +3,19 @@ name: MacOS fiat build with clang
 on: [push]
 
 jobs:
-  test:
+  build:
     runs-on: macos-latest
-    name: MacOS clang build of fiat backend
-    env:
-      LANG: "C"
-      CC: "clang"
-      MAKE: "gmake"
-      HIGHCTIDH_PORTABLE: "1"
     steps:
     - uses: actions/checkout@v4
 
-    - name: Gather environment
-    - run: |
-          uname -a
-          clang -v
+    - name: Gather kernel environment
+    - run: uname -a
 
-    - name: compile and test-quick
-    - run: |
-          HIGHCTIDH_PORTABLE=1 gmake
-          HIGHCTIDH_PORTABLE=1 gmake test-quick
+    - name: Gather compiler info
+    - run: clang -v
+
+    - name: compile
+    - run: HIGHCTIDH_PORTABLE=1 CC=clang MAKE=gmake gmake
+
+    - name: test-quick
+    - run: HIGHCTIDH_PORTABLE=1 CC=clang MAKE=gmake gmake test-quick
