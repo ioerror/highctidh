@@ -40,11 +40,19 @@ LDFLAGS+=-Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now
 LDFLAGS+=-Wl,-Bsymbolic-functions
 LDFLAGS+=-Wl,--reduce-memory-overheads -Wl,--no-keep-memory
 endif
+ifeq ($(HOST_OS),DragonflyBSD)
 ifeq ($(CC),clang)
 BASE_CFLAGS+=-Wno-unused-command-line-argument -Werror=no-attributes
 endif
 ifeq ($(CC),gcc)
 BASE_CFLAGS+=-Werror=no-attributes
+endif
+endif
+ifeq ($(CC),clang)
+BASE_CFLAGS+=-Wno-unused-command-line-argument
+endif
+ifeq ($(CC),gcc)
+BASE_CFLAGS+=
 endif
 # Default to using fiat crypto, safe and portable but slow backend
 HIGHCTIDH_PORTABLE ?= 1
