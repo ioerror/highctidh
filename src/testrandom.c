@@ -272,7 +272,8 @@ void test_boundedl1_generic(void)
   }
 }
 
-int main()
+int main(void);
+int main(void)
 {
   test_batchkeys();
   test_random_coin();
