@@ -44,7 +44,7 @@ ifeq ($(CC),clang)
 BASE_CFLAGS+=-Wno-unused-command-line-argument -Werror=no-attributes
 endif
 ifeq ($(CC),gcc)
-BASE_CFLAGS+=
+BASE_CFLAGS+=-Werror=no-attributes
 endif
 # Default to using fiat crypto, safe and portable but slow backend
 HIGHCTIDH_PORTABLE ?= 1
