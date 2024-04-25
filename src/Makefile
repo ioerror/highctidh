@@ -3,7 +3,9 @@
 .PHONY: clean
 HOST_PLATFORM := $(shell uname -m)
 HOST_OS := $(shell uname -s)
+ifndef __$(HOST_OS)__
 CFLAGS :=-D__$(HOST_OS)__
+endif
 
 ### override these for cross-building:
 PLATFORM ?= $(shell uname -m)
