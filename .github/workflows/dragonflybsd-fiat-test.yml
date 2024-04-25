@@ -1,15 +1,15 @@
-name: DragonflyBSD fiat build with gcc
+name: DragonflyBSD fiat build with clang 
 
 on: [push]
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    name: DragonflyBSD gcc build of fiat backend
+    name: DragonflyBSD clang build of fiat backend
     env:
       LANG: "C"
       LD: "/usr/bin/ld"
-      CC: "gcc"
+      CC: "clang"
       MAKE: "gmake"
       HIGHCTIDH_PORTABLE: "1"
     steps:
@@ -24,11 +24,10 @@ jobs:
         prepare: |
           uname -a
           pkg install -y gmake
-          pkg install -y gcc
-          pkg search llvm
-          gcc -v
+          pkg install -y llvm16-16.0.6_6 
           gmake -v
+          clang -v
 
         run: |
-          HIGHCTIDH_PORTABLE=1 LD_FLAGS="-Wl,-rpath=/usr/local/lib/gcc12" gmake
+          HIGHCTIDH_PORTABLE=1 gmake
           HIGHCTIDH_PORTABLE=1 gmake test-quick
