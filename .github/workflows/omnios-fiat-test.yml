@@ -9,7 +9,7 @@ jobs:
     env:
       LANG: "C"
       LD: "/usr/bin/ld"
-      CC: "clang"
+      CC: "cc"
       MAKE: "gmake"
       HIGHCTIDH_PORTABLE: "1"
     steps:
@@ -26,10 +26,8 @@ jobs:
           psrinfo -vp
           cat /etc/release
           pkg install developer/build/gnu-make
-          pkg install developer/build/gnu-make
-          pkg install developer/clang-18
-          clang -v
           gmake -v
+          cc -v
 
         run: |
           HIGHCTIDH_PORTABLE=1 gmake
