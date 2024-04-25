@@ -42,8 +42,8 @@ test:
 	cd src; $(MAKE) test;
 
 test-quick:
-	cd src; $(MAKE) testrandom test512;
-	cd src; ./test-quick.sh
+	cd src && $(MAKE) testrandom test512 && cd ../;
+	./src/test-quick.sh
 
 test-go:
 	cd src; go test -v ./...;

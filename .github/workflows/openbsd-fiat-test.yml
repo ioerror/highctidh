@@ -1,15 +1,15 @@
-name: OpenBSD fiat build with gcc
+name: OpenBSD fiat build with clang 
 
 on: [push]
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    name: OpenBSD gcc build of fiat backend
+    name: OpenBSD clang build of fiat backend
     env:
       LANG: "C"
       LD: "/usr/bin/ld"
-      CC: "gcc"
+      CC: "clang"
       MAKE: "gmake"
       HIGHCTIDH_PORTABLE: "1"
     steps:
@@ -24,7 +24,8 @@ jobs:
         prepare: |
           uname -a
           pkg_add gmake
-          pkg_add gcc-11.2
+          gmake -v
+          clang -v
 
         run: |
           HIGHCTIDH_PORTABLE=1 gmake

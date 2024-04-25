@@ -26,6 +26,8 @@ jobs:
           freebsd-version
           pkg install -y gmake
           pkg install -y gcc
+          gcc -v
+          gmake -v
 
         run: |
           HIGHCTIDH_PORTABLE=1 gmake
