@@ -41,7 +41,7 @@ LDFLAGS+=-Wl,-Bsymbolic-functions
 LDFLAGS+=-Wl,--reduce-memory-overheads -Wl,--no-keep-memory
 endif
 ifeq ($(CC),clang)
-BASE_CFLAGS+=-Wno-unused-command-line-argument
+BASE_CFLAGS+=-Wno-unused-command-line-argument -Werror=no-attributes
 endif
 ifeq ($(CC),gcc)
 BASE_CFLAGS+=
