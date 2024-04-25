@@ -26,7 +26,8 @@ jobs:
           psrinfo -vp
           cat /etc/release
           pkg install developer/build/gnu-make
-          pkg install developer/gcc13
+          pkg install developer/gcc51
+          pkg install shell/bash
           gmake -v
           gcc -v
 
