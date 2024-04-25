@@ -25,10 +25,10 @@ jobs:
           uname -a
           pkg install -y gmake
           pkg install -y gcc
-          pkg search clang
+          pkg search llvm
           gcc -v
           gmake -v
 
         run: |
-          HIGHCTIDH_PORTABLE=1 CFLAGS="-Werror=no-attributes" LD_FLAGS="-Wl,-rpath=/usr/local/lib/gcc12" gmake
+          HIGHCTIDH_PORTABLE=1 LD_FLAGS="-Wl,-rpath=/usr/local/lib/gcc12" gmake
           HIGHCTIDH_PORTABLE=1 gmake test-quick
