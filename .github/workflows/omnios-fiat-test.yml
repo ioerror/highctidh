@@ -26,7 +26,7 @@ jobs:
           psrinfo -vp
           cat /etc/release
           pkg install developer/build/gnu-make
-          pkg install developer/clang-18
+          pkg install ooce/developer/clang-18
           clang -v
           gmake -v
 
