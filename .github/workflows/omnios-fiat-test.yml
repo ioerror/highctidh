@@ -25,6 +25,7 @@ jobs:
           uname -a
           psrinfo -vp
           cat /etc/release
+          pkg list 'developer/gcc*' '*/clang*'
           pkg install developer/build/gnu-make
           pkg install ooce/developer/clang-18
           clang -v
