@@ -25,12 +25,9 @@ jobs:
           uname -a
           psrinfo -vp
           cat /etc/release
-          pkg install developer/build/gnu-make
-          pkg install developer/gcc12
-          pkg install shell/bash
+          pkg install developer/object-file developer/linker developer/build/gnu-make system/header system/library/math shell/bash developer/gcc12
           gmake -v
-          pkg install developer/object-file developer/linker developer/build/gnu-make system/header system/library/math
-          find /opt/
+          gcc -v
 
         run: |
           HIGHCTIDH_PORTABLE=1 gmake
