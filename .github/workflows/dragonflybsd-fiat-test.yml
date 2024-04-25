@@ -1,0 +1,31 @@
+name: DragonflyBSD fiat build with gcc
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: DragonflyBSD gcc build of fiat backend
+    env:
+      LANG: "C"
+      LD: "/usr/bin/ld"
+      CC: "gcc"
+      MAKE: "/usr/bin/gmake"
+      HIGHCTIDH_PORTABLE: "1"
+    steps:
+    - uses: actions/checkout@v4
+    - name: Test in DragonflyBSD
+      id: test
+      uses: vmactions/dragonflybsd-vm@v1
+      with:
+        release: "6.4.0"
+        envs: 'LANG LD CC MAKE HIGHCTIDH_PORTABLE'
+        usesh: true
+        prepare: |
+          uname -a
+          pkg install -y gmake
+          pkg install -y gcc
+
+        run: |
+          HIGHCTIDH_PORTABLE=1 gmake
+          HIGHCTIDH_PORTABLE=1 gmake test-quick
