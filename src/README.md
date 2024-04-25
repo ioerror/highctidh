@@ -136,15 +136,19 @@ To test without installing run the `test` target:
 ```
 
 The C library and bindings have been tested on the following operating systems:
+- AlmaLinux 9.3
 - Alpine v3.18 (musl libc)
 - Alpine v3.19 (musl libc)
-- CheriBSD
+- CheriBSD 14.0-CURRENT
 - Debian Sid (GNU libc)
 - Debian Bookworm (GNU libc)
-- FreeBSD
+- FreeBSD 14.0
 - HardenedBSD (FreeBSD libc)
 - MacOS
-- OpenBSD
+- NetBSD 10.0
+- Omnios (r151046)
+- OpenBSD 7.5
+- Solaris 11.4
 - Ubuntu Mantic (GNU libc)
 - Ubuntu Noble (GNU libc)
 
