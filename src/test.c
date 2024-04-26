@@ -11,7 +11,7 @@
 
 #if defined(__ARM32__) || defined(__i386__)
 #define DFMT "%#llxU, "
-#elif defined(__MacOS__)
+#elif defined(__Darwin__)
 #define DFMT "%#llxU, "
 #elif defined(__OpenBSD__)
 #define DFMT "%#llxU, "

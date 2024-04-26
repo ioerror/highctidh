@@ -30,7 +30,7 @@ BASE_CFLAGS := -fpie -fPIC -Wall -Wextra -pedantic -O2 -fwrapv -DGETRANDOM -Werr
 BASE_CFLAGS+=-DPLATFORM=${PLATFORM} -DPLATFORM_SIZE=${PLATFORM_SIZE}
 BASE_CFLAGS+=$(SEC_CFLAGS)
 BASE_CFLAGS+=$(if $(strip $(CC_MARCH)),-march=$(CC_MARCH) -mtune=$(CC_MTUNE),)
-ifeq    ($(HOST_OS), $(filter $(HOST_OS), OpenBSD, DragonFly))
+ifeq    ($(HOST_OS), $(filter $(HOST_OS), OpenBSD, DragonFly, Darwin))
 BASE_CFLAGS+=-D__$(HOST_OS)__
 endif
 LDFLAGS :=
