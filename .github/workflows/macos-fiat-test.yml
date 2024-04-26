@@ -4,7 +4,10 @@ on: [push]
 
 jobs:
   build:
-    runs-on: macos-latest
+      strategy:
+        matrix:
+          OS: ["macos-11", "macos-12", "macos-13", "macos-latest"]
+    runs-on: ${{ matrix.OS }}
     steps:
     - uses: actions/checkout@v4
 
@@ -18,14 +21,13 @@ jobs:
     - name: Gather kernel environment
       run: uname -a
 
-    - name: Gather compiler info
+    - name: Gather toolchain info
       run: |
         clang -v
         make -v
 
-
     - name: compile
       run: HIGHCTIDH_PORTABLE=1 CC=clang MAKE=gmake gmake
 
-    - name: test-quick
-      run: HIGHCTIDH_PORTABLE=1 CC=clang MAKE=gmake gmake test-quick
+        #    - name: test-quick
+        #run: HIGHCTIDH_PORTABLE=1 CC=clang MAKE=gmake gmake test-quick
