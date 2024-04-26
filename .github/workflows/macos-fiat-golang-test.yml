@@ -1,4 +1,4 @@
-name: MacOS fiat build with clang
+name: MacOS fiat golang build with clang
 
 on:
   push:
@@ -33,4 +33,4 @@ jobs:
         make -v
 
     - name: compile and test-quick
-      run: HIGHCTIDH_PORTABLE=1 CC=${{ matrix.CC }} MAKE=gmake gmake test-quick
+      run: HIGHCTIDH_PORTABLE=1 CC=${{ matrix.CC }} MAKE=gmake gmake test-go

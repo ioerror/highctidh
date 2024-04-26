@@ -6,7 +6,7 @@
 #elif defined(__FreeBSD__)
 #include <sys/types.h>
 #include <sys/endian.h>
-#elif defined(__APPLE__)
+#elif (defined(__APPLE__) || defined (__Darwin__))
 #include <sys/types.h>
 #include <machine/endian.h>
 #include <libkern/OSByteOrder.h>
