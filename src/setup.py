@@ -177,10 +177,16 @@ if CC == "gcc":
 
 print(f"Building for platform: {PLATFORM} on {OS}")
 if PLATFORM == "aarch64":
-    if CC == "clang":
-        cflags += ["-DHIGHCTIDH_PORTABLE=1"]
-    if CC == "gcc":
-        cflags += ["-march=native", "-mtune=native", "-DHIGHCTIDH_PORTABLE=1"]
+    if OS == "Darwin":
+      if CC == "clang":
+          cflags += ["-DHIGHCTIDH_PORTABLE=1"]
+      if CC == "gcc":
+          cflags += ["-DHIGHCTIDH_PORTABLE=1"]
+    else:
+      if CC == "clang":
+          cflags += ["-DHIGHCTIDH_PORTABLE=1"]
+      if CC == "gcc":
+          cflags += ["-march=native", "-mtune=native", "-DHIGHCTIDH_PORTABLE=1"]
 elif PLATFORM == "armv7l":
     # clang required
     if CC == "clang":
@@ -249,7 +255,16 @@ elif PLATFORM == "sun4v" or PLATFORM == "i86pc":
     cflags += [f"-DPLATFORM={PLATFORM}", f"-DPLATFORM_SIZE={PLATFORM_SIZE}"]
 elif PLATFORM == "x86_64":
     if PLATFORM_SIZE == 64:
-        cflags += ["-march=native", "-mtune=native", "-D__x86_64__"]
+        if OS == "Darwin":
+          if CC == "clang":
+              cflags += ["-D__x86_64__"]
+          if CC == "gcc":
+              cflags += ["-D__x86_64__"]
+        else:
+          if CC == "clang":
+              cflags += ["-DHIGHCTIDH_PORTABLE=1"]
+          if CC == "gcc":
+              cflags += ["-march=native", "-mtune=native"]
         if HIGHCTIDH_PORTABLE == "1":
             if CC == "clang":
                 cflags += ["-fforce-enable-int128"]

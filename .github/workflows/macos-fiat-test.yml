@@ -32,8 +32,8 @@ jobs:
         ${{ matrix.CC }} -v
         make -v
 
-    - name: compile
-      run: HIGHCTIDH_PORTABLE=1 CC=${{ matrix.CC }} MAKE=gmake gmake
+    - name: test-go
+      run: HIGHCTIDH_PORTABLE=1 CC=${{ matrix.CC }} MAKE=gmake gmake test-go
 
-    - name: test-quick
+    - name: compile and test
       run: HIGHCTIDH_PORTABLE=1 CC=${{ matrix.CC }} MAKE=gmake gmake test
