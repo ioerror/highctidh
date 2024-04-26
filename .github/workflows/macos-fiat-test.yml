@@ -14,6 +14,9 @@ jobs:
     - name: Gather compiler info
       run: clang -v
 
+    - name: Install tools
+      run: homebrew install make
+
     - name: compile
       run: HIGHCTIDH_PORTABLE=1 CC=clang MAKE=gmake gmake
 
