@@ -12,14 +12,17 @@ jobs:
       id: set-up-homebrew
       uses: Homebrew/actions/setup-homebrew@master
 
+    - name: Install tools
+      run: brew install make
+
     - name: Gather kernel environment
       run: uname -a
 
     - name: Gather compiler info
-      run: clang -v
+      run: |
+        clang -v
+        make -v
 
-    - name: Install tools
-      run: homebrew install make
 
     - name: compile
       run: HIGHCTIDH_PORTABLE=1 CC=clang MAKE=gmake gmake
