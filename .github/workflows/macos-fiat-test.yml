@@ -1,12 +1,15 @@
 name: MacOS fiat build with clang
 
-on: [push]
+on:
+  push:
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   build:
-      strategy:
-        matrix:
-          OS: ["macos-11", "macos-12", "macos-13", "macos-latest"]
+    strategy:
+      matrix:
+        OS: ["macos-11", "macos-12", "macos-13", "macos-latest"]
     runs-on: ${{ matrix.OS }}
     steps:
     - uses: actions/checkout@v4
@@ -29,5 +32,5 @@ jobs:
     - name: compile
       run: HIGHCTIDH_PORTABLE=1 CC=clang MAKE=gmake gmake
 
-        #    - name: test-quick
-        #run: HIGHCTIDH_PORTABLE=1 CC=clang MAKE=gmake gmake test-quick
+#    - name: test-quick
+#run: HIGHCTIDH_PORTABLE=1 CC=clang MAKE=gmake gmake test-quick
