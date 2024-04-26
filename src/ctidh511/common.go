@@ -1,10 +1,11 @@
 package ctidh511
 
 /*
- #cgo CFLAGS: -DBITS=511 -DGETRANDOM -DCGONUTS -fpie -fPIC -O2
+ #cgo CFLAGS: -DBITS=511 -DGETRANDOM -DCGONUTS -O2
  #cgo LDFLAGS:
  #cgo linux CFLAGS: -DBITS=511 -DGETRANDOM -DCGONUTS -Wformat -Werror=format-security -D_FORTIFY_SOURCE=2 -fstack-protector-all -fpie -fPIC -O2
  #cgo linux LDFLAGS: -Wl,-z,noexecstack -Wl,-z,relro
+ #cgo windows CFLAGS: -D__Windows__ -DHIGHCTIDH_PORTABLE=1
 
  // The following should work as native builds and as cross compiled builds.
  // Example cross compile build lines are provided as examples.
@@ -22,8 +23,17 @@ package ctidh511
  // CC=clang CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -v
  #cgo darwin/amd64 CFLAGS: -DPLATFORM=x86_64 -DPLATFORM_SIZE=64 -march=native -mtune=native -DHIGHCTIDH_PORTABLE=1
 
+ // Generic flags for amd64
+ #cgo amd64 CFLAGS: -DPLATFORM=x86_64 -DPLATFORM_SIZE=64
+
  // CC=gcc CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -v
  #cgo linux/amd64 CFLAGS: -DPLATFORM=x86_64 -DPLATFORM_SIZE=64 -march=native -mtune=native
+
+ // CC=??? CGO_ENABLED=1 GOOS=windows GOARCH=arm64 go build
+ #cgo windows/arm64 CFLAGS: -DPLATFORM=arm64 -DPLATFORM_SIZE=64 -D__Windows__ -DHIGHCTIDH_PORTABLE=1
+
+ // CC=/usr/bin/x86_64-w64-mingw32-gcc CGO_ENABLED=1 GOOS=windows GOARCH=amd64 go build
+ #cgo windows/amd64 CFLAGS: -DPLATFORM=x86_64 -DPLATFORM_SIZE=64 -D__Windows__ -DHIGHCTIDH_PORTABLE=1
 
  // CC=powerpc64le-linux-gnu-gcc CGO_ENABLED=1 GOOS=linux GOARCH=ppc64le go build -v
  #cgo ppc64le CFLAGS: -DPLATFORM=ppc64le -DPLATFORM_SIZE=64 -DHIGHCTIDH_PORTABLE=1

@@ -155,11 +155,21 @@ The C library and bindings have been tested on the following operating systems:
 - Rockylinux 9, 9.3 (GNU libc)
 - Solaris 11.4 (Solaris libc)
 - Ubuntu 22.03, 23.10, 24.04 (GNU libc)
+- Windows Server 2019, 2022 (MSVCRT)
 
 ## Notes on building
 
 Building on Solaris, CheriBSD, FreeBSD, NetBSD, and OpenBSD building is supported using the
 `gmake` command. GNU/Linux and MacOS are supported with the `make` command.
+
+Windows support is extremely experimental. The Python and Golang modules may
+not be functionalon Windows. Building the main C library on Windows Server 2019
+and Windows Server 2022 should be possible with `clang` as is demonstrated in
+the continious integration configuration `windows-fiat-c-library-test.yml`. It
+has only been tested with the Windows Server 2022 image preloaded with `clang`,
+`bash`, `make`, and other related tools
+[https://github.com/actions/runner-images/blob/main/images/windows/Windows2022-Readme.md](available
+as a part of the CI configuration).
 
 ### Additional notes on building the C library
  

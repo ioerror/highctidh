@@ -19,6 +19,8 @@
 #define DFMT "%#llxU, "
 #elif defined(__sun) && defined(__i86pc__)
 #define DFMT "%#lxU, "
+#elif (defined(__Windows__) || defined(__WIN64))
+#define DFMT "%#llxU, "
 #else
 #define DFMT "%#lxU, "
 #endif
@@ -913,8 +915,13 @@ static void test_isog(void)
       xISOG(&A1,P1,t,&K,primes[i]);
 
       for (long long matryoshka = 0;matryoshka < 10;++matryoshka) {
+#if (defined(__Windows__) || defined(__WIN64))
+        long long ilower = rand()%(i+1);
+        long long iupper = i+(rand()%(primes_num-i));
+#else
         long long ilower = random()%(i+1);
         long long iupper = i+(random()%(primes_num-i));
+#endif
         A2 = A;
         for (long long j = 0;j < t;++j)
           P2[j] = P[j];

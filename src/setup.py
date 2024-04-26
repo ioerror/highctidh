@@ -1,14 +1,23 @@
 from warnings import filterwarnings
 
 filterwarnings("ignore", category=DeprecationWarning)
-from os import environ, getcwd, mkdir, path, stat, umask, uname
+
+from os import environ, getcwd, mkdir, path, stat, umask
 from subprocess import PIPE, Popen
 from sys import exit, platform
 from sysconfig import get_config_var
 from time import time
 
+from platform import architecture, uname
+from sys import byteorder
+import timeit
+
 from setuptools import Extension, find_packages, setup
 from setuptools.command.build_ext import build_ext
+
+OS = uname().system
+PLATFORM = uname().machine
+PLATFORM_SIZE = int(architecture()[0][0:2])
 
 try:
     from stdeb.command.bdist_deb import bdist_deb
@@ -121,15 +130,6 @@ if "CC" in environ:
     print(f"CC={CC}")
 
 VERSION = open("VERSION", "r").read().strip()
-PLATFORM = uname().machine
-OS = uname().sysname
-r = Popen("getconf" + " LONG_BIT", shell=True, stdout=PIPE)
-PLATFORM_SIZE = int(r.stdout.read().strip())
-if PLATFORM_SIZE != 64:
-    if PLATFORM_SIZE != 32:
-        print(f"PLATFORM is: {PLATFORM}")
-        print(f"PLATFORM_SIZE is unexpected size: {PLATFORM_SIZE}")
-        exit(2)
 
 base_src = [
     "crypto_classify.c",
@@ -254,6 +254,34 @@ elif PLATFORM == "sun4v" or PLATFORM == "i86pc":
             cflags += ["-fforce-enable-int128"]
     cflags += ["-Wextra", "-fwrapv", "-pedantic", "-Werror", "-DGETRANDOM"]
     cflags += [f"-DPLATFORM={PLATFORM}", f"-DPLATFORM_SIZE={PLATFORM_SIZE}"]
+elif PLATFORM == "x86_64" and OS == 'Windows':
+    # Windows only builds with clang on Windows under the CI
+    # It should also build with other compilers.
+    # As with Solaris we wrap the function that returns these flags internally
+    # during the build process to override them for a value that works for
+    # both.
+    import distutils.sysconfig as _wrapped_distutils
+    from distutils.sysconfig import get_config_vars as _get_config_vars
+
+    _config_vars = _get_config_vars().copy()
+    default_cflags += [
+        " -Wall -Wextra -pedantic -O2 -fwrapv -ffile-prefix-map=..=."
+    ]
+    _config_vars["CFLAGS"] = default_cflags
+
+    def get_config_vars_wrapper(*a):
+        return [_config_vars.get(n) for n in a] if a else _config_vars
+
+    _wrapped_distutils.get_config_vars = get_config_vars_wrapper
+    # Set Windows specific build options
+    cflags = ["-D__Windows__"]
+    ldflags = ["-LAdvapi32.dll"]
+    if PLATFORM == "x86_64":
+        cflags += ["-D__x86_64__"]
+        cflags += ["-DHIGHCTIDH_PORTABLE=" + HIGHCTIDH_PORTABLE]
+    cflags += [f"-DPLATFORM={PLATFORM}", f"-DPLATFORM_SIZE={PLATFORM_SIZE}"]
+    if CC == "clang":
+        cflangs += "-Wno-unused-command-line-argument"
 elif PLATFORM == "x86_64":
     if PLATFORM_SIZE == 64:
         if OS == "Darwin":
