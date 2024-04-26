@@ -178,6 +178,7 @@ if CC == "gcc":
 print(f"Building for platform: {PLATFORM} on {OS}")
 if PLATFORM == "aarch64":
     if OS == "Darwin":
+      cflags += ["-D__Darwin__"]
       if CC == "clang":
           cflags += ["-DHIGHCTIDH_PORTABLE=1"]
       if CC == "gcc":
@@ -256,6 +257,7 @@ elif PLATFORM == "sun4v" or PLATFORM == "i86pc":
 elif PLATFORM == "x86_64":
     if PLATFORM_SIZE == 64:
         if OS == "Darwin":
+          cflags += ["-D__Darwin__"]
           if CC == "clang":
               cflags += ["-D__x86_64__"]
           if CC == "gcc":
