@@ -45,6 +45,9 @@ test-quick:
 	cd src && $(MAKE) testrandom test512 && cd ../;
 	`pwd`/src/test-quick.sh;
 
+test-python:
+	`pwd`/src/test-python.sh;
+
 test-go:
 	cd src; go test -v ./...;
 	cd src/ctidh511; go test -v ./...;

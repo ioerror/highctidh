@@ -1,0 +1,36 @@
+name: MacOS fiat python build with clang
+
+on:
+  push:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        OS: ["macos-11", "macos-12", "macos-13", "macos-14"]
+        CC: ["clang"]
+    runs-on: ${{ matrix.OS }}
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Homebrew
+      id: set-up-homebrew
+      uses: Homebrew/actions/setup-homebrew@master
+
+    - name: Install tools
+      run: brew install make
+
+    - name: Gather kernel environment
+      run: |
+        uname -a
+        sw_vers
+
+    - name: Gather toolchain info
+      run: |
+        ${{ matrix.CC }} -v
+        make -v
+
+    - name: compile and test-quick
+      run: HIGHCTIDH_PORTABLE=1 CC=${{ matrix.CC }} MAKE=gmake gmake test-python
