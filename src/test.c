@@ -11,6 +11,10 @@
 
 #if defined(__ARM32__) || defined(__i386__)
 #define DFMT "%#llxU, "
+#elif defined(__Darwin__)
+#define DFMT "%#llxU, "
+#elif defined(__OpenBSD__)
+#define DFMT "%#llxU, "
 #elif defined(__sun) && !defined(__i86pc__)
 #define DFMT "%#llxU, "
 #elif defined(__sun) && defined(__i86pc__)
