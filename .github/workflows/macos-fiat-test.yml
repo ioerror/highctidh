@@ -1,4 +1,4 @@
-name: MacOS fiat build with clang
+name: MacOS fiat build with clang and gcc
 
 on:
   push:
@@ -9,7 +9,7 @@ jobs:
   build:
     strategy:
       matrix:
-        OS: ["macos-11", "macos-12", "macos-13", "macos-14"]
+        OS: ["macos-11"] #, "macos-12", "macos-13", "macos-14"]
         CC: ["clang", "gcc"]
     runs-on: ${{ matrix.OS }}
     steps:
@@ -23,7 +23,9 @@ jobs:
       run: brew install make
 
     - name: Gather kernel environment
-      run: uname -a
+      run: |
+        uname -a
+        sw_vers
 
     - name: Gather toolchain info
       run: |
@@ -33,5 +35,5 @@ jobs:
     - name: compile
       run: HIGHCTIDH_PORTABLE=1 CC=${{ matrix.CC }} MAKE=gmake gmake
 
-#    - name: test-quick
-#run: HIGHCTIDH_PORTABLE=1 CC=clang MAKE=gmake gmake test-quick
+    - name: test-quick
+      run: HIGHCTIDH_PORTABLE=1 CC=${{ matrix.CC }} MAKE=gmake gmake test
