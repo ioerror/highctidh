@@ -11,9 +11,14 @@ jobs:
       matrix:
         OS: ["macos-11", "macos-12", "macos-13", "macos-14"]
         CC: ["clang"]
+        GO: ["1.20.14", "1.21.9", "1.22.2"]
     runs-on: ${{ matrix.OS }}
     steps:
     - uses: actions/checkout@v4
+    - uses: actions/setup-go@v5
+      with:
+        go-version: ${{ matrix.GO }}
+        check-latest: true
 
     - name: Set up Homebrew
       id: set-up-homebrew
