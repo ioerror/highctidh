@@ -46,7 +46,7 @@ test-quick:
 	`pwd`/src/test-quick.sh;
 
 test-python:
-	`pwd`/src/test-python.sh;
+	cd src && `pwd`/test-python.sh;
 
 test-go:
 	cd src; go test -v ./...;
