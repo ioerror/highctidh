@@ -20043,4 +20043,6 @@ void fiat_p1024_divstep(uint64_t* out1, uint64_t out2[17], uint64_t out3[17], ui
   out5[14] = x437;
   out5[15] = x438;
 }
+#else
+typedef int no_empty_translation_units_asm_1024; // -> "warning: ISO C forbids an empty translation unit"
 #endif
