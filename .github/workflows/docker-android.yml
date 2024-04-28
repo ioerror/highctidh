@@ -19,7 +19,8 @@ jobs:
     - uses: actions/checkout@v3
 
     - name: Build
-      run: CC=${{ matrix.CC }} CFLAGS="-fno-lto" HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make
+      run: CC=${{ matrix.CC }} CFLAGS="-fno-lto" HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} ndk-build -B --makefile=Makefile
+
     - name: Test install
       run: CC=${{ matrix.CC }} HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make install
 
