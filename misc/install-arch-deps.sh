@@ -3,6 +3,6 @@ set -e;
 
 #pacman -Syu #> /dev/null 2>&1;
 echo "Installing required packages...";
-pacman -Syu gcc clang make python3 python3-dev py3-build py3-flit \
-    py3-setuptools py3-wheel #> /dev/null 2>&1;
+pacman -Syu gcc clang make python3 python3-devtools python-build python-flit \
+    python-setuptools python-wheel #> /dev/null 2>&1;
 echo "Required packages installed";
