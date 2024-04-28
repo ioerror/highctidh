@@ -24,7 +24,10 @@ jobs:
     - name: Build
       run: CC=${{ matrix.CC }} CFLAGS="-fno-lto" HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make
     - name: Test install
-      run: CC=${{ matrix.CC }} make install && ldconfig -v
+      run: CC=${{ matrix.CC }} make install
+
+    - name: Register libraries
+      run: ldconfig -v
 
     - name: Build examples
       run: CC=${{ matrix.CC }} make examples
