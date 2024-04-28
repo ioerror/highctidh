@@ -6007,4 +6007,6 @@ void fiat_p511_divstep(uint64_t* out1, uint64_t out2[9], uint64_t out3[9], uint6
   out5[6] = x229;
   out5[7] = x230;
 }
+#else
+typedef int no_empty_translation_units_asm_511; // -> "warning: ISO C forbids an empty translation unit"
 #endif

@@ -89,7 +89,7 @@ with other CPU architectures. The portable backend was generated using the
 include: `amd64`/`x86_64`  (with and without avx2), `arm32v5`, `arm32v6`,
 `arm32v7`, `arm64v8`/`aarch64`/`arm64`, `i386`, `loongarch64/Loongson`, `mips`,
 `mipsel`, `mips64`, `mips64el`, `POWER8/ppc64`, `POWER9/ppc64le`, `riscv64`,
-`s390x`, and `sparc64`.
+`s390x`, `sun4v`, and `sparc64`.
 
 ## Golang bindings
 
@@ -137,24 +137,24 @@ To test without installing run the `test` target:
 
 The C library and bindings have been tested on the following operating systems:
 - AlmaLinux 9.3
-- Alpine v3.18 (musl libc)
-- Alpine v3.19 (musl libc)
+- Alpine v3.17 - v3.19.1 (musl libc)
+- Arch latest
 - CheriBSD 14.0-CURRENT
-- Debian Sid (GNU libc)
-- Debian Bookworm (GNU libc)
+- Debian stable, testing, unstable (GNU libc)
+- DragonFlyBSD 6.4.0
+- Fedora 38, 39, 40, 41
 - FreeBSD 14.0
 - HardenedBSD (FreeBSD libc)
-- MacOS
-- NetBSD 10.0
+- MacOS 11, 12, 13, 14
+- NetBSD 10.0 (NetBSD libc)
 - Omnios (r151046)
-- OpenBSD 7.5
-- Solaris 11.4
-- Ubuntu Mantic (GNU libc)
-- Ubuntu Noble (GNU libc)
+- OpenBSD 7.5 (OpenBSD libc)
+- Solaris 11.4 (Solaris libc)
+- Ubuntu 22.03, 23.10, 24.04 (GNU libc)
 
 ## Notes on building
 
-Building on Solaris, CheriBSD, FreeBSD, and OpenBSD building is supported using the
+Building on Solaris, CheriBSD, FreeBSD, NetBSD, and OpenBSD building is supported using the
 `gmake` command. GNU/Linux and MacOS are supported with the `make` command.
 
 ### Additional notes on building the C library

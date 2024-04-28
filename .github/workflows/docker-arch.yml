@@ -1,0 +1,39 @@
+name: Arch Docker
+
+on:
+  push:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        CC: ["clang", "gcc"]
+        PORTABLE: ["0", "1"]
+        CONTAINER: ["archlinux:latest"]
+      fail-fast: false
+    container: ${{ matrix.CONTAINER }}
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Arch deps
+      run: ./misc/install-arch-deps.sh
+
+    - name: Build
+      run: CC=${{ matrix.CC }} CFLAGS="-fno-lto" HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make
+    - name: Test install
+      run: CC=${{ matrix.CC }} HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make install
+
+    - name: Build examples
+      run: CC=${{ matrix.CC }} HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make examples
+
+    - name: Register libraries
+      run: sudo ldconfig /usr/local/lib
+
+    - name: Run examples
+      run: CC=${{ matrix.CC }} HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make examples-run
+
+    - name: Examine build artifacts
+      run: ls -alh dist/*.so && sha256sum dist/*.so
