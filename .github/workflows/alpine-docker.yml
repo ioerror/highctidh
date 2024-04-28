@@ -32,7 +32,5 @@ jobs:
     - name: Run examples
       run: CC=${{ matrix.CC }} make examples
 
-    - name: Examine build artifacts:
-      run: |
-          ls -alh dist/*.so
-          sha256sum dist/*.so
+    - name: Examine build artifacts
+      run: ls -alh dist/*.so && sha256sum dist/*.so
