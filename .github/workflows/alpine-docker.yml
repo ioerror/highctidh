@@ -27,7 +27,7 @@ jobs:
       run: CC=${{ matrix.CC }} make install
 
     - name: Register libraries
-      run: ldconfig -v
+      run: sudo ldconfig
 
     - name: Build examples
       run: CC=${{ matrix.CC }} make examples
