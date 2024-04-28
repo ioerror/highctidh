@@ -1,4 +1,4 @@
-name: Docker linux variety
+name: Alpine
 
 on:
   push:
@@ -12,18 +12,13 @@ jobs:
       matrix:
         CC: ["clang", "gcc"]
         PORTABLE: ["0", "1"]
-        CONTAINER: ["fedora:35", "alpine:3.19", "alpine:3.18", "debian:sid", "debian:testing"]
+        CONTAINER: ["alpine:3.19", "alpine:3.18"]
     container: ${{ matrix.CONTAINER }}
     steps:
     - uses: actions/checkout@v4
 
     - name: Install Arch/alpine deps
-      if: ${{ CONTAINER == "alpine:3.19" || CONTAINER == "alpine:3.18" }}
       run: ./misc/install-arch-deps.sh
-
-    - name: Install Debian deps
-      if: ${{ CONTAINER == "debian:sid" || CONTAINER == "debian:testing" }}
-      run: ./misc/install-debian-deps.sh
 
     - name: Build
       run: CC=${{ matrix.CC }} CFLAGS="-fno-lto" HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make
