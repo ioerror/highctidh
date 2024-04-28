@@ -12,7 +12,7 @@ jobs:
       matrix:
         CC: ["clang", "gcc"]
         PORTABLE: ["0", "1"]
-        CONTAINER: ["fedora:29"]
+        CONTAINER: ["fedora:41", "fedora:40", "fedora:39", "fedora:38"]
       fail-fast: false
     container: ${{ matrix.CONTAINER }}
     steps:
