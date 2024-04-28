@@ -12,7 +12,7 @@ jobs:
       matrix:
         CC: ["clang", "gcc"]
         PORTABLE: ["0", "1"]
-        CONTAINER: ["androidsdk/android-31"]
+        CONTAINER: ["androidsdk/android-30"]
       fail-fast: false
     container: ${{ matrix.CONTAINER }}
     steps:
