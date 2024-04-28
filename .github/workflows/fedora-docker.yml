@@ -30,7 +30,7 @@ jobs:
       run: CC=${{ matrix.CC }} HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make examples
 
     - name: Register libraries
-      run: sudo ldconfig -v
+      run: sudo ldconfig /usr/local/lib
 
     - name: Run examples
       run: CC=${{ matrix.CC }} HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make examples-run
