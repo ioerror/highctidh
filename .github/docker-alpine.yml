@@ -19,8 +19,8 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Install Arch/alpine deps
-      run: ./misc/install-arch-deps.sh
+    - name: Install alpine deps
+      run: ./misc/install-alpine-deps.sh
 
     - name: Build
       run: CC=${{ matrix.CC }} CFLAGS="-fno-lto" HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make

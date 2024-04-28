@@ -18,7 +18,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Install Arch/alpine deps
+    - name: Install Arch deps
       run: ./misc/install-arch-deps.sh
 
     - name: Build
