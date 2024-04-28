@@ -26,11 +26,11 @@ jobs:
     - name: Test install
       run: CC=${{ matrix.CC }} HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make install
 
-    - name: Build examples
-      run: CC=${{ matrix.CC }} HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make examples
-
     - name: Register libraries
       run: sudo ldconfig /usr/local/lib
+
+    - name: Build examples
+      run: CC=${{ matrix.CC }} HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make examples
 
     - name: Run examples
       run: CC=${{ matrix.CC }} HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make examples-run
