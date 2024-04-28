@@ -25,6 +25,5 @@ jobs:
       if: ${{ CONTAINER == "debian:sid" || CONTAINER == "debian:testing" }}
       run: ./misc/install-debian-deps.sh
 
-    - name: Test cmd
-      run: |
-      CC=${{ matrix.CC }} CFLAGS="-fno-lto" HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make
+    - name: Build
+      run: CC=${{ matrix.CC }} CFLAGS="-fno-lto" HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make
