@@ -73599,4 +73599,6 @@ void fiat_p2048_divstep(uint64_t* out1, uint64_t out2[33], uint64_t out3[33], ui
   out5[30] = x853;
   out5[31] = x854;
 }
+#else
+typedef int no_empty_translation_units_asm_2048; // -> "warning: ISO C forbids an empty translation unit"
 #endif
