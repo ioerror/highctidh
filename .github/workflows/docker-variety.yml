@@ -1,0 +1,30 @@
+name: Docker linux variety
+
+on:
+  push:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        CC: ["clang", "gcc"]
+        PORTABLE: ["0", "1"]
+        CONTAINER: ["fedora:35", "alpine:3.19", "alpine:3.18", "debian:sid", "debian:testing"]
+    container: ${{ matrix.CONTAINER }}
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Arch/alpine deps
+      if: ${{ CONTAINER == "alpine:3.19" || CONTAINER == "alpine:3.18" }}
+      run: ./misc/install-arch-deps.sh
+
+    - name: Install Debian deps
+      if: ${{ CONTAINER == "debian:sid" || CONTAINER == "debian:testing" }}
+      run: ./misc/install-debian-deps.sh
+
+    - name: Test cmd
+      run: |
+      CC=${{ matrix.CC }} CFLAGS="-fno-lto" HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make
