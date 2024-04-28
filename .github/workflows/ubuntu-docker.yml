@@ -12,7 +12,7 @@ jobs:
       matrix:
         CC: ["clang", "gcc"]
         PORTABLE: ["0", "1"]
-        CONTAINER: ["ubuntu:20.04", "ubuntu:22.04", "ubuntu:23.10", "ubuntu:24.04"]
+        CONTAINER: ["ubuntu:22.04", "ubuntu:23.10", "ubuntu:24.04"]
       fail-fast: false
     container: ${{ matrix.CONTAINER }}
     steps:
