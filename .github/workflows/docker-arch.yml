@@ -1,4 +1,4 @@
-name: Android Docker
+name: Arch Docker
 
 on:
   push:
@@ -12,20 +12,19 @@ jobs:
       matrix:
         CC: ["clang", "gcc"]
         PORTABLE: ["0", "1"]
-        CONTAINER: ["androidsdk/android-30"]
+        CONTAINER: ["archlinux:latest"]
       fail-fast: false
     container: ${{ matrix.CONTAINER }}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
+
+    - name: Install Arch/alpine deps
+      run: ./misc/install-arch-deps.sh
 
     - name: Build
-      run: CC=${{ matrix.CC }} CFLAGS="-fno-lto" HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} ndk-build -B --makefile=Makefile
-
+      run: CC=${{ matrix.CC }} CFLAGS="-fno-lto" HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make
     - name: Test install
       run: CC=${{ matrix.CC }} HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make install
-
-    - name: Register libraries
-      run: sudo ldconfig /usr/local/lib
 
     - name: Build examples
       run: CC=${{ matrix.CC }} HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make examples
