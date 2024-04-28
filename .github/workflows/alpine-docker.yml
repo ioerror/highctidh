@@ -25,13 +25,13 @@ jobs:
     - name: Build
       run: CC=${{ matrix.CC }} CFLAGS="-fno-lto" HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make
     - name: Test install
-      run: CC=${{ matrix.CC }} make install
+      run: CC=${{ matrix.CC }} HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make install
 
     - name: Build examples
-      run: CC=${{ matrix.CC }} make examples
+      run: CC=${{ matrix.CC }} HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make examples
 
     - name: Run examples
-      run: CC=${{ matrix.CC }} make examples-run
+      run: CC=${{ matrix.CC }} HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make examples-run
 
     - name: Examine build artifacts
       run: ls -alh dist/*.so && sha256sum dist/*.so
