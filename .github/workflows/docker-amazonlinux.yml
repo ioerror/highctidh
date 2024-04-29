@@ -12,7 +12,7 @@ jobs:
       matrix:
         CC: ["clang", "gcc"]
         PORTABLE: ["0", "1"]
-        CONTAINER: ["amazonlinux:latest"]
+        CONTAINER: ["amazonlinux:2"]
       fail-fast: false
     container: ${{ matrix.CONTAINER }}
     steps:
