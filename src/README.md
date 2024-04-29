@@ -149,7 +149,7 @@ The C library and bindings have been tested on the following operating systems:
 - NetBSD 10.0 (NetBSD libc)
 - Omnios (r151046) (illumos libc)
 - OpenBSD 7.5 (OpenBSD libc)
-- Rockylinux (GNU libc)
+- Rockylinux 9, 9.3 (GNU libc)
 - Solaris 11.4 (Solaris libc)
 - Ubuntu 22.03, 23.10, 24.04 (GNU libc)
 
