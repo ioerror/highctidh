@@ -141,6 +141,7 @@ The C library and bindings have been tested on the following operating systems:
 - Arch latest (GNU libc)
 - CheriBSD 14.0-CURRENT (FreeBSD libc)
 - Debian stable, testing, unstable (GNU libc)
+- Devuan latest (GNU libc)
 - DragonFlyBSD 6.4.0 (FreeBSD libc)
 - Fedora 38, 39, 40, 41 (GNU libc)
 - FreeBSD 14.0 (FreeBSD libc)
