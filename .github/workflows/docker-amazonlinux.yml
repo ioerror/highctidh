@@ -17,10 +17,13 @@ jobs:
     container: ${{ matrix.CONTAINER }}
     steps:
 
-    - name: Install Amazon Linux deps
-      run: ./misc/install-amazonlinux-deps.sh
+    - name: Install Amazon Linux pre-deps
+      run: yum install -y sudo tar gzip git
 
     - uses: actions/checkout@v3
+
+    - name: Install Amazon Linux deps
+      run: ./misc/install-amazonlinux-deps.sh
 
     - name: Build
       run: CC=${{ matrix.CC }} CFLAGS="-fno-lto" HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make
