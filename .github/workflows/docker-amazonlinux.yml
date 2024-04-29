@@ -16,10 +16,11 @@ jobs:
       fail-fast: false
     container: ${{ matrix.CONTAINER }}
     steps:
-    - uses: actions/checkout@v3
 
     - name: Install Amazon Linux deps
       run: ./misc/install-amazonlinux-deps.sh
+
+    - uses: actions/checkout@v3
 
     - name: Build
       run: CC=${{ matrix.CC }} CFLAGS="-fno-lto" HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make
