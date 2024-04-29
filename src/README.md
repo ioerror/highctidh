@@ -136,19 +136,21 @@ To test without installing run the `test` target:
 ```
 
 The C library and bindings have been tested on the following operating systems:
-- AlmaLinux 9.3
+- AlmaLinux 9.3 (GNU libc)
 - Alpine v3.17 - v3.19.1 (musl libc)
-- Arch latest
-- CheriBSD 14.0-CURRENT
+- Arch latest (GNU libc)
+- CentOS (GNU libc)
+- CheriBSD 14.0-CURRENT (FreeBSD libc)
 - Debian stable, testing, unstable (GNU libc)
-- DragonFlyBSD 6.4.0
-- Fedora 38, 39, 40, 41
-- FreeBSD 14.0
+- DragonFlyBSD 6.4.0 (FreeBSD libc)
+- Fedora 38, 39, 40, 41 (GNU libc)
+- FreeBSD 14.0 (FreeBSD libc)
 - HardenedBSD (FreeBSD libc)
-- MacOS 11, 12, 13, 14
+- MacOS 11, 12, 13, 14 (BSD libc)
 - NetBSD 10.0 (NetBSD libc)
-- Omnios (r151046)
+- Omnios (r151046) (illumos libc)
 - OpenBSD 7.5 (OpenBSD libc)
+- Rockylinux (GNU libc)
 - Solaris 11.4 (Solaris libc)
 - Ubuntu 22.03, 23.10, 24.04 (GNU libc)
 
