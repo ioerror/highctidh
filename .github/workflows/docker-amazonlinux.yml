@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        CC: ["clang", "gcc"]
+        CC: ["clang", "gcc10"]
         PORTABLE: ["0", "1"]
         CONTAINER: ["amazonlinux:2", "amazonlinux:latest"]
       fail-fast: false
