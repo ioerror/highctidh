@@ -12,8 +12,8 @@ jobs:
       matrix:
         CC: ["clang", "gcc"]
         PORTABLE: ["0", "1"]
-        CONTAINER: ["rockylinux:8-minimal", "rockylinux:8.9-minimal",
-                    "rockylinux:9-minimal", "rockylinux:9.3-minimal"]
+        CONTAINER: ["rockylinux:8", "rockylinux:8.9",
+                    "rockylinux:9", "rockylinux:9.3"]
       fail-fast: false
     container: ${{ matrix.CONTAINER }}
     steps:
