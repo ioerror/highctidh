@@ -1,4 +1,4 @@
-name: Arch Docker
+name: Alpine
 
 on:
   push:
@@ -12,14 +12,15 @@ jobs:
       matrix:
         CC: ["clang", "gcc"]
         PORTABLE: ["0", "1"]
-        CONTAINER: ["archlinux:latest"]
+        CONTAINER: ["alpine:3.19.1", "alpine:3.19", "alpine:3.18.6",
+                    "alpine:3.18", "alpine:3.17.7", "alpine:3.17"]
       fail-fast: false
     container: ${{ matrix.CONTAINER }}
     steps:
     - uses: actions/checkout@v4
 
-    - name: Install Arch deps
-      run: ./misc/install-arch-deps.sh
+    - name: Install alpine deps
+      run: ./misc/install-alpine-deps.sh
 
     - name: Build
       run: CC=${{ matrix.CC }} CFLAGS="-fno-lto" HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make
@@ -28,9 +29,6 @@ jobs:
 
     - name: Build examples
       run: CC=${{ matrix.CC }} HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make examples
-
-    - name: Register libraries
-      run: sudo ldconfig /usr/local/lib
 
     - name: Run examples
       run: CC=${{ matrix.CC }} HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make examples-run

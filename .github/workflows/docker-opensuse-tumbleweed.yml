@@ -1,4 +1,4 @@
-name: Fedora Docker
+name: openSUSE Tumbleweed
 
 on:
   push:
@@ -12,14 +12,14 @@ jobs:
       matrix:
         CC: ["clang", "gcc"]
         PORTABLE: ["0", "1"]
-        CONTAINER: ["fedora:41", "fedora:40", "fedora:39", "fedora:38"]
+        CONTAINER: ["opensuse/tumbleweed"]
       fail-fast: false
     container: ${{ matrix.CONTAINER }}
     steps:
     - uses: actions/checkout@v4
 
-    - name: Install Fedora deps
-      run: ./misc/install-fedora-deps.sh
+    - name: Install openSUSE Tumbleweed deps
+      run: ./misc/install-opensuse-tumbleweed-deps.sh
 
     - name: Build
       run: CC=${{ matrix.CC }} CFLAGS="-fno-lto" HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make

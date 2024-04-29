@@ -1,4 +1,4 @@
-name: openSUSE Tumbleweed Docker
+name: Oracle Linux
 
 on:
   push:
@@ -12,14 +12,14 @@ jobs:
       matrix:
         CC: ["clang", "gcc"]
         PORTABLE: ["0", "1"]
-        CONTAINER: ["opensuse/tumbleweed"]
+        CONTAINER: ["oraclelinux:9"]
       fail-fast: false
     container: ${{ matrix.CONTAINER }}
     steps:
     - uses: actions/checkout@v4
 
-    - name: Install openSUSE Tumbleweed deps
-      run: ./misc/install-opensuse-tumbleweed-deps.sh
+    - name: Install Oracle Linux deps
+      run: ./misc/install-oraclelinux-deps.sh
 
     - name: Build
       run: CC=${{ matrix.CC }} CFLAGS="-fno-lto" HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make

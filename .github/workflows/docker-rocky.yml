@@ -1,4 +1,4 @@
-name: Ubuntu Docker
+name: Rockylinux
 
 on:
   push:
@@ -12,14 +12,14 @@ jobs:
       matrix:
         CC: ["clang", "gcc"]
         PORTABLE: ["0", "1"]
-        CONTAINER: ["ubuntu:22.04", "ubuntu:23.10", "ubuntu:24.04"]
+        CONTAINER: ["rockylinux:9", "rockylinux:9.3"]
       fail-fast: false
     container: ${{ matrix.CONTAINER }}
     steps:
     - uses: actions/checkout@v4
 
-    - name: Install Ubuntu deps
-      run: ./misc/install-debian-deps.sh
+    - name: Install Rockylinux deps
+      run: ./misc/install-rocky-deps.sh
 
     - name: Build
       run: CC=${{ matrix.CC }} CFLAGS="-fno-lto" HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make

@@ -1,4 +1,4 @@
-name: Amazon Linux Docker
+name: Amazon Linux
 
 on:
   push:

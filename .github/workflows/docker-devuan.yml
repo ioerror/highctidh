@@ -1,4 +1,4 @@
-name: Alma Docker
+name: Devuan
 
 on:
   push:
@@ -12,14 +12,14 @@ jobs:
       matrix:
         CC: ["clang", "gcc"]
         PORTABLE: ["0", "1"]
-        CONTAINER: ["almalinux:latest"]
+        CONTAINER: ["devuan/devuan:latest"]
       fail-fast: false
     container: ${{ matrix.CONTAINER }}
     steps:
     - uses: actions/checkout@v4
 
-    - name: Install Almalinux deps
-      run: ./misc/install-alma-deps.sh
+    - name: Install devuan deps
+      run: ./misc/install-devuan-deps.sh
 
     - name: Build
       run: CC=${{ matrix.CC }} CFLAGS="-fno-lto" HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make
