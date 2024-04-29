@@ -1,0 +1,41 @@
+name: Alma Docker
+
+on:
+  push:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        CC: ["clang", "gcc"]
+        PORTABLE: ["0", "1"]
+        CONTAINER: ["almalinux:8-minimal", "almalinux:8.9-minimal",
+                    "almalinux:9-minimal", "almalinux:9.3-minimal",
+                    "almalinux:latest"]
+      fail-fast: false
+    container: ${{ matrix.CONTAINER }}
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Almalinux deps
+      run: ./misc/install-alma-deps.sh
+
+    - name: Build
+      run: CC=${{ matrix.CC }} CFLAGS="-fno-lto" HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make
+    - name: Test install
+      run: CC=${{ matrix.CC }} HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make install
+
+    - name: Register libraries
+      run: sudo ldconfig /usr/local/lib
+
+    - name: Build examples
+      run: CC=${{ matrix.CC }} HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make examples
+
+    - name: Run examples
+      run: CC=${{ matrix.CC }} HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make examples-run
+
+    - name: Examine build artifacts
+      run: ls -alh dist/*.so && sha256sum dist/*.so
