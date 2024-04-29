@@ -1,4 +1,4 @@
-name: Fedora Docker
+name: Fedora
 
 on:
   push:

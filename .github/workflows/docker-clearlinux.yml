@@ -1,4 +1,4 @@
-name: Debian
+name: Clear Linux
 
 on:
   push:
@@ -12,14 +12,17 @@ jobs:
       matrix:
         CC: ["clang", "gcc"]
         PORTABLE: ["0", "1"]
-        CONTAINER: ["debian:12-slim", "debian:testing-slim", "debian:unstable-slim"]
+        CONTAINER: ["clearlinux:latest"]
       fail-fast: false
     container: ${{ matrix.CONTAINER }}
     steps:
     - uses: actions/checkout@v4
 
-    - name: Install Debian deps
-      run: ./misc/install-debian-deps.sh
+    - name: Gather Clear Linux version info
+      run: swupd info
+
+    - name: Install Clear Linux deps
+      run: ./misc/install-clearlinux-deps.sh
 
     - name: Build
       run: CC=${{ matrix.CC }} CFLAGS="-fno-lto" HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make
