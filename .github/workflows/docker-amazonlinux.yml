@@ -10,9 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        CC: ["clang", "gcc10"]
+        CC: ["clang", "gcc"]
         PORTABLE: ["0", "1"]
-        CONTAINER: ["amazonlinux:2", "amazonlinux:latest"]
+        CONTAINER: ["amazonlinux:latest"]
       fail-fast: false
     container: ${{ matrix.CONTAINER }}
     steps:
