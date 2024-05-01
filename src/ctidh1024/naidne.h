@@ -22,6 +22,19 @@
 #define htole64(x) LE_64(x)
 #define le32toh(x) LE_32(x)
 #define le64toh(x) LE_64(x)
+#elif (defined(__Windows__) || defined(_WIN64))
+#include <stdlib.h>
+#if (BYTE_ORDER == LITTLE_ENDIAN)
+#define htole32(x) (x)
+#define le32toh(x) (x)
+#define htole64(x) (x)
+#define le64toh(x) (x)
+#elif (BYTE_ORDER == BIG_ENDIAN)
+#define htole32(x) _byteswap_ulong(x)
+#define le32toh(x) _byteswap_ulong(x)
+#define htole64(x) _byteswap_uint64(x)
+#define le64toh(x) _byteswap_uint64(x)
+#endif
 #else
 #include <endian.h>
 #endif

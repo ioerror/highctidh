@@ -45,6 +45,21 @@ endif
 ifeq ($(CC),gcc)
 BASE_CFLAGS+=
 endif
+ifeq ($(WINDOWS),1)
+BASE_CFLAGS :=-Wall -Wextra -pedantic -O2 -fwrapv -D__Windows__
+HIGHCTIDH_PORTABLE ?=1
+BASE_CFLAGS+=-DPLATFORM=${PLATFORM} -DPLATFORM_SIZE=${PLATFORM_SIZE}
+ifeq ($(CC),x86_64-w64-mingw32-gcc)
+BASE_CFLAGS+=-fpie -fPIC
+CFLAGS = $(BASE_CFLAGS)
+endif
+ifeq ($(CC),clang)
+HIGHCTIDH_PORTABLE ?=1
+BASE_CFLAGS+=-DPLATFORM=${PLATFORM} -DPLATFORM_SIZE=${PLATFORM_SIZE}
+CFLAGS = $(BASE_CFLAGS) -Wno-unused-command-line-argument
+LDFLAGS = -LAdvapi32.dll
+endif
+endif
 # Default to using fiat crypto, safe and portable but slow backend
 HIGHCTIDH_PORTABLE ?= 1
 ifeq	($(HIGHCTIDH_PORTABLE),1)

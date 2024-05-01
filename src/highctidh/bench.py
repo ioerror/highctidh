@@ -1,15 +1,16 @@
 from . import ctidh
 
-from platform import architecture, machine
-from os import uname 
+from platform import uname
+from platform import architecture
 from sys import byteorder
 import timeit
 
+OS = uname().system
+MACHINE = uname().machine
+ARCH = architecture()[0]
 def simple_bench():
-    print("Benchmark for {0} (endian: {1}), {2}, {3}".format(architecture()[0],
-                                                             byteorder,
-                                                             machine(),
-                                                             uname().sysname))
+    print("Benchmark for {0} ({1} endian), {2}, {3}".format(ARCH, byteorder,
+                                                            MACHINE, OS))
     sk_gen_511_t = timeit.timeit(
         stmt="ctidh511.csidh_private(alice_private_key)",
         setup="from highctidh import ctidh; ctidh511 = ctidh(511);alice_private_key = ctidh511.private_key()",
