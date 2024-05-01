@@ -1,20 +1,6 @@
 #include "randombytes.h"
 
 #include <stdlib.h>
-#ifndef _MSC_VER
-#include <unistd.h>
-#include <fcntl.h>
-#else // e.g. (defined(__Windows__) || defined (__WIN64))
-#include <basetsd.h>
-#define ssize_t SSIZE_T
-#include <windows.h>
-#define SystemFunction036 NTAPI SystemFunction036
-#include <ntsecapi.h>
-#undef SystemFunction036
-#pragma comment(lib, "advapi32.lib")
-ssize_t getrandom(char *buf, size_t buflen);
-#define getrandom(x, y) RtlGenRandom(x, y)
-#endif
 
 #include "crypto_classify.h"
 #include "random_namespace.h"
