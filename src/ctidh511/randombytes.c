@@ -12,6 +12,7 @@
 #include <ntsecapi.h>
 #undef SystemFunction036
 #pragma comment(lib, "advapi32.lib")
+ssize_t getrandom(void buf, size_t buflen);
 #define getrandom(x, y) RtlGenRandom(x, y)
 #endif
 
