@@ -163,11 +163,11 @@ Building on Solaris, CheriBSD, FreeBSD, NetBSD, and OpenBSD building is supporte
 `gmake` command. GNU/Linux and MacOS are supported with the `make` command.
 
 Windows support is extremely experimental. The Python and Golang modules may
-not be functionalon Windows. Building the main C library on Windows Server 2019
-and Windows Server 2022 should be possible with `clang` as is demonstrated in
-the continious integration configuration `windows-fiat-c-library-test.yml`. It
-has only been tested with the Windows Server 2022 image preloaded with `clang`,
-`bash`, `make`, and other related tools
+not be functional on Windows. Building the main C library on Windows Server
+2019 and Windows Server 2022 should be possible with `clang` as is demonstrated
+in the continuous integration configuration `windows-fiat-c-library-test.yml`.
+It has only been tested with the Windows Server 2022 image preloaded with
+`clang`, `bash`, `make`, and other related tools
 [https://github.com/actions/runner-images/blob/main/images/windows/Windows2022-Readme.md](available
 as a part of the CI configuration).
 
@@ -237,7 +237,7 @@ The original website was https://ctidh.isogeny.org/software.html
 The original authors of this software released high-ctidh in the public domain.
 All contributions made in this fork are also in the public domain.
 
-Please consult `docs/AUTHORS.md` for the original authorship informaton.
+Please consult `docs/AUTHORS.md` for the original authorship information.
 
 This forked project is funded through the [NGI Assure
 Fund](https://nlnet.nl/assure), a fund established by [NLnet](https://nlnet.nl)
