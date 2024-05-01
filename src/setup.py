@@ -235,7 +235,7 @@ elif PLATFORM == "sun4v" or PLATFORM == "i86pc":
     from distutils.sysconfig import get_config_vars as _get_config_vars
 
     _config_vars = _get_config_vars().copy()
-    default_cflags += [
+    default_cflags = [
         " -O2 -DNDEBUG -Wall -m64 -fPIC -fpie -DPIC -ffile-prefix-map=..=. "
     ]
     _config_vars["CFLAGS"] = default_cflags
@@ -270,7 +270,7 @@ elif PLATFORM == "x86_64" or PLATFORM == "AMD64" and OS == 'Windows':
     from distutils.sysconfig import get_config_vars as _get_config_vars
 
     _config_vars = _get_config_vars().copy()
-    default_cflags += [
+    default_cflags = [
         " -Wall -pedantic -O2 -fwrapv -ffile-prefix-map=..=."
     ]
     _config_vars["CFLAGS"] = default_cflags
