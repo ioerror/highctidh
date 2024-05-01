@@ -271,7 +271,7 @@ elif PLATFORM == "x86_64" and OS == 'Windows':
 
     _config_vars = _get_config_vars().copy()
     default_cflags += [
-        " -Wall -Wextra -pedantic -O2 -fwrapv -ffile-prefix-map=..=."
+        " -Wall -pedantic -O2 -fwrapv -ffile-prefix-map=..=."
     ]
     _config_vars["CFLAGS"] = default_cflags
 
