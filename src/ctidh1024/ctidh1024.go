@@ -6,11 +6,11 @@ package ctidh1024
 #include "binding1024.h"
 #include <csidh.h>
 
-extern ctidh_fillrandom fillrandom_custom;
+extern ctidh_fillrandom fillrandom_1024_custom;
 
 __attribute__((weak))
 void custom_gen_private(void *const context, private_key *priv) {
-  csidh_private_withrng(priv, (uintptr_t)context, fillrandom_custom);
+  csidh_private_withrng(priv, (uintptr_t)context, fillrandom_1024_custom);
 }
 */
 import "C"
