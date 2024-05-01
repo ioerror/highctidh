@@ -20,21 +20,25 @@ jobs:
           go-version: ${{ matrix.go-version }}
 
       - name: Display Go version
+        shell: bash
         run: go version
 
       - name: Install golang dependencies
+        shell: bash
         run: |
           export HIGHCTIDH_PORTABLE=1
           export CC=${{ matrix.CC }}
           go get -v ./src/ctidh511
 
       - name: Build golang
+        shell: bash
         run: |
           export HIGHCTIDH_PORTABLE=1
           export CC=${{ matrix.CC }}
           go build -v ./...
 
       - name: Golang test
+        shell: bash
         run: |
           export HIGHCTIDH_PORTABLE=1
           export CC=${{ matrix.CC }}
