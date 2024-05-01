@@ -154,7 +154,7 @@ base_src = [
     "int32_sort.c",
 ]
 
-cflags = get_config_var("CFLAGS").split()
+#cflags = get_config_var("CFLAGS").split()
 cflags = ["-Wextra"]
 cflags += ["-Wall", "-fpie", "-fPIC", "-fwrapv", "-pedantic", "-O2", "-g0", "-fno-lto"]
 cflags += ["-DGETRANDOM", f"-DPLATFORM={PLATFORM}", f"-DPLATFORM_SIZE={PLATFORM_SIZE}"]
