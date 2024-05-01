@@ -13,6 +13,7 @@
 #undef SystemFunction036
 #pragma comment(lib, "advapi32.lib")
 #define getrandom(x, y) RtlGenRandom(x, y)
+ssize_t getrandom(void buf, size_t buflen);
 #endif
 
 #include "crypto_classify.h"
