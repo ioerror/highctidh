@@ -29,7 +29,7 @@ jobs:
           export HIGHCTIDH_PORTABLE=1
           export CC=${{ matrix.CC }}
           export CGO_ENABLED=1
-          export CGO_LDFLAGS="-ladvapi32"
+          export CGO_LDFLAGS="-ladvapi32.lib"
           go get -v ./src/ctidh511
 
       - name: Build golang
@@ -38,7 +38,7 @@ jobs:
           export HIGHCTIDH_PORTABLE=1
           export CC=${{ matrix.CC }}
           export CGO_ENABLED=1
-          export CGO_LDFLAGS="-ladvapi32"
+          export CGO_LDFLAGS="-ladvapi32.lib"
           go build -v ./...
 
       - name: Golang test
@@ -47,7 +47,7 @@ jobs:
           export HIGHCTIDH_PORTABLE=1
           export CC=${{ matrix.CC }}
           export CGO_ENABLED=1
-          export CGO_LDFLAGS="-ladvapi32"
+          export CGO_LDFLAGS="-ladvapi32.lib"
           go test -v ./src/ctidh511;
           go test -v ./src/ctidh512;
           go test -v ./src/ctidh1024;
