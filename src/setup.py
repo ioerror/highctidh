@@ -129,7 +129,10 @@ if "CC" in environ:
     CC = str(environ["CC"])
     print(f"CC={CC}")
 
-VERSION = open("VERSION", "r").read().strip()
+try:
+    VERSION = open("src/VERSION", "r").read().strip()
+except AttributeError:
+    VERSION = "1.0.2024050101"
 
 base_src = [
     "crypto_classify.c",
