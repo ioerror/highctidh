@@ -287,7 +287,7 @@ elif PLATFORM == "x86_64" or PLATFORM == "AMD64" and OS == 'Windows':
         cflags += ["-DHIGHCTIDH_PORTABLE=" + HIGHCTIDH_PORTABLE]
     cflags += [f"-DPLATFORM={PLATFORM}", f"-DPLATFORM_SIZE={PLATFORM_SIZE}"]
     if CC == "clang":
-        cflangs += "-Wno-unused-command-line-argument"
+        cflags += "-Wno-unused-command-line-argument"
 elif PLATFORM == "x86_64":
     if PLATFORM_SIZE == 64:
         if OS == "Darwin":
