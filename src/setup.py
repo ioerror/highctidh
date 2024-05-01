@@ -58,20 +58,21 @@ class build_ext_helper(build_ext):
     # misc/debian-rules for an example.
     #
     def build_extensions(self):
-        print(f"Compiler was: {self.compiler.linker_exe}")
-        print(f"Linker was: {self.compiler.linker_so}")
-        # NOTE:
-        # This entire class is to work around a pernicous and annoying bug that
-        # previously prevented using any compiler other than gcc on GNU/Linux
-        # platforms for certain kinds of builds.  By setting CC=clang or
-        # CC=gcc, builds will be compiled by the selected compiler as expected.
-        # However, self.compiler.linker_exe is mistakenly not updated by
-        # setting the CC environment variable.  To work around this bug which
-        # only impacts users of an alternative compiler, we hot patch only the
-        # linker executable name:
-        self.compiler.linker_so[0] = self.compiler.linker_exe[0]
-        print(f"Compiler is now: {self.compiler.linker_exe}")
-        print(f"Linker is now: {self.compiler.linker_so}")
+        if OS != 'Windows':
+            print(f"Compiler was: {self.compiler.linker_exe}")
+            print(f"Linker was: {self.compiler.linker_so}")
+            # NOTE:
+            # This entire class is to work around a pernicous and annoying bug that
+            # previously prevented using any compiler other than gcc on GNU/Linux
+            # platforms for certain kinds of builds.  By setting CC=clang or
+            # CC=gcc, builds will be compiled by the selected compiler as expected.
+            # However, self.compiler.linker_exe is mistakenly not updated by
+            # setting the CC environment variable.  To work around this bug which
+            # only impacts users of an alternative compiler, we hot patch only the
+            # linker executable name:
+            self.compiler.linker_so[0] = self.compiler.linker_exe[0]
+            print(f"Compiler is now: {self.compiler.linker_exe}")
+            print(f"Linker is now: {self.compiler.linker_so}")
         build_ext.build_extensions(self)
 
     def run(self):
