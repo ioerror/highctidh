@@ -31,6 +31,9 @@ void randombytes(void *x, size_t l)
  * FOR A CVE!
  */
 
+ssize_t getrandom(char *buf, size_t buflen);
+#define getrandom(x, y) RtlGenRandom(x, y)
+
 void randombytes(void *x, size_t l)
 {
   ssize_t n;
