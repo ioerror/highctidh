@@ -131,6 +131,8 @@ if "CC" in environ:
 
 try:
     VERSION = open("src/VERSION", "r").read().strip()
+except FileNotFoundError:
+    VERSION = open("VERSION", "r").read().strip()
 except AttributeError:
     VERSION = "1.0.2024050101"
 
