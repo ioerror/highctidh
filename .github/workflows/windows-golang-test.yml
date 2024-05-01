@@ -38,9 +38,8 @@ jobs:
         run: |
           export HIGHCTIDH_PORTABLE=1
           export CC=${{ matrix.CC }}
-          cd src; go test -v ./...;
-          cd src/ctidh511; go test -v ./...;
-          cd src/ctidh512; go test -v ./...;
-          cd src/ctidh1024; go test -v ./...;
-          cd src/ctidh2048; go test -v ./...;
+          go test -v ./src/ctidh511;
+          go test -v ./src/ctidh512;
+          go test -v ./src/ctidh1024;
+          go test -v ./src/ctidh2048;
 
