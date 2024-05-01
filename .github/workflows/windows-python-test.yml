@@ -25,7 +25,6 @@ jobs:
     - name: Gather runtime environment
       shell: bash
       run: |
-       ver
        python -V 
        bash --version
 
