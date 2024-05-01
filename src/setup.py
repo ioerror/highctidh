@@ -58,20 +58,22 @@ class build_ext_helper(build_ext):
     # misc/debian-rules for an example.
     #
     def build_extensions(self):
-        print(f"Compiler was: {self.compiler.linker_exe}")
-        print(f"Linker was: {self.compiler.linker_so}")
-        # NOTE:
-        # This entire class is to work around a pernicous and annoying bug that
-        # previously prevented using any compiler other than gcc on GNU/Linux
-        # platforms for certain kinds of builds.  By setting CC=clang or
-        # CC=gcc, builds will be compiled by the selected compiler as expected.
-        # However, self.compiler.linker_exe is mistakenly not updated by
-        # setting the CC environment variable.  To work around this bug which
-        # only impacts users of an alternative compiler, we hot patch only the
-        # linker executable name:
-        self.compiler.linker_so[0] = self.compiler.linker_exe[0]
-        print(f"Compiler is now: {self.compiler.linker_exe}")
-        print(f"Linker is now: {self.compiler.linker_so}")
+        print(self.compiler)
+        if OS != 'Windows':
+            print(f"Compiler was: {self.compiler.linker_exe}")
+            print(f"Linker was: {self.compiler.linker_so}")
+            # NOTE:
+            # This entire class is to work around a pernicous and annoying bug that
+            # previously prevented using any compiler other than gcc on GNU/Linux
+            # platforms for certain kinds of builds.  By setting CC=clang or
+            # CC=gcc, builds will be compiled by the selected compiler as expected.
+            # However, self.compiler.linker_exe is mistakenly not updated by
+            # setting the CC environment variable.  To work around this bug which
+            # only impacts users of an alternative compiler, we hot patch only the
+            # linker executable name:
+            self.compiler.linker_so[0] = self.compiler.linker_exe[0]
+            print(f"Compiler is now: {self.compiler.linker_exe}")
+            print(f"Linker is now: {self.compiler.linker_so}")
         build_ext.build_extensions(self)
 
     def run(self):
@@ -129,7 +131,12 @@ if "CC" in environ:
     CC = str(environ["CC"])
     print(f"CC={CC}")
 
-VERSION = open("VERSION", "r").read().strip()
+try:
+    VERSION = open("src/VERSION", "r").read().strip()
+except FileNotFoundError:
+    VERSION = open("VERSION", "r").read().strip()
+except AttributeError:
+    VERSION = "3.141592653"
 
 base_src = [
     "crypto_classify.c",
@@ -149,8 +156,11 @@ base_src = [
     "int32_sort.c",
 ]
 
-cflags = get_config_var("CFLAGS").split()
-cflags = ["-Wextra"]
+cflags = get_config_var("CFLAGS")
+if cflags is not None and cflags is str:
+  cflags = cflags.split()
+else:
+  cflags = ["-Wextra"]
 cflags += ["-Wall", "-fpie", "-fPIC", "-fwrapv", "-pedantic", "-O2", "-g0", "-fno-lto"]
 cflags += ["-DGETRANDOM", f"-DPLATFORM={PLATFORM}", f"-DPLATFORM_SIZE={PLATFORM_SIZE}"]
 cflags += [
@@ -176,13 +186,11 @@ if CC == "gcc":
         ]
 
 print(f"Building for platform: {PLATFORM} on {OS}")
-if PLATFORM == "aarch64":
+if PLATFORM == "aarch64" or PLATFORM == "arm64":
+    cflags += ["-D__ARM64__"]
     if OS == "Darwin":
       cflags += ["-D__Darwin__"]
-      if CC == "clang":
-          cflags += ["-DHIGHCTIDH_PORTABLE=1"]
-      if CC == "gcc":
-          cflags += ["-DHIGHCTIDH_PORTABLE=1"]
+      cflags += ["-DHIGHCTIDH_PORTABLE=1"]
     else:
       if CC == "clang":
           cflags += ["-DHIGHCTIDH_PORTABLE=1"]
@@ -229,7 +237,7 @@ elif PLATFORM == "sun4v" or PLATFORM == "i86pc":
     from distutils.sysconfig import get_config_vars as _get_config_vars
 
     _config_vars = _get_config_vars().copy()
-    default_cflags += [
+    default_cflags = [
         " -O2 -DNDEBUG -Wall -m64 -fPIC -fpie -DPIC -ffile-prefix-map=..=. "
     ]
     _config_vars["CFLAGS"] = default_cflags
@@ -254,7 +262,7 @@ elif PLATFORM == "sun4v" or PLATFORM == "i86pc":
             cflags += ["-fforce-enable-int128"]
     cflags += ["-Wextra", "-fwrapv", "-pedantic", "-Werror", "-DGETRANDOM"]
     cflags += [f"-DPLATFORM={PLATFORM}", f"-DPLATFORM_SIZE={PLATFORM_SIZE}"]
-elif PLATFORM == "x86_64" and OS == 'Windows':
+elif PLATFORM == "x86_64" and OS == 'Windows' or PLATFORM == "AMD64" and OS == 'Windows':
     # Windows only builds with clang on Windows under the CI
     # It should also build with other compilers.
     # As with Solaris we wrap the function that returns these flags internally
@@ -264,8 +272,8 @@ elif PLATFORM == "x86_64" and OS == 'Windows':
     from distutils.sysconfig import get_config_vars as _get_config_vars
 
     _config_vars = _get_config_vars().copy()
-    default_cflags += [
-        " -Wall -Wextra -pedantic -O2 -fwrapv -ffile-prefix-map=..=."
+    default_cflags = [
+        " -Wall -pedantic -O2 -fwrapv -ffile-prefix-map=..=."
     ]
     _config_vars["CFLAGS"] = default_cflags
 
@@ -275,21 +283,21 @@ elif PLATFORM == "x86_64" and OS == 'Windows':
     _wrapped_distutils.get_config_vars = get_config_vars_wrapper
     # Set Windows specific build options
     cflags = ["-D__Windows__"]
-    ldflags = ["-LAdvapi32.dll"]
+    ldflags = ["-LAdvapi32.lib"]
+    if PLATFORM == "AMD64":
+        cflags += ["-D__x86_64__"]
+        cflags += ["-D__AMD64__"]
+        cflags += ["-DHIGHCTIDH_PORTABLE=" + HIGHCTIDH_PORTABLE]
     if PLATFORM == "x86_64":
         cflags += ["-D__x86_64__"]
         cflags += ["-DHIGHCTIDH_PORTABLE=" + HIGHCTIDH_PORTABLE]
     cflags += [f"-DPLATFORM={PLATFORM}", f"-DPLATFORM_SIZE={PLATFORM_SIZE}"]
-    if CC == "clang":
-        cflangs += "-Wno-unused-command-line-argument"
 elif PLATFORM == "x86_64":
     if PLATFORM_SIZE == 64:
+        cflags += ["-D__x86_64__"]
         if OS == "Darwin":
           cflags += ["-D__Darwin__"]
-          if CC == "clang":
-              cflags += ["-D__x86_64__"]
-          if CC == "gcc":
-              cflags += ["-D__x86_64__"]
+          cflags += ["-DHIGHCTIDH_PORTABLE=1"]
         else:
           if CC == "clang":
               cflags += ["-DHIGHCTIDH_PORTABLE=1"]
@@ -386,6 +394,10 @@ print(f"511 files: {src_511=}")
 print(f"512 files: {src_512=}")
 print(f"1024 files: {src_1024=}")
 print(f"2048 files: {src_2048=}")
+print(f"511 cflags: {extra_compile_args_511=}")
+print(f"512 cflags: {extra_compile_args_512=}")
+print(f"1024 cflags: {extra_compile_args_1024=}")
+print(f"2048 cflags: {extra_compile_args_2048=}")
 if __name__ == "__main__":
     setup(
         name="highctidh",

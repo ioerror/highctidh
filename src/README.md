@@ -159,17 +159,36 @@ The C library and bindings have been tested on the following operating systems:
 
 ## Notes on building
 
-Building on Solaris, CheriBSD, FreeBSD, NetBSD, and OpenBSD building is supported using the
-`gmake` command. GNU/Linux and MacOS are supported with the `make` command.
+Building on Solaris, CheriBSD, FreeBSD, NetBSD, and OpenBSD building is
+supported using the `gmake` command. GNU/Linux and MacOS are supported with the
+`make` command.
 
-Windows support is extremely experimental. The Python and Golang modules may
-not be functional on Windows. Building the main C library on Windows Server
-2019 and Windows Server 2022 should be possible with `clang` as is demonstrated
-in the continuous integration configuration `windows-fiat-c-library-test.yml`.
-It has only been tested with the Windows Server 2022 image preloaded with
-`clang`, `bash`, `make`, and other related tools
+MacOS 11, 12, 13, and 14 support is functional for building the C library.
+MacOS 14 support is functional for the Golang bindings with Golang 1.19, 1.20,
+1.21.x, and 1.22.0.
+MacOS 14 supports the Python module with Python 3.9, 3.10, 3.11, and 3.12.
+
+Windows support is extremely experimental. The Python and Golang modules are
+almost certianly not be functional on Windows. Building the main C library on
+Windows Server 2019 and Windows Server 2022 should be possible with `clang` as
+is demonstrated in the continuous integration configuration
+`windows-fiat-c-library-test.yml`.  It has only been tested with the Windows
+Server 2022 image preloaded with `clang`, `bash`, `make`, and other related
+tools
 [https://github.com/actions/runner-images/blob/main/images/windows/Windows2022-Readme.md](available
 as a part of the CI configuration).
+
+Building and performing minimal testing manually requires using `bash` as
+provided by `git` on Windows, GNU `make`, and `clang` using the following
+commands:
+```
+export HIGHCTIDH_PORTABLE=1
+export WINDOWS=1
+export CC=${{ matrix.CC }} MAKE=make
+mkdir -p src/build/src
+mkdir -p src/dist/tmp
+cd src/ && make && make testrandom test512 && ./testrandom && ./test512
+```
 
 ### Additional notes on building the C library
  
