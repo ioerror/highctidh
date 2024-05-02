@@ -8,8 +8,10 @@
 
 #if 511 == BITS
 
-//void fillrandom_custom( void *const outptr, const size_t outsz, const uintptr_t context);
+#if (!defined(__Windows__) || !defined(__WIN64))
+void fillrandom_custom( void *const outptr, const size_t outsz, const uintptr_t context);
 void highctidh_511_go_fillrandom(void *, void *, size_t);
+#endif
 #define NAMESPACEBITS(x) highctidh_511_##x
 #define NAMESPACEGENERIC(x) highctidh_511_##x
 
