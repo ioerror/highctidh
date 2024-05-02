@@ -281,13 +281,11 @@ elif PLATFORM == "x86_64" or PLATFORM == "AMD64" and OS == 'Windows':
     _wrapped_distutils.get_config_vars = get_config_vars_wrapper
     # Set Windows specific build options
     cflags = ["-D__Windows__"]
-    ldflags = ["-LAdvapi32.dll"]
+    ldflags = ["-LAdvapi32.lib"]
     if PLATFORM == "x86_64":
         cflags += ["-D__x86_64__"]
         cflags += ["-DHIGHCTIDH_PORTABLE=" + HIGHCTIDH_PORTABLE]
     cflags += [f"-DPLATFORM={PLATFORM}", f"-DPLATFORM_SIZE={PLATFORM_SIZE}"]
-    if CC == "clang":
-        cflags += ["-Wno-unused-command-line-argument"]
 elif PLATFORM == "x86_64":
     if PLATFORM_SIZE == 64:
         if OS == "Darwin":
