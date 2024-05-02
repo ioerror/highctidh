@@ -41,7 +41,7 @@ jobs:
           export HIGHCTIDH_PORTABLE=1
           export CGO_ENABLED=1
           export CGO_CFLAGS="-DHIGHCTIDH_PORTABLE=1 -DCGONUTS -D__Windows__"
-          go build -v ./...
+          go build -x -v ./...
 
       - name: Golang test
         shell: bash
@@ -49,5 +49,5 @@ jobs:
           export HIGHCTIDH_PORTABLE=1
           export CGO_ENABLED=1
           export CGO_CFLAGS="-DHIGHCTIDH_PORTABLE=1 -DCGONUTS -D__Windows__"
-          go test -v ./...
+          go test -x -v ./...
 

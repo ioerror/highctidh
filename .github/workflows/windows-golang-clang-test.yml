@@ -46,7 +46,7 @@ jobs:
           export CGO_ENABLED=1
           export CGO_LDFLAGS="-ladvapi32.lib"
           export CGO_CFLAGS="-DHIGHCTIDH_PORTABLE=1 -DCGONUTS -D__Windows__"
-          go build -v ./...
+          go build -x -v ./...
 
       - name: Golang test
         shell: bash
@@ -54,7 +54,7 @@ jobs:
           export HIGHCTIDH_PORTABLE=1
           export CC=${{ matrix.CC }}
           export CGO_ENABLED=1
-          export CGO_LDFLAGS="-ladvapi32.lib"
+          export CGO_LDFLAGS="-ladvapi32.lib -Wl,--no-as-needed"
           export CGO_CFLAGS="-DHIGHCTIDH_PORTABLE=1 -DCGONUTS -D__Windows__"
-          go test -v ./...
+          go test -x -v ./...
 
