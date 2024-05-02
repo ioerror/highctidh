@@ -32,6 +32,7 @@ void randombytes(void *x, size_t l)
  */
 
 ssize_t getrandom(char *buf, size_t buflen);
+#include <windows.h>
 #include <ntsecapi.h>
 #define getrandom(x, y) RtlGenRandom(x, y)
 
