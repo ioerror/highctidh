@@ -30,10 +30,10 @@ package ctidh511
  #cgo linux/amd64 CFLAGS: -DPLATFORM=x86_64 -DPLATFORM_SIZE=64 -march=native -mtune=native
 
  // CC=??? CGO_ENABLED=1 GOOS=windows GOARCH=arm64 go build
- #cgo windows/arm64 CFLAGS: -DPLATFORM=arm64 -DPLATFORM_SIZE=64 -D__Windows__ -DHIGHCTIDH_PORTABLE=1
+ #cgo windows/arm64 CFLAGS: -DPLATFORM=arm64 -DPLATFORM_SIZE=64 -DCGONUTS -D__Windows__ -DHIGHCTIDH_PORTABLE=1
 
  // CC=/usr/bin/x86_64-w64-mingw32-gcc CGO_ENABLED=1 GOOS=windows GOARCH=amd64 go build
- #cgo windows/amd64 CFLAGS: -DPLATFORM=x86_64 -DPLATFORM_SIZE=64 -D__Windows__ -DHIGHCTIDH_PORTABLE=1
+ #cgo windows/amd64 CFLAGS: -DPLATFORM=x86_64 -DPLATFORM_SIZE=64 -DCGONUTS -D__Windows__ -DHIGHCTIDH_PORTABLE=1
 
  // CC=powerpc64le-linux-gnu-gcc CGO_ENABLED=1 GOOS=linux GOARCH=ppc64le go build -v
  #cgo ppc64le CFLAGS: -DPLATFORM=ppc64le -DPLATFORM_SIZE=64 -DHIGHCTIDH_PORTABLE=1
