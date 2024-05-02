@@ -1,0 +1,44 @@
+name: MacOS Python build and test
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        OS: ["macos-11", "macos-12", "macos-13", "macos-14"]
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
+      fail-fast: false
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version:  ${{ matrix.python-version }}
+
+    - name: Gather runtime environment
+      shell: bash
+      run: |
+       python -V 
+       bash --version
+
+    - name: Install dependencies
+      shell: bash
+      run: python -m pip install --upgrade build pip setuptools wheel pytest pytest-xdist
+
+    - name: Build wheel
+      shell: bash
+      run: |
+        export HIGHCTIDH_PORTABLE=1
+        export MAKE=make
+        cd src && python -m build
+        pip install --force-reinstall dist/highctidh-*.whl
+
+    - name: Test with pytest
+      shell: bash
+      run: |
+        python -c 'from highctidh import bench; bench.simple_bench()'
+        py.test -v
