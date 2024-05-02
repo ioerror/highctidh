@@ -9,7 +9,7 @@
 #if 2048 == BITS
 
 #if (!defined(__Windows__) || !defined(__WIN64))
-void fillrandom_custom( void *const outptr, const size_t outsz, const uintptr_t context);
+void fillrandom_2048_custom( void *const outptr, const size_t outsz, const uintptr_t context);
 void highctidh_2048_go_fillrandom(void *, void *, size_t);
 #endif
 #define NAMESPACEBITS(x) highctidh_2048_##x
