@@ -162,6 +162,11 @@ The C library and bindings have been tested on the following operating systems:
 Building on Solaris, CheriBSD, FreeBSD, NetBSD, and OpenBSD building is supported using the
 `gmake` command. GNU/Linux and MacOS are supported with the `make` command.
 
+MacOS 11, 12, 13, and 14 support is functional for building the C library.
+MacOS 14 support is functional for the Golang bindings with Golang 1.19, 1.20,
+1.21.x, and 1.22.0.
+MacOS 14 supports the Python module with Python 3.9, 3.10, 3.11, and 3.12.
+
 Windows support is extremely experimental. The Python and Golang modules may
 not be functional on Windows. Building the main C library on Windows Server
 2019 and Windows Server 2022 should be possible with `clang` as is demonstrated
