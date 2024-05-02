@@ -7,9 +7,11 @@ jobs:
     runs-on: ${{ matrix.OS }}
     strategy:
       matrix:
-        OS: ["windows-2019", "windows-2022"]
+        #OS: ["windows-2019", "windows-2022"]
+        OS: ["windows-2022"]
         CC: ["clang"]
-        go-version: [ "1.20", "1.21.x", "1.22.x"]
+        #go-version: [ "1.20", "1.21.x", "1.22.x"]
+        go-version: ["1.22.x"]
       fail-fast: false
 
     steps:
@@ -43,7 +45,7 @@ jobs:
           export CC=${{ matrix.CC }}
           export CGO_ENABLED=1
           export CGO_LDFLAGS="-DCGONUTS -ladvapi32.lib"
-          go build -ldflags=-linkmode=internal -v ./...
+          go build -ldflags=-extldflags=-Wl,-ld_classic -v ./...
 
       - name: Golang test
         shell: bash
@@ -52,8 +54,8 @@ jobs:
           export CC=${{ matrix.CC }}
           export CGO_ENABLED=1
           export CGO_LDFLAGS="-DCGONUTS -ladvapi32.lib"
-          go test -ldflags=-linkmode=internal -v ./src/ctidh511;
-          go test -ldflags=-linkmode=internal -v ./src/ctidh512;
-          go test -ldflags=-linkmode=internal -v ./src/ctidh1024;
-          go test -ldflags=-linkmode=internal -v ./src/ctidh2048;
+          go test -ldflags=-extldflags=-Wl,-ld_classic -v ./src/ctidh511;
+          go test -ldflags=-extldflags=-Wl,-ld_classic -v ./src/ctidh512;
+          go test -ldflags=-extldflags=-Wl,-ld_classic -v ./src/ctidh1024;
+          go test -ldflags=-extldflags=-Wl,-ld_classic -v ./src/ctidh2048;
 
