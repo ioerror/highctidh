@@ -32,6 +32,9 @@ jobs:
           export CGO_ENABLED=1
           export CGO_LDFLAGS="-ladvapi32.lib"
           go get -v ./src/ctidh511
+          go get -v ./src/ctidh512
+          go get -v ./src/ctidh1024
+          go get -v ./src/ctidh2048
 
       - name: Build golang
         shell: bash
@@ -39,7 +42,7 @@ jobs:
           export HIGHCTIDH_PORTABLE=1
           export CC=${{ matrix.CC }}
           export CGO_ENABLED=1
-          export CGO_LDFLAGS="-ladvapi32.lib"
+          export CGO_LDFLAGS="-DCGONUTS -ladvapi32.lib -ldflags=-linkmode=internal"
           go build -v ./...
 
       - name: Golang test
@@ -48,7 +51,7 @@ jobs:
           export HIGHCTIDH_PORTABLE=1
           export CC=${{ matrix.CC }}
           export CGO_ENABLED=1
-          export CGO_LDFLAGS="-ladvapi32.lib"
+          export CGO_LDFLAGS="-DCGONUTS -ladvapi32.lib -ldflags=-linkmode=internal"
           go test -v ./src/ctidh511;
           go test -v ./src/ctidh512;
           go test -v ./src/ctidh1024;
