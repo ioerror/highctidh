@@ -1,4 +1,4 @@
-name: MacOS Golang clang build and test
+name: MacOS Golang build and test
 
 on: [push]
 
