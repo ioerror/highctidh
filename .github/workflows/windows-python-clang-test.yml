@@ -1,4 +1,4 @@
-name: Windows and MacOS Python clang build and test
+name: Windows Python clang build and test
 
 on: [push]
 
@@ -7,7 +7,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        OS: ["windows-2022", "macos-latest"]
+        OS: ["windows-2022"]
         CC: ["clang"]
         python-version: ["3.9", "3.10", "3.11", "3.12"]
         exclude:
