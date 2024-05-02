@@ -24,19 +24,13 @@ jobs:
         shell: bash
         run: go version
 
-      - name: Downgrade mingw due to cgo
-        shell: bash
-        run: |
-          choco install -y make
-          choco install -y mingw --version 10.2.0 --allow-downgrade
-
       - name: Install golang dependencies
         shell: bash
         run: |
           export HIGHCTIDH_PORTABLE=1
           export CGO_ENABLED=1
           export CGO_LDFLAGS="-DCGONUTS"
-          export CC=x86_64-w64-mingw32-gcc.exe
+          export CGO_CFLAGS="-DHIGHCTIDH_PORTABLE=1 -DCGONUTS -D__Windows__"
           go get -v ./src/ctidh511
           go get -v ./src/ctidh512
           go get -v ./src/ctidh1024
@@ -48,7 +42,6 @@ jobs:
           export HIGHCTIDH_PORTABLE=1
           export CGO_ENABLED=1
           export CGO_CFLAGS="-DHIGHCTIDH_PORTABLE=1 -DCGONUTS -D__Windows__"
-          export CC=x86_64-w64-mingw32-gcc.exe
           go build -x -v ./...
 
       - name: Golang test
@@ -57,7 +50,5 @@ jobs:
           export HIGHCTIDH_PORTABLE=1
           export CGO_ENABLED=1
           export CGO_CFLAGS="-DHIGHCTIDH_PORTABLE=1 -DCGONUTS -D__Windows__"
-          export CC=x86_64-w64-mingw32-gcc.exe
-          go clean -x -cache
           go test -x -v ./...
 
