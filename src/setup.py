@@ -182,7 +182,8 @@ if CC == "gcc":
         ]
 
 print(f"Building for platform: {PLATFORM} on {OS}")
-if PLATFORM == "aarch64":
+if PLATFORM == "aarch64" || PLATFORM == "arm64":
+    cflags += ["-D__ARM64__"]
     if OS == "Darwin":
       cflags += ["-D__Darwin__"]
       if CC == "clang":
@@ -390,6 +391,10 @@ print(f"511 files: {src_511=}")
 print(f"512 files: {src_512=}")
 print(f"1024 files: {src_1024=}")
 print(f"2048 files: {src_2048=}")
+print(f"511 cflags: {extra_compile_args_511=}")
+print(f"512 cflags: {extra_compile_args_512=}")
+print(f"1024 cflags: {extra_compile_args_1024=}")
+print(f"2048 cflags: {extra_compile_args_2048=}")
 if __name__ == "__main__":
     setup(
         name="highctidh",
