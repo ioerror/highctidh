@@ -11,6 +11,6 @@ void fillrandom_512_custom(
   const size_t outsz,
   const uintptr_t context)
 {
-  highctidh_512_go_fillrandom((void *)context, outptr, outsz);
+  go_fillrandom((void *)context, outptr, outsz);
 }
 #endif
