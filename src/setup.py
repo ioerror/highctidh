@@ -186,10 +186,7 @@ if PLATFORM == "aarch64" or PLATFORM == "arm64":
     cflags += ["-D__ARM64__"]
     if OS == "Darwin":
       cflags += ["-D__Darwin__"]
-      if CC == "clang":
-          cflags += ["-DHIGHCTIDH_PORTABLE=1"]
-      if CC == "gcc":
-          cflags += ["-DHIGHCTIDH_PORTABLE=1"]
+      cflags += ["-DHIGHCTIDH_PORTABLE=1"]
     else:
       if CC == "clang":
           cflags += ["-DHIGHCTIDH_PORTABLE=1"]
