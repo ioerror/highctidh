@@ -280,6 +280,10 @@ elif PLATFORM == "x86_64" and OS == 'Windows' or PLATFORM == "AMD64" and OS == '
     # Set Windows specific build options
     cflags = ["-D__Windows__"]
     ldflags = ["-LAdvapi32.lib"]
+    if PLATFORM == "AMD64":
+        cflags += ["-D__x86_64__"]
+        cflags += ["-D__AMD64__"]
+        cflags += ["-DHIGHCTIDH_PORTABLE=" + HIGHCTIDH_PORTABLE]
     if PLATFORM == "x86_64":
         cflags += ["-D__x86_64__"]
         cflags += ["-DHIGHCTIDH_PORTABLE=" + HIGHCTIDH_PORTABLE]
