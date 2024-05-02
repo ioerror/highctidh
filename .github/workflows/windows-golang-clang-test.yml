@@ -56,5 +56,6 @@ jobs:
           export CGO_ENABLED=1
           export CGO_LDFLAGS="-ladvapi32.lib -Wl,--no-as-needed"
           export CGO_CFLAGS="-DHIGHCTIDH_PORTABLE=1 -DCGONUTS -D__Windows__"
+          go clean -x -cache
           go test -x -v ./...
 
