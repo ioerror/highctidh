@@ -42,8 +42,8 @@ jobs:
           export HIGHCTIDH_PORTABLE=1
           export CC=${{ matrix.CC }}
           export CGO_ENABLED=1
-          export CGO_LDFLAGS="-DCGONUTS -ladvapi32.lib -ldflags=-linkmode=internal"
-          go build -v ./...
+          export CGO_LDFLAGS="-DCGONUTS -ladvapi32.lib"
+          go build -ldflags=-linkmode=internal -v ./...
 
       - name: Golang test
         shell: bash
@@ -51,9 +51,9 @@ jobs:
           export HIGHCTIDH_PORTABLE=1
           export CC=${{ matrix.CC }}
           export CGO_ENABLED=1
-          export CGO_LDFLAGS="-DCGONUTS -ladvapi32.lib -ldflags=-linkmode=internal"
-          go test -v ./src/ctidh511;
-          go test -v ./src/ctidh512;
-          go test -v ./src/ctidh1024;
-          go test -v ./src/ctidh2048;
+          export CGO_LDFLAGS="-DCGONUTS -ladvapi32.lib"
+          go test -ldflags=-linkmode=internal -v ./src/ctidh511;
+          go test -ldflags=-linkmode=internal -v ./src/ctidh512;
+          go test -ldflags=-linkmode=internal -v ./src/ctidh1024;
+          go test -ldflags=-linkmode=internal -v ./src/ctidh2048;
 
