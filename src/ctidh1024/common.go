@@ -97,7 +97,7 @@ func test_go_fillrandom(context unsafe.Pointer, outptr []byte) {
 }
 
 // This is called from the C library, DO NOT CHANGE THE FUNCTION INTERFACE
-//export highctidh_1024_go_fillrandom
+// highctidh_1024_go_fillrandom
 func highctidh_1024_go_fillrandom(context unsafe.Pointer, outptr unsafe.Pointer, outsz C.size_t) {
 	rng := gopointer.Restore(context).(io.Reader)
 	buf := make([]byte, outsz)
