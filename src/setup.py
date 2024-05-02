@@ -182,7 +182,7 @@ if CC == "gcc":
         ]
 
 print(f"Building for platform: {PLATFORM} on {OS}")
-if PLATFORM == "aarch64" || PLATFORM == "arm64":
+if PLATFORM == "aarch64" or PLATFORM == "arm64":
     cflags += ["-D__ARM64__"]
     if OS == "Darwin":
       cflags += ["-D__Darwin__"]
