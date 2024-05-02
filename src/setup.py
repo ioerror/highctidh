@@ -261,7 +261,7 @@ elif PLATFORM == "sun4v" or PLATFORM == "i86pc":
             cflags += ["-fforce-enable-int128"]
     cflags += ["-Wextra", "-fwrapv", "-pedantic", "-Werror", "-DGETRANDOM"]
     cflags += [f"-DPLATFORM={PLATFORM}", f"-DPLATFORM_SIZE={PLATFORM_SIZE}"]
-elif PLATFORM == "x86_64" or PLATFORM == "AMD64" and OS == 'Windows':
+elif PLATFORM == "x86_64" and OS == 'Windows' or PLATFORM == "AMD64" and OS == 'Windows':
     # Windows only builds with clang on Windows under the CI
     # It should also build with other compilers.
     # As with Solaris we wrap the function that returns these flags internally
@@ -289,12 +289,10 @@ elif PLATFORM == "x86_64" or PLATFORM == "AMD64" and OS == 'Windows':
     cflags += [f"-DPLATFORM={PLATFORM}", f"-DPLATFORM_SIZE={PLATFORM_SIZE}"]
 elif PLATFORM == "x86_64":
     if PLATFORM_SIZE == 64:
+        cflags += ["-D__x86_64__"]
         if OS == "Darwin":
           cflags += ["-D__Darwin__"]
-          if CC == "clang":
-              cflags += ["-D__x86_64__"]
-          if CC == "gcc":
-              cflags += ["-D__x86_64__"]
+          cflags += ["-DHIGHCTIDH_PORTABLE=1"]
         else:
           if CC == "clang":
               cflags += ["-DHIGHCTIDH_PORTABLE=1"]
