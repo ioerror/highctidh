@@ -16,7 +16,7 @@ package ctidh511
  // CC=clang CGO_ENABLED=1 GOOS=darwin GOARCH=arm64 go build -v
  #cgo darwin/arm64 CFLAGS: -DPLATFORM=aarch64 -DPLATFORM_SIZE=64 -D__ARM64__ -D__Darwin__ -DHIGHCTIDH_PORTABLE=1
 
- // export CGO_CFLAGS_ALLOW="-fforce-enable-int128";
+ // CGO_CFLAGS_ALLOW="-fforce-enable-int128";
  // CC=clang CGO_ENABLED=1 GOOS=linux GOARCH=arm ARMVER=7  go build
  #cgo arm CFLAGS: -DPLATFORM=arm -DPLATFORM_SIZE=32 -D__ARM32__ -DHIGHCTIDH_PORTABLE=1
 
@@ -69,7 +69,7 @@ package ctidh511
  // With clang, -fforce-enable-int128 must be added to the CFLAGS
  #cgo mips CFLAGS: -DPLATFORM=mips -DPLATFORM_SIZE=32 -DHIGHCTIDH_PORTABLE=1
 
- // export CGO_CFLAGS_ALLOW="-fforce-enable-int128";
+ // CGO_CFLAGS_ALLOW="-fforce-enable-int128";
  // CC=clang CGO_ENABLED=1 GOOS=linux GOARCH=386  go build
  #cgo 386 CFLAGS: -DPLATFORM=i386 -DPLATFORM_SIZE=32 -fforce-enable-int128 -D__i386__ -DHIGHCTIDH_PORTABLE=1
 
