@@ -1,7 +1,7 @@
 package ctidh512
 
 /*
- #cgo CFLAGS: -DBITS=512 -DGETRANDOM -DCGONUTS -O2
+ #cgo CFLAGS: -DBITS=512 -DCGONUTS -O2
  #cgo LDFLAGS:
  #cgo linux CFLAGS: -DBITS=512 -DGETRANDOM -DCGONUTS -Wformat -Werror=format-security -D_FORTIFY_SOURCE=2 -fstack-protector-all -fpie -fPIC -O2
  #cgo linux LDFLAGS: -Wl,-z,noexecstack -Wl,-z,relro
