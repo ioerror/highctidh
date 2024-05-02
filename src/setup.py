@@ -58,6 +58,7 @@ class build_ext_helper(build_ext):
     # misc/debian-rules for an example.
     #
     def build_extensions(self):
+        print(self.compiler)
         if OS != 'Windows':
             print(f"Compiler was: {self.compiler.linker_exe}")
             print(f"Linker was: {self.compiler.linker_so}")
