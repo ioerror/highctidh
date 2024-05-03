@@ -45,7 +45,7 @@ jobs:
           -e "CC=${{ matrix.CC }}" \
           -e "HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }}" \
           -e "CFLAGS=-fno-lto" \
-          --rm -it \
+          --rm \
           ${{ matrix.DOCKER_ARCH_ARGS}} \
           /bin/bash \
           -c "cd /highctidh && ./misc/install-alpine-deps.sh && make alpine-multi-arch"
