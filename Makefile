@@ -65,10 +65,10 @@ examples-run:
 	cd src; time ./example-ctidh2048;
 
 alpine-multi-arch-deps:
-	$(Attempting to install dependencies);
+	$(Attempting to install dependencies)
 	uname -a;
 	./misc/install-alpine-deps.sh;
-	$(Attempting to build, install, and test);
+	$(Attempting to build, install, and test)
 
 alpine-multi-arch: alpine-multi-arch-deps library install examples examples-run test-python 
 	$(Hopefully the above was successful)
