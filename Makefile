@@ -46,7 +46,7 @@ test-quick:
 	`pwd`/src/test-quick.sh;
 
 test-python:
-	cd src && `pwd`/test-python.sh;
+	cd src/; $(MAKE) -f Makefile.packages test-python;
 
 test-go:
 	cd src; go test -v ./...;

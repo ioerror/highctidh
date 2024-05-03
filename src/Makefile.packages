@@ -73,6 +73,9 @@ ${WHEEL_NAME}:
 test:
 	python3 setup.py test
 
+test-python:
+	`pwd`/test-python.sh;
+
 sdist: ${SDIST_GZ}
 ${SDIST_GZ}:
 	-mkdir -p dist/source
