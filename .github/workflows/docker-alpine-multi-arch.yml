@@ -12,8 +12,8 @@ jobs:
       matrix:
         CC: ["clang"]
         PORTABLE: ["1"]
-        CONTAINER: ["alpine:3.19.1"]
-        ARCH: ["amd64", "armhf", "arm32v7", "i386", "aarch64", "ppc64le",
+        CONTAINER: ["alpine"]
+        ARCH: ["amd64", "arm/v6", "arm/v7", "i386", "aarch64", "ppc64le",
                "riscv64", "s390x"]
       fail-fast: false
     container: ${{ matrix.ARCH }}/${{ matrix.CONTAINER }}
