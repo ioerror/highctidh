@@ -6,7 +6,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  docker:
+  docker-multiarch:
     runs-on: ubuntu-latest
     strategy:
       matrix:
