@@ -10,7 +10,7 @@
 #include "fp.h"
 #include "annotations.h"
 
-#if HIGHCTIDH_PORTABLE == 0 && !defined(CGONUTS) && (defined(__x86_64__) || defined(__i86pc__))
+#if HIGHCTIDH_PORTABLE == 0 && (defined(__x86_64__) || defined(__i86pc__))
 #define highctidh_macro_stringize(x) #x
 #define highctidh_macro_str(y) highctidh_macro_stringize(y)
 __asm__ (".include \"uintbig" highctidh_macro_str(BITS)  ".S\"");
