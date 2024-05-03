@@ -74,7 +74,19 @@ test:
 	python3 setup.py test
 
 test-python:
-	`pwd`/test-python.sh;
+	python3 -m venv venv
+	source venv/bin/activate
+	pip3 install build pytest pytest-xdist
+	mkdir -p build/src
+	mkdir -p dist/tmp
+	python3 -m build
+	pip install --force-reinstall dist/highctidh-*.whl
+	python3 -c 'from highctidh import bench; bench.simple_bench()'
+	python3 -m pytest -v -n auto --doctest-modules -k 511
+	python3 -m pytest -v -n auto --doctest-modules -k 512
+	python3 -m pytest -v -n auto --doctest-modules -k 1024
+	python3 -m pytest -v -n auto --doctest-modules -k 2048
+
 
 sdist: ${SDIST_GZ}
 ${SDIST_GZ}:
