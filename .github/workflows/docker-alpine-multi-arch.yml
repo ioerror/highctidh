@@ -47,5 +47,5 @@ jobs:
           -e "CFLAGS=-fno-lto" \
           --rm \
           ${{ matrix.DOCKER_ARCH_ARGS}} \
-          /bin/bash \
+          /bin/sh \
           -c "cd /highctidh && ./misc/install-alpine-deps.sh && make alpine-multi-arch"
