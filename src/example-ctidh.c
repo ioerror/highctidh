@@ -25,6 +25,12 @@
 #include <stdio.h>
 #include <libhighctidh/csidh.h>
 
+#if (defined(__ARM32__) || defined(__i386__))
+#define FMT %u
+#else
+#define FMT %lu
+#endif
+
 void print_hex_key(void *k, unsigned int l)
 { 
   printf("0x");
