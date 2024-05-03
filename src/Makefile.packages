@@ -74,7 +74,6 @@ test:
 	python3 setup.py test
 
 test-python:
-	pip3 install build pytest pytest-xdist
 	mkdir -p build/src
 	mkdir -p dist/tmp
 	python3 -m build
