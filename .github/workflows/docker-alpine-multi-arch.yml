@@ -23,11 +23,8 @@ jobs:
                       "--platform linux/s390x s390x/alpine"]
       fail-fast: false
     steps:
-
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
-        with:
-          platforms: ${{ matrix.arch }}
 
     - uses: actions/checkout@v4
 
