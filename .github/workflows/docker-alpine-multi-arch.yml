@@ -1,10 +1,8 @@
 name: Alpine multi-arch docker build and test
-
 on:
   push:
   pull_request:
     branches: [ "main" ]
-
 jobs:
   docker-multiarch:
     runs-on: ubuntu-latest
@@ -39,14 +37,14 @@ jobs:
         uname -a
 
      - name: Run in Docker
-        run: |
-          docker run \
-            -v $(pwd):/${{ github.workspace }} \
-            -w ${{ github.workspace }} \
-            -e "CC=${{ matrix.CC }}" \
-            -e "HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }}" \
-            -e "CFLAGS=-fno-lto" \
-            --rm -it \
-            ${{ matrix.DOCKER_ARCH_ARGS}} \
-            /bin/bash \
-            -c "cd /highctidh && ./misc/install-alpine-deps.sh && make alpine-multi-arch"
+       run: |
+         docker run \
+           -v $(pwd):/${{ github.workspace }} \
+           -w ${{ github.workspace }} \
+           -e "CC=${{ matrix.CC }}" \
+           -e "HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }}" \
+           -e "CFLAGS=-fno-lto" \
+           --rm -it \
+           ${{ matrix.DOCKER_ARCH_ARGS}} \
+           /bin/bash \
+           -c "cd /highctidh && ./misc/install-alpine-deps.sh && make alpine-multi-arch"
