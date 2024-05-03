@@ -162,6 +162,20 @@ deb-and-wheel-in-docker-arch-sid:
 		bash -c 'git config --global --add safe.directory /highctidh && mkdir -p build && make -f Makefile.packages sdist wheel deb && sha256sum dist/*.{deb,tar.gz,whl} && exit';
 	echo "Built ${VERSION} for ${ARCH}";
 
+deb-and-wheel-in-docker-arch-alpine:
+	echo "Building ${VERSION} for ${ARCH}...";
+	docker run \
+		-e "ARCH=${PODMAN_ARCH}" -e "CC=${CC}" \
+		-e "DEBIAN_FRONTEND=noninteractive" \
+		-e "DEB_BUILD_OPTIONS=nocheck" \
+		-e "SOURCE_DATE_EPOCH=${SOURCE_DATE_EPOCH}" \
+		-e "WORKDIR=/highctidh" \
+		-v `pwd`:/highctidh \
+		--workdir /highctidh \
+		--rm -it debian-${PODMAN_ARCH}-${DIST}-libhighctidh \
+		bash -c 'git config --global --add safe.directory /highctidh && mkdir -p build && make -f Makefile.packages sdist wheel deb && sha256sum dist/*.{deb,tar.gz,whl} && exit';
+	echo "Built ${VERSION} for ${ARCH}";
+
 clean:
 	-rm -f *.a *.o *.out *.so
 	-rm -f bench1024cycles bench1024mults bench1024untuned bench2048cycles bench2048mults bench2048untuned bench511cycles bench511mults bench511untuned bench512cycles bench512mults bench512untuned

@@ -64,6 +64,16 @@ examples-run:
 	cd src; time ./example-ctidh1024;
 	cd src; time ./example-ctidh2048;
 
+alpine-multi-arch-deps:
+	$(Attempting to install dependencies);
+	uname -a;
+	./misc/install-alpine-deps.sh;
+	$(Attempting to build, install, and test);
+
+alpine-multi-arch: alpine-multi-arch-deps library install examples examples-run test-python 
+	$(Hopefully the above was successful)
+	ls -alh dist/*.so && sha256sum dist/*.so
+
 _prep:
 	-mkdir src/dist;
 	-ln -s src/build build;

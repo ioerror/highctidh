@@ -1,4 +1,4 @@
-name: Alpine multi-arch
+name: Alpine multi-arch docker build and test
 
 on:
   push:
@@ -16,30 +16,36 @@ jobs:
         ARCH: ["amd64", "arm32v6", "arm32v7", "i386", "arm64v8", "ppc64le",
                "riscv64", "s390x"]
       fail-fast: false
-    container: ${{ matrix.ARCH }}/${{ matrix.CONTAINER }}
     steps:
 
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
+        with:
+          platforms: ${{ matrix.arch }}
 
     - uses: actions/checkout@v4
 
-    - name: Install alpine deps
-      run: ./misc/install-alpine-deps.sh
+    - name: Install requirements
+      run : |
+        apt install -y --no-recommends docker
 
-    - name: Build
-      run: CC=${{ matrix.CC }} CFLAGS="-fno-lto" HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make
-    - name: Test install
-      run: CC=${{ matrix.CC }} HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make install
+    - name: check kernel
+      run: |
+        mount | grep binfmt_misc
+        docker info
+        uname -a
 
-    - name: Build examples
-      run: CC=${{ matrix.CC }} HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make examples
-
-    - name: Run examples
-      run: CC=${{ matrix.CC }} HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make examples-run
-
-    - name: Run python tests
-      run: CC=${{ matrix.CC }} HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make test-python
-
-    - name: Examine build artifacts
-      run: ls -alh dist/*.so && sha256sum dist/*.so
+     - name: Run in Docker
+        run: |
+          docker run \
+            --rm \
+            -v $(pwd):/${{ github.workspace }} \
+            -w ${{ github.workspace }} \
+            -e "ARCH=${{ matrix.ARCH }}" \
+            -e "CC=${{ matrix.CC }}" \
+            -e "HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }}" \
+            -e "CFLAGS=-fno-lto" \
+            --platform ${{ matrix.ARCH }} \
+            ${{ matrix.ARCH }}/${{ matrix.CONTAINER }} \
+            ./misc/install-alpine-deps.sh && \
+            make alpine-multi-arch
