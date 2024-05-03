@@ -22,7 +22,7 @@ jobs:
     - name: Gather runtime environment
       shell: bash
       run: |
-       python -V 
+       python -V
        bash --version
 
     - name: Install dependencies

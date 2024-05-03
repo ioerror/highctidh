@@ -70,7 +70,7 @@ alpine-multi-arch-deps:
 	./misc/install-alpine-deps.sh;
 	$(Attempting to build, install, and test)
 
-alpine-multi-arch: alpine-multi-arch-deps library install examples examples-run test-python 
+alpine-multi-arch: alpine-multi-arch-deps library install examples examples-run test-python
 	$(Hopefully the above was successful)
 	ls -alh dist/*.so && sha256sum dist/*.so
 

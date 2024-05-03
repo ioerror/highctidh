@@ -1,4 +1,4 @@
-name: Windows Python clang build and test
+name: Windows build and test
 
 on: [push]
 
@@ -8,7 +8,6 @@ jobs:
     strategy:
       matrix:
         OS: ["windows-2022"]
-        CC: ["clang"]
         python-version: ["3.9", "3.10", "3.11", "3.12"]
         exclude:
           - OS: "windows-2022"
@@ -26,7 +25,7 @@ jobs:
     - name: Gather runtime environment
       shell: bash
       run: |
-       python -V 
+       python -V
        bash --version
 
     - name: Install dependencies
@@ -38,7 +37,7 @@ jobs:
       run: |
         export HIGHCTIDH_PORTABLE=1
         export WINDOWS=1
-        export CC=${{ matrix.CC }} MAKE=make
+        export MAKE=make
         cd src && python -m build
         pip install --force-reinstall dist/highctidh-*.whl
 

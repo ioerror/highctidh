@@ -136,7 +136,7 @@ try:
 except FileNotFoundError:
     VERSION = open("VERSION", "r").read().strip()
 except AttributeError:
-    VERSION = "1.0.2024050101"
+    VERSION = "3.141592653"
 
 base_src = [
     "crypto_classify.c",
