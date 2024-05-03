@@ -43,4 +43,4 @@ jobs:
           --rm \
           ${{ matrix.DOCKER_ARCH_ARGS}} \
           /bin/sh \
-          -c "./misc/install-alpine-deps.sh && make alpine-multi-arch"
+          -c "./misc/install-alpine-deps.sh && ./misc/docker-gha-fixup.sh && make alpine-multi-arch"
