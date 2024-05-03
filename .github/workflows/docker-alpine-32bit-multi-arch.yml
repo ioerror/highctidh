@@ -1,4 +1,4 @@
-name: Alpine multi-arch docker 32bit build and test (gcc)
+name: Alpine multi-arch docker 32bit build and test (clang)
 on:
   push:
   pull_request:
@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        CC: ["gcc"]
+        CC: ["clang"]
         PORTABLE: ["1"]
         CONTAINER: ["alpine"]
         DOCKER_ARCH_ARGS: ["--platform linux/arm/v6 arm32v6/alpine",
@@ -39,7 +39,7 @@ jobs:
           -w ${{ github.workspace }} \
           -e "CC=${{ matrix.CC }}" \
           -e "HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }}" \
-          -e "CFLAGS=-fno-lto" \
+          -e "CFLAGS=-fno-lto -fforce-enable-int128" \
           --rm \
           ${{ matrix.DOCKER_ARCH_ARGS}} \
           /bin/sh \
