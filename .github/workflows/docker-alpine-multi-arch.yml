@@ -13,8 +13,14 @@ jobs:
         CC: ["clang"]
         PORTABLE: ["1"]
         CONTAINER: ["alpine"]
-        ARCH: ["amd64", "arm32v6", "arm32v7", "i386", "arm64v8", "ppc64le",
-               "riscv64", "s390x"]
+        DOCKER_ARCH_ARGS: ["--platform linux/arm64/v8 arm64v8/alpine",
+                      "--platform linux/amd64 amd64/alpine",
+                      "--platform linux/arm32/v6 arm32v6/alpine",
+                      "--platform linux/arm32/v7 arm32v7/alpine",
+                      "--platform linux/i386 i386/alpine",
+                      "--platform linux/riscv64 riscv64/alpine",
+                      "--platform linux/ppc64le ppc64le/alpine",
+                      "--platform linux/s390x s390x/alpine"]
       fail-fast: false
     steps:
 
@@ -38,14 +44,12 @@ jobs:
      - name: Run in Docker
         run: |
           docker run \
-            --rm \
             -v $(pwd):/${{ github.workspace }} \
             -w ${{ github.workspace }} \
-            -e "ARCH=${{ matrix.ARCH }}" \
             -e "CC=${{ matrix.CC }}" \
             -e "HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }}" \
             -e "CFLAGS=-fno-lto" \
-            --platform ${{ matrix.ARCH }} \
-            ${{ matrix.ARCH }}/${{ matrix.CONTAINER }} \
-            ./misc/install-alpine-deps.sh && \
-            make alpine-multi-arch
+            --rm -it \
+            ${{ matrix.DOCKER_ARCH_ARGS}} \
+            /bin/bash \
+            -c "cd /highctidh && ./misc/install-alpine-deps.sh && make alpine-multi-arch"
