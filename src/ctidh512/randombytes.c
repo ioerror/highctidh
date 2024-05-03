@@ -17,6 +17,18 @@ void randombytes(void *x, size_t l)
   crypto_classify(x,l);
 }
 
+#elif (defined(GETRANDOM) && defined(__Darwin))
+#include <sys/random.h>
+// This could be CCRandomGenerateBytes
+void randombytes(void *x, size_t l)
+{
+  ssize_t n;
+  for (size_t i = 0; i < l; i += n)
+    if (0 >= (n = getentropy((char *) x + i, l - i)))
+      exit(2);
+  crypto_classify(x,l);
+}
+
 #elif (defined(__Windows__) || defined(__WIN64) || defined(__WIN32))
 /*
  *

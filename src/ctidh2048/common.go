@@ -14,20 +14,20 @@ package ctidh2048
  #cgo arm64 CFLAGS: -DPLATFORM=aarch64 -DPLATFORM_SIZE=64 -DHIGHCTIDH_PORTABLE=1
 
  // CC=clang CGO_ENABLED=1 GOOS=darwin GOARCH=arm64 go build -v
- #cgo darwin/arm64 CFLAGS: -DPLATFORM=aarch64 -DPLATFORM_SIZE=64 -D__ARM64__ -D__Darwin__ -DHIGHCTIDH_PORTABLE=1
+ #cgo darwin/arm64 CFLAGS: -DPLATFORM=aarch64 -DPLATFORM_SIZE=64 -D__ARM64__ -D__Darwin__ -DGETRANDOM -DHIGHCTIDH_PORTABLE=1
 
  // export CGO_CFLAGS_ALLOW="-fforce-enable-int128";
  // CC=clang CGO_ENABLED=1 GOOS=linux GOARCH=arm ARMVER=7  go build
  #cgo arm CFLAGS: -DPLATFORM=arm -DPLATFORM_SIZE=32 -D__ARM32__ -DHIGHCTIDH_PORTABLE=1
 
  // CC=clang CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -v
- #cgo darwin/amd64 CFLAGS: -DPLATFORM=x86_64 -DPLATFORM_SIZE=64 -march=native -mtune=native -DHIGHCTIDH_PORTABLE=1
+ #cgo darwin/amd64 CFLAGS: -DPLATFORM=x86_64 -DPLATFORM_SIZE=64 -march=native -mtune=native -DGETRANDOM -DHIGHCTIDH_PORTABLE=1
 
  // Generic flags for amd64 
- #cgo linux/amd64 CFLAGS: -DPLATFORM=x86_64 -DPLATFORM_SIZE=64
+ #cgo amd64 CFLAGS: -DPLATFORM=x86_64 -DPLATFORM_SIZE=64 -D__x86_64__ -fpie -fPIC -DHIGHCTIDH_PORTABLE=1
 
  // CC=gcc CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -v
- #cgo linux/amd64 CFLAGS: -DPLATFORM=x86_64 -DPLATFORM_SIZE=64 -march=native -mtune=native
+ #cgo linux/amd64 CFLAGS: -DPLATFORM=x86_64 -DPLATFORM_SIZE=64 -march=native -mtune=native -D__x86_64__ -fpie -fPIC -DHIGHCTIDH_PORTABLE=1
 
  // CC=??? CGO_ENABLED=1 GOOS=windows GOARCH=arm64 go build
  #cgo windows/arm64 CFLAGS: -DPLATFORM=arm64 -DPLATFORM_SIZE=64 -D__Windows__ -DHIGHCTIDH_PORTABLE=1
