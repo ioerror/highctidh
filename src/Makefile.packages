@@ -74,8 +74,6 @@ test:
 	python3 setup.py test
 
 test-python:
-	python3 -m venv venv
-	source venv/bin/activate
 	pip3 install build pytest pytest-xdist
 	mkdir -p build/src
 	mkdir -p dist/tmp
