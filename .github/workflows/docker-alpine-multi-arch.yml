@@ -1,0 +1,42 @@
+name: Alpine multi-arch
+
+on:
+  push:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        CC: ["clang"]
+        PORTABLE: ["0", "1"]
+        CONTAINER: ["alpine:3.19.1"]
+        ARCH: ["amd64", "arm32v5", "arm32v6", "arm32v7", "i386", "arm64",
+               "mips64", "mips64le", "mips", "mipsle", "ppc64", "ppc64le",
+               "riscv64", "s390x"]
+      fail-fast: false
+    container: ${{ matrix.ARCH }}/${{ matrix.CONTAINER }}
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install alpine deps
+      run: ./misc/install-alpine-deps.sh
+
+    - name: Build
+      run: CC=${{ matrix.CC }} CFLAGS="-fno-lto" HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make
+    - name: Test install
+      run: CC=${{ matrix.CC }} HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make install
+
+    - name: Build examples
+      run: CC=${{ matrix.CC }} HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make examples
+
+    - name: Run examples
+      run: CC=${{ matrix.CC }} HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make examples-run
+
+    - name: Run python tests
+      run: CC=${{ matrix.CC }} HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make test-python
+
+    - name: Examine build artifacts
+      run: ls -alh dist/*.so && sha256sum dist/*.so
