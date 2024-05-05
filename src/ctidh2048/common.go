@@ -21,7 +21,7 @@ package ctidh2048
  #cgo arm CFLAGS: -DPLATFORM=arm -DPLATFORM_SIZE=32 -D__ARM32__ -DHIGHCTIDH_PORTABLE=1
 
  // CC=clang CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -v
- #cgo darwin/amd64 CFLAGS: -DPLATFORM=x86_64 -DPLATFORM_SIZE=64 -march=native -mtune=native -D__Darwin__ -DGETRANDOM -DHIGHCTIDH_PORTABLE=1
+ #cgo darwin/amd64 CFLAGS: -DPLATFORM=x86_64 -DPLATFORM_SIZE=64 -D__x86_64__ -march=native -mtune=native -D__Darwin__ -DGETRANDOM -DHIGHCTIDH_PORTABLE=1
 
  // Generic flags for amd64 
  #cgo amd64 CFLAGS: -DPLATFORM=x86_64 -DPLATFORM_SIZE=64 -D__x86_64__ -fpie -fPIC -DHIGHCTIDH_PORTABLE=1
