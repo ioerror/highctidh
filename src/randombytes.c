@@ -1,19 +1,6 @@
 #include "randombytes.h"
 
 #include <stdlib.h>
-#ifndef _MSC_VER
-#include <unistd.h>
-#include <fcntl.h>
-#else // e.g. (defined(__Windows__) || defined (__WIN64))
-#include <basetsd.h>
-#define ssize_t SSIZE_T
-#include <windows.h>
-#define SystemFunction036 NTAPI SystemFunction036
-#include <ntsecapi.h>
-#undef SystemFunction036
-#pragma comment(lib, "advapi32.lib")
-#define getrandom(x, y) RtlGenRandom(x, y)
-#endif
 
 #include "crypto_classify.h"
 #include "random_namespace.h"
@@ -30,6 +17,18 @@ void randombytes(void *x, size_t l)
   crypto_classify(x,l);
 }
 
+#elif (defined(GETRANDOM) && defined(__Darwin__))
+#include <CommonCrypto/CommonRandom.h>
+void randombytes(void *x, size_t l)
+{
+  ssize_t n;
+  n = CCRandomGenerateBytes((char *) x, l);
+  if (n != kCCSuccess) {
+    exit(2);
+  }
+  crypto_classify(x,l);
+}
+
 #elif (defined(__Windows__) || defined(__WIN64) || defined(__WIN32))
 /*
  *
@@ -43,6 +42,11 @@ void randombytes(void *x, size_t l)
  * YOU HAVE BEEN WARNED. THIS, LIKE THE REST OF THE LIBRARY, IS NOT ELIGIBLE
  * FOR A CVE!
  */
+
+ssize_t getrandom(char *buf, size_t buflen);
+#include <windows.h>
+#include <ntsecapi.h>
+#define getrandom(x, y) RtlGenRandom(x, y)
 
 void randombytes(void *x, size_t l)
 {
