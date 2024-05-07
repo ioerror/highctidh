@@ -44,7 +44,7 @@ jobs:
     - name: Build highctidh
       shell: msys2 {0}
       run: |
-        CC=${{ matrix.CC }} make wheel
+        CC=${{ matrix.CC }} CFLAGS="" make wheel
 
     - name: Test with pytest
       shell: msys2 {0}
