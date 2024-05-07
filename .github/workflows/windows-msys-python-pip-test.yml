@@ -1,0 +1,46 @@
+name: Windows Msys2 Python pip build and test
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        OS: ["windows-2022"]
+      fail-fast: false
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Msys2
+      uses: msys2/setup-msys2@v2
+      run: |
+       set MSYSTEM=MINGW64
+
+    -name: Set up Msys2 environment
+      shell: msys2 {0}
+      run: |
+        pacman -S python git
+
+    - name: Gather runtime environment
+      shell: msys2 {0}
+      run: |
+       uname -a
+       python -V
+       bash --version
+
+    - name: Install dependencies
+      shell: msys2 {0}
+      run: python -m pip install --upgrade build pip setuptools wheel pytest pytest-xdist
+
+    - name: Build highctidh
+      shell: msys2 {0}
+      run: |
+        pip install highctidh
+
+    - name: Test with pytest
+      shell: msys2 {0}
+      run: |
+        python -c 'from highctidh import bench; bench.simple_bench()'
+        pytest -v
