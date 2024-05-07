@@ -18,7 +18,7 @@ jobs:
       run: |
        set MSYSTEM=MINGW64
 
-    -name: Set up Msys2 environment
+    - name: Set up Msys2 environment
       shell: msys2 {0}
       run: |
         pacman -S python git
