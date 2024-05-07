@@ -8,7 +8,7 @@ jobs:
     strategy:
       matrix:
         OS: ["windows-2022"]
-        CC: ['gcc']
+        CC: ["clang"] # GCC works here
       fail-fast: false
 
     steps:
@@ -22,8 +22,8 @@ jobs:
           python
           python-pip
           git
-          clang
           mingw-w64-ucrt-x86_64-gcc
+          mingw-w64-clang-x86_64-toolchain
 
     - name: Gather runtime environment
       shell: msys2 {0}
