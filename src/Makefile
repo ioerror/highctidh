@@ -45,6 +45,11 @@ endif
 ifeq ($(CC),gcc)
 BASE_CFLAGS+=
 endif
+ifeq ($(CC),emcc)
+BASE_CFLAGS+=-Wno-unused-command-line-argument
+LDFLAGS=-s SIDE_MODULE=1
+endif
+
 ifeq ($(WINDOWS),1)
 BASE_CFLAGS :=-Wall -Wextra -pedantic -O2 -fwrapv -D__Windows__
 HIGHCTIDH_PORTABLE ?=1
@@ -975,6 +980,12 @@ test2048-dyn: test2048 libhighctidh_2048.so
 
 libhighctidh.so: libhighctidh_511.so libhighctidh_512.so libhighctidh_1024.so libhighctidh_2048.so
 		ls -l libhighctidh_*.so
+
+# This produces wasm as a shared library module
+highctidh.wasm: libhighctidh.so
+	export LDFLAGS="-s SIDE_MODULE=1"
+	$(CC) -v --no-entry -O1 *.o -o dist/highctidh.wasm
+	ls -al dist/highctidh.wasm
 
 setup-examples: csidh.h
 		-mkdir -p libhighctidh

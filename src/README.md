@@ -222,6 +222,15 @@ By default `HIGHCTIDH_PORTABLE=1` is enabled for all platforms unless
 the library is installed via the Python package, in which case optimized
 implementations will be used where possible.
 
+### Experimental WebAssembly
+
+With `export CC=emcc` it is possible to build `highctidh` in several ways. This
+is experimental and primarily used to catch build bugs. We have never used this
+beyond compiling the library and we do not recommend it for anything at all.
+On Debian GNU/Linux systems install the package `emscripten` to install `emcc`.
+
+It is possible to use `emcc` to compile `highctidh` as a `.wasm` WebAssembly:
+`make wasm`
 
 ## Example C library usage
 
