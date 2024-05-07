@@ -1,4 +1,4 @@
-name: Windows Msys2 (ucrt) clang Python pip build and test
+name: Windows Msys2 64bit (ucrt,msvcrt) clang Python pip build and test
 
 on: [push]
 
@@ -9,7 +9,7 @@ jobs:
       matrix:
         OS: ["windows-2022"]
         CC: ["clang"]
-        ENVIRONMENT: ["MSYS", "UCRT64", "MINGW64"] # https://www.msys2.org/docs/environments/
+        ENVIRONMENT: ["CLANG64", "MINGW64"] # https://www.msys2.org/docs/environments/
       fail-fast: false
 
     steps:
