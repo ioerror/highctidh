@@ -262,7 +262,10 @@ elif PLATFORM == "sun4v" or PLATFORM == "i86pc":
             cflags += ["-fforce-enable-int128"]
     cflags += ["-Wextra", "-fwrapv", "-pedantic", "-Werror", "-DGETRANDOM"]
     cflags += [f"-DPLATFORM={PLATFORM}", f"-DPLATFORM_SIZE={PLATFORM_SIZE}"]
-elif PLATFORM == "x86_64" and OS == 'Windows' or PLATFORM == "AMD64" and OS == 'Windows' or PLATFORM == "x86_64" and OS.startswith('MINGW'):
+elif PLATFORM == "x86_64" and OS == 'Windows' \
+     or PLATFORM == "AMD64" and OS == 'Windows' \
+     or PLATFORM == "x86_64" and OS.startswith('MINGW') \
+     or PLATFORM == "x86_64" and OS.startswith('MSYS'):
     # Windows only builds with clang on Windows under the CI
     # It should also build with other compilers.
     # As with Solaris we wrap the function that returns these flags internally
@@ -284,6 +287,10 @@ elif PLATFORM == "x86_64" and OS == 'Windows' or PLATFORM == "AMD64" and OS == '
     # Set Windows specific build options
     cflags = ["-D__Windows__"]
     ldflags = ["-LAdvapi32.lib"]
+    if OS.startswith('MINGW64') or OS.startswith('MSYS'):
+        cflags += ["-D_WIN64"]
+    if OS.startswith('MINGW32'):
+        cflags += ["-D_WIN32"]
     if PLATFORM == "AMD64":
         cflags += ["-D__x86_64__"]
         cflags += ["-D__AMD64__"]
