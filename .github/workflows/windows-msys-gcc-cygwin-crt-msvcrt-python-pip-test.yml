@@ -23,6 +23,7 @@ jobs:
           python
           python-pip
           git
+          gcc
           mingw-w64-x86_64-gcc
           mingw-w64-ucrt-x86_64-gcc
 
