@@ -43,7 +43,7 @@ jobs:
     - name: Build highctidh
       shell: msys2 {0}
       run: |
-        CC=${{ matrix.CC }} pip install -v .
+        cd src/ && CC=${{ matrix.CC }} pip install -v .
 
     - name: Test with pytest
       shell: msys2 {0}
