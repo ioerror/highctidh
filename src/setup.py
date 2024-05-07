@@ -161,7 +161,7 @@ if cflags is not None and cflags is str:
   cflags = cflags.split()
 else:
   cflags = ["-Wextra"]
-cflags += ["-Wall", "-fpie", "-fwrapv", "-pedantic", "-O2", "-g0", "-fno-lto"]
+cflags += ["-Wall", "-fPIC", "-fpie", "-fwrapv", "-pedantic", "-O2", "-g0", "-fno-lto"]
 cflags += ["-DGETRANDOM", f"-DPLATFORM={PLATFORM}", f"-DPLATFORM_SIZE={PLATFORM_SIZE}"]
 cflags += [
     "-Wformat",
@@ -262,7 +262,7 @@ elif PLATFORM == "sun4v" or PLATFORM == "i86pc":
             cflags += ["-fforce-enable-int128"]
     cflags += ["-Wextra", "-fwrapv", "-pedantic", "-Werror", "-DGETRANDOM"]
     cflags += [f"-DPLATFORM={PLATFORM}", f"-DPLATFORM_SIZE={PLATFORM_SIZE}"]
-elif PLATFORM == "x86_64" and OS == 'Windows' or PLATFORM == "AMD64" and OS == 'Windows':
+elif PLATFORM == "x86_64" and OS == 'Windows' or PLATFORM == "AMD64" and OS == 'Windows' or PLATFORM == "x86_64" and OS.startswith('MINGW'):
     # Windows only builds with clang on Windows under the CI
     # It should also build with other compilers.
     # As with Solaris we wrap the function that returns these flags internally
