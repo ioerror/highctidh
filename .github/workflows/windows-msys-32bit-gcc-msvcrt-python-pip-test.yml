@@ -25,6 +25,7 @@ jobs:
           git
           gcc
           mingw-w64-i686-gcc
+          make
 
     - name: Gather runtime environment
       shell: msys2 {0}

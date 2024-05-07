@@ -25,6 +25,7 @@ jobs:
           git
           clang
           mingw-w64-i686-clang
+          make
 
     - name: Gather runtime environment
       shell: msys2 {0}
