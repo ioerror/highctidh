@@ -1,0 +1,52 @@
+name: Windows Msys2 64bit (cygwin,msvcrt,ucrt) gcc Python pip build and test
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        OS: ["windows-2022"]
+        CC: ["gcc"]
+        ENVIRONMENT: ["MSYS", "UCRT64", "MINGW64"] # https://www.msys2.org/docs/environments/
+      fail-fast: false
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Msys2
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: ${{ matrix.ENVIRONMENT }}
+        install: >-
+          python
+          python-pip
+          git
+          gcc
+          mingw-w64-x86_64-gcc
+          mingw-w64-ucrt-x86_64-gcc
+
+    - name: Gather runtime environment
+      shell: msys2 {0}
+      run: |
+       echo ${{ matrix.ENVIRONMENT }}
+       uname -a
+       python -V
+       bash --version
+       ${{ matrix.CC }} -v
+
+    - name: Install dependencies
+      shell: msys2 {0}
+      run: python -m pip install --upgrade build pip setuptools wheel pytest pytest-xdist
+
+    - name: Build highctidh
+      shell: msys2 {0}
+      run: |
+        CC=${{ matrix.CC }} pip install -v highctidh
+
+    - name: Test with pytest
+      shell: msys2 {0}
+      run: |
+        python -c 'from highctidh import bench; bench.simple_bench()'
+        pytest -v

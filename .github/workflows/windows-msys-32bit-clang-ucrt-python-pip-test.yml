@@ -1,4 +1,4 @@
-name: Windows Msys2 (cygwin,msvcrt,crt) gcc Python pip build and test
+name: Windows Msys2 32bit (ucrt) gcc Python pip build and test
 
 on: [push]
 
@@ -8,8 +8,8 @@ jobs:
     strategy:
       matrix:
         OS: ["windows-2022"]
-        CC: ["gcc"]
-        ENVIRONMENT: ["MSYS", "UCRT64", "MINGW64"] # https://www.msys2.org/docs/environments/
+        CC: ["clang"]
+        ENVIRONMENT: ["CLANG32"] # https://www.msys2.org/docs/environments/
       fail-fast: false
 
     steps:
@@ -23,9 +23,8 @@ jobs:
           python
           python-pip
           git
-          gcc
-          mingw-w64-x86_64-gcc
-          mingw-w64-ucrt-x86_64-gcc
+          clang
+          mingw-w64-i686-clang
 
     - name: Gather runtime environment
       shell: msys2 {0}
