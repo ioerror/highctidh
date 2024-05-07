@@ -9,6 +9,7 @@ jobs:
       matrix:
         OS: ["windows-2022"]
         CC: ["clang"]
+        ENVIRONMENT: ["MSYS", "UCRT64", "MINGW64"] # https://www.msys2.org/docs/environments/
       fail-fast: false
 
     steps:
@@ -17,7 +18,7 @@ jobs:
     - name: Set up Msys2
       uses: msys2/setup-msys2@v2
       with:
-        msystem: MINGW64
+        msystem: ${{ matrix.ENVIRONMENT }}
         install: >-
           python
           python-pip
