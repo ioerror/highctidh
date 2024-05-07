@@ -263,7 +263,9 @@ elif PLATFORM == "sun4v" or PLATFORM == "i86pc":
     cflags += ["-Wextra", "-fwrapv", "-pedantic", "-Werror", "-DGETRANDOM"]
     cflags += [f"-DPLATFORM={PLATFORM}", f"-DPLATFORM_SIZE={PLATFORM_SIZE}"]
 elif PLATFORM == "x86_64" or PLATFORM == "AMD64":
+    print("x86_64 or AMD64")
     if OS == 'Windows' or OS.startswith('MINGW') or OS.startswith('MSYS'):
+        print(f"{OS=}")
         # Windows only builds with clang on Windows under the CI
         # It should also build with other compilers.
         # As with Solaris we wrap the function that returns these flags internally
@@ -289,7 +291,6 @@ elif PLATFORM == "x86_64" or PLATFORM == "AMD64":
             cflags += ["-D_WIN64"]
         if OS.startswith('MINGW32'):
             cflags += ["-D_WIN32"]
-        cflags += [f"-DPLATFORM={PLATFORM}", f"-DPLATFORM_SIZE={PLATFORM_SIZE}"]
     if PLATFORM == "AMD64":
         cflags += ["-D__x86_64__"]
         cflags += ["-D__AMD64__"]
@@ -300,6 +301,7 @@ elif PLATFORM == "x86_64" or PLATFORM == "AMD64":
     if PLATFORM_SIZE == 32:
         cflags += ["-D__i386__"]
         HIGHCTIDH_PORTABLE = "1"
+    cflags += [f"-DPLATFORM={PLATFORM}", f"-DPLATFORM_SIZE={PLATFORM_SIZE}"]
     cflags += ["-DHIGHCTIDH_PORTABLE=" + HIGHCTIDH_PORTABLE]
     if HIGHCTIDH_PORTABLE == "1":
         if CC == "clang":
