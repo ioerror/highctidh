@@ -1,4 +1,4 @@
-name: Windows Msys2 Python pip build and test
+name: Windows Msys2 (ucrt) clang Python pip build and test
 
 on: [push]
 
@@ -8,7 +8,7 @@ jobs:
     strategy:
       matrix:
         OS: ["windows-2022"]
-        CC: ["clang"] # GCC works here
+        CC: ["clang"]
       fail-fast: false
 
     steps:
@@ -17,13 +17,12 @@ jobs:
     - name: Set up Msys2
       uses: msys2/setup-msys2@v2
       with:
-        msystem: MINGW64
+        msystem: CLANG64
         install: >-
           python
           python-pip
           git
-          mingw-w64-ucrt-x86_64-gcc
-          mingw-w64-clang-x86_64-toolchain
+          mingw-w64-x86_64-clang
 
     - name: Gather runtime environment
       shell: msys2 {0}

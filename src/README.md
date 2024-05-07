@@ -179,7 +179,8 @@ only been tested with the Windows Server 2022 image preloaded with `clang`,
 as a part of the CI configuration).
 
 The Python module on Windows is functional when installed with `pip` under MSYS
-using MINGW64 as demonstrated in `windows-msys-python-pip-test.yml`.
+using MINGW64 and `gcc` as provided by `mingw-w64-ucrt-x86_64-gcc`. This is
+tested in `windows-msys-python-pip-test.yml`.
 
 Building and performing minimal testing manually requires using `bash` as
 provided by `git` on Windows, GNU `make`, and `clang` using the following
