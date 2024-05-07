@@ -26,7 +26,6 @@ jobs:
           clang
           mingw-w64-i686-clang
           make
-          mingw-w64-python-flit
 
     - name: Gather runtime environment
       shell: msys2 {0}
@@ -39,7 +38,7 @@ jobs:
 
     - name: Install dependencies
       shell: msys2 {0}
-      run: python -m pip install --upgrade build pip setuptools wheel pytest pytest-xdist
+      run: python -m pip install --upgrade build pip setuptools wheel pytest pytest-xdist flit
 
     - name: Build highctidh
       shell: msys2 {0}
