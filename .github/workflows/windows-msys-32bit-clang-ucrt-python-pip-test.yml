@@ -26,7 +26,7 @@ jobs:
           clang
           mingw-w64-i686-clang
           make
-          mingw-w64-python-flit
+          mingw-w64-x86_64-python
 
     - name: Gather runtime environment
       shell: msys2 {0}

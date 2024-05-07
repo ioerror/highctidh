@@ -27,7 +27,7 @@ jobs:
           mingw-w64-x86_64-gcc
           mingw-w64-ucrt-x86_64-gcc
           make
-          mingw-w64-python-flit
+          mingw-w64-x86_64-python
 
     - name: Gather runtime environment
       shell: msys2 {0}
