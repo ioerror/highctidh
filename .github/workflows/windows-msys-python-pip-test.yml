@@ -19,6 +19,7 @@ jobs:
         msystem: MINGW64
         install: >-
           python
+          python-pip
           git
 
 #   - name: Set up Msys2 environment
