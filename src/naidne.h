@@ -22,7 +22,7 @@
 #define htole64(x) LE_64(x)
 #define le32toh(x) LE_32(x)
 #define le64toh(x) LE_64(x)
-#elif (defined(__Windows__) || defined(_WIN64))
+#elif (defined(__Windows__) || defined(_WIN64) || defined(_WIN32))
 #include <stdlib.h>
 #if (BYTE_ORDER == LITTLE_ENDIAN)
 #define htole32(x) (x)
