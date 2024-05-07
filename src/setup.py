@@ -161,7 +161,7 @@ if cflags is not None and cflags is str:
   cflags = cflags.split()
 else:
   cflags = ["-Wextra"]
-cflags += ["-Wall", "-fpie", "-fPIC", "-fwrapv", "-pedantic", "-O2", "-g0", "-fno-lto"]
+cflags += ["-Wall", "-fpie", "-fwrapv", "-pedantic", "-O2", "-g0", "-fno-lto"]
 cflags += ["-DGETRANDOM", f"-DPLATFORM={PLATFORM}", f"-DPLATFORM_SIZE={PLATFORM_SIZE}"]
 cflags += [
     "-Wformat",
