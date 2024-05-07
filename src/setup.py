@@ -161,7 +161,7 @@ if cflags is not None and cflags is str:
   cflags = cflags.split()
 else:
   cflags = ["-Wextra"]
-cflags += ["-Wall", "-fpie", "-fPIC", "-fwrapv", "-pedantic", "-O2", "-g0", "-fno-lto"]
+cflags += ["-Wall", "-fPIC", "-fpie", "-fwrapv", "-pedantic", "-O2", "-g0", "-fno-lto"]
 cflags += ["-DGETRANDOM", f"-DPLATFORM={PLATFORM}", f"-DPLATFORM_SIZE={PLATFORM_SIZE}"]
 cflags += [
     "-Wformat",
@@ -262,54 +262,34 @@ elif PLATFORM == "sun4v" or PLATFORM == "i86pc":
             cflags += ["-fforce-enable-int128"]
     cflags += ["-Wextra", "-fwrapv", "-pedantic", "-Werror", "-DGETRANDOM"]
     cflags += [f"-DPLATFORM={PLATFORM}", f"-DPLATFORM_SIZE={PLATFORM_SIZE}"]
-elif PLATFORM == "x86_64" and OS == 'Windows' or PLATFORM == "AMD64" and OS == 'Windows':
-    # Windows only builds with clang on Windows under the CI
-    # It should also build with other compilers.
-    # As with Solaris we wrap the function that returns these flags internally
-    # during the build process to override them for a value that works for
-    # both.
-    import distutils.sysconfig as _wrapped_distutils
-    from distutils.sysconfig import get_config_vars as _get_config_vars
-
-    _config_vars = _get_config_vars().copy()
-    default_cflags = [
-        " -Wall -pedantic -O2 -fwrapv -ffile-prefix-map=..=."
-    ]
-    _config_vars["CFLAGS"] = default_cflags
-
-    def get_config_vars_wrapper(*a):
-        return [_config_vars.get(n) for n in a] if a else _config_vars
-
-    _wrapped_distutils.get_config_vars = get_config_vars_wrapper
-    # Set Windows specific build options
-    cflags = ["-D__Windows__"]
-    ldflags = ["-LAdvapi32.lib"]
+elif PLATFORM == "x86_64" or PLATFORM == "AMD64":
+    print("x86_64 or AMD64")
+    if OS == 'Windows' or OS.startswith('MINGW') or OS.startswith('MSYS'):
+        print(f"{OS=}")
+        # Windows only builds with clang on Windows under the CI
+        # It should also build with other compilers.
+        # As with Solaris we wrap the function that returns these flags internally
+        # during the build process to override them for a value that works for
+        # both.
+        # Set Windows specific build options
+        cflags = ["-D__Windows__"]
+        ldflags = ["-LAdvapi32.lib"]
+        if OS.startswith('MINGW64') or OS.startswith('MSYS'):
+            cflags += ["-D_WIN64"]
+        if OS.startswith('MINGW32'):
+            cflags += ["-D_WIN32"]
     if PLATFORM == "AMD64":
         cflags += ["-D__x86_64__"]
         cflags += ["-D__AMD64__"]
-        cflags += ["-DHIGHCTIDH_PORTABLE=" + HIGHCTIDH_PORTABLE]
     if PLATFORM == "x86_64":
         cflags += ["-D__x86_64__"]
-        cflags += ["-DHIGHCTIDH_PORTABLE=" + HIGHCTIDH_PORTABLE]
-    cflags += [f"-DPLATFORM={PLATFORM}", f"-DPLATFORM_SIZE={PLATFORM_SIZE}"]
-elif PLATFORM == "x86_64":
-    if PLATFORM_SIZE == 64:
-        cflags += ["-D__x86_64__"]
-        if OS == "Darwin":
-          cflags += ["-D__Darwin__"]
-          cflags += ["-DHIGHCTIDH_PORTABLE=1"]
-        else:
-          if CC == "clang":
-              cflags += ["-DHIGHCTIDH_PORTABLE=1"]
-          if CC == "gcc":
-              cflags += ["-march=native", "-mtune=native"]
-        if HIGHCTIDH_PORTABLE == "1":
-            if CC == "clang":
-                cflags += ["-fforce-enable-int128"]
-    elif PLATFORM_SIZE == 32:
-        # clang required
-        cflags += ["-fforce-enable-int128", "-D__i386__"]
+    if OS == "Darwin":
+        cflags += ["-D__Darwin__"]
+    if PLATFORM_SIZE == 32:
+        cflags += ["-D__i386__"]
+        cflags += ["-fforce-enable-int128"]
         HIGHCTIDH_PORTABLE = "1"
+    cflags += [f"-DPLATFORM={PLATFORM}", f"-DPLATFORM_SIZE={PLATFORM_SIZE}"]
     cflags += ["-DHIGHCTIDH_PORTABLE=" + HIGHCTIDH_PORTABLE]
 else:
     cflags += ["-DHIGHCTIDH_PORTABLE=" + HIGHCTIDH_PORTABLE]
