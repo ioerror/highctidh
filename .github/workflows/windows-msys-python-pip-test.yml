@@ -8,7 +8,7 @@ jobs:
     strategy:
       matrix:
         OS: ["windows-2022"]
-        CC: ['clang']
+        CC: ['gcc']
       fail-fast: false
 
     steps:
@@ -23,6 +23,7 @@ jobs:
           python-pip
           git
           clang
+          mingw-w64-ucrt-x86_64-gcc
 
     - name: Gather runtime environment
       shell: msys2 {0}
