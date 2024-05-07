@@ -8,6 +8,7 @@ jobs:
     strategy:
       matrix:
         OS: ["windows-2022"]
+        CC: ['clang']
       fail-fast: false
 
     steps:
@@ -22,17 +23,13 @@ jobs:
           python-pip
           git
 
-#   - name: Set up Msys2 environment
-#     shell: msys2 {0}
-#     run: |
-#       pacman -S python git
-
     - name: Gather runtime environment
       shell: msys2 {0}
       run: |
        uname -a
        python -V
        bash --version
+       ${{ matrix.CC }} -v
 
     - name: Install dependencies
       shell: msys2 {0}
@@ -41,7 +38,7 @@ jobs:
     - name: Build highctidh
       shell: msys2 {0}
       run: |
-        pip install -v highctidh
+        CC=${{ matrix.CC }} pip install -v highctidh
 
     - name: Test with pytest
       shell: msys2 {0}
