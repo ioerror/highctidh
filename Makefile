@@ -26,6 +26,10 @@ deb: _prep
 deb-and-wheel-in-podman:
 	podman run -v `pwd`:/highctidh --workdir /highctidh --rm -it debian:bookworm bash -c 'apt update && ./misc/install-debian-deps.sh && $(MAKE) wheel && CC=clang $(MAKE) deb'
 
+wasm: _prep
+	export CC=emcc;
+	cd src/; $(MAKE) highctidh.wasm;
+
 wheel: _prep
 	cd src/; $(MAKE) -f Makefile.packages wheel;
 

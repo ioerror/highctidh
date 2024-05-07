@@ -959,6 +959,10 @@ with open(fn+'.tmp','w') as f:
   f.write('ifeq ($(CC),gcc)\n')
   f.write('BASE_CFLAGS+=\n')
   f.write('endif\n')
+  f.write('ifeq ($(CC),emcc)\n')
+  f.write('BASE_CFLAGS+=-Wno-unused-command-line-argument\n')
+  f.write('LDFLAGS=-s SIDE_MODULE=1\n')
+  f.write('endif\n')
   f.write('ifeq ($(WINDOWS),1)\n')
   f.write('BASE_CFLAGS :=-Wall -Wextra -pedantic -O2 -fwrapv -D__Windows__\n')
   f.write('HIGHCTIDH_PORTABLE ?=1\n')
@@ -1348,7 +1352,10 @@ with open(fn+'.tmp','w') as f:
 
   f.write('\n\nlibhighctidh.so: libhighctidh_511.so libhighctidh_512.so libhighctidh_1024.so libhighctidh_2048.so\n')
   f.write('\t\tls -l libhighctidh_*.so\n\n')
-
+  f.write('highctidh.wasm: libhighctidh.so\n')
+  f.write('\texport LDFLAGS="-s SIDE_MODULE=1"\n')
+  f.write('\t$(CC) -v --no-entry -O1 *.o -o dist/highctidh.wasm\n')
+  f.write('\tls -al dist/highctidh.wasm\n\n')
   f.write('setup-examples: csidh.h\n')
   f.write('\t\t-mkdir -p libhighctidh\n')
   f.write('\t\t-cp csidh.h libhighctidh/\n\n')
