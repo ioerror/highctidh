@@ -17,11 +17,12 @@ jobs:
     - name: Set up Msys2
       uses: msys2/setup-msys2@v2
       with:
-        msystem: CLANG64
+        msystem: MINGW64
         install: >-
           python
           python-pip
           git
+          clang
           mingw-w64-x86_64-clang
 
     - name: Gather runtime environment
