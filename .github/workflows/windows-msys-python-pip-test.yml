@@ -22,6 +22,7 @@ jobs:
           python
           python-pip
           git
+          clang
 
     - name: Gather runtime environment
       shell: msys2 {0}
