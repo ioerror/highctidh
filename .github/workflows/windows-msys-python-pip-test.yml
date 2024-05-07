@@ -15,11 +15,11 @@ jobs:
 
     - name: Set up Msys2
       uses: msys2/setup-msys2@v2
-        with:
-          msystem: MINGW64
-          install: >-
-            python
-            git
+      with:
+        msystem: MINGW64
+        install: >-
+          python
+          git
 
 #   - name: Set up Msys2 environment
 #     shell: msys2 {0}
