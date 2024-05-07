@@ -15,13 +15,16 @@ jobs:
 
     - name: Set up Msys2
       uses: msys2/setup-msys2@v2
-      run: |
-       set MSYSTEM=MINGW64
+        with:
+          msystem: MINGW64
+          install: >-
+            python
+            git
 
-    - name: Set up Msys2 environment
-      shell: msys2 {0}
-      run: |
-        pacman -S python git
+#   - name: Set up Msys2 environment
+#     shell: msys2 {0}
+#     run: |
+#       pacman -S python git
 
     - name: Gather runtime environment
       shell: msys2 {0}
@@ -37,7 +40,7 @@ jobs:
     - name: Build highctidh
       shell: msys2 {0}
       run: |
-        pip install highctidh
+        pip install -v highctidh
 
     - name: Test with pytest
       shell: msys2 {0}
