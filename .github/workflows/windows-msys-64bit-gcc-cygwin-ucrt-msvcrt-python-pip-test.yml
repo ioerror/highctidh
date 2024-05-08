@@ -50,7 +50,8 @@ jobs:
     - name: Build highctidh
       shell: msys2 {0}
       run: |
-        CC=${{ matrix.CC }} OPT="" make wheel
+        export SOURCE_DATE_EPOCH=`git log -1 --pretty=%ct`
+        CC=${{ matrix.CC }} OPT="" cd src/ && python3 -m build --wheel
 
     - name: Test with pytest
       shell: msys2 {0}
