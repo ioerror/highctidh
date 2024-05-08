@@ -24,13 +24,13 @@ jobs:
           python-pip
           python-build
           python-setuptools
-          python-distutils
           python-wheel
           python-pytest
           git
           clang
           mingw-w64-clang-x86_64-python-pytest-xdist
           mingw-w64-clang-x86_64-python-flit
+          mingw-w64-clang-x86_64-python-distutils-extra
           mingw-w64-x86_64-clang
           make
 
