@@ -24,6 +24,7 @@ jobs:
           python-pip
           python-build
           python-setuptools
+          python-distutils
           python-wheel
           python-pytest
           git
@@ -48,6 +49,7 @@ jobs:
     - name: Build highctidh
       shell: msys2 {0}
       run: |
+        export SETUPTOOLS_USE_DISTUTILS=local
         export SOURCE_DATE_EPOCH=`git log -1 --pretty=%ct`
         cd src/ && CC=${{ matrix.CC }} OPT="" python3 setup.py install
 
