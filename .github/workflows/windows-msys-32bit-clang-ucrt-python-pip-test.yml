@@ -55,7 +55,7 @@ jobs:
         export HIGHCTIDH_PORTABLE=1
         export WINDOWS=1
         export MAKE=make
-        cd src/ && CC=${{ matrix.CC }} OPT="" python3 setup.py install
+        cd src/ && CC=${{ matrix.CC }} OPT="" python3 -b build -v
 
     - name: Test with pytest
       shell: msys2 {0}
