@@ -50,7 +50,7 @@ jobs:
         export HIGHCTIDH_PORTABLE=1
         export WINDOWS=1
         export MAKE=make
-        CC=${{ matrix.CC }} OPT="" pip install -v -e src/ 
+        CC=${{ matrix.CC }} OPT="" pip install -v -e src/
 
     - name: Test with pytest
       shell: msys2 {0}

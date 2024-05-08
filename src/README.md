@@ -155,7 +155,7 @@ The C library and bindings have been tested on the following operating systems:
 - Rockylinux 9, 9.3 (GNU libc)
 - Solaris 11.4 (Solaris libc)
 - Ubuntu 22.03, 23.10, 24.04 (GNU libc)
-- Windows Server 2019, 2022 (MSVCRT, MINGW64)
+- Windows Server 2019, 2022 (MSVCRT, CYGWIN, UCRT)
 
 ## Notes on building
 
@@ -178,13 +178,9 @@ only been tested with the Windows Server 2022 image preloaded with `clang`,
 [https://github.com/actions/runner-images/blob/main/images/windows/Windows2022-Readme.md](available
 as a part of the CI configuration).
 
-The Python module on Windows is functional when installed with `pip` under MSYS
-using MINGW64 and `gcc` as provided by `mingw-w64-ucrt-x86_64-gcc`. This is
-tested in `windows-msys-python-pip-test.yml`.
-
-Building and performing minimal testing manually requires using `bash` as
-provided by `git` on Windows, GNU `make`, and `clang` using the following
-commands:
+Building the C library and performing minimal testing manually requires using
+`bash` as provided by `git` on Windows, GNU `make`, and `clang` using the
+following commands:
 ```
 export HIGHCTIDH_PORTABLE=1
 export WINDOWS=1
@@ -193,6 +189,12 @@ mkdir -p src/build/src
 mkdir -p src/dist/tmp
 cd src/ && make && make testrandom test512 && ./testrandom && ./test512
 ```
+
+The Python module on Windows is functional when installed with `pip` under
+MSYS2 using `gcc` in the `MSYS`, `UCRT64`, `MINGW64` environments or using
+`clang` in the `MINGW64` environment.  These different environments are tested
+in `windows-msys-64bit-gcc-cygwin-ucrt-msvcrt-python-pip-test.yml` and
+`windows-msys-64bit-clang-msvcrt-python-pip-test.yml` respectively.
 
 ### Additional notes on building the C library
  

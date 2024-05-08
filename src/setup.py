@@ -161,7 +161,7 @@ if cflags is not None and cflags is str:
   cflags = cflags.split()
 else:
   cflags = ["-Wextra"]
-cflags += ["-Wall", "-fPIC", "-fpie", "-fwrapv", "-pedantic", "-O2", "-g0", "-fno-lto"]
+cflags += ["-Wall", "-fpie", "-fPIC", "-fwrapv", "-pedantic", "-O2", "-g0", "-fno-lto"]
 cflags += ["-DGETRANDOM", f"-DPLATFORM={PLATFORM}", f"-DPLATFORM_SIZE={PLATFORM_SIZE}"]
 cflags += [
     "-Wformat",
@@ -286,9 +286,10 @@ elif PLATFORM == "x86_64" or PLATFORM == "AMD64":
     if OS == "Darwin":
         cflags += ["-D__Darwin__"]
     if PLATFORM_SIZE == 32:
-        cflags += ["-D__i386__"]
-        cflags += ["-fforce-enable-int128"]
         HIGHCTIDH_PORTABLE = "1"
+        cflags += ["-D__i386__"]
+        if CC == "clang":
+            cflags += ["-fforce-enable-int128"]
     cflags += [f"-DPLATFORM={PLATFORM}", f"-DPLATFORM_SIZE={PLATFORM_SIZE}"]
     cflags += ["-DHIGHCTIDH_PORTABLE=" + HIGHCTIDH_PORTABLE]
 else:
