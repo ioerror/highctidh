@@ -42,10 +42,6 @@ jobs:
        bash --version
        ${{ matrix.CC }} -v
 
-#   - name: Install dependencies
-#     shell: msys2 {0}
-#     run: python -m pip install --upgrade flit
-
     - name: Build highctidh
       shell: msys2 {0}
       run: |
