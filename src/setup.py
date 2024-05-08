@@ -274,7 +274,7 @@ elif PLATFORM == "x86_64" or PLATFORM == "AMD64":
         # Set Windows specific build options
         cflags = ["-D__Windows__"]
         ldflags = ["-LAdvapi32.lib"]
-        if OS.startswith('MINGW64')
+        if OS.startswith('MINGW64'):
             cflags += ["-D_WIN64"]
             cflags += ["-D__MINGW64"]
         if OS.startswith('MINGW32'):
