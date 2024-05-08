@@ -155,7 +155,7 @@ The C library and bindings have been tested on the following operating systems:
 - Rockylinux 9, 9.3 (GNU libc)
 - Solaris 11.4 (Solaris libc)
 - Ubuntu 22.03, 23.10, 24.04 (GNU libc)
-- Windows Server 2019, 2022 (MSVCRT)
+- Windows Server 2019, 2022 (MSVCRT, CYGWIN, UCRT)
 
 ## Notes on building
 
@@ -168,19 +168,19 @@ MacOS 14 support is functional for the Golang bindings with Golang 1.19, 1.20,
 1.21.x, and 1.22.0.
 MacOS 14 supports the Python module with Python 3.9, 3.10, 3.11, and 3.12.
 
-Windows support is extremely experimental. The Python and Golang modules are
-almost certianly not be functional on Windows. Building the main C library on
-Windows Server 2019 and Windows Server 2022 should be possible with `clang` as
-is demonstrated in the continuous integration configuration
-`windows-fiat-c-library-test.yml`.  It has only been tested with the Windows
-Server 2022 image preloaded with `clang`, `bash`, `make`, and other related
-tools
+Windows support is extremely experimental. The Golang modules are almost
+certianly not be functional on Windows due to the state of cgo on Windows
+platforms. Building the main C library on Windows Server 2019 and Windows
+Server 2022 should be possible with `clang` as is demonstrated in the
+continuous integration configuration `windows-fiat-c-library-test.yml`.  It has
+only been tested with the Windows Server 2022 image preloaded with `clang`,
+`bash`, `make`, and other related tools
 [https://github.com/actions/runner-images/blob/main/images/windows/Windows2022-Readme.md](available
 as a part of the CI configuration).
 
-Building and performing minimal testing manually requires using `bash` as
-provided by `git` on Windows, GNU `make`, and `clang` using the following
-commands:
+Building the C library and performing minimal testing manually requires using
+`bash` as provided by `git` on Windows, GNU `make`, and `clang` using the
+following commands:
 ```
 export HIGHCTIDH_PORTABLE=1
 export WINDOWS=1
@@ -189,6 +189,12 @@ mkdir -p src/build/src
 mkdir -p src/dist/tmp
 cd src/ && make && make testrandom test512 && ./testrandom && ./test512
 ```
+
+The Python module on Windows is functional when installed with `pip` under
+MSYS2 using `gcc` in the `MSYS`, `UCRT64`, `MINGW64` environments or using
+`clang` in the `MINGW64` environment.  These different environments are tested
+in `windows-msys-64bit-gcc-cygwin-ucrt-msvcrt-python-pip-test.yml` and
+`windows-msys-64bit-clang-msvcrt-python-pip-test.yml` respectively.
 
 ### Additional notes on building the C library
  
@@ -222,6 +228,15 @@ By default `HIGHCTIDH_PORTABLE=1` is enabled for all platforms unless
 the library is installed via the Python package, in which case optimized
 implementations will be used where possible.
 
+### Experimental WebAssembly
+
+With `export CC=emcc` it is possible to build `highctidh` in several ways. This
+is experimental and primarily used to catch build bugs. We have never used this
+beyond compiling the library and we do not recommend it for anything at all.
+On Debian GNU/Linux systems install the package `emscripten` to install `emcc`.
+
+It is possible to use `emcc` to compile `highctidh` as a `.wasm` WebAssembly:
+`make wasm`
 
 ## Example C library usage
 
