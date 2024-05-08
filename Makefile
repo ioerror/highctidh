@@ -1,5 +1,6 @@
 export MAKE ?= make
 export PYTEST ?=pytest-3
+export DIST ?= ubuntu:24.04
 library: _prep
 	cd src; $(MAKE);
 	cp src/*.so dist/;
@@ -24,7 +25,7 @@ deb: _prep
 	cd src/; $(MAKE) -f Makefile.packages deb;
 
 deb-and-wheel-in-podman:
-	podman run -v `pwd`:/highctidh --workdir /highctidh --rm -it debian:bookworm bash -c 'apt update && ./misc/install-debian-deps.sh && $(MAKE) wheel && CC=clang $(MAKE) deb'
+	podman run -v `pwd`:/highctidh --workdir /highctidh --rm -it $(DIST) bash -c 'apt update && ./misc/install-debian-deps.sh && $(MAKE) wheel && CC=clang $(MAKE) deb'
 
 wasm: _prep
 	export CC=emcc;
