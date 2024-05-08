@@ -295,6 +295,8 @@ elif PLATFORM == "x86_64" or PLATFORM == "AMD64":
         cflags += ["-D__i386__"]
         if CC == "clang":
             cflags += ["-fforce-enable-int128"]
+    if CC == "gcc":
+        cflags += ["-march=native", "-mtune=native"]
     cflags += [f"-DPLATFORM={PLATFORM}", f"-DPLATFORM_SIZE={PLATFORM_SIZE}"]
     cflags += ["-DHIGHCTIDH_PORTABLE=" + HIGHCTIDH_PORTABLE]
 else:
