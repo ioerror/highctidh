@@ -50,8 +50,8 @@ jobs:
         export HIGHCTIDH_PORTABLE=1
         export WINDOWS=1
         export MAKE=make
-        #CC=${{ matrix.CC }} OPT="" pip install -v highctidh 
-        CC=${{ matrix.CC }} OPT="" py -m pip install --global-option build_ext --global-option --compiler=mingw32 -e src/  
+        CC=${{ matrix.CC }} OPT="" pip install -v -e src/ 
+        #CC=${{ matrix.CC }} OPT="" py -m pip install --global-option build_ext --global-option --compiler=mingw32 -e src/  
 
     - name: Test with pytest
       shell: msys2 {0}
