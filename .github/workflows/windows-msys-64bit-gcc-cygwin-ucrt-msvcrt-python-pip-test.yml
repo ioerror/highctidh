@@ -52,7 +52,8 @@ jobs:
         export HIGHCTIDH_PORTABLE=1
         export WINDOWS=1
         export MAKE=make
-        CC=${{ matrix.CC }} OPT="" pip install -v highctidh
+        #CC=${{ matrix.CC }} OPT="" pip install -v highctidh
+        CC=${{ matrix.CC }} OPT="" py -m pip install src/ 
 
     - name: Test with pytest
       shell: msys2 {0}
