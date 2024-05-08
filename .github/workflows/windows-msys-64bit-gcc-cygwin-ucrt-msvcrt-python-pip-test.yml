@@ -26,9 +26,9 @@ jobs:
           python-setuptools
           python-wheel
           python-pytest
-          python-pytest-xdist
           git
           gcc
+          mingw-w64-clang-x86_64-python-pytest-xdist
           mingw-w64-x86_64-gcc
           mingw-w64-ucrt-x86_64-gcc
           make
