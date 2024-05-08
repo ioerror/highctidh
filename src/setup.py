@@ -271,19 +271,19 @@ elif PLATFORM == "x86_64" or PLATFORM == "AMD64":
         # As with Solaris we wrap the function that returns these flags internally
         # during the build process to override them for a value that works for
         # both.
-        import distutils.sysconfig as _wrapped_distutils
-        from distutils.sysconfig import get_config_vars as _get_config_vars
+       #import distutils.sysconfig as _wrapped_distutils
+       #from distutils.sysconfig import get_config_vars as _get_config_vars
 
-        _config_vars = _get_config_vars().copy()
-        default_cflags = [
-            " -Wall -pedantic -O2 -fwrapv -ffile-prefix-map=..=."
-        ]
-        _config_vars["CFLAGS"] = default_cflags
+       #_config_vars = _get_config_vars().copy()
+       #default_cflags = [
+       #    " -Wall -pedantic -O2 -fwrapv -ffile-prefix-map=..=."
+       #]
+       #_config_vars["CFLAGS"] = default_cflags
 
-        def get_config_vars_wrapper(*a):
-            return [_config_vars.get(n) for n in a] if a else _config_vars
+       #def get_config_vars_wrapper(*a):
+       #    return [_config_vars.get(n) for n in a] if a else _config_vars
 
-        _wrapped_distutils.get_config_vars = get_config_vars_wrapper
+       #_wrapped_distutils.get_config_vars = get_config_vars_wrapper
         # Set Windows specific build options
         cflags = ["-D__Windows__"]
         ldflags = ["-LAdvapi32.lib"]
