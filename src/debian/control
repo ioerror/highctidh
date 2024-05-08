@@ -1,0 +1,34 @@
+Source: highctidh
+Maintainer: Jacob Appelbaum <jacob@appelbaum.net>
+Section: python
+Priority: optional
+Build-Depends: dh-python, python3-setuptools, python3-all-dev, debhelper (>= 9)
+Standards-Version: 3.9.6
+Homepage: https://codeberg.org/vula/highctidh
+X-Python3-Version: >= 3.9
+
+Package: python3-highctidh
+Architecture: any
+Depends: ${misc:Depends}, ${python3:Depends}, ${shlibs:Depends}, python3
+Description: highctidh bindings with included C library
+ ![highctidh build status](https://ci.codeberg.org/api/badges/vula/highctidh/status.svg "highctidh build status")
+ .
+ # Warning and notice
+ .
+ This is an unofficial fork of high-ctidh. This is highly experimental software
+ and it has not yet been reviewed for security considerations. We encourage
+ users of this software to assume that there are vulnerabilities until a review
+ confirms otherwise.
+ .
+ # Quick start
+ .
+ The `highctidh` project offers three compatible interfaces that all use the
+ same underlying C or assembler implementations:
+ - C Library
+ - Python module
+ - Golang module
+ .
+ ## C library
+ .
+ Build and install the C library for each field size with required headers:
+
