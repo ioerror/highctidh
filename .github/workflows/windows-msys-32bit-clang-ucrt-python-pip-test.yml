@@ -50,7 +50,7 @@ jobs:
       shell: msys2 {0}
       run: |
         export SOURCE_DATE_EPOCH=`git log -1 --pretty=%ct`
-        cd src/ && CC=${{ matrix.CC }} OPT="" python3 -m install
+        cd src/ && CC=${{ matrix.CC }} OPT="" python3 setup.py install
 
     - name: Test with pytest
       shell: msys2 {0}

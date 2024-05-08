@@ -408,7 +408,7 @@ if __name__ == "__main__":
         ext_modules=[
             Extension(
                 "highctidh_511",
-                extra_compile_args=" ".join(extra_compile_args_511),
+                extra_compile_args=extra_compile_args_511,
                 extra_link_args=ldflags,
                 include_dirs=dir_include,
                 language="c",
@@ -417,7 +417,7 @@ if __name__ == "__main__":
             ),
             Extension(
                 "highctidh_512",
-                extra_compile_args=" ".join(extra_compile_args_512),
+                extra_compile_args=extra_compile_args_512,
                 extra_link_args=ldflags,
                 include_dirs=dir_include,
                 language="c",
@@ -426,7 +426,7 @@ if __name__ == "__main__":
             ),
             Extension(
                 "highctidh_1024",
-                extra_compile_args=" ".join(extra_compile_args_1024),
+                extra_compile_args=extra_compile_args_1024,
                 extra_link_args=ldflags,
                 include_dirs=dir_include,
                 language="c",
@@ -435,7 +435,7 @@ if __name__ == "__main__":
             ),
             Extension(
                 "highctidh_2048",
-                extra_compile_args=" ".join(extra_compile_args_2048),
+                extra_compile_args=extra_compile_args_2048,
                 extra_link_args=ldflags,
                 include_dirs=dir_include,
                 language="c",
