@@ -1,4 +1,4 @@
-name: Windows Msys2 32bit (msvcrt) gcc Python pip build and test
+name: Windows Msys2 64bit (cygwin,msvcrt,ucrt) gcc Python pip build and test
 
 on: [push]
 
@@ -9,7 +9,7 @@ jobs:
       matrix:
         OS: ["windows-2022"]
         CC: ["gcc"]
-        ENVIRONMENT: ["MINGW32"] # https://www.msys2.org/docs/environments/
+        ENVIRONMENT: ["MSYS", "UCRT64", "MINGW64"] # https://www.msys2.org/docs/environments/
       fail-fast: false
 
     steps:
@@ -28,9 +28,11 @@ jobs:
           python-pytest
           git
           gcc
-          mingw-w64-clang-i686-python-pytest-xdist
-          mingw-w64-clang-i686-python-distutils-extra
-          mingw-w64-i686-gcc
+          mingw-w64-clang-x86_64-python-pytest-xdist
+          mingw-w64-clang-x86_64-python-flit
+          mingw-w64-clang-x86_64-python-distutils-extra
+          mingw-w64-x86_64-gcc
+          mingw-w64-ucrt-x86_64-gcc
           make
 
     - name: Gather runtime environment
@@ -50,7 +52,7 @@ jobs:
         export HIGHCTIDH_PORTABLE=1
         export WINDOWS=1
         export MAKE=make
-        CC=${{ matrix.CC }} OPT="" pip install -v highctidh 
+        CC=${{ matrix.CC }} OPT="" pip install -v -e src/
 
     - name: Test with pytest
       shell: msys2 {0}
