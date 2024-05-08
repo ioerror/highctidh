@@ -29,6 +29,7 @@ jobs:
           git
           gcc
           mingw-w64-clang-i686-python-pytest-xdist
+          mingw-w64-clang-x86_64-python-flit
           mingw-w64-i686-gcc
           make
 
@@ -41,9 +42,9 @@ jobs:
        bash --version
        ${{ matrix.CC }} -v
 
-    - name: Install dependencies
-      shell: msys2 {0}
-      run: python -m pip install --upgrade flit
+#   - name: Install dependencies
+#     shell: msys2 {0}
+#     run: python -m pip install --upgrade flit
 
     - name: Build highctidh
       shell: msys2 {0}
