@@ -287,12 +287,10 @@ elif PLATFORM == "x86_64" or PLATFORM == "AMD64":
         cflags += ["-D__Darwin__"]
     if PLATFORM_SIZE == 32:
         cflags += ["-D__i386__"]
+        cflags += ["-fforce-enable-int128"]
         HIGHCTIDH_PORTABLE = "1"
     cflags += [f"-DPLATFORM={PLATFORM}", f"-DPLATFORM_SIZE={PLATFORM_SIZE}"]
     cflags += ["-DHIGHCTIDH_PORTABLE=" + HIGHCTIDH_PORTABLE]
-    if HIGHCTIDH_PORTABLE == "1":
-        if CC == "clang":
-            cflags += ["-fforce-enable-int128"]
 else:
     cflags += ["-DHIGHCTIDH_PORTABLE=" + HIGHCTIDH_PORTABLE]
 
