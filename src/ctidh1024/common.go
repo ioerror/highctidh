@@ -18,7 +18,7 @@ package ctidh1024
 
  // export CGO_CFLAGS_ALLOW="-fforce-enable-int128";
  // CC=clang CGO_ENABLED=1 GOOS=linux GOARCH=arm ARMVER=7  go build
- #cgo arm CFLAGS: -DPLATFORM=arm -DPLATFORM_SIZE=32 -D__ARM32__ -DHIGHCTIDH_PORTABLE=1
+ #cgo arm CFLAGS: -DPLATFORM=arm -DPLATFORM_SIZE=32 -fforce-enable-int128 -D__ARM32__ -DHIGHCTIDH_PORTABLE=1
 
  // CC=clang CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -v
  #cgo darwin/amd64 CFLAGS: -DPLATFORM=x86_64 -DPLATFORM_SIZE=64 -D__x86_64__ -march=native -mtune=native -D__Darwin__ -DGETRANDOM -DHIGHCTIDH_PORTABLE=1
