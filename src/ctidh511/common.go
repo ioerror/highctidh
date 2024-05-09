@@ -6,6 +6,7 @@ package ctidh511
  #cgo linux CFLAGS: -DBITS=511 -DGETRANDOM -DCGONUTS -Wformat -Werror=format-security -D_FORTIFY_SOURCE=2 -fstack-protector-all -fpie -fPIC -O2
  #cgo linux LDFLAGS: -Wl,-z,noexecstack -Wl,-z,relro
  #cgo windows CFLAGS: -D__Windows__ -DHIGHCTIDH_PORTABLE=1
+ #cgo windows LDFLAGS: -Wl,--no-as-needed -Wl,-allow-multiple-definition
 
  // The following should work as native builds and as cross compiled builds.
  // Example cross compile build lines are provided as examples.

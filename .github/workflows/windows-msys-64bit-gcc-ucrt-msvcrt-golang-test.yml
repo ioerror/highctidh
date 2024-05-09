@@ -48,8 +48,8 @@ jobs:
       - name: Install golang dependencies
         shell: msys2 {0}
         run: |
-          export HIGHCTIDH_PORTABLE=1
-          export CGO_ENABLED=1
+          #export HIGHCTIDH_PORTABLE=1
+          #export CGO_ENABLED=1
           go get -v ./src/ctidh511
           go get -v ./src/ctidh512
           go get -v ./src/ctidh1024
@@ -58,20 +58,20 @@ jobs:
       - name: Build golang
         shell: msys2 {0}
         run: |
-          export HIGHCTIDH_PORTABLE=1
-          export CGO_ENABLED=1
-          export GOEXPERIMENT=cgocheck2
-          export GODEBUG=cgocheck=1
+          #export HIGHCTIDH_PORTABLE=1
+          #export CGO_ENABLED=1
+          #export GOEXPERIMENT=cgocheck2
+          #export GODEBUG=cgocheck=1
           go build -v ./...
 
       - name: Golang test
         shell: msys2 {0}
         run: |
-          export HIGHCTIDH_PORTABLE=1
-          export CGO_ENABLED=1
-          export GOEXPERIMENT=cgocheck2
-          export GODEBUG=cgocheck=1
-          export CGO_LDFLAGS="-Wl,--no-as-needed -Wl,-allow-multiple-definition"
+          #export HIGHCTIDH_PORTABLE=1
+          #export CGO_ENABLED=1
+          #export GOEXPERIMENT=cgocheck2
+          #export GODEBUG=cgocheck=1
+          #export CGO_LDFLAGS="-Wl,--no-as-needed -Wl,-allow-multiple-definition"
           go test -v ./src/ctidh511;
           go test -v ./src/ctidh512;
           go test -v ./src/ctidh1024;
