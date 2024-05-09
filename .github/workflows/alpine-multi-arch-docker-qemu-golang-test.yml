@@ -10,10 +10,10 @@ jobs:
       matrix:
         CC: ["clang"]
         DOCKER_ARCH_ARGS: ["--platform linux/arm64/v8 arm64v8/alpine",
-                           "--platform linux/amd64 amd64/alpine"] #,
-               #           "--platform linux/riscv64 riscv64/alpine:edge",
-               #           "--platform linux/ppc64le ppc64le/alpine",
-               #           "--platform linux/s390x s390x/alpine"]
+                           "--platform linux/amd64 amd64/alpine",
+                           "--platform linux/riscv64 riscv64/alpine:edge",
+                           "--platform linux/ppc64le ppc64le/alpine",
+                           "--platform linux/s390x s390x/alpine"]
       fail-fast: false
     steps:
       - name: Set up QEMU
@@ -33,7 +33,7 @@ jobs:
           uname -a
 
       - name: Run Golang tests in Docker under qemu
-        continue-on-error: true
+        continue-on-error: false
         run: |
           docker run \
             -v $(pwd):/${{ github.workspace }} \
@@ -41,4 +41,4 @@ jobs:
             -e "CC=${{ matrix.CC }}" \
             --rm \
             ${{ matrix.DOCKER_ARCH_ARGS}} \
-            /bin/sh -c "./misc/alpine-multi-arch-docker-qemu-golang-test.sh"
+            /bin/sh -c "./misc/test-golang-alpine-docker-qemu.sh"

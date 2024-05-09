@@ -41,4 +41,4 @@ jobs:
             -e "CC=${{ matrix.CC }}" \
             --rm \
             ${{ matrix.DOCKER_ARCH_ARGS}} \
-            /bin/sh -c "./misc/debian-multi-arch-docker-qemu-golang-test.sh"
+            /bin/sh -c "./misc/test-golang-debian-docker-qemu.sh"
