@@ -46,16 +46,6 @@ jobs:
          ${{ matrix.CC }} -v
          go version
 
-      - name: Build highctidh
-        shell: msys2 {0}
-        run: |
-          export SETUPTOOLS_USE_DISTUTILS=local
-          export SOURCE_DATE_EPOCH=`git log -1 --pretty=%ct`
-          export HIGHCTIDH_PORTABLE=1
-          export WINDOWS=1
-          export MAKE=make
-          CC=${{ matrix.CC }} OPT="" pip install -v -e src/
-
       - name: Install golang dependencies
         shell: msys2 {0}
         run: |
