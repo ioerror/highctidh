@@ -10,5 +10,6 @@ echo "Required packages installed";
 echo "Configuring git";
 git config --global --add safe.directory .;
 echo "Running Golang tests";
+go clean -v;
 go test -v ./...;
 echo "Golang tests completed";

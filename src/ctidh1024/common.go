@@ -51,7 +51,7 @@ package ctidh1024
  #cgo solaris/sparc64 CFLAGS: -m64 -DPLATFORM=sun4v -DPLATFORM_SIZE=64 -D__sun -DHIGHCTIDH_PORTABLE=1
 
  // CC=s390x-linux-gnu-gcc CGO_ENABLED=1 GOOS=linux GOARCH=s390x go build -v
- #cgo s390x CFLAGS: -DPLATFORM=s390x -DPLATFORM_SIZE=64 -DHIGHCTIDH_PORTABLE=1
+ #cgo s390x CFLAGS: -DPLATFORM=s390x -DPLATFORM_SIZE=64 -D__s390x__ -march=z10 -mtune=z10 -DHIGHCTIDH_PORTABLE=1
 
  // CC=mips64-linux-gnuabi64-gcc CGO_ENABLED=1 GOOS=linux GOARCH=mips64  go build
  // With clang, -fforce-enable-int128 must be added to the CFLAGS
