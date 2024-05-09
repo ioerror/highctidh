@@ -6,7 +6,7 @@ echo "Updating Debian package sources";
 apt update # > /dev/null 2>&1;
 echo "Installing required packages...";
 apt install -y --no-install-recommends make clang git \
-  golang build-essential fakeroot coreutils #> /dev/null 2>&1;
+  golang build-essential fakeroot coreutils ca-certificates #> /dev/null 2>&1;
 echo "Required packages installed";
 echo "Configuring git";
 git config --global --add safe.directory .;
