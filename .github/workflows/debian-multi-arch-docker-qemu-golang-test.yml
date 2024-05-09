@@ -1,19 +1,19 @@
-name: Alpine multi-arch docker 64bit golang test (clang)
+name: Debian multi-arch docker 64bit golang test (clang)
 on:
   push:
   pull_request:
     branches: ["main"]
 jobs:
-  alpine-multiarch-64bit-qemu-test:
+  debian-multiarch-64bit-qemu-test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         CC: ["clang"]
-        DOCKER_ARCH_ARGS: ["--platform linux/arm64/v8 arm64v8/alpine",
-                           "--platform linux/amd64 amd64/alpine"] #,
-               #           "--platform linux/riscv64 riscv64/alpine:edge",
-               #           "--platform linux/ppc64le ppc64le/alpine",
-               #           "--platform linux/s390x s390x/alpine"]
+        DOCKER_ARCH_ARGS: ["--platform linux/arm64/v8 arm64v8/debian",
+                           "--platform linux/amd64 amd64/debian"] #,
+           #               "--platform linux/riscv64 riscv64/debian",
+           #               "--platform linux/ppc64le ppc64le/debian",
+           #               "--platform linux/s390x s390x/debian"]
       fail-fast: false
     steps:
       - name: Set up QEMU
@@ -41,4 +41,4 @@ jobs:
             -e "CC=${{ matrix.CC }}" \
             --rm \
             ${{ matrix.DOCKER_ARCH_ARGS}} \
-            /bin/sh -c "./misc/alpine-multi-arch-docker-qemu-golang-test.sh"
+            /bin/sh -c "./misc/debian-multi-arch-docker-qemu-golang-test.sh"
