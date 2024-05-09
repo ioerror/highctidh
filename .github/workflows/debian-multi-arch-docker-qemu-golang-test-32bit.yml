@@ -4,12 +4,12 @@ on:
   pull_request:
     branches: ["main"]
 jobs:
-  debian-multiarch-64bit-qemu-test:
+  debian-multiarch-32bit-qemu-test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         CC: ["clang"]
-        DOCKER_ARCH_ARGS: ["--platform linux/arm32/v7 arm32v7/debian:sid-slim",
+        DOCKER_ARCH_ARGS: ["--platform linux/arm/v7 arm32v7/debian:sid-slim",
                            "--platform linux/i386 i386/debian:sid-slim"]
       fail-fast: false
     steps:
@@ -36,6 +36,7 @@ jobs:
             -v $(pwd):/${{ github.workspace }} \
             -w ${{ github.workspace }} \
             -e "CC=${{ matrix.CC }}" \
+            -e "CGO_CFLAGS_ALLOW=-fforce-enable-int128" \
             --rm \
             ${{ matrix.DOCKER_ARCH_ARGS}} \
             /bin/sh -c "./misc/test-golang-debian-docker-qemu.sh"
