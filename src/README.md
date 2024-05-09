@@ -168,13 +168,12 @@ MacOS 14 support is functional for the Golang bindings with Golang 1.19, 1.20,
 1.21.x, and 1.22.0.
 MacOS 14 supports the Python module with Python 3.9, 3.10, 3.11, and 3.12.
 
-Windows support is extremely experimental. The Golang modules are almost
-certianly not be functional on Windows due to the state of cgo on Windows
-platforms. Building the main C library on Windows Server 2019 and Windows
-Server 2022 should be possible with `clang` as is demonstrated in the
-continuous integration configuration `windows-fiat-c-library-test.yml`.  It has
-only been tested with the Windows Server 2022 image preloaded with `clang`,
-`bash`, `make`, and other related tools
+Windows support is extremely experimental.  Building the main C library on
+Windows Server 2019 and Windows Server 2022 should be possible with `clang` as
+is demonstrated in the continuous integration configuration
+`windows-fiat-c-library-test.yml`.  It has only been tested with the Windows
+Server 2022 image preloaded with `clang`, `bash`, `make`, and other related
+tools
 [https://github.com/actions/runner-images/blob/main/images/windows/Windows2022-Readme.md](available
 as a part of the CI configuration).
 
@@ -195,6 +194,10 @@ MSYS2 using `gcc` in the `MSYS`, `UCRT64`, `MINGW64` environments or using
 `clang` in the `MINGW64` environment.  These different environments are tested
 in `windows-msys-64bit-gcc-cygwin-ucrt-msvcrt-python-pip-test.yml` and
 `windows-msys-64bit-clang-msvcrt-python-pip-test.yml` respectively.
+
+The Golang module on Windows is functional when built under MSYS2 using `gcc`
+in the `UCRT64`, or `MINGW64` environments.  These different environments are
+tested in `windows-msys-64bit-gcc-ucrt-msvcrt-golang-test.yml`.
 
 ### Additional notes on building the C library
  
