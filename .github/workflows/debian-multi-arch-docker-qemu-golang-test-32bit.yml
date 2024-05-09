@@ -1,0 +1,41 @@
+name: Debian multi-arch docker 32bit golang test (clang)
+on:
+  push:
+  pull_request:
+    branches: ["main"]
+jobs:
+  debian-multiarch-64bit-qemu-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        CC: ["clang"]
+        DOCKER_ARCH_ARGS: ["--platform linux/arm32/v7 arm32v7/debian:sid-slim",
+                           "--platform linux/i386 i386/debian:sid-slim"]
+      fail-fast: false
+    steps:
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: Install requirements
+        run: |
+          sudo apt install -y --no-install-recommends docker
+
+      - name: check kernel
+        run: |
+          mount | grep binfmt_misc
+          docker info
+          uname -a
+
+      - name: Run Golang tests in Docker under qemu
+        continue-on-error: false
+        run: |
+          docker run \
+            -v $(pwd):/${{ github.workspace }} \
+            -w ${{ github.workspace }} \
+            -e "CC=${{ matrix.CC }}" \
+            --rm \
+            ${{ matrix.DOCKER_ARCH_ARGS}} \
+            /bin/sh -c "./misc/test-golang-debian-docker-qemu.sh"

@@ -9,11 +9,11 @@ jobs:
     strategy:
       matrix:
         CC: ["clang"]
-        DOCKER_ARCH_ARGS: ["--platform linux/arm64/v8 arm64v8/debian",
-                           "--platform linux/amd64 amd64/debian",
-                           "--platform linux/riscv64 riscv64/debian",
-                           "--platform linux/ppc64le ppc64le/debian",
-                           "--platform linux/s390x s390x/debian"]
+        DOCKER_ARCH_ARGS: ["--platform linux/arm64/v8 arm64v8/debian:sid-slim",
+                           "--platform linux/amd64 amd64/debian:sid-slim",
+                           "--platform linux/riscv64 riscv64/debian:sid-slim",
+                           "--platform linux/ppc64le ppc64le/debian:sid-slim",
+                           "--platform linux/s390x s390x/debian:sid-slim"]
       fail-fast: false
     steps:
       - name: Set up QEMU
