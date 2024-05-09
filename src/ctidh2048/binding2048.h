@@ -13,8 +13,6 @@ void highctidh_2048_go_fillrandom(void *, void *, size_t);
 #define NAMESPACEBITS(x) highctidh_2048_##x
 #define NAMESPACEGENERIC(x) highctidh_2048_##x
 
-//#if !defined(fillrandom_2048_custom_FUNC)
-//#define fillrandom_2048_custom_FUNC
 __attribute__((weak))
 void fillrandom_2048_custom(
   void *const outptr,
@@ -23,7 +21,6 @@ void fillrandom_2048_custom(
 {
   highctidh_2048_go_fillrandom((void *) context, outptr, outsz);
 }
-//#endif
 #endif
 
 #endif
