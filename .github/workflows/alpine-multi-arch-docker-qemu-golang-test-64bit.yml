@@ -39,7 +39,7 @@ jobs:
             -v $(pwd):/${{ github.workspace }} \
             -w ${{ github.workspace }} \
             -e "CC=${{ matrix.CC }}" \
-            -e "CFLAGS=-fno-lto" \
+            -e "CFLAGS=-fno-lto -fno-stack-protector" \
             --rm \
             ${{ matrix.DOCKER_ARCH_ARGS}} \
             /bin/sh -c "./misc/test-golang-alpine-docker-qemu.sh"
