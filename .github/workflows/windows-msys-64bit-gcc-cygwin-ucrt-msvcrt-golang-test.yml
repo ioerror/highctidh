@@ -1,9 +1,9 @@
-name: Windows Msys2 64bit (cygwin,msvcrt,ucrt) gcc Python pip build and test
+name: Windows Msys2 64bit (cygwin,msvcrt,ucrt) gcc golang build and test
 
 on: [push]
 
 jobs:
-  build:
+  windows-build-and-test-golang:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
