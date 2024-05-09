@@ -10,10 +10,10 @@ jobs:
       matrix:
         CC: ["clang"]
         DOCKER_ARCH_ARGS: ["--platform linux/arm64/v8 arm64v8/alpine",
-                           "--platform linux/amd64 amd64/alpine"] #,
-                           #"--platform linux/riscv64 riscv64/alpine:edge",
-                           # "--platform linux/ppc64le ppc64le/alpine",
-                           #                           "--platform linux/s390x s390x/alpine"]
+                           "--platform linux/amd64 amd64/alpine",
+                           "--platform linux/riscv64 riscv64/alpine:edge",
+                           "--platform linux/ppc64le ppc64le/alpine",
+                           "--platform linux/s390x s390x/alpine"]
       fail-fast: false
     steps:
       - name: Set up QEMU
