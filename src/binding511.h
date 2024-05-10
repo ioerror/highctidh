@@ -19,7 +19,7 @@ void fillrandom_511_custom(
   const size_t outsz,
   const uintptr_t context)
 {
-  highctidh_2048_go_fillrandom((void *)context, outptr, outsz);
+  highctidh_511_go_fillrandom((void *)context, outptr, outsz);
 }
 #endif
 
