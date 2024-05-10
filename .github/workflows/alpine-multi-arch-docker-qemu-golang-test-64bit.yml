@@ -5,7 +5,7 @@ on:
     branches: ["main"]
 jobs:
   alpine-multiarch-64bit-qemu-test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         CC: ["clang", "gcc"]
