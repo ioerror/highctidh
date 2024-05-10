@@ -9,28 +9,35 @@ jobs:
     strategy:
       matrix:
         CC: ["clang", "gcc"]
-        DOCKER_ARCH_ARGS: ["--platform linux/s390x s390x/debian:sid-slim"]
+        DOCKER_ARCH_ARGS: ["--platform linux/s390x s390x/debian:sid-slim",
+                           "--platform linux/amd64 amd64/debian:sid-slim"] #,
           #"--platform linux/arm64/v8 arm64v8/debian:sid-slim",
-          #                 "--platform linux/amd64 amd64/debian:sid-slim",
           #                 "--platform linux/riscv64 riscv64/debian:sid-slim",
           #                 "--platform linux/ppc64le ppc64le/debian:sid-slim",
       fail-fast: false
     steps:
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+    # - name: Set up QEMU
+    #   uses: docker/setup-qemu-action@v3
 
       - name: checkout
         uses: actions/checkout@v4
 
       - name: Install requirements
         run: |
-          sudo apt install -y --no-install-recommends docker
+          sudo apt update
+          sudo apt install -y docker.io qemu-user-static
 
       - name: check kernel
         run: |
           mount | grep binfmt_misc
           docker info
           uname -a
+
+      - name: Setup qemu user static
+        continue-on-error: false
+        run: |
+          docker pull multiarch/qemu-user-static
+          docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
 
       - name: Run Golang tests in Docker under qemu
         continue-on-error: false

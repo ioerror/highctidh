@@ -24,7 +24,8 @@ jobs:
 
       - name: Install requirements
         run: |
-          sudo apt install -y --no-install-recommends docker.io qemu-user-static
+          sudo apt update
+          sudo apt install -y docker.io qemu-user-static
 
       - name: check kernel
         run: |
