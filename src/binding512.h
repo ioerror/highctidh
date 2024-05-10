@@ -9,9 +9,10 @@
 #if 512 == BITS
 
 void fillrandom_custom( void *const outptr, const size_t outsz, const uintptr_t context);
-void highctidh_512_go_fillrandom(void *, void *, size_t);
+void go_fillrandom(void *, void *, size_t);
 #define NAMESPACEBITS(x) highctidh_512_##x
 #define NAMESPACEGENERIC(x) highctidh_512_##x
+#define NAMESPACEBITS(go_fillrandom)
 
 __attribute__((weak))
 void fillrandom_512_custom(

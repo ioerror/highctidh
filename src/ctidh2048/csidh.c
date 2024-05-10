@@ -22,11 +22,14 @@ public_key_from_bytes(public_key *const pk, const char *const input)
 	uint64_t *input_u64 = (uint64_t *)input;
 	for(size_t i=0; i < sizeof(pk->A.x.c)/sizeof(pk->A.x.c[0]); i++){
     // We could write this as so on GNU/Linux, BSD, and MacOS
-		// pk->A.x.c[i] = le64toh(*input_u64++);
+#if !defined(__sun)
+		pk->A.x.c[i] = le64toh(*input_u64++);
+#else
     // however on Solaris 11.4 sparcv9 64bit it throws a hard error of
     // 'multiple unsequenced modifications'
 		pk->A.x.c[i] = le64toh(*input_u64);
-    input_u64++;
+		input_u64++;
+#endif
 	}
 }
 
