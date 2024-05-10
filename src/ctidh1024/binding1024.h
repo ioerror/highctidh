@@ -9,10 +9,9 @@
 #if 1024 == BITS
 
 void fillrandom_custom( void *const outptr, const size_t outsz, const uintptr_t context);
-void go_fillrandom(void *, void *, size_t);
+void highctidh_1024_go_fillrandom(void *, void *, size_t);
 #define NAMESPACEBITS(x) highctidh_1024_##x
 #define NAMESPACEGENERIC(x) highctidh_1024_##x
-#define go_fillrandom NAMESPACEBITS(go_fillrandom)
 
 __attribute__((weak))
 void fillrandom_1024_custom(
@@ -20,7 +19,7 @@ void fillrandom_1024_custom(
   const size_t outsz,
   const uintptr_t context)
 {
-  go_fillrandom((void *) context, outptr, outsz);
+  highctidh_1024_go_fillrandom((void *) context, outptr, outsz);
 }
 #endif
 
