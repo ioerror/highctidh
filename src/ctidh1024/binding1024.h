@@ -20,7 +20,7 @@ void fillrandom_1024_custom(
   const size_t outsz,
   const uintptr_t context)
 {
-  highctidh_1024_go_fillrandom((void *) context, outptr, outsz);
+  go_fillrandom((void *) context, outptr, outsz);
 }
 #endif
 
