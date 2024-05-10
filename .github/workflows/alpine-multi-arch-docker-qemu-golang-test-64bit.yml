@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        CC: ["clang"]
+        CC: ["clang", "gcc"]
         DOCKER_ARCH_ARGS: ["--platform linux/arm64/v8 arm64v8/alpine:edge",
                            "--platform linux/amd64 amd64/alpine:edge",
                            "--platform linux/riscv64 riscv64/alpine:edge",
@@ -39,7 +39,7 @@ jobs:
             -v $(pwd):/${{ github.workspace }} \
             -w ${{ github.workspace }} \
             -e "CC=${{ matrix.CC }}" \
-            -e "CFLAGS=-fno-lto -fno-stack-protector" \
+            -e "CFLAGS=-fno-lto" \
             --rm \
             ${{ matrix.DOCKER_ARCH_ARGS}} \
             /bin/sh -c "./misc/test-golang-alpine-docker-qemu.sh"

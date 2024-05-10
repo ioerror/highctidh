@@ -5,7 +5,7 @@ set -x;
 echo "Updating alpine package sources";
 apk update > /dev/null 2>&1;
 echo "Installing required packages...";
-apk add --no-cache alpine-sdk musl-dev clang go > /dev/null 2>&1;
+apk add --no-cache alpine-sdk clang gcc go musl-dev > /dev/null 2>&1;
 echo "Required packages installed";
 echo "Configuring git";
 git config --global --add safe.directory .;

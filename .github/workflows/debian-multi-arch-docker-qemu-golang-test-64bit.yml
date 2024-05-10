@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        CC: ["clang"]
+        CC: ["clang", "gcc"]
         DOCKER_ARCH_ARGS: ["--platform linux/s390x s390x/debian:sid-slim"]
           #"--platform linux/arm64/v8 arm64v8/debian:sid-slim",
           #                 "--platform linux/amd64 amd64/debian:sid-slim",
