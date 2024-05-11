@@ -1,3 +1,5 @@
+//go:noinline
+
 package ctidh511
 
 /*

@@ -11,7 +11,7 @@ jobs:
         CC: ["clang", "gcc"]
         DOCKER_ARCH_ARGS: ["--platform linux/arm64/v8 arm64v8/alpine:3.18",
                            "--platform linux/amd64 amd64/alpine:3.18",
-                           "--platform linux/riscv64 riscv64/alpine:3.19",
+                           "--platform linux/riscv64 riscv64/alpine:edge",
                            "--platform linux/ppc64le ppc64le/alpine:3.18",
                            "--platform linux/s390x s390x/alpine:3.18"]
       fail-fast: false
