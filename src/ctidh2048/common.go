@@ -1,11 +1,9 @@
-//go:noinline
-
 package ctidh2048
 
 /*
  #cgo CFLAGS: -DBITS=2048 -DCGONUTS -O2
  #cgo LDFLAGS:
- #cgo linux CFLAGS: -DBITS=2048 -DGETRANDOM -DCGONUTS -Wformat -Werror=format-security -D_FORTIFY_SOURCE=2 -fstack-protector-all -fpie -fPIC -O2
+ #cgo linux CFLAGS: -DBITS=2048 -DGETRANDOM -DCGONUTS -Wformat -Werror=format-security -D_FORTIFY_SOURCE=2 -fstack-protector-all -fpie -fPIC -O1
  #cgo linux LDFLAGS: -Wl,-z,noexecstack -Wl,-z,relro
  #cgo windows CFLAGS: -D__Windows__ -DHIGHCTIDH_PORTABLE=1
 
