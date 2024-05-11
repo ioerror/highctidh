@@ -5,15 +5,15 @@ on:
     branches: ["main"]
 jobs:
   alpine-multiarch-64bit-qemu-test:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         CC: ["clang", "gcc"]
         DOCKER_ARCH_ARGS: ["--platform linux/arm64/v8 arm64v8/alpine:3.18",
-                           "--platform linux/amd64 amd64/alpine:3.18"] #,
-                           #                           "--platform linux/riscv64 riscv64/alpine:edge",
-                           #"--platform linux/ppc64le ppc64le/alpine:edge",
-                           #"--platform linux/s390x s390x/alpine:edge"]
+                           "--platform linux/amd64 amd64/alpine:3.18",
+                           "--platform linux/riscv64 riscv64/alpine:3.18",
+                           "--platform linux/ppc64le ppc64le/alpine:3.18",
+                           "--platform linux/s390x s390x/alpine:3.18"]
       fail-fast: false
     steps:
       #      - name: Set up QEMU
@@ -25,7 +25,7 @@ jobs:
       - name: Install requirements
         run: |
           sudo apt update
-          sudo apt install -y docker.io qemu-user-static
+          sudo apt install -y docker qemu-user-static
 
       - name: check kernel
         run: |
