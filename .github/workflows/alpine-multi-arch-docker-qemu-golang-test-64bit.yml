@@ -14,7 +14,7 @@ jobs:
         #                  "--platform linux/riscv64 riscv64/alpine:edge",
         #                  "--platform linux/ppc64le ppc64le/alpine:3.18",
         #                  "--platform linux/s390x s390x/alpine:3.18"]
-      fa#l-fast: false
+      fail-fast: false
     steps:
       #      - name: Set up QEMU
       #  uses: docker/setup-qemu-action@v3
