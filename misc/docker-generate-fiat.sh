@@ -1,8 +1,10 @@
-#!/bin/bash
-set -e;
+#!/usr/bin/env bash
 
-docker=$(type -p podman || type -p docker);
+set -e -u -o pipefail
 
-$docker run --mount type=bind,source="$(pwd)/docker_build_output/",target=/docker_build_output/ \
-   --rm -it debian-libhighctidh-fiat-crypto \
-   /highctidh/generate-fields.sh;
+docker=$(type -p podman || type -p docker)
+
+$docker run \
+  --mount type=bind,source="$(pwd)/docker_build_output/",target=/docker_build_output/ \
+  --rm -it debian-libhighctidh-fiat-crypto \
+  /highctidh/generate-fields.sh

@@ -1,7 +1,11 @@
-#!/bin/bash
-set -e
+#!/usr/bin/env bash
 
-echo "Installing required packages...";
-apt update  > /dev/null 2>&1;
-apt install -y --no-install-recommends clang fakeroot > /dev/null 2>&1;
-echo "Required packages installed";
+set -e -u -o pipefail
+
+echo "Installing required packages..."
+
+apt update &> /dev/null
+
+apt install -y --no-install-recommends clang fakeroot &> /dev/null
+
+echo "Required packages installed"

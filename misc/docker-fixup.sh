@@ -1,5 +1,6 @@
-#!/bin/bash
-#
+#!/usr/bin/env bash
 
-mkdir -p {dist/source,build/tmp};
-git config --global --add safe.directory /highctidh;
+set -e -u -o pipefail
+
+mkdir -p {dist/source,build/tmp}
+git config --global --add safe.directory /highctidh
