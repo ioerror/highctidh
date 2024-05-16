@@ -10,6 +10,7 @@ export DEB_BUILD_OPTIONS=nocheck
 export ARCHES_UNSUPPORTED="POWER8/ppc64 loongarch64/Loongson sparc64"
 export ARCHES_GCC="amd64 arm64v8 ppc64le riscv64 s390x"
 export ARCHES_CLANG="i386 mips64le arm32v5 arm32v7"
+
 echo "Starting building of libhighctidh packages: $(date -R)"
 echo "Currently skipping builds for $ARCHES_UNSUPPORTED"
 
@@ -28,16 +29,20 @@ done
 for arch in $ARCHES_CLANG
 do
   echo "Building artifacts on $arch with clang"
-  CC=clang PODMAN_ARCH=$arch make -f Makefile.packages deb-and-wheel-in-podman-arch-sid
+  CC=clang PODMAN_ARCH=$arch \
+    make -f Makefile.packages deb-and-wheel-in-podman-arch-sid
 done
 
 for arch in $ARCHES_GCC
 do
   echo "Building artifacts on $arch with gcc"
-  CC=gcc PODMAN_ARCH=$arch make -f Makefile.packages deb-and-wheel-in-podman-arch-sid
+  CC=gcc PODMAN_ARCH=$arch \
+    make -f Makefile.packages deb-and-wheel-in-podman-arch-sid
 done
 
 echo "Watch the build process: tail -f docker_build_output/*/*/build.log"
 
-find docker_build_output/ | grep -E '.tar.gz$|.whl$|.deb$' | xargs -n1 sha256sum
+find docker_build_output/ |
+  grep -E '.tar.gz$|.whl$|.deb$' |
+  xargs -n1 sha256sum
 echo "Finished building libhighctidh packages: $(date -R)"

@@ -4,6 +4,11 @@ set -e -u -o pipefail
 set -x
 
 echo "Installing required packages..."
-apt update > /dev/null 2>&1
-apt install -y --no-install-recommends make git emscripten > /dev/null 2>&1
+
+apt update &> /dev/null
+
+apt install -y --no-install-recommends \
+  make git emscripten \
+  &> /dev/null
+
 echo "Required packages installed"

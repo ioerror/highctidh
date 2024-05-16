@@ -55,5 +55,8 @@ do
   -e "WORKDIR=/highctidh/" \
   --rm -d -it \
   "debian-$arch-$DIST-libhighctidh:latest" \
-  /bin/bash -c 'cd /highctidh && ./misc/docker-fixup.sh && make packages 2>&1 >> /highctidh/dist/build.log'
+  /bin/bash -c '
+    cd /highctidh &&
+      ./misc/docker-fixup.sh &&
+      make packages 2>&1 >> /highctidh/dist/build.log'
 done

@@ -126,4 +126,5 @@ do
     done
   )
 done
+
 echo "Cross compile for $GOOS with CGO_ENABLED=$CGO_ENABLED successful."

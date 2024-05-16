@@ -20,10 +20,11 @@ do
       --build-arg DEBIAN_FRONTEND=noninteractive \
       -t "debian-$arch-$DIST-libhighctidh" 2>&1 |
         tee "docker_build_output/$arch-$DIST-docker-image-build.log"
-   )
+  )
   then
     echo "Built base image for $arch/$DIST"
   fi
 done
 
-docker image ls|grep libhighctidh
+docker image ls |
+  grep libhighctidh

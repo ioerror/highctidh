@@ -4,7 +4,7 @@ endif
 
 SHELL := bash
 
-BASH_FILES := $(shell grep -lr '^#!.*bash')
+BASH_FILES := $(shell grep -lr '^#!.*bash' | grep -v '\.swp')
 TEST_BASH_FILES := $(BASH_FILES:%=test-%)
 SHELLCHECK := $(shell command -v shellcheck)
 SHELLCHECK_VERSION := 0.10.0

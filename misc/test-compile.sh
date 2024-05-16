@@ -10,6 +10,7 @@ set -x
   make libhighctidh.a
   make libhighctidh.so
 )
+
 python3 -m build
 make -f Makefile.packages deb
 echo "gcc builds are okay"
@@ -21,6 +22,7 @@ echo "gcc builds are okay"
   make libhighctidh.a
   make libhighctidh.so
 )
+
 python3 -m build
 make -f Makefile.packages deb
 echo "clang builds are okay"

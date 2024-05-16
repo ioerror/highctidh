@@ -9,6 +9,7 @@ mkdir -p dist/source
 mkdir -p build/tmp
 export TMP=build/tmp
 export VENV=venv${PYVER}
+
 if [[ ! -d $VENV ]]
 then
   "python${PYVER}" -m venv "$VENV"
@@ -16,6 +17,8 @@ else
   echo "venv exists: $VENV"
 fi
 
-source "$VENV/bin/activate" && CC=${CC} TMP=$TMP "pip${PYVER}" --cache-dir=build/ install --upgrade pip
-source "$VENV/bin/activate" && CC=${CC} TMP=$TMP "pip${PYVER}" --cache-dir=build/ install pytest pytest-xdist
-source "$VENV/bin/activate" && CC=${CC} TMP=$TMP "pip${PYVER}" --cache-dir=build/ install --no-clean .
+source "$VENV/bin/activate"
+
+CC=${CC} TMP=$TMP "pip${PYVER}" --cache-dir=build/ install --upgrade pip
+CC=${CC} TMP=$TMP "pip${PYVER}" --cache-dir=build/ install pytest pytest-xdist
+CC=${CC} TMP=$TMP "pip${PYVER}" --cache-dir=build/ install --no-clean .
