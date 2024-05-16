@@ -6,7 +6,8 @@ set -e;
 
 export GOOS=linux;
 export CGO_ENABLED=1;
-export HOST_ARCH=`uname -m`;
+HOST_ARCH=$(uname -m);
+export HOST_ARCH
 CHECKMARK="\xE2\x9C\x94";
 
 echo "Running tests on $HOST_ARCH";
@@ -24,6 +25,8 @@ do
 done
 
 echo "Cross compile for $GOOS with CGO_ENABLED=$CGO_ENABLED...";
+
+# shellcheck disable=2097,2098
 for BITS in 511 512 1024 2048;
 do
     cd src/ctidh$BITS;

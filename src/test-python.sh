@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# shellcheck disable=1091
+
 set -e;
 set -x;
 

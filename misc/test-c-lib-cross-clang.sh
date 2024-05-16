@@ -2,11 +2,16 @@
 #
 # Test cross compile of c library using clang cross compilers
 #
+
+# shellcheck disable=2097,2098
+
 set -eu;
 set -x;
 
-export HOST_ARCH=`uname -m`;
-export CODENAME=`lsb_release -c|grep Codename`;
+HOST_ARCH=$(uname -m);
+export HOST_ARCH
+CODENAME=$(lsb_release -c|grep Codename);
+export CODENAME
 echo "Building on: $HOST_ARCH";
 CHECKMARK="\xE2\x9C\x94";
 
@@ -14,7 +19,7 @@ CHECKMARK="\xE2\x9C\x94";
 export AR CC CC_MARCH CFLAGS LD PLATFORM PLATFORM_SIZE prefix;
 
 make_and_clean() {
-    rm -fv *.o *.so;
+    rm -fv -- *.o *.so;
     echo "${PLATFORM} ${CC_MARCH:-} (${PLATFORM_SIZE}):";
     make;
     mkdir -p dist/cross/$PLATFORM/$PLATFORM_SIZE/;
@@ -24,7 +29,7 @@ make_and_clean() {
 }
 
 echo "Checking to see if CI needs clean up";
-rm -fv *.o *.so;
+rm -fv -- *.o *.so;
 
 echo "Cross compile for GNU/Linux with clang on $HOST_ARCH...";
 
@@ -59,7 +64,7 @@ LD=/usr/bin/$PLATFORM-linux-gnu-ld \
 CC="clang --target=$PLATFORM-pc-linux-gnu -fuse-ld=$LD" \
 make_and_clean;
 
-if [ $CODENAME == "Codename:	mantic" ];
+if [[ $CODENAME == "Codename:	mantic" ]];
 then
 PLATFORM=sparcv9 PLATFORM_SIZE=64 \
 AR=/usr/bin/sparc64-linux-gnu-ar \
@@ -75,7 +80,7 @@ LD=/usr/bin/$PLATFORM-linux-gnuabi$PLATFORM_SIZE-ld \
 CC="clang --target=$PLATFORM-pc-linux-gnu -fuse-ld=$LD" \
 make_and_clean;
 
-if [ $CODENAME == "Codename:	mantic" ];
+if [[ $CODENAME == "Codename:	mantic" ]];
 then
 PLATFORM=mips64el PLATFORM_SIZE=64 \
 LD=/usr/bin/$PLATFORM-linux-gnuabi$PLATFORM_SIZE-ld \

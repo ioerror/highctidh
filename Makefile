@@ -5,6 +5,7 @@ endif
 SHELL := bash
 
 BASH_FILES := $(shell grep -lr '^#!.*bash')
+TEST_BASH_FILES := $(BASH_FILES:%=test-%)
 SHELLCHECK := $(shell command -v shellcheck)
 SHELLCHECK_VERSION := 0.10.0
 
@@ -69,15 +70,20 @@ test-go:
 	cd src/ctidh1024; go test -v ./...
 	cd src/ctidh2048; go test -v ./...
 
-test-bash:
+test-bash: assert-shellcheck $(TEST_BASH_FILES)
+	@echo
+	@echo '*** All bash files pass shellcheck ***'
+
+$(TEST_BASH_FILES):
+	shellcheck $(@:test-%=%)
+
+assert-shellcheck:
 ifeq (,$(SHELLCHECK))
 	$(error shellcheck not installed)
 endif
 ifeq (,$(shell grep -F 'version: $(SHELLCHECK_VERSION)' <(shellcheck --version)))
 	$(error $(SHELLCHECK) is not version $(SHELLCHECK_VERSION))
 endif
-	shellcheck $(BASH_FILES)
-	@echo 'All bash files pass shellcheck'
 
 examples-run:
 	cd src; time ./example-ctidh511

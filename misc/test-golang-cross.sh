@@ -9,7 +9,8 @@ export ARCH=$1;
 export ARCH_ALT=$ARCH;
 export GOOS=linux;
 export CGO_ENABLED=1;
-export HOST_ARCH=`uname -m`;
+HOST_ARCH=$(uname -m);
+export HOST_ARCH
 export PLATFORM=$ARCH;
 export PLATFORM_SIZE=64;
 export CGO_CFLAGS_ALLOW="";

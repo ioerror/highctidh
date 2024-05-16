@@ -2,17 +2,22 @@
 #
 # Test cross compile of c library using gcc cross compilers
 #
+
+# shellcheck disable=2097,2098
+
 set -eu;
 set -x;
 
-export HOST_ARCH=`uname -m`;
+
+HOST_ARCH=$(uname -m);
+export HOST_ARCH
 CHECKMARK="\xE2\x9C\x94";
 
 # these are passed on to `make`:
 export AR CC CC_MARCH CFLAGS LD PLATFORM PLATFORM_SIZE prefix;
 
 make_and_clean() {
-    rm -fv *.o *.so;
+    rm -fv -- *.o *.so;
     echo "${PLATFORM} ${CC_MARCH:-} (${PLATFORM_SIZE}):";
     make;
     mkdir -p dist/cross/$PLATFORM/$PLATFORM_SIZE/;
@@ -21,7 +26,7 @@ make_and_clean() {
 }
 
 echo "Checking to see if CI needs clean up";
-rm -fv *.o *.so;
+rm -fv -- *.o *.so;
 
 echo "Cross compile for GNU/Linux with gcc on $HOST_ARCH...";
 

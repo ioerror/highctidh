@@ -6,7 +6,8 @@ set -e;
 
 export GOOS=linux;
 export CGO_ENABLED=1;
-export HOST_ARCH=`uname -m`;
+HOST_ARCH=$(uname -m);
+export HOST_ARCH
 CHECKMARK="\xE2\x9C\x94";
 
 echo "Running tests on $HOST_ARCH";
