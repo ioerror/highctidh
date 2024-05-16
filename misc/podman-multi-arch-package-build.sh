@@ -15,8 +15,8 @@ echo "Currently skipping builds for $ARCHES_UNSUPPORTED"
 
 if [[ -d docker_build_output ]]
 then
-    echo "Moving old docker_build_output..."
-    mv docker_build_output "docker_build_output.old-$(date +%s)"
+  echo "Moving old docker_build_output..."
+  mv docker_build_output "docker_build_output.old-$(date +%s)"
 fi
 
 for arch in $ARCHES_CLANG $ARCHES_GCC

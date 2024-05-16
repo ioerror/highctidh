@@ -8,7 +8,6 @@
 set -e -u -o pipefail
 set -x
 
-
 HOST_ARCH=$(uname -m)
 export HOST_ARCH
 CHECKMARK="\xE2\x9C\x94"
@@ -17,12 +16,12 @@ CHECKMARK="\xE2\x9C\x94"
 export AR CC CC_MARCH CFLAGS LD PLATFORM PLATFORM_SIZE prefix
 
 make_and_clean() {
-    rm -fv -- *.o *.so
-    echo "${PLATFORM} ${CC_MARCH:-} (${PLATFORM_SIZE}):"
-    make
-    mkdir -p dist/cross/$PLATFORM/$PLATFORM_SIZE/
-    mv -v dist/*.so dist/cross/$PLATFORM/$PLATFORM_SIZE/
-    echo -e "$CHECKMARK"
+  rm -fv -- *.o *.so
+  echo "${PLATFORM} ${CC_MARCH:-} (${PLATFORM_SIZE}):"
+  make
+  mkdir -p dist/cross/$PLATFORM/$PLATFORM_SIZE/
+  mv -v dist/*.so dist/cross/$PLATFORM/$PLATFORM_SIZE/
+  echo -e "$CHECKMARK"
 }
 
 echo "Checking to see if CI needs clean up"
