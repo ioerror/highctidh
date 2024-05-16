@@ -1,9 +1,9 @@
-#!/bin/bash
-#
+#!/usr/bin/env bash
+
 # Test cross compile of golang module using clang
 # This is meant to be called as part of `.woodpecker/golang.yml`
-#
-set -e
+
+set -e -u -o pipefail
 
 export ARCH=$1
 export ARCH_ALT=$ARCH

@@ -1,8 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # Test cross compile of golang module using gcc cross compilers
 #
-set -e
+
+set -e -u -o pipefail
 
 export GOOS=linux
 export CGO_ENABLED=1

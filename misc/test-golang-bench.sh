@@ -1,8 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # Benchmark each golang module by field size
 #
-set -e
+
+set -e -u -o pipefail
 
 export GOOS=linux
 export CGO_ENABLED=1

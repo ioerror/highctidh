@@ -1,6 +1,9 @@
-#!/bin/bash -x
+#!/usr/bin/env bash
 
 # shellcheck disable=1091
+
+set -e -u -o pipefail
+set -x
 
 FIELD_SIZE=$1
 export VENV=venv${PYVER}

@@ -1,6 +1,9 @@
-#!/bin/bash -x
+#!/usr/bin/env bash
 
 # shellcheck disable=1091
+
+set -e -u -o pipefail
+set -x
 
 SOURCE_DATE_EPOCH=$(git log -1 --pretty=%ct)
 export SOURCE_DATE_EPOCH

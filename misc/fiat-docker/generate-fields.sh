@@ -1,4 +1,8 @@
-#!/bin/bash -x
+#!/usr/bin/env bash
+
+set -e -u -o pipefail
+set -x
+
 # on i7-9750H this takes under a minute
 ulimit -s unlimited && time /fiat-crypto/src/ExtractionOCaml/word_by_word_montgomery --widen-bytes --internal-static --lang C -o /docker_build_output/fiat-crypto-generated-code/fiat_p512.c p512 64 5326738796327623094747867617954605554069371494832722337612446642054009560026576537626892113026381253624626941643949444792662881241621373288942880288065659
 

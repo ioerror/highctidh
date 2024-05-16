@@ -1,5 +1,6 @@
-#!/bin/bash
-set -e
+#!/usr/bin/env bash
+
+set -e -u -o pipefail
 
 export DIST="sid"
 SOURCE_DATE_EPOCH=$(git log -1 --pretty=%ct)

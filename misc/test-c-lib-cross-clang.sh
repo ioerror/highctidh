@@ -1,11 +1,12 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
 #
 # Test cross compile of c library using clang cross compilers
 #
 
 # shellcheck disable=2097,2098
 
-set -eu
+set -e -u -o pipefail
 set -x
 
 HOST_ARCH=$(uname -m)

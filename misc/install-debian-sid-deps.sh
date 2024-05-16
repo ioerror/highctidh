@@ -1,5 +1,6 @@
-#!/bin/bash
-set -e
+#!/usr/bin/env bash
+
+set -e -u -o pipefail
 set -x
 
 echo "Installing required packages..."

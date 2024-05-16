@@ -1,5 +1,6 @@
-#!/bin/bash
-set -e
+#!/usr/bin/env bash
+
+set -e -u -o pipefail
 
 ARCH=$1
 # This BASE_PACKAGES list assumes a Docker image with golang installed

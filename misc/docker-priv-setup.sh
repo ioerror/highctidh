@@ -1,4 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+set -e -u -o pipefail
+
 # This requires `apt install -y docker.io qemu-user-static
 # qemu-system-{arm,mips,ppc,s390x,sparc,x86} docker-buildx`
 docker pull multiarch/qemu-user-static

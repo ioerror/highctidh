@@ -1,8 +1,8 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # shellcheck disable=1091
 
-set -e
+set -e -u -o pipefail
 set -x
 
 python3 -m venv venv
