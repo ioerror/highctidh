@@ -8,7 +8,7 @@ mkdir -p dist/source
 mkdir -p build/tmp
 export TMP=build/tmp
 export VENV=venv${PYVER}
-if [[ ! -d $VENV ]];
+if [[ ! -d $VENV ]]
 then
     "python${PYVER}" -m venv "$VENV"
 else

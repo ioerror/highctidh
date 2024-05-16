@@ -2,8 +2,8 @@
 
 # shellcheck disable=1091
 
-set -e;
-set -x;
+set -e
+set -x
 
 python3 -m venv venv
 source venv/bin/activate
