@@ -12,7 +12,7 @@ export ARCHES_CLANG="i386 mips64le arm32v5 arm32v7"
 echo "Starting building of libhighctidh packages: $(date -R)"
 echo "Currently skipping builds for $ARCHES_UNSUPPORTED"
 
-if [ -d docker_build_output ]
+if [[ -d docker_build_output ]]
 then
     echo "Moving old docker_build_output..."
     mv docker_build_output "docker_build_output.old-$(date +%s)"

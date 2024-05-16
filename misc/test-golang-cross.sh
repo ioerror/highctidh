@@ -21,10 +21,10 @@ export TARGET="--target=$PLATFORM-pc-linux-gnu"
 export SUBARCHES="none"
 CHECKMARK="\xE2\x9C\x94"
 
-if [ -n "$ARCH" ]
+if [[ $ARCH ]]
 then
 
-    if [ "$ARCH" == "arm64" ]
+    if [[ $ARCH == arm64 ]]
     then
         export GOARCH=arm64
         export PLATFORM=arm64
@@ -35,7 +35,7 @@ then
         export TARGET="--target=$PLATFORM-pc-linux-gnu"
     fi
 
-    if [ "$ARCH" == "arm32v5" ]
+    if [[ $ARCH == arm32v5 ]]
     then
         export ARCH_ALT=arm-linux-gnueabihf
         export CGO_CFLAGS_ALLOW="-fforce-enable-int128"
@@ -49,7 +49,7 @@ then
         export TARGET="--target=arm-pc-linux-gnu"
     fi
 
-    if [ "$ARCH" == "arm32v6" ]
+    if [[ $ARCH == arm32v6 ]]
     then
         export ARCH_ALT=arm-linux-gnueabi
         export CGO_CFLAGS_ALLOW="-fforce-enable-int128"
@@ -63,7 +63,7 @@ then
         export TARGET="--target=arm-pc-linux-gnu"
     fi
 
-    if [ "$ARCH" == "arm32v7" ] || [ "$ARCH" == "arm" ]
+    if [[ $ARCH == arm32v7 ]] || [[ $ARCH == arm ]]
     then
         export ARCH_ALT=arm-linux-gnueabi
         export CGO_CFLAGS_ALLOW="-fforce-enable-int128"
@@ -77,7 +77,7 @@ then
         export TARGET="--target=arm-pc-linux-gnu"
     fi
 
-    if [ "$ARCH" == "i386" ] || [ "$ARCH" == "386" ] || [ "$ARCH" == "i686" ]
+    if [[ $ARCH == i386 ]] || [[ $ARCH == 386 ]] || [[ $ARCH == i686 ]]
     then
         export ARCH=386
         export ARCH_ALT=i686
@@ -91,7 +91,7 @@ then
         export SUBARCHES="none"
     fi
 
-    if [ "$ARCH" == "mips" ]
+    if [[ $ARCH == mips ]]
     then
         export CGO_CFLAGS_ALLOW="-fforce-enable-int128"
         export EXTRA_FLAGS="-fforce-enable-int128"
@@ -100,7 +100,7 @@ then
         export EXTRA_INCLUDE="-I /usr/$ARCH_ALT-linux-gnu/include/"
     fi
 
-    if [ "$ARCH" == "mipsle" ] || [ "$ARCH" == "mipsel" ]
+    if [[ $ARCH == mipsle ]] || [[ $ARCH == mipsel ]]
     then
         export GOARCH=mipsle
         export PLATFORM=mipsle
@@ -111,13 +111,13 @@ then
         export TARGET="--target=mipsel-pc-linux-gnu"
     fi
 
-    if [ "$ARCH" == "mips64" ]
+    if [[ $ARCH == mips64 ]]
     then
         export TARGET="--target=$PLATFORM-pc-linux-gnu"
         export EXTRA_INCLUDE="-I /usr/$ARCH_ALT-linux-gnuabi64/include/"
     fi
 
-    if [ "$ARCH" == "mips64le" ] || [ "$ARCH" == "mips64el" ]
+    if [[ $ARCH == mips64le ]] || [[ $ARCH == mips64el ]]
     then
         export GOARCH=mips64le
         export PLATFORM=mips64el
@@ -126,13 +126,13 @@ then
     fi
 
 
-    if [ "$ARCH" == "riscv64" ]
+    if [[ $ARCH == riscv64 ]]
     then
         export PLATFORM=riscv64
         export EXTRA_INCLUDE="-I /usr/$ARCH_ALT-linux-gnu/include/"
     fi
 
-    if [ "$ARCH" == "ppc64" ]
+    if [[ $ARCH == ppc64 ]]
     then
         export GOARCH=ppc64
         export PLATFORM=ppc64
@@ -140,7 +140,7 @@ then
         export EXTRA_INCLUDE="-I /usr/$ARCH_ALT/include/"
     fi
 
-    if [ "$ARCH" == "ppc64le" ]
+    if [[ $ARCH == ppc64le ]]
     then
         export GOARCH=ppc64le
         export PLATFORM=ppc64le
@@ -148,7 +148,7 @@ then
         export EXTRA_INCLUDE="-I /usr/$ARCH_ALT/include/"
     fi
 
-    if [ "$ARCH" == "s390x" ]
+    if [[ $ARCH == s390x ]]
     then
         export EXTRA_FLAGS="-fforce-enable-int128"
         export TARGET="--target=$PLATFORM-pc-linux-gnu"
@@ -158,16 +158,16 @@ then
 
     for BITS in 511 512 1024 2048
     do
-        if [ -n "$GOARCH" ]
+        if [[ -n "$GOARCH" ]]
         then
             export GOARCH=$ARCH
         fi
         cd src/ctidh$BITS
         for SUBARCH in $SUBARCHES
         do
-           if [ "$ARCH" == "arm32v5" ] || [ "$ARCH" == "arm32v6" ] \
-                                       || [ "$ARCH" == "arm32v7" ] \
-                                       || [ "$ARCH" == "arm" ]
+           if [[ $ARCH == arm32v5 ]] || [[ $ARCH == arm32v6 ]] \
+                                       || [[ $ARCH == arm32v7 ]] \
+                                       || [[ $ARCH == arm ]]
            then
                export GOARCH=arm
                export GOARM=$SUBARCH
@@ -182,7 +182,7 @@ then
         cd ../../
     done
 
-    if [ "$ARCH" == "amd64" ]
+    if [[ $ARCH == amd64 ]]
     then
         echo "Running tests on $HOST_ARCH"
         for BITS in 511 512 1024 2048
