@@ -167,25 +167,26 @@ then
     then
       export GOARCH=$ARCH
     fi
-    cd src/ctidh$BITS
-    for SUBARCH in $SUBARCHES
-    do
-      if [[ $ARCH == arm32v5 ]] ||
-         [[ $ARCH == arm32v6 ]] ||
-         [[ $ARCH == arm32v7 ]] ||
-         [[ $ARCH == arm ]]
-      then
-        export GOARCH=arm
-        export GOARM=$SUBARCH
-        echo -n "$GOARCH/$GOARM $BITS bits:"
-      else
-        echo -n "$GOARCH $BITS bits:"
-      fi
-      CC="clang $TARGET $EXTRA_FLAGS $EXTRA_INCLUDE" \
-        go build
-      echo -e "$CHECKMARK"
-    done
-    cd ../../
+    (
+      cd src/ctidh$BITS
+      for SUBARCH in $SUBARCHES
+      do
+        if [[ $ARCH == arm32v5 ]] ||
+          [[ $ARCH == arm32v6 ]] ||
+          [[ $ARCH == arm32v7 ]] ||
+          [[ $ARCH == arm ]]
+        then
+          export GOARCH=arm
+          export GOARM=$SUBARCH
+          echo -n "$GOARCH/$GOARM $BITS bits:"
+        else
+          echo -n "$GOARCH $BITS bits:"
+        fi
+        CC="clang $TARGET $EXTRA_FLAGS $EXTRA_INCLUDE" \
+          go build
+        echo -e "$CHECKMARK"
+      done
+    )
   done
 
   if [[ $ARCH == amd64 ]]
@@ -193,14 +194,15 @@ then
     echo "Running tests on $HOST_ARCH"
     for BITS in 511 512 1024 2048
     do
-      cd src/ctidh$BITS
-      export GOARCH=amd64
-      echo "$GOARCH $BITS bits:"
-      CC="clang $TARGET $EXTRA_FLAGS $EXTRA_INCLUDE" \
-        go test -v
-      echo -n "$GOARCH $BITS bits:"
-      echo -e "$CHECKMARK"
-      cd ../../
+      (
+        cd src/ctidh$BITS
+        export GOARCH=amd64
+        echo "$GOARCH $BITS bits:"
+        CC="clang $TARGET $EXTRA_FLAGS $EXTRA_INCLUDE" \
+          go test -v
+        echo -n "$GOARCH $BITS bits:"
+        echo -e "$CHECKMARK"
+      )
     done
   fi
 

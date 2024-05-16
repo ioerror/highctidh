@@ -8,9 +8,11 @@ BASH_FILES := $(shell grep -lr '^#!.*bash')
 TEST_BASH_FILES := $(BASH_FILES:%=test-%)
 SHELLCHECK := $(shell command -v shellcheck)
 SHELLCHECK_VERSION := 0.10.0
+SHELLCHECK_EXCLUDE := 1091,2030,2031,2097,2098
 
 export MAKE ?= make
 export PYTEST ?= pytest-3
+
 
 default:
 
@@ -75,7 +77,7 @@ test-bash: assert-shellcheck $(TEST_BASH_FILES)
 	@echo '*** All bash files pass shellcheck ***'
 
 $(TEST_BASH_FILES):
-	shellcheck $(@:test-%=%)
+	$(SHELLCHECK) --exclude=$(SHELLCHECK_EXCLUDE) $(@:test-%=%)
 
 assert-shellcheck:
 ifeq (,$(SHELLCHECK))

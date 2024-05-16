@@ -4,8 +4,6 @@
 # Test cross compile of c library using clang cross compilers
 #
 
-# shellcheck disable=2097,2098
-
 set -e -u -o pipefail
 set -x
 
