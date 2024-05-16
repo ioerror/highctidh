@@ -4,8 +4,14 @@ endif
 
 SHELL := bash
 
+BASH_FILES := $(shell grep -lr '^#!.*bash')
+SHELLCHECK := $(shell command -v shellcheck)
+SHELLCHECK_VERSION := 0.10.0
+
 export MAKE ?= make
 export PYTEST ?= pytest-3
+
+default:
 
 library: _prep
 	$(MAKE) -C src
@@ -62,6 +68,16 @@ test-go:
 	cd src/ctidh512; go test -v ./...
 	cd src/ctidh1024; go test -v ./...
 	cd src/ctidh2048; go test -v ./...
+
+test-bash:
+ifeq (,$(SHELLCHECK))
+	$(error shellcheck not installed)
+endif
+ifeq (,$(shell grep -F 'version: $(SHELLCHECK_VERSION)' <(shellcheck --version)))
+	$(error $(SHELLCHECK) is not version $(SHELLCHECK_VERSION))
+endif
+	shellcheck $(BASH_FILES)
+	@echo 'All bash files pass shellcheck'
 
 examples-run:
 	cd src; time ./example-ctidh511
