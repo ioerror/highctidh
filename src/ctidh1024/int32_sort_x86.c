@@ -365,7 +365,7 @@ static void int32_sort_2power(int32 *x,long long n,int flagdown)
     int flip, flipflip;
 
     mask = _mm256_set1_epi32(-1);
-  
+
     for (j = 0;j < n;j += 32) {
       int32x8 x0 = int32x8_load(&x[j]);
       int32x8 x1 = int32x8_load(&x[j+16]);
@@ -374,7 +374,7 @@ static void int32_sort_2power(int32 *x,long long n,int flagdown)
       int32x8_store(&x[j],x0);
       int32x8_store(&x[j+16],x1);
     }
-  
+
     p = 8;
     for (;;) { /* for p in [8, 16, ..., n/16] */
       q = p>>1;
@@ -398,7 +398,7 @@ static void int32_sort_2power(int32 *x,long long n,int flagdown)
             int32x8 x5 = int32x8_load(&x[i+5*q]);
             int32x8 x6 = int32x8_load(&x[i+6*q]);
             int32x8 x7 = int32x8_load(&x[i+7*q]);
-  
+
             int32x8_MINMAX(x0,x4);
             int32x8_MINMAX(x1,x5);
             int32x8_MINMAX(x2,x6);
@@ -411,7 +411,7 @@ static void int32_sort_2power(int32 *x,long long n,int flagdown)
             int32x8_MINMAX(x2,x3);
             int32x8_MINMAX(x4,x5);
             int32x8_MINMAX(x6,x7);
-  
+
             int32x8_store(&x[i],x0);
             int32x8_store(&x[i+q],x1);
             int32x8_store(&x[i+2*q],x2);
@@ -431,12 +431,12 @@ static void int32_sort_2power(int32 *x,long long n,int flagdown)
             int32x8 x1 = int32x8_load(&x[i+q]);
             int32x8 x2 = int32x8_load(&x[i+2*q]);
             int32x8 x3 = int32x8_load(&x[i+3*q]);
-  
+
             int32x8_MINMAX(x0,x2);
             int32x8_MINMAX(x1,x3);
             int32x8_MINMAX(x0,x1);
             int32x8_MINMAX(x2,x3);
-  
+
             int32x8_store(&x[i],x0);
             int32x8_store(&x[i+q],x1);
             int32x8_store(&x[i+2*q],x2);
@@ -448,13 +448,13 @@ static void int32_sort_2power(int32 *x,long long n,int flagdown)
         for (k = 0;k < n;k += q + q) {
           int32x8 x0 = int32x8_load(&x[k]);
           int32x8 x1 = int32x8_load(&x[k+q]);
-  
+
           int32x8_MINMAX(x0,x1);
-  
+
           int32x8_store(&x[k],x0);
           int32x8_store(&x[k+q],x1);
         }
-  
+
       q = n>>3;
       flip = (p<<1 == q);
       flipflip = !flip;
@@ -469,7 +469,7 @@ static void int32_sort_2power(int32 *x,long long n,int flagdown)
             int32x8 x5 = int32x8_load(&x[i+5*q]);
             int32x8 x6 = int32x8_load(&x[i+6*q]);
             int32x8 x7 = int32x8_load(&x[i+7*q]);
-      
+
             int32x8_MINMAX(x0,x1);
             int32x8_MINMAX(x2,x3);
             int32x8_MINMAX(x4,x5);
@@ -482,7 +482,7 @@ static void int32_sort_2power(int32 *x,long long n,int flagdown)
             int32x8_MINMAX(x1,x5);
             int32x8_MINMAX(x2,x6);
             int32x8_MINMAX(x3,x7);
-      
+
             if (flip) {
               x0 ^= mask;
               x1 ^= mask;
@@ -493,7 +493,7 @@ static void int32_sort_2power(int32 *x,long long n,int flagdown)
               x6 ^= mask;
               x7 ^= mask;
             }
-      
+
             int32x8_store(&x[i],x0);
             int32x8_store(&x[i+q],x1);
             int32x8_store(&x[i+2*q],x2);

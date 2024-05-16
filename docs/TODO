@@ -31,7 +31,7 @@ original velusqrt was 2296 mults for l=587 bs=16 gs=9:
 * 236 = 2*118 for 2 multiprod2 (product of quadratics) for pushing point
 * 148 = 2*74 for 2 multiprod2_selfreciprocal for pushing curve
 * 170 for multieval_precompute (reciprocal of root of product tree)
-* 1140 = 4*285 for 4 multieval_postcompute (scaled remainder tree) 
+* 1140 = 4*285 for 4 multieval_postcompute (scaled remainder tree)
 * 60 = 4*(bs-1) for accumulating multieval results
 * 30 = 6*5 for 5=(587-1)/2-2*bs*gs stray points at the end
 * 32 for lth powers

@@ -72,7 +72,7 @@ def optimizem(minkeyspace,primes0,primes1,N0,m0=None):
   if m0 == None:
     N0 = tuple(N0)
     assert sum(N0) == len(primes0)
-  
+
     z = 1
     while True:
       m0 = tuple([z]*B0)

@@ -70,7 +70,7 @@ import (
     ctidh512  "codeberg.org/vula/highctidh/src/ctidh512"
     ctidh1024 "codeberg.org/vula/highctidh/src/ctidh1024"
     ctidh2048 "codeberg.org/vula/highctidh/src/ctidh2048"
-) 
+)
 ```
 
 # highctidh improvements
@@ -254,7 +254,7 @@ A basic Python benchmarking program `misc/highctidh-simple-benchmark.py` shows
 general performance numbers. Python tests may be run with `pytest` and should be
 functional without `pytest` assuming the library is installed. If the library
 path includes the build directory as is done in `test.sh`, `pytest` or python
-should be able to run the tests without installation. 
+should be able to run the tests without installation.
 
 ### Additional information
 

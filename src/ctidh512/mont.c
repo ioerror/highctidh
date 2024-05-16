@@ -359,7 +359,7 @@ void xISOG_matryoshka(proj *A, proj *P, long long Plen, proj const *K, long long
             continue;
           }
         }
-  
+
         if (bs > 0) {
           if (s == 2*bs) {
             assert(Minit[bs-1]);
@@ -417,15 +417,15 @@ void xISOG_matryoshka(proj *A, proj *P, long long Plen, proj const *K, long long
     if (sqrtvelu) {
       long long TIlen = 2*bs+poly_tree1size(bs);
       fp TI[TIlen];
-  
+
       for (long long i = 0;i < bs;++i) {
         assert(Minit[2*i+1]);
         fp_neg2(&TI[2*i],&M[2*i+1].x);
         TI[2*i+1] = M[2*i+1].z;
       }
-  
+
       poly_tree1(TI+2*bs,TI,bs);
-  
+
       fp Aprecomp[gs][8];
       fp T1[3*gs];
       fp Tminus1[3*gs];
@@ -455,20 +455,20 @@ void xISOG_matryoshka(proj *A, proj *P, long long Plen, proj const *K, long long
       for (long long h = 0;h < Plen;++h) {
         fp Pprecomp[6];
         biquad_precompute_point(Pprecomp,&P[h]);
-  
+
         fp TP[3*gs];
         for (long long j = 0;j < gs;++j)
           biquad_postcompute_point(TP+3*j,Pprecomp,Aprecomp[j]);
         poly_multiprod2(TP,gs);
-  
+
         fp TPinv[2*gs+1];
         for (long long j = 0;j < 2*gs+1;++j)
           TPinv[j] = TP[2*gs-j];
-  
+
         poly_multieval_postcompute(v,bs,TP,2*gs+1,TI,TI+2*bs,precomp);
         Qbatch[h].z = v[0];
         for (long long i = 1;i < bs;++i) fp_mul2(&Qbatch[h].z,&v[i]);
-  
+
         poly_multieval_postcompute(v,bs,TPinv,2*gs+1,TI,TI+2*bs,precomp);
         Qbatch[h].x = v[0];
         for (long long i = 1;i < bs;++i) fp_mul2(&Qbatch[h].x,&v[i]);
@@ -586,13 +586,13 @@ void xISOG_old(proj *A, proj *P, proj const *K, long long k)
     fp_add3(&Aed.z, &A->z, &A->z);  //compute twisted Edwards curve coefficients
     fp_add3(&Aed.x, &A->x, &Aed.z);
     fp_sub3(&Aed.z, &A->x, &Aed.z);
-   
+
     fp_add3(&Psum, &P->x, &P->z);   //precomputations
     fp_sub3(&Pdif, &P->x, &P->z);
 
     fp_sub3(&prod.x, &K->x, &K->z);
     fp_add3(&prod.z, &K->x, &K->z);
-    
+
     fp_mul3(&tmp1, &prod.x, &Psum);
     fp_mul3(&tmp0, &prod.z, &Pdif);
     fp_add3(&Q.x, &tmp0, &tmp1);
