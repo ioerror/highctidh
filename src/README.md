@@ -98,18 +98,18 @@ The Golang bindings compile and should be functional on `amd64`/`x86_64`,
 `ppc64le`, `riscv64`, `s390x`, `mips`, `mipsle`, `mips64`, `mips64le`.  The
 `misc/test-golang-cross.sh` script runs tests on the host build architecture
 and then attempts to cross-compile for each listed architecture.  The
-`.woodpecker/golang.yml` attempts to perform a cross-compile for all listed
+`.woodpecker/golang.yaml` attempts to perform a cross-compile for all listed
 golang versions and enumerated architectures.  Native builds for the Golang
 bindings should be functional on `loong64` and `sparc64` but this is currently
 untested. Go version 1.21 is used to build and test in
-`.woodpecker/golang.yml`.
+`.woodpecker/golang.yaml`.
 
 ## Python bindings
 
 The Python bindings build and should be functional on `amd64`, `arm32/armv7l`,
 `arm32v5`, `arm32v6`, `arm32v7`, `arm64`, `i386`, `ppc64le`, `riscv64`,
 `s390x`, and `mips64el`. Python 3.9, 3.10, 3.11, and 3.12 are used to build and
-test in `.woodpecker/qemu-python-clang.yml`.
+test in `.woodpecker/qemu-python-clang.yaml`.
 
 Debian packages and Python wheels that contain everything needed to use
 `highctidh` build with the `make -f Makefile.packages packages` Makefile target
@@ -171,7 +171,7 @@ MacOS 14 supports the Python module with Python 3.9, 3.10, 3.11, and 3.12.
 Windows support is extremely experimental.  Building the main C library on
 Windows Server 2019 and Windows Server 2022 should be possible with `clang` as
 is demonstrated in the continuous integration configuration
-`windows-fiat-c-library-test.yml`.  It has only been tested with the Windows
+`windows-fiat-c-library-test.yaml`.  It has only been tested with the Windows
 Server 2022 image preloaded with `clang`, `bash`, `make`, and other related
 tools
 [https://github.com/actions/runner-images/blob/main/images/windows/Windows2022-Readme.md](available
@@ -192,15 +192,15 @@ cd src/ && make && make testrandom test512 && ./testrandom && ./test512
 The Python module on Windows is functional when installed with `pip` under
 MSYS2 using `gcc` in the `MSYS`, `UCRT64`, `MINGW64` environments or using
 `clang` in the `MINGW64` environment.  These different environments are tested
-in `windows-msys-64bit-gcc-cygwin-ucrt-msvcrt-python-pip-test.yml` and
-`windows-msys-64bit-clang-msvcrt-python-pip-test.yml` respectively.
+in `windows-msys-64bit-gcc-cygwin-ucrt-msvcrt-python-pip-test.yaml` and
+`windows-msys-64bit-clang-msvcrt-python-pip-test.yaml` respectively.
 
 The Golang module on Windows is functional when built under MSYS2 using `gcc`
 in the `UCRT64`, or `MINGW64` environments.  These different environments are
-tested in `windows-msys-64bit-gcc-ucrt-msvcrt-golang-test.yml`.
+tested in `windows-msys-64bit-gcc-ucrt-msvcrt-golang-test.yaml`.
 
 ### Additional notes on building the C library
- 
+
 To build and install we recommend:
 ```
    sudo apt install gcc clang make

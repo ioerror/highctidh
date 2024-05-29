@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Test cross compile of golang module using clang
-# This is meant to be called as part of `.woodpecker/golang.yml`
+# This is meant to be called as part of `.woodpecker/golang.yaml`
 #
 set -e;
 
