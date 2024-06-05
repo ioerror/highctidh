@@ -1,3 +1,10 @@
+highctidh (1.0.2024060500-1) unstable; urgency=low
+
+  * Add src/pytest.ini
+  * Do not use stdeb to generate packages for `make deb` target
+
+ -- Jacob Appelbaum <jacob@appelbaum.net>  Wed, 05 Jun 2024 16:46:29 +0200
+
 highctidh (1.0.2024053000-1) unstable; urgency=low
 
   * source package automatically created by stdeb 0.10.0
