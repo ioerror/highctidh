@@ -4,6 +4,8 @@ endif
 
 SHELL := bash
 
+export CC ?= clang
+export DISTRO ?= debian:bookworm
 export MAKE ?= make
 export PYTEST ?= pytest-3
 
@@ -31,11 +33,14 @@ deb-and-wheel-in-podman:
 	podman run --rm -it \
 	  -v `pwd`:/highctidh \
 	  --workdir /highctidh \
-	  debian:bookworm \
+	  -e "CC=$(CC)" \
+	  -e "DEBIAN_FRONTEND=noninteractive" \
+	  -e "DEB_BUILD_OPTIONS=nocheck" \
+	  $(DISTRO) \
 	    bash -c 'apt update && \
 	      ./misc/install-debian-deps.sh && \
 	      $(MAKE) wheel && \
-	      CC=clang $(MAKE) deb'
+	      $(MAKE) deb'
 
 wasm: _prep
 	CC=emcc $(MAKE) -C src highctidh.wasm
