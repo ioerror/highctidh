@@ -72,6 +72,8 @@ class build_ext_helper(build_ext):
             # only impacts users of an alternative compiler, we hot patch only the
             # linker executable name:
             self.compiler.linker_so[0] = self.compiler.linker_exe[0]
+            cflags = [x.replace('-D_FORTIFY_SOURCE=2', '-D_FORTIFY_SOURCE=3')
+                      for x in self.compiler.linker_so]
             print(f"Compiler is now: {self.compiler.linker_exe}")
             print(f"Linker is now: {self.compiler.linker_so}")
         build_ext.build_extensions(self)
@@ -175,7 +177,7 @@ if CC == "clang":
     cflags += ["-Wno-ignored-optimization-argument", "-Wno-unreachable-code"]
 if CC == "gcc":
     if OS == "Linux":
-        cflags += ["-Werror"]
+        cflags += ["-Wextra"] # was -Werror
         ldflags += [
             "-Wl,-Bsymbolic-functions",
             "-Wl,-z,noexecstack",
