@@ -184,6 +184,7 @@ if CC == "gcc":
             "-Wl,--reduce-memory-overheads",
             "-Wl,--no-keep-memory",
         ]
+cflags = [x.replace('-D_FORTIFY_SOURCE=2', '-D_FORTIFY_SOURCE=3') for x in cflags]
 
 print(f"Building for platform: {PLATFORM} on {OS}")
 if PLATFORM == "aarch64" or PLATFORM == "arm64":
