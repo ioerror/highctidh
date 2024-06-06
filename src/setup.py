@@ -184,7 +184,6 @@ if CC == "gcc":
             "-Wl,--reduce-memory-overheads",
             "-Wl,--no-keep-memory",
         ]
-cflags = [x.replace('-D_FORTIFY_SOURCE=2', '-D_FORTIFY_SOURCE=3') for x in cflags]
 
 print(f"Building for platform: {PLATFORM} on {OS}")
 if PLATFORM == "aarch64" or PLATFORM == "arm64":
@@ -358,6 +357,7 @@ else:
         "primes2048.c",
     ]
 
+cflags = [x.replace('-D_FORTIFY_SOURCE=2', '-D_FORTIFY_SOURCE=3') for x in cflags]
 extra_compile_args = cflags
 extra_compile_args_511 = cflags + [
     "-DBITS=511",
