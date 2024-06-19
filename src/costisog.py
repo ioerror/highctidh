@@ -29,7 +29,7 @@ def isog(lmax,push,bsgs):
     result += ((lmax-3)//2)*2*M
     result += push*(2*M)
     result += ((lmax-3)//2)*4*M*push
-  
+
   else: # velusqrt
     multiples = set()
     multiples.add(2)
@@ -38,7 +38,7 @@ def isog(lmax,push,bsgs):
     multiples.add(2*bs)
     multiples.add(4*bs)
     for j in range(6*bs,2*bs*(2*gs+1),4*bs): multiples.add(j)
-  
+
     result += len(multiples)*xADD # actually xADD or xDBL
 
     result += tree1[bs]
@@ -51,7 +51,7 @@ def isog(lmax,push,bsgs):
     result += 2*(push+1)*multieval_postcompute[bs][gs*2+1] # scaled remainder tree
     result += 2*M*(push+1)*(bs-1) # accumulating multieval results
     result += 2*M*(1+2*push)*((lmax-1)//2-2*bs*gs) # stray points at the end
-  
+
   result += push*(S+S+M+M) # final point evaluation
   result += 2*(S+M+M+(S+S+M)*(lbits//2-1)) # powpow8mod
   return result

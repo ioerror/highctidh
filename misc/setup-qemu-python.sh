@@ -9,7 +9,7 @@ if [ ! -d $VENV ];
 then
     python${PYVER} -m venv $VENV
 else
-    echo "venv exists: $VENV" 
+    echo "venv exists: $VENV"
 fi
 
 source $VENV/bin/activate && CC=${CC} TMP=$TMP pip${PYVER} --cache-dir=build/ install --upgrade pip

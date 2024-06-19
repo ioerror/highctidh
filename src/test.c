@@ -515,7 +515,7 @@ test_deterministic_keygen(void)
 	uintbig expected_pub_gh3 = {{0xc3de1e9a0ce452eaU, 0x2c7f834207cfa321U, 0x51df39b2d45a52f7U, 0x6ce5234c0c96b630U, 0x5d73222e4f2c034bU, 0x904b4b9b9f5d8b54U, 0xfdf299a7dc08f21cU, 0x14f78a9cde33342eU}};
 #elif 1024 == BITS
 	uintbig expected_pub_gh1 ={{0x145a4fa93ff3473cU, 0x3f4f6d848078517cU, 0x54bd4b5260b98237U, 0x4385ba5b5880943aU, 0xa00d7a581add9491U, 0x607b0b25e32a0767U, 0x4ff219cf1e3b78bcU, 0xbb57d39d048d3941U, 0xa778914f32ea4c60U, 0xff150a8dbdc1ffb7U, 0x5f6e36be62ed8cbcU, 0x3f847d188b6b2f1aU, 0xfee36e770460ab3U, 0xace25b28b4fa79d0U, 0x5c48f2f5f18d3e89U, 0x1df39a760bffbbeU}};
-	uintbig expected_pub_gh3 = {{0x4999f9e76365f7b8U, 0x28fcde7eaddb3ecfU, 0x5e03424d4d458410U, 0xcc3095baaa51f010U, 0xfd2cc5c863a9ccd1U, 0xaf63cb97b7e9302bU, 0xa83b97ef56ee2f7aU, 0x6fc0d03b1c528643U, 0x424070484c4b7e01U, 0x26e1d849d6cb5025U, 0xc2822acaca0abcdeU, 0x72de377972cc49dbU, 0x70afbe77c427e919U, 0xa0416dc6f13b6733U, 0x3328508d4670521fU, 0xd2c91ffe09e4916U, 
+	uintbig expected_pub_gh3 = {{0x4999f9e76365f7b8U, 0x28fcde7eaddb3ecfU, 0x5e03424d4d458410U, 0xcc3095baaa51f010U, 0xfd2cc5c863a9ccd1U, 0xaf63cb97b7e9302bU, 0xa83b97ef56ee2f7aU, 0x6fc0d03b1c528643U, 0x424070484c4b7e01U, 0x26e1d849d6cb5025U, 0xc2822acaca0abcdeU, 0x72de377972cc49dbU, 0x70afbe77c427e919U, 0xa0416dc6f13b6733U, 0x3328508d4670521fU, 0xd2c91ffe09e4916U,
 }};
 #elif 2048 == BITS
 	uintbig expected_pub_gh1 = {{0x800e67b0bc7bfd06U, 0x3bce48af8fb38f7eU, 0xf35b04d14f8d3822U, 0xdbd9c7ab897e9002U, 0x9d0632ba7d6422dU, 0xa430bf8309412c3aU, 0x287b134c7b93ef50U, 0xbc8750ecf09bdcd7U, 0x466bcb717f690adaU, 0x994a81a2cc2dcbeeU, 0xd02d8d4af1b5fe87U, 0xab609c45d4ef5c97U, 0xdd1654456c056fbU, 0x7a16750215bda5a1U, 0xa6cb44b15a09ce1U, 0x31cd404807d3ac3eU, 0x310023f9fa68bef5U, 0x7a05048b7952e891U, 0xb15888f8b7a441ecU, 0xc1830ce2018ac99fU, 0x9b9b2daa5ee2ba5U, 0xa17b9f5786813eadU, 0x9b51ac5fba38238dU, 0xe7caedf72d093b61U, 0x718d2d4b5df6a5dcU, 0x15339f1e604f8b87U, 0x8b45733c8a5d6dfbU, 0xd62d63a17956e30cU, 0x93a13fe8336be9c5U, 0x84ffd577f0611092U, 0xa5d20c27372ffba8U, 0x1405c6a16c6553cdU, }};
@@ -688,7 +688,7 @@ static int validate_cutofforder_v1(uintbig *order,const fp *P,const fp *A)
   Pproj[0].z = fp_1;
 
   xA24(&A24,&Aproj);
-  
+
   /* maximal 2-power in p+1 */
   xDBL(Pproj,Pproj,&A24,1);
   xDBL(Pproj,Pproj,&A24,1);
@@ -883,7 +883,7 @@ static void kernel_setup(proj *K,long long k,const proj *A)
   for (long long i = 0;i < primes_num;++i)
     if (primes[i] != k)
       uintbig_mul3_64(&cof, &cof, primes[i]);
-      
+
   for (;;) {
     proj P;
     fp_random(&P.x);
@@ -1302,18 +1302,18 @@ static void test_dac(void)
           xDBL(&R,&Pmont,&A124,1);
           assert(proj_equal(&R,&mPmont[100+m]));
         }
-          
+
         if (m >= 0) {
           uintbig um; uintbig_set(&um,m);
           xMUL_vartime(&R,&A,0,&Pmont,&um);
           assert(proj_equal(&R,&mPmont[100+m]));
-  
+
           xMUL_vartime(&R,&A1,1,&Pmont,&um);
           assert(proj_equal(&R,&mPmont[100+m]));
-  
+
           xMUL(&R,&A,0,&Pmont,&um,20);
           assert(proj_equal(&R,&mPmont[100+m]));
-  
+
           xMUL(&R,&A1,1,&Pmont,&um,20);
           assert(proj_equal(&R,&mPmont[100+m]));
         }
@@ -1464,13 +1464,13 @@ static void test_nike(void)
       fflush(stdout);
 
       steps_override(bs,gs);
-    
+
       csidh_private(&priv_alice);
       ok = csidh(&pub_alice, &base, &priv_alice);
       assert(ok);
       action_old(&check,&base,&priv_alice);
       assert(!memcmp(&check,&pub_alice,sizeof pub_alice));
-    
+
       steps_override(0,0);
 
       csidh_private(&priv_bob);
@@ -1478,19 +1478,19 @@ static void test_nike(void)
       assert(ok);
       action_old(&check,&base,&priv_bob);
       assert(!memcmp(&check,&pub_bob,sizeof pub_bob));
-    
+
       ok = csidh(&shared_bob, &pub_alice, &priv_bob);
       assert(ok);
       action_old(&check,&pub_alice,&priv_bob);
       assert(!memcmp(&check,&shared_bob,sizeof shared_bob));
 
       steps_override(bs,gs);
-    
+
       ok = csidh(&shared_alice, &pub_bob, &priv_alice);
       assert(ok);
       action_old(&check,&pub_bob,&priv_alice);
       assert(!memcmp(&check,&shared_alice,sizeof shared_alice));
-  
+
       assert(!memcmp(&shared_alice, &shared_bob, sizeof(public_key)));
     }
   }

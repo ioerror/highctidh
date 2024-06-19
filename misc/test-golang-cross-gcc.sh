@@ -65,7 +65,7 @@ do
   # CGO_CFLAGS="-fno-stack-protector" \
   # go build;
   # echo -e "$CHECKMARK";
-  
+
   # for SUBARCH in 5 6 7
   # do
   #     export GOARCH=arm;

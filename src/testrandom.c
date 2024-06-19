@@ -228,7 +228,7 @@ void test_boundedl1_generic(void)
       long long numoutputs = 0;
       for (long long i = 0;i < MAXOUTPUTS;++i)
         freq[i] = 0;
-        
+
       for (long long loop = 0;loop < 16384*expoutputs;++loop) {
         int8_t e[wMAX];
         random_boundedl1(e,w,S, (uintptr_t)e, ctidh_fillrandom_default);
