@@ -160,8 +160,8 @@ The C library and bindings have been tested on the following operating systems:
 ## Notes on building
 
 Building on Solaris, CheriBSD, FreeBSD, NetBSD, and OpenBSD building is
-supported using the `gmake` command. GNU/Linux and MacOS are supported with the
-`make` command.
+supported using the `bmake` and `gmake` commands. GNU/Linux and MacOS are
+supported with the `gmake`, `bmake`, and `make` commands.
 
 MacOS 11, 12, 13, and 14 support is functional for building the C library.
 MacOS 14 support is functional for the Golang bindings with Golang 1.19, 1.20,
