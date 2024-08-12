@@ -1,8 +1,8 @@
-ifneq (GNU,$(firstword $(shell $(MAKE) --version)))
-  $(error Error: 'make' must be 'GNU make')
-endif
-
-SHELL := bash
+#ifneq (GNU,$(firstword $(shell $(MAKE) --version)))
+#  $(error Error: 'make' must be 'GNU make')
+#endif
+#
+#SHELL := bash
 
 export CC ?= clang
 export DISTRO ?= debian:bookworm
