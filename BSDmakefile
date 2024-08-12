@@ -104,4 +104,3 @@ clean:
 	-$(RM) -r docker_build_output
 	-$(RM) -r .pytest_cache
 	-$(MAKE) -C src clean
-	-$(MAKE) -C src -f Makefile.packages clean
