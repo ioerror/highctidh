@@ -25,9 +25,7 @@ jobs:
           uname -a
           freebsd-version
           pkg install -y llvm-13
-          pkg install -y bash
           clang -v
-          make -v
           echo $SHELL
 
         run: |
