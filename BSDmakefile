@@ -10,7 +10,7 @@ export MAKE ?= make
 export PYTEST ?= pytest-3
 
 library: _prep
-	$(MAKE) -C src
+	$(MAKE) -C src -f BSDmakefile
 	cp src/*.so dist/
 
 release: clean _prep
