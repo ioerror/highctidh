@@ -5,7 +5,7 @@
 #SHELL := bash
 
 export CC ?= clang
-export DISTRO ?= debian:bookworm
+#export DISTRO ?= debian:bookworm
 export MAKE ?= make
 export PYTEST ?= pytest-3
 

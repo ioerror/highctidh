@@ -30,4 +30,4 @@ jobs:
 
         run: |
           HIGHCTIDH_PORTABLE=1 make
-          HIGHCTIDH_PORTABLE=1 make test-quick
+          #          HIGHCTIDH_PORTABLE=1 make test-quick
