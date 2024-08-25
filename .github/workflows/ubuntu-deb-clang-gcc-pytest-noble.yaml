@@ -16,10 +16,11 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Install Python deps for testing
-      run: sudo bash -c ./misc/install-ubuntu-deps.sh
+      run: sudo bash -c "./misc/install-ubuntu-deps.sh && apt install -y --no-install-recommends autoconf automake libtool"
 
     - name: Build and install C library
       run: |
+        autoreconf -fi
         CC=${{ matrix.CC }} CFLAGS="-fno-lto" ./configure --prefix="${HOME}/inst" --enable-asm=${{ matrix.ASM }}
         make install
 

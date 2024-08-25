@@ -21,12 +21,16 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Install Ubuntu miminal golang deps
-      run: ./misc/install-debian-deps-go-sanitizer.sh
+      run: |
+        ./misc/install-debian-deps-go-sanitizer.sh
+        apt install -y --no-install-recommends autoconf automake libtool
 
     - name: Build and install C library with asan
       env:
         CFLAGS: -fsanitize=address -fno-omit-frame-pointer -g3 -fno-lto
-      run: CC=${{ matrix.CC }} ./configure --prefix="$HOME/inst" --enable-asm=${{ matrix.ASM }} && make install
+      run: |
+        autoreconf -fi
+        CC=${{ matrix.CC }} ./configure --prefix="$HOME/inst" --enable-asm=${{ matrix.ASM }} && make install
 
     - name: Show go env
       run: go env

@@ -18,10 +18,14 @@ jobs:
       run: ${{ matrix.CC }} -v
 
     - name: Install cross compiler deps
-      run: sudo ./misc/install-ubuntu-latest-cross-deps.sh
+      run: |
+        sudo ./misc/install-ubuntu-latest-cross-deps.sh
+        sudo apt install -y --no-install-recommends autoconf automake libtool
 
     - name: Build 
-      run: CC=${{ matrix.CC }} ./configure --prefix=/usr/local && make
+      run: |
+        autoreconf -fi
+        CC=${{ matrix.CC }} ./configure --prefix=/usr/local && make
 
     - name: Install
       run: sudo make install && sudo ldconfig

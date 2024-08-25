@@ -21,10 +21,14 @@ jobs:
           uname -a
           freebsd-version
           pkg install -y llvm-13
+          pkg install -y autoconf
+          pkg install -y automake
+          pkg install -y libtool
           clang -v
           echo $SHELL
 
         run: |
+          autoreconf -fi
           ./configure
           make
           # make test-quick

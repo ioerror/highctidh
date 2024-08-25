@@ -17,8 +17,13 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Prepare
+      run: sudo bash -c "apt install -y --no-install-recommends autoconf automake libtool"
+
     - name: Build
-      run: CC=${{ matrix.CC }} ./configure --prefix="$HOME/inst" && make install
+      run: |
+        autoreconf -fi
+        CC=${{ matrix.CC }} ./configure --prefix="$HOME/inst" && make install
 
     - name: Setup Go ${{ matrix.go-version }}
       uses: actions/setup-go@v5

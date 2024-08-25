@@ -16,6 +16,16 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Set up Msys2
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: ${{ matrix.ENVIRONMENT }}
+        install: >-
+          make
+          autoconf
+          automake
+          libtool
+
     - name: Gather toolchain info
       shell: bash
       run: |
@@ -24,4 +34,4 @@ jobs:
 
     - name: compile and test-quick
       shell: bash
-      run: ./configure && make test-quick
+      run: autoreconf -fi && ./configure && make test-quick

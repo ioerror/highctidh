@@ -22,9 +22,13 @@ jobs:
           freebsd-version
           pkg install -y llvm-13
           pkg install -y bash
+          pkg install -y autoconf
+          pkg install -y automake
+          pkg install -y libtool
           clang -v
           echo $SHELL
 
         run: |
+          autoreconf -fi
           ./configure
           make test-quick

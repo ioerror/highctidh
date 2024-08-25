@@ -20,10 +20,14 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Install alpine deps
-      run: ./misc/install-alpine-deps.sh
+      run: |
+        ./misc/install-alpine-deps.sh
+        apk add --no-cache autoconf automake libtool
 
     - name: Build
-      run: CC=${{ matrix.CC }} CFLAGS="-fno-lto" ./configure --prefix="$HOME/inst" --enable-asm=${{ matrix.ASM }} && make
+      run: |
+        autoreconf -fi
+        CC=${{ matrix.CC }} CFLAGS="-fno-lto" ./configure --prefix="$HOME/inst" --enable-asm=${{ matrix.ASM }} && make
 
     - name: Test install
       run: make install

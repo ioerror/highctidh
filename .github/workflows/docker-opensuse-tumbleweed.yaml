@@ -19,10 +19,14 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Install openSUSE Tumbleweed deps
-      run: ./misc/install-opensuse-tumbleweed-deps.sh
+      run: |
+        ./misc/install-opensuse-tumbleweed-deps.sh
+        zypper install -y autoconf automake libtool
 
     - name: Build
-      run: CC=${{ matrix.CC }} CFLAGS="-fno-lto" ./configure --prefix=/usr/local --enable-asm=${{ matrix.ASM }} && make
+      run: |
+        autoreconf -fi
+        CC=${{ matrix.CC }} CFLAGS="-fno-lto" ./configure --prefix=/usr/local --enable-asm=${{ matrix.ASM }} && make
 
     - name: Test install
       run: sudo make install

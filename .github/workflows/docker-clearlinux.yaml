@@ -22,10 +22,14 @@ jobs:
       run: swupd info
 
     - name: Install Clear Linux deps
-      run: ./misc/install-clearlinux-deps.sh
+      run: |
+        ./misc/install-clearlinux-deps.sh
+        swupd bundle-add -y autoconf automake libtool
 
     - name: Build
-      run: CC=${{ matrix.CC }} CFLAGS="-fno-lto" ./configure --prefix=/usr/local --enable-asm=${{ matrix.ASM }} && make
+      run: |
+        autoreconf -fi
+        CC=${{ matrix.CC }} CFLAGS="-fno-lto" ./configure --prefix=/usr/local --enable-asm=${{ matrix.ASM }} && make
 
     - name: Test install
       run: sudo make install

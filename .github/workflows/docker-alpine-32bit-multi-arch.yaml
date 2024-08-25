@@ -24,7 +24,7 @@ jobs:
 
     - name: Install requirements
       run : |
-        sudo apt install -y --no-install-recommends docker
+        sudo apt install -y --no-install-recommends docker autoconf automake libtool
 
     - name: check kernel
       run: |
@@ -42,4 +42,4 @@ jobs:
           --rm \
           ${{ matrix.DOCKER_ARCH_ARGS}} \
           /bin/sh \
-          -c "./misc/docker-gha-fixup.sh && ./configure --enable-asm=${{ matrix.ASM }} && make alpine-multi-arch"
+          -c "./misc/docker-gha-fixup.sh && autoreconf -fi && ./configure --enable-asm=${{ matrix.ASM }} && make alpine-multi-arch"

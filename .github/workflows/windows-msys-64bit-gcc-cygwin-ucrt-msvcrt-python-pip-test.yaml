@@ -34,6 +34,9 @@ jobs:
           mingw-w64-x86_64-gcc
           mingw-w64-ucrt-x86_64-gcc
           make
+          autoconf
+          automake
+          libtool
 
     - name: Gather runtime environment
       shell: msys2 {0}
@@ -47,6 +50,7 @@ jobs:
     - name: Build and install C library
       shell: msys2 {0}
       run: |
+        autoreconf -fi
         CC=${{ matrix.CC }} ./configure --prefix="$HOME/inst"
         make install
 

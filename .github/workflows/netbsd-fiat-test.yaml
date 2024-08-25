@@ -22,7 +22,11 @@ jobs:
           /usr/sbin/pkg_add gcc10
           gcc -v
           make -v
+          /usr/sbin/pkg_add autoconf
+          /usr/sbin/pkg_add automake
+          /usr/sbin/pkg_add libtool
 
         run: |
+          autoreconf -fi
           ./configure
           make test-quick

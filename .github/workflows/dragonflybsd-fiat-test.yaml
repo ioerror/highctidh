@@ -21,9 +21,13 @@ jobs:
           uname -a
           pkg install -y llvm16-16.0.6_9
           pkg install -y bash
+          pkg install -y autoconf
+          pkg install -y automake
+          pkg install -y libtool
           /usr/local/bin/clang16 -v
           echo $SHELL
 
         run: |
+          autoreconf -fi
           ./configure
           make test-quick

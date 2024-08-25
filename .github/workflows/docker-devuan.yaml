@@ -19,10 +19,14 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Install devuan deps
-      run: ./misc/install-devuan-deps.sh
+      run: |
+        ./misc/install-devuan-deps.sh
+        apt install -y --no-install-recommends autoconf automake libtool
 
     - name: Build
-      run: CC=${{ matrix.CC }} CFLAGS="-fno-lto" ./configure --prefix=/usr/local --enable-asm=${{ matrix.ASM }} && make
+      run: |
+        autoreconf -fi
+        CC=${{ matrix.CC }} CFLAGS="-fno-lto" ./configure --prefix=/usr/local --enable-asm=${{ matrix.ASM }} && make
 
     - name: Test install
       run: sudo make install

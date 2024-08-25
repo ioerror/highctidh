@@ -20,10 +20,14 @@ jobs:
         prepare: |
           uname -a
           pkg_add bash
+          pkg_add autoconf
+          pkg_add automake
+          pkg_add libtool
           make -v
           clang -v
           echo $SHELL
 
         run: |
+          autoreconf -fi
           ./configure
           make test-quick
