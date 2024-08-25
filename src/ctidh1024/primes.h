@@ -3,8 +3,6 @@
 #ifndef primes_h
 #define primes_h
 
-#include "primes_namespace.h"
-
 #if BITS == 511
 #define primes_num 74
 #define primes_batches 15
