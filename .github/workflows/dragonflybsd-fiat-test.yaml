@@ -24,7 +24,7 @@ jobs:
         prepare: |
           uname -a
           pkg install -y gmake
-          pkg install -y llvm16-16.0.6_6 
+          pkg install -y llvm16-16.0.6_9
           pkg install -y bash
           gmake -v
           /usr/local/bin/clang16 -v

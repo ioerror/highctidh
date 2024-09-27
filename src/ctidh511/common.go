@@ -88,15 +88,14 @@ import (
 	gopointer "github.com/mattn/go-pointer"
 )
 
-//
 // This function wraps go_fillrandom, so we can emulate the calls from the
 // C library and test the results
-//
 func test_go_fillrandom(context unsafe.Pointer, outptr []byte) {
 	highctidh_511_go_fillrandom(context, unsafe.Pointer(&outptr[0]), C.size_t(len(outptr)))
 }
 
 // This is called from the C library, DO NOT CHANGE THE FUNCTION INTERFACE
+//
 //export highctidh_511_go_fillrandom
 func highctidh_511_go_fillrandom(context unsafe.Pointer, outptr unsafe.Pointer, outsz C.size_t) {
 	rng := gopointer.Restore(context).(io.Reader)
@@ -108,11 +107,9 @@ func highctidh_511_go_fillrandom(context unsafe.Pointer, outptr unsafe.Pointer, 
 	if count != int(outsz) {
 		panic("rng fail")
 	}
-	p := uintptr(outptr)
-	for i := 0; i < int(outsz); {
-		(*(*uint8)(unsafe.Pointer(p))) = uint8(buf[i])
-		p += 1
-		i += 1
+	for i := 0; i < int(outsz); i++ {
+		p := unsafe.Pointer(uintptr(outptr) + uintptr(i))
+		*(*uint8)(p) = uint8(buf[i])
 	}
 }
 
