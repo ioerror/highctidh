@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <string.h>
 
 #include "random.h"
 #include "randombytes.h"
