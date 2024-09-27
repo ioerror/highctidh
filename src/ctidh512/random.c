@@ -42,7 +42,7 @@ void random_boundedl1(int8_t *e, const long long w,const long long S, uintptr_t 
   assert(rnum <= 254);
   /* XXX: Microsoft compiler doesn't handle int32_t r[S+w] */
   int32_t r[254];
-  memset(r, 0, 254); // msan complains if not initalized
+  memset(r, 0, sizeof(r)); // msan complains if not initalized
 
   for (;;) { /* rejection-sampling loop */
     rng_callback(r,4*rnum, rng_context);
