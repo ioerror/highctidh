@@ -132,6 +132,7 @@ static int64_t uint64mask_lessthan(uint64_t x,uint64_t y)
 int64_t random_coin(uint64_t num,uint64_t den)
 {
   uint8_t buf[32];
+  memset(buf, 0, sizeof(buf));
   uint64_t r = 0;
 
   randombytes(buf,sizeof buf);
