@@ -24,7 +24,7 @@ void elligator(proj *plus,proj *minus,const proj *A)
     crypto_declassify(&reject,sizeof reject);
     if (reject) continue; /* bad RNG outputs +-1 */
 
-    fp M; 
+    fp M;
     memset(&M, 0, sizeof(M));
     fp_mul3(&M,&A->x,&u2); /* M = u^2 A->x */
     fp T;
