@@ -26,7 +26,7 @@ func TestBlindingOperationNoRandReader(t *testing.T) {
 	mixPrivateKey, mixPublicKey := GenerateKeyPair()
 	clientPrivateKey, clientPublicKey := GenerateKeyPair()
 
-	blindingFactor := GeneratePrivateKey()
+	blindingFactor, _ := GenerateKeyPair()
 	value1, err := Blind(blindingFactor, NewPublicKey(DeriveSecret(clientPrivateKey, mixPublicKey)))
 	require.NoError(t, err)
 	blinded, err := Blind(blindingFactor, clientPublicKey)
