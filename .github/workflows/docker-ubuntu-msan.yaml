@@ -21,8 +21,8 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Install Ubuntu deps
-      run: ./misc/install-debian-deps.sh
+    - name: Install Ubuntu golang deps
+      run: ./misc/install-debian-go-deps.sh
 
     - name: Show go env
       run: go env
