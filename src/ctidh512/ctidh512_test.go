@@ -3,9 +3,7 @@
 package ctidh512
 
 import (
-	"bytes"
 	"crypto/rand"
-	"errors"
 	"github.com/stretchr/testify/require"
 	"testing"
 )
