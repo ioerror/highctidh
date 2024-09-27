@@ -3,10 +3,11 @@
 package ctidh511
 
 import (
+	"bytes"
 	"crypto/rand"
-	"testing"
-
+	"errors"
 	"github.com/stretchr/testify/require"
+	"testing"
 )
 
 func TestBlindingOperation(t *testing.T) {
@@ -22,7 +23,6 @@ func TestBlindingOperation(t *testing.T) {
 
 	require.Equal(t, value1.Bytes(), value2)
 }
-
 
 func TestBlindingOperationNoRandReader(t *testing.T) {
 	errCh := make(chan error, 1024)
@@ -57,7 +57,6 @@ func TestBlindingOperationNoRandReader(t *testing.T) {
 		require.NoError(t, e)
 	}
 }
-
 
 func TestGenerateKeyPairWithRNG(t *testing.T) {
 	privateKey, publicKey := GenerateKeyPairWithRNG(rand.Reader)

@@ -3,10 +3,11 @@
 package ctidh512
 
 import (
+	"bytes"
 	"crypto/rand"
-	"testing"
-
+	"errors"
 	"github.com/stretchr/testify/require"
+	"testing"
 )
 
 func TestBlindingOperation(t *testing.T) {
