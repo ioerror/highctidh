@@ -14,7 +14,6 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        CC: ["clang"]
         PORTABLE: ["0", "1"]
         CONTAINER: ["alpine:3.19.1", "alpine:3.19", "alpine:3.18.6",
                     "alpine:3.18", "alpine:3.17.7", "alpine:3.17"]
@@ -29,5 +28,5 @@ jobs:
     - name: Show go env
       run: go env
 
-    - name: Build and test with asan
+    - name: Build and test with msan
       run: cd src/ctidh1024 && HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} go test -v -msan ./...
