@@ -7,13 +7,13 @@ on:
 
 env:
   CGO_CFLAGS: -fsanitize=memory -fpie -fPIC -fPIE -fno-omit-frame-pointer -fsanitize-memory-param-retval -fsanitize-memory-track-origins -g3 -fno-lto 
+  CC: clang
 
 jobs:
   docker:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        CC: ["clang"]
         PORTABLE: ["0", "1"]
         CONTAINER: ["ubuntu:22.04", "ubuntu:23.10", "ubuntu:24.04"]
       fail-fast: false
@@ -28,4 +28,4 @@ jobs:
       run: go env
 
     - name: Build and test with asan
-      run: CC=${{ matrix.CC }} HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} cd src/ctidh1024 && go test -v -msan ./...
+      run: HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} cd src/ctidh1024 && go test -v -msan ./...
