@@ -28,5 +28,14 @@ jobs:
     - name: Show go env
       run: go env
 
-    - name: Build and test with asan
+    - name: Build and test 511 with asan
+      run: cd src/ctidh511 && HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} go test -o asan-test -timeout 0 -asan -v ./...
+
+    - name: Build and test 512 with asan
+      run: cd src/ctidh512 && HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} go test -o asan-test -timeout 0 -asan -v ./...
+
+    - name: Build and test 1024 with asan
       run: cd src/ctidh1024 && HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} go test -o asan-test -timeout 0 -asan -v ./...
+
+    - name: Build and test 2048 with asan
+      run: cd src/ctidh2048 && HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} go test -o asan-test -timeout 0 -asan -v ./...
