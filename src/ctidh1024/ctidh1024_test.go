@@ -26,37 +26,17 @@ func TestBlindingOperation(t *testing.T) {
 }
 
 func TestBlindingOperationNoRandReader(t *testing.T) {
-	errCh := make(chan error, 1024)
-	for i := 0; i < 10; i++ {
-		go func() {
-			mixPrivateKey, mixPublicKey := GenerateKeyPair()
-			clientPrivateKey, clientPublicKey := GenerateKeyPair()
+	mixPrivateKey, mixPublicKey := GenerateKeyPair()
+	clientPrivateKey, clientPublicKey := GenerateKeyPair()
 
-			blindingFactor, _ := GenerateKeyPair() // not using GeneratePrivateKey(rand.Reader)
-			value1, err := Blind(blindingFactor, NewPublicKey(DeriveSecret(clientPrivateKey, mixPublicKey)))
-			if err != nil {
-				errCh <- err
-				return
-			}
-			blinded, err := Blind(blindingFactor, clientPublicKey)
-			if err != nil {
-				errCh <- err
-				return
-			}
+	blindingFactor := GeneratePrivateKey()
+	value1, err := Blind(blindingFactor, NewPublicKey(DeriveSecret(clientPrivateKey, mixPublicKey)))
+	require.NoError(t, err)
+	blinded, err := Blind(blindingFactor, clientPublicKey)
+	require.NoError(t, err)
+	value2 := DeriveSecret(mixPrivateKey, blinded)
 
-			value2 := DeriveSecret(mixPrivateKey, blinded)
-
-			if !bytes.Equal(value1.Bytes(), value2) {
-				errCh <- errors.New("fuk")
-				return
-			}
-		}()
-	}
-	close(errCh)
-
-	for e := range errCh {
-		require.NoError(t, e)
-	}
+	require.Equal(t, value1.Bytes(), value2)
 }
 
 func TestGenerateKeyPairWithRNG(t *testing.T) {
