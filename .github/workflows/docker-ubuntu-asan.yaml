@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         PORTABLE: ["0", "1"]
-        CONTAINER: ["ubuntu:22.04", "ubuntu:23.10", "ubuntu:24.04"]
+        CONTAINER: ["ubuntu:23.10", "ubuntu:24.04"]
       fail-fast: false
     container: ${{ matrix.CONTAINER }}
     steps:
