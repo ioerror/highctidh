@@ -3,7 +3,7 @@ name: MacOS Golang build and test
 on: [push]
 
 env:
-  CGO_LDFLAGS: -Wl,-z,stack-size=0xFFFFFF
+  CGO_LDFLAGS: -Wl,-stack_size,0xFFFFFF
   CC: clang
 
 jobs:
