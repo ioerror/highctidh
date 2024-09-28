@@ -7,6 +7,7 @@ on:
 
 env:
   CGO_CFLAGS: -fsanitize=address -fpie -fPIC -fPIE -fno-omit-frame-pointer -g3 -fno-lto 
+  CGO_LDFLAGS: -Wl,-z,stack-size=0xFFFFFF
   CC: clang
 
 jobs:

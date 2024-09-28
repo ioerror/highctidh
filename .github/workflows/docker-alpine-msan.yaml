@@ -7,6 +7,7 @@ on:
 
 env:
   CGO_CFLAGS: -fsanitize=memory -fpie -fPIC -fPIE -fno-omit-frame-pointer -fsanitize-memory-param-retval -fsanitize-memory-track-origins -g3 -fno-lto
+  CGO_LDFLAGS: -Wl,-z,stack-size=0xFFFFFF
   CC: clang
 
 jobs:
