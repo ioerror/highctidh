@@ -6,7 +6,7 @@ on:
     branches: [ "main" ]
 
 env:
-  CGO_CFLAGS: -fsanitize=memory -fpie -fPIC -fPIE -fno-omit-frame-pointer -fsanitize-memory-param-retval -fsanitize-memory-track-origins -g3 -fno-lto 
+  CGO_CFLAGS: -fsanitize=memory -fpie -fPIC -fPIE -fno-omit-frame-pointer -fsanitize-memory-param-retval -fsanitize-memory-track-origins -g3 -fno-lto
   CC: clang
 
 jobs:
