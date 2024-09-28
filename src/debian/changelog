@@ -1,3 +1,9 @@
+highctidh (1.0.2024092800-1) unstable; urgency=medium
+
+  * New version released
+
+ -- Jacob Appelbaum <jacob@appelbaum.net>  Sat, 28 Sep 2024 19:43:52 +0200
+
 highctidh (1.0.2024060500-1) unstable; urgency=low
 
   * Add src/pytest.ini
