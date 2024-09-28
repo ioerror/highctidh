@@ -23,7 +23,7 @@ package ctidh2048
  // CC=clang CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -v
  #cgo darwin/amd64 CFLAGS: -DPLATFORM=x86_64 -DPLATFORM_SIZE=64 -D__x86_64__ -march=native -mtune=native -D__Darwin__ -DGETRANDOM -DHIGHCTIDH_PORTABLE=1
 
- // Generic flags for amd64 
+ // Generic flags for amd64
  #cgo amd64 CFLAGS: -DPLATFORM=x86_64 -DPLATFORM_SIZE=64 -D__x86_64__ -fpie -fPIC -DHIGHCTIDH_PORTABLE=1
 
  // CC=gcc CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -v
@@ -88,15 +88,14 @@ import (
 	gopointer "github.com/mattn/go-pointer"
 )
 
-//
 // This function wraps go_fillrandom, so we can emulate the calls from the
 // C library and test the results
-//
 func test_go_fillrandom(context unsafe.Pointer, outptr []byte) {
 	highctidh_2048_go_fillrandom(context, unsafe.Pointer(&outptr[0]), C.size_t(len(outptr)))
 }
 
 // This is called from the C library, DO NOT CHANGE THE FUNCTION INTERFACE
+//
 //export highctidh_2048_go_fillrandom
 func highctidh_2048_go_fillrandom(context unsafe.Pointer, outptr unsafe.Pointer, outsz C.size_t) {
 	rng := gopointer.Restore(context).(io.Reader)
@@ -108,11 +107,9 @@ func highctidh_2048_go_fillrandom(context unsafe.Pointer, outptr unsafe.Pointer,
 	if count != int(outsz) {
 		panic("rng fail")
 	}
-	p := uintptr(outptr)
-	for i := 0; i < int(outsz); {
-		(*(*uint8)(unsafe.Pointer(p))) = uint8(buf[i])
-		p += 1
-		i += 1
+	for i := 0; i < int(outsz); i++ {
+		p := unsafe.Pointer(uintptr(outptr) + uintptr(i))
+		*(*uint8)(p) = uint8(buf[i])
 	}
 }
 

@@ -4,6 +4,7 @@ package ctidh2048
 
 import (
 	"crypto/rand"
+	"sync"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -23,11 +24,69 @@ func TestBlindingOperation(t *testing.T) {
 	require.Equal(t, value1.Bytes(), value2)
 }
 
+func TestBlindingOperationNoRandReader(t *testing.T) {
+	mixPrivateKey, mixPublicKey := GenerateKeyPair()
+	clientPrivateKey, clientPublicKey := GenerateKeyPair()
+
+	blindingFactor, _ := GenerateKeyPair()
+	value1, err := Blind(blindingFactor, NewPublicKey(DeriveSecret(clientPrivateKey, mixPublicKey)))
+	require.NoError(t, err)
+	blinded, err := Blind(blindingFactor, clientPublicKey)
+	require.NoError(t, err)
+	value2 := DeriveSecret(mixPrivateKey, blinded)
+
+	require.Equal(t, value1.Bytes(), value2)
+}
+
 func TestGenerateKeyPairWithRNG(t *testing.T) {
 	privateKey, publicKey := GenerateKeyPairWithRNG(rand.Reader)
 	zeros := make([]byte, PublicKeySize)
 	require.NotEqual(t, privateKey.Bytes(), zeros)
 	require.NotEqual(t, publicKey.Bytes(), zeros)
+}
+
+func TestGenerateKeyPair(t *testing.T) {
+	for i := 0; i < 16; i++ {
+		privateKey, publicKey := GenerateKeyPair()
+		zeros := make([]byte, PublicKeySize)
+		require.NotEqual(t, privateKey.Bytes(), zeros)
+		require.NotEqual(t, publicKey.Bytes(), zeros)
+	}
+}
+
+func TestCorruptStack(t *testing.T) {
+	errCh := make(chan error, 10)
+	wg := new(sync.WaitGroup)
+	for i := 0; i < 10; i++ {
+		wg.Add(1)
+		go func() {
+			go func() {
+				foo := []byte("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+				t.Logf("stack: %s", foo)
+			}()
+
+			_, _ = GenerateKeyPair()
+
+			go func() {
+				foo := []byte("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+				t.Logf("stack: %s", foo)
+			}()
+			errCh <- nil
+			wg.Done()
+		}()
+	}
+	wg.Wait()
+	close(errCh)
+
+	for e := range errCh {
+		require.NoError(t, e)
+	}
+	wg.Add(1)
+	go func() {
+		t.Log("last call")
+		wg.Done()
+	}()
+	wg.Wait()
 }
 
 func TestPublicKeyReset(t *testing.T) {

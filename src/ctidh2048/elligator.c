@@ -1,24 +1,35 @@
 #include "crypto_declassify.h"
 #include "elligator.h"
+#include <string.h>
 
 void elligator(proj *plus,proj *minus,const proj *A)
 {
   for (;;) {
-    fp u; fp_random(&u);
+    fp u;
+    memset(&u, 0, sizeof(u));
+    fp_random(&u);
 
     long long reject = fp_iszero(&u);
     crypto_declassify(&reject,sizeof reject);
     if (reject) continue; /* bad RNG outputs 0 */
 
-    fp u2; fp_sq2(&u2,&u);
-    fp D; fp_sub3(&D,&u2,&fp_1);
+    fp u2;
+    memset(&u2, 0, sizeof(u2));
+    fp_sq2(&u2,&u);
+    fp D;
+    memset(&D, 0, sizeof(D));
+    fp_sub3(&D,&u2,&fp_1);
 
     reject = fp_iszero(&D);
     crypto_declassify(&reject,sizeof reject);
     if (reject) continue; /* bad RNG outputs +-1 */
 
-    fp M; fp_mul3(&M,&A->x,&u2); /* M = u^2 A->x */
-    fp T; fp_mul3(&T,&A->x,&M); /* T = u^2 A->x^2 */
+    fp M;
+    memset(&M, 0, sizeof(M));
+    fp_mul3(&M,&A->x,&u2); /* M = u^2 A->x */
+    fp T;
+    memset(&T, 0, sizeof(T));
+    fp_mul3(&T,&A->x,&M); /* T = u^2 A->x^2 */
 
     long long control = fp_iszero(&A->x);
     fp P = A->x;
@@ -28,7 +39,9 @@ void elligator(proj *plus,proj *minus,const proj *A)
 
     fp_mul2(&D,&A->z); /* D = (u^2-1) A->z */
 
-    fp D2; fp_sq2(&D2,&D); /* D2 = (u^2-1)^2 A->z^2 */
+    fp D2;
+    memset(&D2, 0, sizeof(D2));
+    fp_sq2(&D2,&D); /* D2 = (u^2-1)^2 A->z^2 */
 
     fp_add2(&T,&D2); /* T = 1 + (u^2-1)^2 A->z^2 if A->x = 0, else u^2 A->x^2 + (u^2-1)^2 A->z^2 */
     fp_mul2(&T,&D);

@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <string.h>
 
 #include "random.h"
 #include "randombytes.h"
@@ -41,6 +42,7 @@ void random_boundedl1(int8_t *e, const long long w,const long long S, uintptr_t 
   assert(rnum <= 254);
   /* XXX: Microsoft compiler doesn't handle int32_t r[S+w] */
   int32_t r[254];
+  memset(r, 0, sizeof(r)); // msan complains if not initalized
 
   for (;;) { /* rejection-sampling loop */
     rng_callback(r,4*rnum, rng_context);
@@ -130,6 +132,7 @@ static int64_t uint64mask_lessthan(uint64_t x,uint64_t y)
 int64_t random_coin(uint64_t num,uint64_t den)
 {
   uint8_t buf[32];
+  memset(buf, 0, sizeof(buf));
   uint64_t r = 0;
 
   randombytes(buf,sizeof buf);
