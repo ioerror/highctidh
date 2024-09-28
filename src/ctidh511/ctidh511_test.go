@@ -61,14 +61,14 @@ func TestCorruptStack(t *testing.T) {
 		go func() {
 			go func() {
 				foo := []byte("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-        t.Logf("stack: %s", foo)
+				t.Logf("stack: %s", foo)
 			}()
 
 			_, _ = GenerateKeyPair()
 
 			go func() {
 				foo := []byte("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-        t.Logf("stack: %s", foo)
+				t.Logf("stack: %s", foo)
 			}()
 			errCh <- nil
 			wg.Done()
