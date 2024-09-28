@@ -73,6 +73,16 @@ import (
 ) 
 ```
 
+### musl libc and cgo
+
+The Golang bindings are compatable with musl libc for field sizes 511 and 512
+without any configuration. For field sizes of 1024 and 2048, Golang users
+building with musl libc will need to set an environment variable to increase
+the default stack size at build time:
+```
+CGO_LDFLAGS: -Wl,-z,stack-size=0xFFFFFF
+```
+
 # highctidh improvements
 
 This fork enhances high-ctidh with additional Makefile targets including
