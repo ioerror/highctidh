@@ -78,9 +78,17 @@ import (
 The Golang bindings are compatable with musl libc for field sizes 511 and 512
 without any configuration. For field sizes of 1024 and 2048, Golang users
 building with musl libc will need to set an environment variable to increase
-the default stack size at build time:
+the default stack size at build time. The stack size should be a multiple of
+the page size.
+
+For GNU/Linux:
 ```
-CGO_LDFLAGS: -Wl,-z,stack-size=0xFFFFFF
+CGO_LDFLAGS: -Wl,-z,stack-size=0x1F40000
+```
+
+For MacOS:
+```
+CGO_LDFLAGS: -Wl,-stack_size,0x1F40000
 ```
 
 # highctidh improvements
@@ -174,8 +182,8 @@ supported using the `bmake` and `gmake` commands. GNU/Linux and MacOS are
 supported with the `gmake`, `bmake`, and `make` commands.
 
 MacOS 11, 12, 13, and 14 support is functional for building the C library.
-MacOS 14 support is functional for the Golang bindings with Golang 1.19, 1.20,
-1.21.x, and 1.22.0.
+MacOS 14 support is functional for the Golang bindings with Golang 1.20,
+1.21.x, 1.22.x, and 1.23.x.
 MacOS 14 supports the Python module with Python 3.9, 3.10, 3.11, and 3.12.
 
 Windows support is extremely experimental.  Building the main C library on
