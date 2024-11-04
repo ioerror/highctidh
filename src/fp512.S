@@ -11,36 +11,13 @@
 .set pbits,511
 .set pbytes,64
 .set plimbs,8
+
+.hidden .uintbig_p_local
 .uintbig_p_local:
     .quad 0x1b81b90533c6c87b, 0xc2721bf457aca835, 0x516730cc1f0b4f25, 0xa7aac6c567f35507
     .quad 0x5afbfcc69322c9cd, 0xb42d083aedc88c42, 0xfc8ab0d15e3e4c4a, 0x65b48e8f740f89bf
 
-.highctidh_512_inv_min_p_mod_r: /* -p^-1 mod 2^64 */
-    .quad 0x66c1301f632e294d
-
-.global highctidh_512_fp_0
-highctidh_512_fp_0:
-    .zero 64
-    .size highctidh_512_fp_0, 64
-    .type highctidh_512_fp_0, @object
-
-.global highctidh_512_fp_1
-highctidh_512_fp_1: /* 2^512 mod p */
-    .quad 0xc8fc8df598726f0a, 0x7b1bc81750a6af95, 0x5d319e67c1e961b4, 0xb0aa7275301955f1
-    .quad 0x4a080672d9ba6c64, 0x97a5ef8a246ee77b, 0x06ea9e5d4383676a, 0x3496e2e117e0ec80
-    .size highctidh_512_fp_1, 64
-    .type highctidh_512_fp_1, @object
-
-.global highctidh_512_fp_2
-highctidh_512_fp_2: /* 2^513 mod p */
-    .quad 0x767762e5fd1e1599, 0x33c5743a49a0b6f6, 0x68fc0c0364c77443, 0xb9aa1e24f83f56db
-    .quad 0x3914101f20520efb, 0x7b1ed6d95b1542b4, 0x114a8be928c8828a, 0x03793732bbb24f40
-    .size highctidh_512_fp_2, 64
-    .type highctidh_512_fp_2, @object
-
-.highctidh_512_r_squared_mod_p: /* (2^512)^2 mod p */
-    .quad 0x36905b572ffc1724, 0x67086f4525f1f27d, 0x4faf3fbfd22370ca, 0x192ea214bcc584b1
-    .quad 0x5dae03ee2f5de3d0, 0x1e9248731776b371, 0xad5f166e20e4f52d, 0x4ed759aea6f3917e
+#include "fp_const_le_512.s"
 
 .section .data
 .global highctidh_512_fp_mulsq_count
