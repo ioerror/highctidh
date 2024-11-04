@@ -77,6 +77,8 @@ else
 BASE_CFLAGS += -DHIGHCTIDH_PORTABLE=0
 ifeq ($(PLATFORM),amd64)
 ASM_PLATFORM := x86_64
+else ifeq ($(PLATFORM),arm64)
+ASM_PLATFORM := aarch64
 else
 ASM_PLATFORM := $(PLATFORM)
 endif
