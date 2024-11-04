@@ -216,34 +216,7 @@ highctidh_2048_fp_sub3:
 
 	MULX	x5, x4, x3, x21
 	ADOX	x9, x4
-
-	ADCX	x10, x5
-	MULX	x5, x4, x3, x22
-	ADOX	x10, x4
-
-	ADCX	x11, x5
-	MULX	x5, x4, x3, x23
-	ADOX	x11, x4
-
-	ADCX	x12, x5
-	MULX	x5, x4, x3, x24
-	ADOX	x12, x4
-
-	ADCX	x13, x5
-	MULX	x5, x4, x3, x25
-	ADOX	x13, x4
-
-	ADCX	x14, x5
-	MULX	x5, x4, x3, x26
-	ADOX	x14, x4
-
-	ADCX	x15, x5
-	MULX	x5, x4, x3, x27
-	ADOX	x15, x4
-
-	ADCX	x16, x5
-	MULX	x5, x4, x3, x28
-	ADOX	x16, x4
+	MAAx7	x3
 
 	STx4AT	sp, x9, \I0, x10, \I1, x11, \I2, x12, \I3
 	STx4AT	sp, x13, \I4, x14, \I5, x15, \I6, x16, \I7
@@ -252,39 +225,7 @@ highctidh_2048_fp_sub3:
 	LD64x8	xuintbig_p, 64, x21, x22, x23, x24, x25, x26, x27, x28
 	LDx4AT	sp, x9, \I8, x10, \I9, x11, \I10, x12, \I11
 	LDx4AT	sp, x13, \I12, x14, \I13, x15, \I14, x16, \I15
-
-	ADCX	x9, x5
-	MULX	x5, x4, x3, x21
-	ADOX	x9, x4
-
-	ADCX	x10, x5
-	MULX	x5, x4, x3, x22
-	ADOX	x10, x4
-
-	ADCX	x11, x5
-	MULX	x5, x4, x3, x23
-	ADOX	x11, x4
-
-	ADCX	x12, x5
-	MULX	x5, x4, x3, x24
-	ADOX	x12, x4
-
-	ADCX	x13, x5
-	MULX	x5, x4, x3, x25
-	ADOX	x13, x4
-
-	ADCX	x14, x5
-	MULX	x5, x4, x3, x26
-	ADOX	x14, x4
-
-	ADCX	x15, x5
-	MULX	x5, x4, x3, x27
-	ADOX	x15, x4
-
-	ADCX	x16, x5
-	MULX	x5, x4, x3, x28
-	ADOX	x16, x4
-
+	MAAx8	x3
 	STx4AT	sp, x9, \I8, x10, \I9, x11, \I10, x12, \I11
 	STx4AT	sp, x13, \I12, x14, \I13, x15, \I14, x16, \I15
 
@@ -292,39 +233,7 @@ highctidh_2048_fp_sub3:
 	LD64x8	xuintbig_p, 128, x21, x22, x23, x24, x25, x26, x27, x28
 	LDx4AT	sp, x9, \I16, x10, \I17, x11, \I18, x12, \I19
 	LDx4AT	sp, x13, \I20, x14, \I21, x15, \I22, x16, \I23
-
-	ADCX	x9, x5
-	MULX	x5, x4, x3, x21
-	ADOX	x9, x4
-
-	ADCX	x10, x5
-	MULX	x5, x4, x3, x22
-	ADOX	x10, x4
-
-	ADCX	x11, x5
-	MULX	x5, x4, x3, x23
-	ADOX	x11, x4
-
-	ADCX	x12, x5
-	MULX	x5, x4, x3, x24
-	ADOX	x12, x4
-
-	ADCX	x13, x5
-	MULX	x5, x4, x3, x25
-	ADOX	x13, x4
-
-	ADCX	x14, x5
-	MULX	x5, x4, x3, x26
-	ADOX	x14, x4
-
-	ADCX	x15, x5
-	MULX	x5, x4, x3, x27
-	ADOX	x15, x4
-
-	ADCX	x16, x5
-	MULX	x5, x4, x3, x28
-	ADOX	x16, x4
-
+	MAAx8	x3
 	STx4AT	sp, x9, \I16, x10, \I17, x11, \I18, x12, \I19
 	STx4AT	sp, x13, \I20, x14, \I21, x15, \I22, x16, \I23
 
@@ -332,39 +241,7 @@ highctidh_2048_fp_sub3:
 	LD64x8	xuintbig_p, 192, x21, x22, x23, x24, x25, x26, x27, x28
 	LDx4AT	sp, x9, \I24, x10, \I25, x11, \I26, x12, \I27
 	LDx4AT	sp, x13, \I28, x14, \I29, x15, \I30, x16, \I31
-
-	ADCX	x9, x5
-	MULX	x5, x4, x3, x21
-	ADOX	x9, x4
-
-	ADCX	x10, x5
-	MULX	x5, x4, x3, x22
-	ADOX	x10, x4
-
-	ADCX	x11, x5
-	MULX	x5, x4, x3, x23
-	ADOX	x11, x4
-
-	ADCX	x12, x5
-	MULX	x5, x4, x3, x24
-	ADOX	x12, x4
-
-	ADCX	x13, x5
-	MULX	x5, x4, x3, x25
-	ADOX	x13, x4
-
-	ADCX	x14, x5
-	MULX	x5, x4, x3, x26
-	ADOX	x14, x4
-
-	ADCX	x15, x5
-	MULX	x5, x4, x3, x27
-	ADOX	x15, x4
-
-	ADCX	x16, x5
-	MULX	x5, x4, x3, x28
-	ADOX	x16, x4
-
+	MAAx8	x3
 	STx4AT	sp, x9, \I24, x10, \I25, x11, \I26, x12, \I27
 	STx4AT	sp, x13, \I28, x14, \I29, x15, \I30, x16, \I31
 
@@ -384,34 +261,7 @@ highctidh_2048_fp_sub3:
 
 	MULX	x5, x4, xa_k, x21
 	ADOX	x9, x4
-
-	ADCX	x10, x5
-	MULX	x5, x4, xa_k, x22
-	ADOX	x10, x4
-
-	ADCX	x11, x5
-	MULX	x5, x4, xa_k, x23
-	ADOX	x11, x4
-
-	ADCX	x12, x5
-	MULX	x5, x4, xa_k, x24
-	ADOX	x12, x4
-
-	ADCX	x13, x5
-	MULX	x5, x4, xa_k, x25
-	ADOX	x13, x4
-
-	ADCX	x14, x5
-	MULX	x5, x4, xa_k, x26
-	ADOX	x14, x4
-
-	ADCX	x15, x5
-	MULX	x5, x4, xa_k, x27
-	ADOX	x15, x4
-
-	ADCX	x16, x5
-	MULX	x5, x4, xa_k, x28
-	ADOX	x16, x4
+	MAAx7	xa_k
 
 	STx4AT	sp, x9, \I0, x10, \I1, x11, \I2, x12, \I3
 	STx4AT	sp, x13, \I4, x14, \I5, x15, \I6, x16, \I7
@@ -420,39 +270,7 @@ highctidh_2048_fp_sub3:
 	LD64x8	x2, 64, x21, x22, x23, x24, x25, x26, x27, x28
 	LDx4AT	sp, x9, \I8, x10, \I9, x11, \I10, x12, \I11
 	LDx4AT	sp, x13, \I12, x14, \I13, x15, \I14, x16, \I15
-
-	ADCX	x9, x5
-	MULX	x5, x4, xa_k, x21
-	ADOX	x9, x4
-
-	ADCX	x10, x5
-	MULX	x5, x4, xa_k, x22
-	ADOX	x10, x4
-
-	ADCX	x11, x5
-	MULX	x5, x4, xa_k, x23
-	ADOX	x11, x4
-
-	ADCX	x12, x5
-	MULX	x5, x4, xa_k, x24
-	ADOX	x12, x4
-
-	ADCX	x13, x5
-	MULX	x5, x4, xa_k, x25
-	ADOX	x13, x4
-
-	ADCX	x14, x5
-	MULX	x5, x4, xa_k, x26
-	ADOX	x14, x4
-
-	ADCX	x15, x5
-	MULX	x5, x4, xa_k, x27
-	ADOX	x15, x4
-
-	ADCX	x16, x5
-	MULX	x5, x4, xa_k, x28
-	ADOX	x16, x4
-
+	MAAx8	xa_k
 	STx4AT	sp, x9, \I8, x10, \I9, x11, \I10, x12, \I11
 	STx4AT	sp, x13, \I12, x14, \I13, x15, \I14, x16, \I15
 
@@ -460,39 +278,7 @@ highctidh_2048_fp_sub3:
 	LD64x8	x2, 128, x21, x22, x23, x24, x25, x26, x27, x28
 	LDx4AT	sp, x9, \I16, x10, \I17, x11, \I18, x12, \I19
 	LDx4AT	sp, x13, \I20, x14, \I21, x15, \I22, x16, \I23
-
-	ADCX	x9, x5
-	MULX	x5, x4, xa_k, x21
-	ADOX	x9, x4
-
-	ADCX	x10, x5
-	MULX	x5, x4, xa_k, x22
-	ADOX	x10, x4
-
-	ADCX	x11, x5
-	MULX	x5, x4, xa_k, x23
-	ADOX	x11, x4
-
-	ADCX	x12, x5
-	MULX	x5, x4, xa_k, x24
-	ADOX	x12, x4
-
-	ADCX	x13, x5
-	MULX	x5, x4, xa_k, x25
-	ADOX	x13, x4
-
-	ADCX	x14, x5
-	MULX	x5, x4, xa_k, x26
-	ADOX	x14, x4
-
-	ADCX	x15, x5
-	MULX	x5, x4, xa_k, x27
-	ADOX	x15, x4
-
-	ADCX	x16, x5
-	MULX	x5, x4, xa_k, x28
-	ADOX	x16, x4
-
+	MAAx8	xa_k
 	STx4AT	sp, x9, \I16, x10, \I17, x11, \I18, x12, \I19
 	STx4AT	sp, x13, \I20, x14, \I21, x15, \I22, x16, \I23
 
@@ -500,39 +286,7 @@ highctidh_2048_fp_sub3:
 	LD64x8	x2, 192, x21, x22, x23, x24, x25, x26, x27, x28
 	LDx4AT	sp, x9, \I24, x10, \I25, x11, \I26, x12, \I27
 	LDx4AT	sp, x13, \I28, x14, \I29, x15, \I30, x16, \I31
-
-	ADCX	x9, x5
-	MULX	x5, x4, xa_k, x21
-	ADOX	x9, x4
-
-	ADCX	x10, x5
-	MULX	x5, x4, xa_k, x22
-	ADOX	x10, x4
-
-	ADCX	x11, x5
-	MULX	x5, x4, xa_k, x23
-	ADOX	x11, x4
-
-	ADCX	x12, x5
-	MULX	x5, x4, xa_k, x24
-	ADOX	x12, x4
-
-	ADCX	x13, x5
-	MULX	x5, x4, xa_k, x25
-	ADOX	x13, x4
-
-	ADCX	x14, x5
-	MULX	x5, x4, xa_k, x26
-	ADOX	x14, x4
-
-	ADCX	x15, x5
-	MULX	x5, x4, xa_k, x27
-	ADOX	x15, x4
-
-	ADCX	x16, x5
-	MULX	x5, x4, xa_k, x28
-	ADOX	x16, x4
-
+	MAAx8	xa_k
 	STx4AT	sp, x9, \I24, x10, \I25, x11, \I26, x12, \I27
 	STx4AT	sp, x13, \I28, x14, \I29, x15, \I30, x16, \I31
 
