@@ -984,6 +984,8 @@ with open(fn+'.tmp','w') as f:
   f.write('BASE_CFLAGS += -DHIGHCTIDH_PORTABLE=0\n')
   f.write('ifeq ($(PLATFORM),amd64)\n')
   f.write('ASM_PLATFORM := x86_64\n')
+  f.write('else ifeq ($(PLATFORM),arm64)\n')
+  f.write('ASM_PLATFORM := aarch64\n')
   f.write('else\n')
   f.write('ASM_PLATFORM := $(PLATFORM)\n')
   f.write('endif\n')

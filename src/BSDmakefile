@@ -97,6 +97,8 @@ libhighctidh_2048_OBJS := fp2fiat2048.o fiat_p2048.o
 BASE_CFLAGS += -DHIGHCTIDH_PORTABLE=0
 .if ${PLATFORM} == amd64
 ASM_PLATFORM := x86_64
+.elif ${PLATFORM} == arm64
+ASM_PLATFORM := aarch64
 .else
 ASM_PLATFORM := ${PLATFORM}
 .endif
