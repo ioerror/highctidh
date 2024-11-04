@@ -162,3 +162,24 @@
 	adds	\r0, \r0, \r1
 	adc	xover, xover, xzr
 .endm
+
+.macro MAA rterm1, rterm2, raddto
+	ADCX	\raddto, x5
+	MULX	x5, x4, \rterm1, \rterm2
+	ADOX	\raddto, x4
+.endm
+
+.macro MAAx7 rterm1
+	MAA	\rterm1, x22, x10
+	MAA	\rterm1, x23, x11
+	MAA	\rterm1, x24, x12
+	MAA	\rterm1, x25, x13
+	MAA	\rterm1, x26, x14
+	MAA	\rterm1, x27, x15
+	MAA	\rterm1, x28, x16
+.endm
+
+.macro MAAx8 rterm1
+	MAA	\rterm1, x21, x9
+	MAAx7	\rterm1
+.endm
