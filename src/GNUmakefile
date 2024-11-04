@@ -839,35 +839,35 @@ primes2048.o: primes2048.c primes.h primes_namespace.h cgo.h binding511.h bindin
 	$(CC) -DBITS=2048 -D'NAMESPACEBITS(x)=highctidh_2048_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
 		-c primes2048.c
 
-fp511.o: fp511.S fp.h fp_namespace.h uintbig.h uintbig_namespace.h GNUmakefile
+fp511.o: fp511.S fp_const_le_511.s fp.h fp_namespace.h uintbig.h uintbig_namespace.h GNUmakefile
 	$(SCC) -DBITS=511 -D'NAMESPACEBITS(x)=highctidh_511_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
 		-c fp511.S
 
-fp512.o: fp512.S fp.h fp_namespace.h uintbig.h uintbig_namespace.h GNUmakefile
+fp512.o: fp512.S fp_const_le_512.s fp.h fp_namespace.h uintbig.h uintbig_namespace.h GNUmakefile
 	$(SCC) -DBITS=512 -D'NAMESPACEBITS(x)=highctidh_512_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
 		-c fp512.S
 
-fp1024.o: fp1024.S fp.h fp_namespace.h uintbig.h uintbig_namespace.h GNUmakefile
+fp1024.o: fp1024.S fp_const_le_1024.s fp.h fp_namespace.h uintbig.h uintbig_namespace.h GNUmakefile
 	$(SCC) -DBITS=1024 -D'NAMESPACEBITS(x)=highctidh_1024_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
 		-c fp1024.S
 
-fp2048.o: fp2048.S fp.h fp_namespace.h uintbig.h uintbig_namespace.h GNUmakefile
+fp2048.o: fp2048.S fp_const_le_2048.s fp.h fp_namespace.h uintbig.h uintbig_namespace.h GNUmakefile
 	$(SCC) -DBITS=2048 -D'NAMESPACEBITS(x)=highctidh_2048_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
 		-c fp2048.S
 
-uintbig511.o: uintbig511.S uintbig.h uintbig_namespace.h GNUmakefile
+uintbig511.o: uintbig511.S uintbig_const_le_511.s uintbig.h uintbig_namespace.h GNUmakefile
 	$(SCC) -DBITS=511 -D'NAMESPACEBITS(x)=highctidh_511_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
 		-c uintbig511.S
 
-uintbig512.o: uintbig512.S uintbig.h uintbig_namespace.h GNUmakefile
+uintbig512.o: uintbig512.S uintbig_const_le_512.s uintbig.h uintbig_namespace.h GNUmakefile
 	$(SCC) -DBITS=512 -D'NAMESPACEBITS(x)=highctidh_512_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
 		-c uintbig512.S
 
-uintbig1024.o: uintbig1024.S uintbig.h uintbig_namespace.h GNUmakefile
+uintbig1024.o: uintbig1024.S uintbig_const_le_1024.s uintbig.h uintbig_namespace.h GNUmakefile
 	$(SCC) -DBITS=1024 -D'NAMESPACEBITS(x)=highctidh_1024_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
 		-c uintbig1024.S
 
-uintbig2048.o: uintbig2048.S uintbig.h uintbig_namespace.h GNUmakefile
+uintbig2048.o: uintbig2048.S uintbig_const_le_2048.s uintbig.h uintbig_namespace.h GNUmakefile
 	$(SCC) -DBITS=2048 -D'NAMESPACEBITS(x)=highctidh_2048_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
 		-c uintbig2048.S
 
