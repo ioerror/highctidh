@@ -4,7 +4,7 @@
 HOST_PLATFORM := ${MACHINE_ARCH}
 HOST_OS := ${MACHINE_OS}
 
-PLATFORMS_64 := arm64 amd64 i86pc loongarch64 mips64 mips64el ppc64 ppc64le riscv64 s390x sparc sparc4v sparc64 x86_64
+PLATFORMS_64 := arm64 aarch64 amd64 i86pc loongarch64 mips64 mips64el ppc64 ppc64le riscv64 s390x sparc sparc4v sparc64 x86_64
 PLATFORMS_32 := armv7l i386 i686 mips mipsel
 
 ### override these for cross-building:
