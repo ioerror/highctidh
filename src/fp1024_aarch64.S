@@ -262,6 +262,14 @@ xover			.req	x20
 
 	add	sp, sp, #96
 
+	mov	w5, #0x0001
+	str	w5, [sp]
+	ldr	p0, [sp]
+
+	mov	w5, #0x0100
+	str	w5, [sp]
+	ldr	p1, [sp]
+
 	ST64x8	sp, 0, xzr, xzr, xzr, xzr, xzr, xzr, xzr, xzr
 	ST64x8	sp, 64, xzr, xzr, xzr, xzr, xzr, xzr, xzr, xzr
 	str	xzr, [sp, #128]

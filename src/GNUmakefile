@@ -82,6 +82,9 @@ ASM_PLATFORM := aarch64
 else
 ASM_PLATFORM := $(PLATFORM)
 endif
+ifeq ($(ASM_PLATFORM), aarch64)
+ASFLAGS := -march=armv8-a+sve2
+endif
 	libhighctidh_511_OBJS := uintbig511.o fp511.o
 	libhighctidh_512_OBJS := uintbig512.o fp512.o
 	libhighctidh_1024_OBJS := uintbig1024.o fp1024.o
@@ -874,18 +877,22 @@ primes2048.o: primes2048.c primes.h primes_namespace.h cgo.h binding511.h bindin
 
 fp511.o: fp511_$(ASM_PLATFORM).S fp_const_le_511.s fp.h fp_namespace.h uintbig.h uintbig_namespace.h GNUmakefile
 	$(SCC) -DBITS=511 -D'NAMESPACEBITS(x)=highctidh_511_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(ASFLAGS) \
 		-o $@ -c $<
 
 fp512.o: fp512_$(ASM_PLATFORM).S fp_const_le_512.s fp.h fp_namespace.h uintbig.h uintbig_namespace.h GNUmakefile
 	$(SCC) -DBITS=512 -D'NAMESPACEBITS(x)=highctidh_512_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(ASFLAGS) \
 		-o $@ -c $<
 
 fp1024.o: fp1024_$(ASM_PLATFORM).S fp_const_le_1024.s fp.h fp_namespace.h uintbig.h uintbig_namespace.h GNUmakefile
 	$(SCC) -DBITS=1024 -D'NAMESPACEBITS(x)=highctidh_1024_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(ASFLAGS) \
 		-o $@ -c $<
 
 fp2048.o: fp2048_$(ASM_PLATFORM).S fp_const_le_2048.s fp.h fp_namespace.h uintbig.h uintbig_namespace.h GNUmakefile
 	$(SCC) -DBITS=2048 -D'NAMESPACEBITS(x)=highctidh_2048_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(ASFLAGS) \
 		-o $@ -c $<
 
 uintbig511.o: uintbig511_$(ASM_PLATFORM).S uintbig_const_le_511.s uintbig.h uintbig_namespace.h GNUmakefile
