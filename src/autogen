@@ -993,6 +993,9 @@ with open(fn+'.tmp','w') as f:
   f.write('else\n')
   f.write('ASM_PLATFORM := $(PLATFORM)\n')
   f.write('endif\n')
+  f.write('ifeq ($(ASM_PLATFORM), aarch64)\n')
+  f.write('ASFLAGS := -march=armv8-a+sve2\n'
+  f.write('endif\n')
   f.write('\tlibhighctidh_511_OBJS := uintbig511.o fp511.o\n')
   f.write('\tlibhighctidh_512_OBJS := uintbig512.o fp512.o\n')
   f.write('\tlibhighctidh_1024_OBJS := uintbig1024.o fp1024.o\n')
@@ -1265,6 +1268,7 @@ with open(fn+'.tmp','w') as f:
   for bits in databits:
     f.write('fp{0}.o: fp{0}_$(ASM_PLATFORM).S fp_const_le_{0}.s fp.h fp_namespace.h uintbig.h uintbig_namespace.h GNUmakefile\n'.format(bits))
     f.write(scc.format(bits))
+    f.write('\t\t$(ASFLAGS) \\\n')
     f.write('\t\t-o $@ -c $<\n')
     f.write('\n')
 
