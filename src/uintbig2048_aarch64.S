@@ -1,3 +1,5 @@
+//go:build arm64
+#if HIGHCTIDH_PORTABLE == 0
 .section .rodata
 
 #include "uintbig_const_le_2048.s"
@@ -25,3 +27,4 @@ highctidh_2048_uintbig_sub3:
 .global highctidh_2048_uintbig_mul3_64
 highctidh_2048_uintbig_mul3_64:
 	MUL3_64	2048
+#endif

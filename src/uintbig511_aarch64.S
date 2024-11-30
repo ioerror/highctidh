@@ -1,3 +1,5 @@
+//go:build arm64
+#if HIGHCTIDH_PORTABLE == 0
 .section .rodata
 
 #include "uintbig_const_le_511.s"
@@ -31,3 +33,4 @@ highctidh_511_uintbig_sub3:
 .global highctidh_511_uintbig_mul3_64
 highctidh_511_uintbig_mul3_64:
 	MUL3_64	512
+#endif

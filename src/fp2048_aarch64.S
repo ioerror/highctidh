@@ -1,3 +1,5 @@
+//go:build arm64
+#if HIGHCTIDH_PORTABLE == 0
 #include "aarch64_macros.s"
 
 .set plimbs, 32
@@ -624,3 +626,4 @@ highctidh_2048_fp_sq1:
 highctidh_2048_fp_sq2:
 	mov	x2, x1
 	b	highctidh_2048_fp_mul3
+#endif
