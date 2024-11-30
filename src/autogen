@@ -857,10 +857,14 @@ for bits,primes,batchsize,batchbound in data:
       f.write('.endm\n')
       f.write('\n')
 
-      for i in range(plimbs):
-        indices = ['%d' % (8*((j+i+1)%(plimbs+1))) for j in range(plimbs+1)]
-        indices = ', '.join(indices)
-        f.write('    MULSTEP %d, %s\n' % (i,indices))
+      indices = ['8*(k+1)']
+      indices += ['(8*(k+%d))%%%d' % (j, 8*(plimbs+1)) for j in range(2,plimbs+1)]
+      indices += ['8*k']
+      f.write('    .set k, 0\n')
+      f.write('    .rept plimbs\n')
+      f.write('        MULSTEP k, %s\n' % ', '.join(indices))
+      f.write('        .set k, k+1\n')
+      f.write('    .endr\n')
       f.write('\n')
       f.write('    mov rdi,[rsp+%d]\n' % (8*plimbs+8))
       f.write('\n')
