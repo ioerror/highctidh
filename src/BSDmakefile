@@ -282,28 +282,28 @@ libhighctidh_2048.a libhighctidh_base.a libhighctidh_tunecycles2048.a libtest.a
 		libhighctidh_2048.a libhighctidh_base.a libhighctidh_tunecycles2048.a libtest.a
 
 checkct511mults: checkct.c \
-libhighctidh_511.a libhighctidh_base.a libhighctidh_tunemults511.a libtest.a
+libhighctidh_511.a libhighctidh_base.a libtest.a
 	${CC} -DBITS=511 -D'NAMESPACEBITS(x)=highctidh_511_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
 		-o checkct511mults checkct.c \
-		libhighctidh_511.a libhighctidh_base.a libhighctidh_tunemults511.a libtest.a
+		libhighctidh_511.a libhighctidh_base.a libtest.a
 
 checkct512mults: checkct.c \
-libhighctidh_512.a libhighctidh_base.a libhighctidh_tunemults512.a libtest.a
+libhighctidh_512.a libhighctidh_base.a libtest.a
 	${CC} -DBITS=512 -D'NAMESPACEBITS(x)=highctidh_512_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
 		-o checkct512mults checkct.c \
-		libhighctidh_512.a libhighctidh_base.a libhighctidh_tunemults512.a libtest.a
+		libhighctidh_512.a libhighctidh_base.a libtest.a
 
 checkct1024mults: checkct.c \
-libhighctidh_1024.a libhighctidh_base.a libhighctidh_tunemults1024.a libtest.a
+libhighctidh_1024.a libhighctidh_base.a libtest.a
 	${CC} -DBITS=1024 -D'NAMESPACEBITS(x)=highctidh_1024_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
 		-o checkct1024mults checkct.c \
-		libhighctidh_1024.a libhighctidh_base.a libhighctidh_tunemults1024.a libtest.a
+		libhighctidh_1024.a libhighctidh_base.a libtest.a
 
 checkct2048mults: checkct.c \
-libhighctidh_2048.a libhighctidh_base.a libhighctidh_tunemults2048.a libtest.a
+libhighctidh_2048.a libhighctidh_base.a libtest.a
 	${CC} -DBITS=2048 -D'NAMESPACEBITS(x)=highctidh_2048_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
 		-o checkct2048mults checkct.c \
-		libhighctidh_2048.a libhighctidh_base.a libhighctidh_tunemults2048.a libtest.a
+		libhighctidh_2048.a libhighctidh_base.a libtest.a
 
 checkct511untuned: checkct.c \
 libhighctidh_511.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
@@ -354,28 +354,28 @@ libhighctidh_2048.a libhighctidh_base.a libhighctidh_tunecycles2048.a libtest.a
 		libhighctidh_2048.a libhighctidh_base.a libhighctidh_tunecycles2048.a libtest.a
 
 bench511mults: bench.c \
-libhighctidh_511.a libhighctidh_base.a libhighctidh_tunemults511.a libtest.a
+libhighctidh_511.a libhighctidh_base.a libtest.a
 	${CC} -DBITS=511 -D'NAMESPACEBITS(x)=highctidh_511_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
 		-o bench511mults bench.c \
-		libhighctidh_511.a libhighctidh_base.a libhighctidh_tunemults511.a libtest.a
+		libhighctidh_511.a libhighctidh_base.a libtest.a
 
 bench512mults: bench.c \
-libhighctidh_512.a libhighctidh_base.a libhighctidh_tunemults512.a libtest.a
+libhighctidh_512.a libhighctidh_base.a libtest.a
 	${CC} -DBITS=512 -D'NAMESPACEBITS(x)=highctidh_512_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
 		-o bench512mults bench.c \
-		libhighctidh_512.a libhighctidh_base.a libhighctidh_tunemults512.a libtest.a
+		libhighctidh_512.a libhighctidh_base.a libtest.a
 
 bench1024mults: bench.c \
-libhighctidh_1024.a libhighctidh_base.a libhighctidh_tunemults1024.a libtest.a
+libhighctidh_1024.a libhighctidh_base.a libtest.a
 	${CC} -DBITS=1024 -D'NAMESPACEBITS(x)=highctidh_1024_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
 		-o bench1024mults bench.c \
-		libhighctidh_1024.a libhighctidh_base.a libhighctidh_tunemults1024.a libtest.a
+		libhighctidh_1024.a libhighctidh_base.a libtest.a
 
 bench2048mults: bench.c \
-libhighctidh_2048.a libhighctidh_base.a libhighctidh_tunemults2048.a libtest.a
+libhighctidh_2048.a libhighctidh_base.a libtest.a
 	${CC} -DBITS=2048 -D'NAMESPACEBITS(x)=highctidh_2048_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
 		-o bench2048mults bench.c \
-		libhighctidh_2048.a libhighctidh_base.a libhighctidh_tunemults2048.a libtest.a
+		libhighctidh_2048.a libhighctidh_base.a libtest.a
 
 bench511untuned: bench.c \
 libhighctidh_511.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
@@ -549,87 +549,7 @@ libhighctidh_2048.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 		-o ubench2048 ubench.c \
 		libhighctidh_2048.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 
-# ----- libhighctidh_tune{mults,cycles}:
-
-libhighctidh_tunemults511.a: steps_tunemults511.o BSDmakefile
-	${AR} crs libhighctidh_tunemults511.a steps_tunemults511.o
-
-libhighctidh_tunemults512.a: steps_tunemults512.o BSDmakefile
-	${AR} crs libhighctidh_tunemults512.a steps_tunemults512.o
-
-libhighctidh_tunemults1024.a: steps_tunemults1024.o BSDmakefile
-	${AR} crs libhighctidh_tunemults1024.a steps_tunemults1024.o
-
-libhighctidh_tunemults2048.a: steps_tunemults2048.o BSDmakefile
-	${AR} crs libhighctidh_tunemults2048.a steps_tunemults2048.o
-
-steps_tunemults511.o: steps_tunemults511.c steps.h BSDmakefile
-	${CC} -DBITS=511 -D'NAMESPACEBITS(x)=highctidh_511_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
-		-c steps_tunemults511.c
-
-steps_tunemults512.o: steps_tunemults512.c steps.h BSDmakefile
-	${CC} -DBITS=512 -D'NAMESPACEBITS(x)=highctidh_512_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
-		-c steps_tunemults512.c
-
-steps_tunemults1024.o: steps_tunemults1024.c steps.h BSDmakefile
-	${CC} -DBITS=1024 -D'NAMESPACEBITS(x)=highctidh_1024_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
-		-c steps_tunemults1024.c
-
-steps_tunemults2048.o: steps_tunemults2048.c steps.h BSDmakefile
-	${CC} -DBITS=2048 -D'NAMESPACEBITS(x)=highctidh_2048_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
-		-c steps_tunemults2048.c
-
-steps_tunemults511.c: tunemults511.out tune2c BSDmakefile
-	./tune2c < tunemults511.out > steps_tunemults511.c
-
-steps_tunemults512.c: tunemults512.out tune2c BSDmakefile
-	./tune2c < tunemults512.out > steps_tunemults512.c
-
-steps_tunemults1024.c: tunemults1024.out tune2c BSDmakefile
-	./tune2c < tunemults1024.out > steps_tunemults1024.c
-
-steps_tunemults2048.c: tunemults2048.out tune2c BSDmakefile
-	./tune2c < tunemults2048.out > steps_tunemults2048.c
-
-tunemults511.out: tunemults511 BSDmakefile
-	[ -f tunemults511.time ] && cat tunemults511.time || :
-	time ./tunemults511 > tunemults511.out
-
-tunemults512.out: tunemults512 BSDmakefile
-	[ -f tunemults512.time ] && cat tunemults512.time || :
-	time ./tunemults512 > tunemults512.out
-
-tunemults1024.out: tunemults1024 BSDmakefile
-	[ -f tunemults1024.time ] && cat tunemults1024.time || :
-	time ./tunemults1024 > tunemults1024.out
-
-tunemults2048.out: tunemults2048 BSDmakefile
-	[ -f tunemults2048.time ] && cat tunemults2048.time || :
-	time ./tunemults2048 > tunemults2048.out
-
-tunemults511: tunemults.c \
-libhighctidh_511.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
-	${CC} -DBITS=511 -D'NAMESPACEBITS(x)=highctidh_511_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
-		-o tunemults511 tunemults.c \
-		libhighctidh_511.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
-
-tunemults512: tunemults.c \
-libhighctidh_512.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
-	${CC} -DBITS=512 -D'NAMESPACEBITS(x)=highctidh_512_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
-		-o tunemults512 tunemults.c \
-		libhighctidh_512.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
-
-tunemults1024: tunemults.c \
-libhighctidh_1024.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
-	${CC} -DBITS=1024 -D'NAMESPACEBITS(x)=highctidh_1024_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
-		-o tunemults1024 tunemults.c \
-		libhighctidh_1024.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
-
-tunemults2048: tunemults.c \
-libhighctidh_2048.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
-	${CC} -DBITS=2048 -D'NAMESPACEBITS(x)=highctidh_2048_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
-		-o tunemults2048 tunemults.c \
-		libhighctidh_2048.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
+# ----- libhighctidh_tunecycles:
 
 libhighctidh_tunecycles511.a: steps_tunecycles511.o BSDmakefile
 	${AR} crs libhighctidh_tunecycles511.a steps_tunecycles511.o
@@ -1066,7 +986,7 @@ clean:
 		-rm -f *.a *.o *.out *.so
 		-rm -f bench1024cycles bench1024mults bench1024untuned bench2048cycles bench2048mults bench2048untuned bench511cycles bench511mults bench511untuned bench512cycles bench512mults bench512untuned
 		-rm -f checkct1024cycles checkct1024mults checkct1024untuned checkct2048cycles checkct2048mults checkct2048untuned checkct511cycles checkct511mults checkct511untuned checkct512cycles checkct512mults checkct512untuned costpoly1024 costpoly2048 costpoly511 example-ctidh1024 example-ctidh2048
-		-rm -f example-ctidh511 example-ctidh512 test1024 test2048 test511 test511 test512 test512-dyn test*-dyn testrandom tunecycles1024 tunecycles2048 tunecycles511 tunecycles512 tunemults1024 tunemults2048 tunemults511 tunemults512 ubench1024 ubench2048 ubench511 ubench512 umults1024 umults2048 umults511 umults512
+		-rm -f example-ctidh511 example-ctidh512 test1024 test2048 test511 test511 test512 test512-dyn test*-dyn testrandom tunecycles1024 tunecycles2048 tunecycles511 tunecycles512 ubench1024 ubench2048 ubench511 ubench512 umults1024 umults2048 umults511 umults512
 		-rm -rf UNKNOWN.egg-info/ __pycache__/
 		-rm -rf build/ deb_dist/ dist/
 		-rm -rf highctidh.egg-info/ highctidh/__pycache__/

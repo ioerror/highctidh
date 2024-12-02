@@ -26,17 +26,6 @@
 
 #include "fp_const_le_2048.s"
 
-.section .data
-.global highctidh_2048_fp_mulsq_count
-highctidh_2048_fp_mulsq_count:
-    .quad 0
-.global highctidh_2048_fp_sq_count
-highctidh_2048_fp_sq_count:
-    .quad 0
-.global highctidh_2048_fp_addsub_count
-highctidh_2048_fp_addsub_count:
-    .quad 0
-
 .section .text
 .p2align 4,,15
 
@@ -259,8 +248,6 @@ highctidh_2048_fp_add2:
     mov rdx, rdi
 .global highctidh_2048_fp_add3
 highctidh_2048_fp_add3:
-    mov rax, [rip + highctidh_2048_fp_addsub_count@GOTPCREL]
-    add qword ptr [rax], 1
     push rdi
     call highctidh_2048_uintbig_add3
     pop rdi
@@ -272,8 +259,6 @@ highctidh_2048_fp_sub2:
   xchg rsi, rdx
 .global highctidh_2048_fp_sub3
 highctidh_2048_fp_sub3:
-    mov rax, [rip + highctidh_2048_fp_addsub_count@GOTPCREL]
-    add qword ptr [rax], 1
     push rdi
     call highctidh_2048_uintbig_sub3
     pop rdi
@@ -316,9 +301,6 @@ highctidh_2048_fp_mul2:
 highctidh_2048_fp_mul3:
     push rbp
     push rbx
-
-  mov rax, [rip + highctidh_2048_fp_mulsq_count@GOTPCREL]
-  add qword ptr [rax], 1
 
   sub rsp,272
   mov [rsp+264],rdi
@@ -883,8 +865,6 @@ highctidh_2048_fp_sq1:
 highctidh_2048_fp_sq2:
     /* TODO implement optimized Montgomery squaring */
     mov rdx, rsi
-    mov rax, [rip + highctidh_2048_fp_sq_count@GOTPCREL]
-    add qword ptr [rax], 1
     jmp highctidh_2048_fp_mul3
 
 #endif

@@ -40,7 +40,6 @@ void isog_setup(proj *A,proj *P,proj *K,long long k)
 
 #define TIMINGS 7
 long long t[TIMINGS];
-long long t2[TIMINGS];
 
 int main()
 {
@@ -218,7 +217,6 @@ int main()
               t[i] = cpucycles();
             for (long long i = 0;i < TIMINGS;++i) {
               t[i] = cpucycles();
-	      t2[i] = fp_mulsq_count;
               xISOG(&A[i],&P[i],1,&K[i],primes[lpos]);
             }
 	  } else {
@@ -226,7 +224,6 @@ int main()
               t[i] = cpucycles();
             for (long long i = 0;i < TIMINGS;++i) {
               t[i] = cpucycles();
-	      t2[i] = fp_mulsq_count;
               xISOG_old(&A[i],&P[i],&K[i],primes[lpos]);
             }
 	    stopearly = 1;
@@ -243,9 +240,6 @@ int main()
 	  if (!new) printf("_old");
           printf(" bs=%lld",bs);
           printf(" gs=%lld",gs);
-	  printf(" mults");
-          for (long long i = 1;i < TIMINGS;++i)
-            printf(" %lld",t2[i]-t2[i-1]);
           printf("\n");
         }
       }
