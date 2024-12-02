@@ -44,11 +44,11 @@ static void test_iszero(void)
   memset(x,0,sizeof u);
   assert(uintbig_iszero(&u));
 
-  for (unsigned long long i = 0;i < 8*sizeof u;++i) {
+  for (unsigned long long i = 0;i < BITS;++i) {
     memset(x,0,sizeof u);
     x[i/8] = 1<<(i&7);
     assert(!uintbig_iszero(&u));
-    for (unsigned long long j = 0;j < 8*sizeof u;++j) {
+    for (unsigned long long j = 0;j < BITS;++j) {
       memset(x,0,sizeof u);
       x[i/8] = 1<<(i&7);
       x[j/8] = 1<<(j&7);
@@ -83,8 +83,8 @@ test_uintbig_bit(void)
 	printf("uintbig_set\n"); fflush(stdout);
 	x.c[1] = 2ULL;
 	assert(66 == uintbig_bits_vartime(&x));
-	x.c[7] = -1ULL;
-	assert(512 == uintbig_bits_vartime(&x));
+	x.c[(BITS-1)/64] = -1ULL;
+	assert(BITS == uintbig_bits_vartime(&x));
 	uintbig_set(&x, 5ULL); /* should clear the high limbs */
 	assert(3 == uintbig_bits_vartime(&x));
 }
