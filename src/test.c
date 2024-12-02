@@ -89,6 +89,31 @@ test_uintbig_bit(void)
 	assert(3 == uintbig_bits_vartime(&x));
 }
 
+static void
+test_uintbig_addsub(void)
+{
+	printf("uintbig_addsub\n");
+	fflush(stdout);
+
+	size_t i;
+
+	uintbig x = uintbig_1;
+	uintbig o = {0};
+
+	assert(0 == uintbig_sub3(&o, &x, &o));
+	assert(!memcmp(&o, &uintbig_1, sizeof o));
+
+	for (i = 0; i < sizeof o / sizeof o.c[0]; i++)
+		o.c[i] = -1ULL;
+
+	assert(1 == uintbig_add3(&x, &o, &uintbig_1));
+	assert(uintbig_iszero(&x));
+
+	assert(1 == uintbig_sub3(&x, &x, &uintbig_1));
+	for (i = 0; i < sizeof o / sizeof o.c[0]; i++)
+		assert(-1ULL == o.c[i]);
+}
+
 void
 test_uintbig_mul3_64(void)
 {
@@ -1503,6 +1528,7 @@ int main(void)
   fflush(stdout);
   test_iszero();
   test_uintbig_bit();
+  test_uintbig_addsub();
   test_uintbig_mul3_64();
   test_fillrandom();
   test_random_boundedl1();
