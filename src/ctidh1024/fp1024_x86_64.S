@@ -22,17 +22,6 @@
 
 #include "fp_const_le_1024.s"
 
-.section .data
-.global highctidh_1024_fp_mulsq_count
-highctidh_1024_fp_mulsq_count:
-    .quad 0
-.global highctidh_1024_fp_sq_count
-highctidh_1024_fp_sq_count:
-    .quad 0
-.global highctidh_1024_fp_addsub_count
-highctidh_1024_fp_addsub_count:
-    .quad 0
-
 .section .text
 .p2align 4,,15
 
@@ -175,8 +164,6 @@ highctidh_1024_fp_add2:
     mov rdx, rdi
 .global highctidh_1024_fp_add3
 highctidh_1024_fp_add3:
-    mov rax, [rip + highctidh_1024_fp_addsub_count@GOTPCREL]
-    add qword ptr [rax], 1
     push rdi
     call highctidh_1024_uintbig_add3
     pop rdi
@@ -188,8 +175,6 @@ highctidh_1024_fp_sub2:
   xchg rsi, rdx
 .global highctidh_1024_fp_sub3
 highctidh_1024_fp_sub3:
-    mov rax, [rip + highctidh_1024_fp_addsub_count@GOTPCREL]
-    add qword ptr [rax], 1
     push rdi
     call highctidh_1024_uintbig_sub3
     pop rdi
@@ -232,9 +217,6 @@ highctidh_1024_fp_mul2:
 highctidh_1024_fp_mul3:
     push rbp
     push rbx
-
-  mov rax, [rip + highctidh_1024_fp_mulsq_count@GOTPCREL]
-  add qword ptr [rax], 1
 
   sub rsp,144
   mov [rsp+136],rdi
@@ -478,22 +460,11 @@ highctidh_1024_fp_mul3:
 
 .endm
 
-    MULSTEP 0, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 0
-    MULSTEP 1, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 0, 8
-    MULSTEP 2, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 0, 8, 16
-    MULSTEP 3, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 0, 8, 16, 24
-    MULSTEP 4, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 0, 8, 16, 24, 32
-    MULSTEP 5, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 0, 8, 16, 24, 32, 40
-    MULSTEP 6, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 0, 8, 16, 24, 32, 40, 48
-    MULSTEP 7, 64, 72, 80, 88, 96, 104, 112, 120, 128, 0, 8, 16, 24, 32, 40, 48, 56
-    MULSTEP 8, 72, 80, 88, 96, 104, 112, 120, 128, 0, 8, 16, 24, 32, 40, 48, 56, 64
-    MULSTEP 9, 80, 88, 96, 104, 112, 120, 128, 0, 8, 16, 24, 32, 40, 48, 56, 64, 72
-    MULSTEP 10, 88, 96, 104, 112, 120, 128, 0, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80
-    MULSTEP 11, 96, 104, 112, 120, 128, 0, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88
-    MULSTEP 12, 104, 112, 120, 128, 0, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96
-    MULSTEP 13, 112, 120, 128, 0, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104
-    MULSTEP 14, 120, 128, 0, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112
-    MULSTEP 15, 128, 0, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120
+    .set k, 0
+    .rept plimbs
+        MULSTEP k, 8*(k+1), (8*(k+2))%136, (8*(k+3))%136, (8*(k+4))%136, (8*(k+5))%136, (8*(k+6))%136, (8*(k+7))%136, (8*(k+8))%136, (8*(k+9))%136, (8*(k+10))%136, (8*(k+11))%136, (8*(k+12))%136, (8*(k+13))%136, (8*(k+14))%136, (8*(k+15))%136, (8*(k+16))%136, 8*k
+        .set k, k+1
+    .endr
 
     mov rdi,[rsp+136]
 
@@ -543,8 +514,6 @@ highctidh_1024_fp_sq1:
 highctidh_1024_fp_sq2:
     /* TODO implement optimized Montgomery squaring */
     mov rdx, rsi
-    mov rax, [rip + highctidh_1024_fp_sq_count@GOTPCREL]
-    add qword ptr [rax], 1
     jmp highctidh_1024_fp_mul3
 
 #endif

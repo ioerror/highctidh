@@ -310,13 +310,6 @@ uintbig_sub3(uintbig *x, uintbig const *const y, uintbig const *const z)
  */
 const fp fp_0 = {{{0}}};
 
-/*
- * Operation counters
- */
-long long fp_mulsq_count = 0;
-long long fp_sq_count = 0;
-long long fp_addsub_count = 0;
-
 // debug macro to dump out a fp:
 #include <stdio.h>
 #define dump_fp(fp2) {for (size_t i=0; i<sizeof(fp2.x.c)/sizeof(fp2.x.c[0]);i++) { printf("%#lxU, ", fp2.x.c[i]); };printf("\n"); }
@@ -406,7 +399,6 @@ __attribute__((nonnull))
 //__attribute__ ((access(read_only,2)))
 fp_add3(fp *const x, fp const *y, fp const *z)
 {
-	fp_addsub_count += 1;
 	FIAT_BITS(add)(x->x.c, y->x.c, z->x.c);
 }
 
@@ -444,7 +436,6 @@ __attribute__((nonnull))
 ATTR_INITIALIZE_1st
 fp_sub3(fp *const x, const fp *const y, const fp *const z)
 {
-	fp_addsub_count += 1;
 	FIAT_BITS(sub)(x->x.c, y->x.c, z->x.c);
 }
 
@@ -477,7 +468,6 @@ __attribute__((flatten))
 //__attribute__ ((access(read_only,2)))
 fp_sq2(fp *const x, fp const *const y)
 {
-	fp_sq_count += 1;
 	FIAT_BITS(square)(x->x.c, y->x.c);
 }
 
