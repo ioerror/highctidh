@@ -1127,6 +1127,16 @@ with open(fn+'.tmp','w') as f:
       f.write('\t\tlibhighctidh_{0}.a libhighctidh_base.a libhighctidh_untuned.a libtest.a\n'.format(bits))
       f.write('\n')
 
+  f.write('# ----- uintbig tests require HIGHCTIDH_PORTABLE=0 and never run automatically:\n')
+  f.write('\n')
+
+  for bits in databits:
+    f.write('testuintbig{0}: test.c uintbig{0}_$(ASM_PLATFORM).S\n'.format(bits))
+    f.write(ccbits.format(bits))
+    f.write('\t\t-DTEST_UINTBIG \\\n')
+    f.write('\t\t-o $@ $^\n')
+    f.write('\n')
+
   f.write('# ----- tests run automatically:\n')
   f.write('\n')
 
@@ -1363,7 +1373,7 @@ with open(fn+'.tmp','w') as f:
   f.write('\t\t-rm -f *.a *.o *.out *.so\n')
   f.write('\t\t-rm -f bench1024cycles bench1024mults bench1024untuned bench2048cycles bench2048mults bench2048untuned bench511cycles bench511mults bench511untuned bench512cycles bench512mults bench512untuned\n')
   f.write('\t\t-rm -f checkct1024cycles checkct1024mults checkct1024untuned checkct2048cycles checkct2048mults checkct2048untuned checkct511cycles checkct511mults checkct511untuned checkct512cycles checkct512mults checkct512untuned costpoly1024 costpoly2048 costpoly511 example-ctidh1024 example-ctidh2048\n')
-  f.write('\t\t-rm -f example-ctidh511 example-ctidh512 test1024 test2048 test511 test511 test512 test512-dyn test*-dyn testrandom tunecycles1024 tunecycles2048 tunecycles511 tunecycles512 ubench1024 ubench2048 ubench511 ubench512 umults1024 umults2048 umults511 umults512\n')
+  f.write('\t\t-rm -f example-ctidh511 example-ctidh512 test1024 test2048 test511 test511 test512 test512-dyn test*-dyn testuintbig1024 testuintbig2048 testuintbig511 testuintbig512 testrandom tunecycles1024 tunecycles2048 tunecycles511 tunecycles512 ubench1024 ubench2048 ubench511 ubench512 umults1024 umults2048 umults511 umults512\n')
   f.write('\t\t-rm -rf UNKNOWN.egg-info/ __pycache__/\n')
   f.write('\t\t-rm -rf build/ deb_dist/ dist/\n')
   f.write('\t\t-rm -rf highctidh.egg-info/ highctidh/__pycache__/\n')

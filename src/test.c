@@ -1,5 +1,7 @@
 #include <assert.h>
+#ifndef TEST_UINTBIG
 #include <string.h>
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include "naidne.h"
@@ -41,15 +43,27 @@ static void test_iszero(void)
   uintbig u;
   unsigned char *x = (void *) &u;
 
+#ifdef TEST_UINTBIG
+  uintbig_set(&u,0);
+#else
   memset(x,0,sizeof u);
+#endif
   assert(uintbig_iszero(&u));
 
   for (unsigned long long i = 0;i < BITS;++i) {
+#ifdef TEST_UINTBIG
+    uintbig_set(&u,0);
+#else
     memset(x,0,sizeof u);
+#endif
     x[i/8] = 1<<(i&7);
     assert(!uintbig_iszero(&u));
     for (unsigned long long j = 0;j < BITS;++j) {
+#ifdef TEST_UINTBIG
+      uintbig_set(&u,0);
+#else
       memset(x,0,sizeof u);
+#endif
       x[i/8] = 1<<(i&7);
       x[j/8] = 1<<(j&7);
       assert(!uintbig_iszero(&u));
@@ -148,6 +162,7 @@ test_uintbig_mul3_64(void)
     }
 }
 
+#ifndef TEST_UINTBIG
 static void test_sqrt(void)
 {
   printf("fp_sqrt\n");
@@ -1520,6 +1535,7 @@ static void test_nike(void)
     }
   }
 }
+#endif /* TEST_UINTBIG */
 
 int main(void);
 int main(void)
@@ -1530,6 +1546,7 @@ int main(void)
   test_uintbig_bit();
   test_uintbig_addsub();
   test_uintbig_mul3_64();
+#ifndef TEST_UINTBIG
   test_fillrandom();
   test_random_boundedl1();
   test_deterministic_keygen();
@@ -1540,5 +1557,6 @@ int main(void)
   test_validate();
   test_isog();
   test_nike();
+#endif /* TEST_UINTBIG */
   return 0;
 }

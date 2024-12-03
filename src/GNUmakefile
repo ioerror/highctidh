@@ -373,6 +373,28 @@ libhighctidh_2048.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 		-o bench2048untuned bench.c \
 		libhighctidh_2048.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 
+# ----- uintbig tests require HIGHCTIDH_PORTABLE=0 and never run automatically:
+
+testuintbig511: test.c uintbig511_$(ASM_PLATFORM).S
+	$(CC) -DBITS=511 -D'NAMESPACEBITS(x)=highctidh_511_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		-DTEST_UINTBIG \
+		-o $@ $^
+
+testuintbig512: test.c uintbig512_$(ASM_PLATFORM).S
+	$(CC) -DBITS=512 -D'NAMESPACEBITS(x)=highctidh_512_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		-DTEST_UINTBIG \
+		-o $@ $^
+
+testuintbig1024: test.c uintbig1024_$(ASM_PLATFORM).S
+	$(CC) -DBITS=1024 -D'NAMESPACEBITS(x)=highctidh_1024_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		-DTEST_UINTBIG \
+		-o $@ $^
+
+testuintbig2048: test.c uintbig2048_$(ASM_PLATFORM).S
+	$(CC) -DBITS=2048 -D'NAMESPACEBITS(x)=highctidh_2048_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		-DTEST_UINTBIG \
+		-o $@ $^
+
 # ----- tests run automatically:
 
 testrandom.out: testrandom
@@ -958,7 +980,7 @@ clean:
 		-rm -f *.a *.o *.out *.so
 		-rm -f bench1024cycles bench1024mults bench1024untuned bench2048cycles bench2048mults bench2048untuned bench511cycles bench511mults bench511untuned bench512cycles bench512mults bench512untuned
 		-rm -f checkct1024cycles checkct1024mults checkct1024untuned checkct2048cycles checkct2048mults checkct2048untuned checkct511cycles checkct511mults checkct511untuned checkct512cycles checkct512mults checkct512untuned costpoly1024 costpoly2048 costpoly511 example-ctidh1024 example-ctidh2048
-		-rm -f example-ctidh511 example-ctidh512 test1024 test2048 test511 test511 test512 test512-dyn test*-dyn testrandom tunecycles1024 tunecycles2048 tunecycles511 tunecycles512 ubench1024 ubench2048 ubench511 ubench512 umults1024 umults2048 umults511 umults512
+		-rm -f example-ctidh511 example-ctidh512 test1024 test2048 test511 test511 test512 test512-dyn test*-dyn testuintbig1024 testuintbig2048 testuintbig511 testuintbig512 testrandom tunecycles1024 tunecycles2048 tunecycles511 tunecycles512 ubench1024 ubench2048 ubench511 ubench512 umults1024 umults2048 umults511 umults512
 		-rm -rf UNKNOWN.egg-info/ __pycache__/
 		-rm -rf build/ deb_dist/ dist/
 		-rm -rf highctidh.egg-info/ highctidh/__pycache__/
