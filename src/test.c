@@ -1,3 +1,4 @@
+#include "config.h"
 #include <assert.h>
 #include <string.h>
 #include <stdio.h>
@@ -533,7 +534,7 @@ test_deterministic_keygen(void)
 	/* to_bytes is a no-op on little-endian archs, and not on big-endian: */
 
 // gcc -E -dM - </dev/null|grep -i __BYTE_ORDER
-# if defined(PLATFORM) && PLATFORM == sun4v || PLATFORM == i86pc
+# if defined(PLATFORM) && (PLATFORM == sun4v || PLATFORM == i86pc)
 # if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
   assert(0 != memcmp((void*)&pub_gh3, serialized_gh3, sizeof(pub_gh3)));
 # else

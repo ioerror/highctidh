@@ -23,7 +23,7 @@
  * */
 
 #include <stdio.h>
-#include <libhighctidh/csidh.h>
+#include <csidh.h>
 
 #if (defined(__ARM32__) || defined(__i386__))
 #define STR_FMT "%u"
