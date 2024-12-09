@@ -1,10 +1,12 @@
+#include <config.h>
 #include "randombytes.h"
 
 #include <stdlib.h>
 
 #include "crypto_classify.h"
 
-#if defined(GETRANDOM) && (defined(__linux__) || defined(__sun))
+#ifdef HAVE_GETRANDOM
+#ifndef __Darwin__
 #include <sys/random.h>
 
 void randombytes(void *x, size_t l)
@@ -16,7 +18,7 @@ void randombytes(void *x, size_t l)
   crypto_classify(x,l);
 }
 
-#elif (defined(GETRANDOM) && defined(__Darwin__))
+#else
 #include <CommonCrypto/CommonRandom.h>
 void randombytes(void *x, size_t l)
 {
@@ -28,6 +30,7 @@ void randombytes(void *x, size_t l)
   crypto_classify(x,l);
 }
 
+#endif
 #elif (defined(__Windows__) || defined(__WIN64) || defined(__WIN32))
 /*
  *

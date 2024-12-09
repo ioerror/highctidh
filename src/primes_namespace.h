@@ -1,3 +1,4 @@
+#include <namespace.h>
 #define primes NAMESPACEBITS(primes)
 #define primes_batchbound NAMESPACEBITS(primes_batchbound)
 #define primes_batchmaxdaclen NAMESPACEBITS(primes_batchmaxdaclen)

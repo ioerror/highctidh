@@ -6,7 +6,7 @@
  * stand-alone without external macro definitions.
  *
  * It is used to generate highctidh.h, with an automatic pre-processing step:
- * gcc -I. -DGETRANDOM -DHIGHCTIDH_PORTABLE -E highctidh_macros.h | \
+ * gcc -I. -E highctidh_macros.h | \
  * awk '/^#/ { if($3 ~ /"[^/]/){nice=1} else {nice = 0}} nice && /^[^#]/ {print}'
  * and some manual cleanup because the oneliner above isn't perfect.
  *

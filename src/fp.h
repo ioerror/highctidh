@@ -1,17 +1,48 @@
 #ifndef FP_H
 #define FP_H
 
-#include "fp_namespace.h"
+#include <config.h>
+
+#include <namespace.h>
+// fp*.S:
+#define fp_0 NAMESPACEBITS(fp_0)
+#define fp_1 NAMESPACEBITS(fp_1)
+#define fp_2 NAMESPACEBITS(fp_2)
+#define fp_add2 NAMESPACEBITS(fp_add2)
+#define fp_add3 NAMESPACEBITS(fp_add3)
+#define fp_addsub_count NAMESPACEBITS(fp_addsub_count)
+#define fp_cmov NAMESPACEBITS(fp_cmov)
+#define fp_copy NAMESPACEBITS(fp_copy)
+#define fp_cswap NAMESPACEBITS(fp_cswap)
+#define fp_mul2 NAMESPACEBITS(fp_mul2)
+#define fp_mul3 NAMESPACEBITS(fp_mul3)
+#define fp_mulsq_count NAMESPACEBITS(fp_mulsq_count)
+#define fp_sq1 NAMESPACEBITS(fp_sq1)
+#define fp_sq2 NAMESPACEBITS(fp_sq2)
+#define fp_sq_count NAMESPACEBITS(fp_sq_count)
+#define fp_sub2 NAMESPACEBITS(fp_sub2)
+#define fp_sub3 NAMESPACEBITS(fp_sub3)
+#define fp_neg1 NAMESPACEBITS(fp_neg1)
+#define fp_neg2 NAMESPACEBITS(fp_neg2)
+#define fp_sq1_rep NAMESPACEBITS(fp_sq1_rep)
+#define fp_random NAMESPACEBITS(fp_random)
+#define fp_isequal NAMESPACEBITS(fp_isequal)
+#define fp_iszero NAMESPACEBITS(fp_iszero)
+#define fp_double1 NAMESPACEBITS(fp_double1)
+#define fp_double2 NAMESPACEBITS(fp_double2)
+#define fp_quadruple1 NAMESPACEBITS(fp_quadruple1)
+#define fp_quadruple2 NAMESPACEBITS(fp_quadruple2)
+#define fp NAMESPACEBITS(fp)
+
+// fp_inv*.c:
+#define fp_inv NAMESPACEBITS(fp_inv)
+// fp_sqrt*.c:
+#define fp_sqrt NAMESPACEBITS(fp_sqrt)
+
 #include "uintbig.h"
 #include "annotations.h"
 
-#if HIGHCTIDH_PORTABLE == 1 || !(defined(__x86_64__) || defined(_M_X64))
-/* we only have optimizations for amd64 so far, so on other platforms we
- * default to the portable code by defining HIGHCTIDH_PORTABLE:
- */
-#ifndef HIGHCTIDH_PORTABLE
-#define HIGHCTIDH_PORTABLE 1
-#endif
+#ifndef ENABLE_ASM
 
 #if 511 == BITS
 #include "fiat_p511.h"
@@ -31,7 +62,7 @@
 #define FIAT_PASTER(x,y,z) x ## y ## _ ## z
 #define FIAT_EVALUATOR(x,y, z) FIAT_PASTER(x,y, z)
 #define FIAT_BITS(actual) FIAT_EVALUATOR(fiat_p, BITS, actual)
-#endif /* end HIGHCTIDH_PORTABLE */
+#endif /* end ENABLE_ASM */
 
 #ifndef FIAT_BITS
 #define FIAT_BITS(actual) actual
@@ -76,16 +107,14 @@ fp_mul3(fp *const x, fp const *const y, fp const *const z)
 	__attribute__ ((alias ("fiat_p512_mul")));
 */
 //void fp_mul3 () __attribute__ ((weak, alias ("fiat_p512_mul")));
-#if HIGHCTIDH_PORTABLE == 1
+#ifndef ENABLE_ASM
 #define highctidh_511_fp_mul3(a,b,c) fiat_p511_mul((uint64_t *)a,(const uint64_t*)b,(const uint64_t*)c)
 #define highctidh_512_fp_mul3(a,b,c) fiat_p512_mul((uint64_t *)a,(const uint64_t*)b,(const uint64_t*)c)
 #define highctidh_1024_fp_mul3(a,b,c) fiat_p1024_mul((uint64_t *)a,(const uint64_t*)b,(const uint64_t*)c)
 #define highctidh_2048_fp_mul3(a,b,c) fiat_p2048_mul((uint64_t *)a,(const uint64_t*)b,(const uint64_t*)c)
-#endif
-
-#if HIGHCTIDH_PORTABLE == 0
+#else
 void fp_mul3(fp *const a, const fp *const b, const fp *const c);
-#endif /* ndef HIGHCTIDH_PORTABLE */
+#endif /* ndef ENABLE_ASM */
 
 void fp_sq1(fp *x);
 void fp_sq2(fp *const x, fp const *const y);
@@ -114,7 +143,7 @@ static inline
 __attribute__((nonnull))
 void fp_neg2(fp *const x,const fp *const y)
 {
-#if HIGHCTIDH_PORTABLE == 1
+#ifndef ENABLE_ASM
 	FIAT_BITS(opp)(x->x.c, y->x.c);
 #else
 	fp_sub3(x, &fp_0, y);

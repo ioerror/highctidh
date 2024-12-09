@@ -4,7 +4,7 @@
 #ifndef HIGHCTIDH_INT32_MINMAX_H
 #define HIGHCTIDH_INT32_MINMAX_H
 
-#if ((defined(__x86_64__) || defined(__i86pc__))) && HIGHCTIDH_PORTABLE == 0
+#if defined(ENABLE_ASM) && (defined(__x86_64__) || defined(__i86pc__))
 
 #define int32_MINMAX(a,b)			\
 do { \
@@ -30,6 +30,5 @@ do { \
   b = big; \
 } while (0);
 
-#endif /* portable */
-typedef int no_empty_translation_units; // -> "warning: ISO C forbids an empty translation unit"
+#endif /* ENABLE_ASM */
 #endif /* HIGHCTIDH_INT32_MINMAX_H */
