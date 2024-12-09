@@ -16,6 +16,10 @@ jobs:
       fail-fast: false
     steps:
     - uses: actions/checkout@v4
+
+    - name: Run autoreconf
+      run: autoreconf -fi
+
     - name: Setup Go ${{ matrix.go-version }}
       uses: actions/setup-go@v5
       with:

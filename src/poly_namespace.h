@@ -1,3 +1,4 @@
+#include <namespace.h>
 #define poly_eval NAMESPACEBITS(poly_eval)
 #define poly_eval_postcompute NAMESPACEBITS(poly_eval_postcompute)
 #define poly_eval_precompute NAMESPACEBITS(poly_eval_precompute)

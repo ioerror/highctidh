@@ -8,9 +8,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        CC: ["emcc"]
     steps:
     - uses: actions/checkout@v4
 
@@ -18,7 +15,7 @@ jobs:
       run: sudo ./misc/install-ubuntu-webassembly-deps.sh
 
     - name: Display compiler version
-      run: ${{ matrix.CC }} -v
+      run: emcc -v
 
     - name: Build
-      run: CC=${{ matrix.CC }} make wasm
+      run: autoreconf -fi && emconfigure ./configure --disable-silent-rules --disable-shared && make wasm

@@ -21,7 +21,7 @@ jobs:
       uses: Homebrew/actions/setup-homebrew@master
 
     - name: Install tools
-      run: brew install make
+      run: brew install --force make autoconf automake libtool
 
     - name: Gather kernel environment
       run: |
@@ -34,4 +34,7 @@ jobs:
         make -v
 
     - name: compile and test-quick
-      run: HIGHCTIDH_PORTABLE=1 CC=${{ matrix.CC }} MAKE=gmake gmake test-quick
+      run: |
+        autoreconf -fi
+        ./configure --disable-silent-rules CC=${{ matrix.CC }}
+        make test-quick
