@@ -1,7 +1,6 @@
-#ifndef HIGHCTIDH_INT32_SORT_H
-#define HIGHCTIDH_INT32_SORT_H
+#include <config.h>
 
-#if defined(__AVX2__) && HIGHCTIDH_PORTABLE == 0
+#if defined(ENABLE_ASM) && defined(__AVX2__)
 
 // This is the original high-ctidh x86_64 sorting code
 #include "int32_sort_x86.c"
@@ -40,5 +39,4 @@ void int32_sort(int32 *x,long long n)
   }
 }
 
-#endif /* end HIGHCTIDH_PORTABLE */
-#endif /* HIGHCTIDH_INT32_SORT_H */
+#endif /* ENABLE_ASM */

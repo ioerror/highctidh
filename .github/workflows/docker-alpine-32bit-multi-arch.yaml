@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         CC: ["clang"]
-        PORTABLE: ["1"]
+        ASM: ["asm=no"]
         CONTAINER: ["alpine"]
         DOCKER_ARCH_ARGS: ["--platform linux/arm/v6 arm32v6/alpine",
                            "--platform linux/arm/v7 arm32v7/alpine",
@@ -22,8 +22,8 @@ jobs:
     - name: checkout
       uses: actions/checkout@v4
 
-   #- name: Install requirements
-   #  run : sudo apt update && sudo apt install -y --no-install-recommends docker.io autoconf automake libtool
+    - name: Install requirements
+      run : sudo apt update && sudo apt install -y --no-install-recommends autoconf automake libtool
 
     - name: check kernel
       run: |
@@ -37,10 +37,7 @@ jobs:
           -v $(pwd):/${{ github.workspace }} \
           -w ${{ github.workspace }} \
           -e "CC=${{ matrix.CC }}" \
-          -e "HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }}" \
-          -e "CFLAGS=-fno-lto -fforce-enable-int128" \
-          -e "PLATFORM_SIZE=32" \
           --rm \
           ${{ matrix.DOCKER_ARCH_ARGS}} \
           /bin/sh \
-          -c "./misc/install-alpine-deps.sh && ./misc/docker-gha-fixup.sh && make alpine-multi-arch"
+          -c "./misc/install-alpine-deps.sh && ./misc/docker-gha-fixup.sh && autoreconf -fi && ./configure --disable-silent-rules --enable-${{ matrix.ASM }} && make install examples-run test-python && ls -alh .libs/*.so* && sha256sum .libs/*.so"

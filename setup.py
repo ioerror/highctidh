@@ -30,10 +30,8 @@ except FileNotFoundError:
 class build_ext_helper(build_ext):
     def run(self):
         if os.uname().machine == "s390x":
-            os.environ['CFLAGS'] = "-fno-lto -march=z10 -mtune=z10"
-        else:
-            os.environ['CFLAGS'] = "-fno-lto"
-        subprocess.run(shell=True, check=True, args='make -C src -f GNUmakefile')
+            os.environ['CFLAGS'] = "-march=z10 -mtune=z10"
+        subprocess.run(shell=True, check=True, args='./configure --disable-static --disable-assert --with-fortify=3 && make')
 
         if os.name == 'nt':
             shext = 'dll'
@@ -43,7 +41,7 @@ class build_ext_helper(build_ext):
             shext = 'so'
 
         for ext in self.extensions:
-            lib = os.path.join('src', 'lib' + ext.name + '.' + shext)
+            lib = os.path.join('.libs', 'lib' + ext.name + '.' + shext)
             out = self.get_ext_fullpath(ext.name)
             self.copy_file(lib, out, preserve_mode=False)
 

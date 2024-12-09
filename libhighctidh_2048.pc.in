@@ -1,0 +1,10 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: libhighctidh_2048
+Description: C library for constant time CSIDH
+Version: @VERSION@
+Libs: -L${libdir} -lhighctidh_2048 -Wl,-rpath,${libdir}
+Cflags: -I${includedir}
