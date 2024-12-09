@@ -1,3 +1,4 @@
+#include "namespace.h"
 #define action NAMESPACEBITS(action)
 #define base NAMESPACEBITS(base)
 #define public_key_from_bytes NAMESPACEBITS(public_key_from_bytes)

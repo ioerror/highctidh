@@ -1,5 +1,15 @@
 include VERSION
-include src/GNUmakefile
+include compile
+include configure
+include config.guess
+include config.sub
+include Makefile.in
+include config.h.in
+include install-sh
+include libhighctidh*.pc.in
+include libtool
+include ltmain.sh
+include missing
 include src/*.S
 include src/*.c
 include src/*.h

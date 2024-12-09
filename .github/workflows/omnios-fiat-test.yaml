@@ -8,27 +8,27 @@ jobs:
     name: Omnios gcc build of fiat backend
     env:
       LANG: "C"
-      LD: "/usr/bin/ld"
       CC: "gcc"
-      MAKE: "gmake"
-      HIGHCTIDH_PORTABLE: "1"
     steps:
     - uses: actions/checkout@v4
-    - name: Test in Omnios
+
+    - name: Install dependencies
+      run: misc/install-deps.sh ubuntu
+
+    - name: Run autoreconf
+      run: autoreconf -fi
+
+    - name: Build and test in Omnios
       id: test
       uses: vmactions/omnios-vm@v1
       with:
         release: "r151046"
-        envs: 'LANG LD CC MAKE HIGHCTIDH_PORTABLE'
+        envs: 'LANG CC'
         usesh: true
         prepare: |
           uname -a
           psrinfo -vp
           cat /etc/release
-          pkg install developer/object-file developer/linker developer/build/gnu-make system/header system/library/math shell/bash developer/gcc12
-          gmake -v
+          pkg install developer/object-file developer/linker system/header system/library/math developer/gcc12
           gcc -v
-
-        run: |
-          HIGHCTIDH_PORTABLE=1 gmake
-          HIGHCTIDH_PORTABLE=1 gmake test-quick
+        run: ./configure --disable-silent-rules && make test-quick

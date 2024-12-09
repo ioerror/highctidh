@@ -1,3 +1,4 @@
+#include <config.h>
 #include <string.h>
 #include <assert.h>
 #include <stdbool.h>
@@ -10,14 +11,15 @@
 #include "elligator.h"
 #include "random.h"
 #include "crypto_declassify.h"
+#include "api.h"
 
-const public_key base = {0}; /* A = 0 */
+const public_key HIGHCTIDH_API base = {0}; /* A = 0 */
 
 /*
  * Initialize a public_key from a byte array, byteswapping for
  * big-endian portability.
  */
-void
+void HIGHCTIDH_API
 public_key_from_bytes(public_key *const pk, const char *const input)
 {
 	uint64_t *input_u64 = (uint64_t *)input;
@@ -31,7 +33,7 @@ public_key_from_bytes(public_key *const pk, const char *const input)
 	}
 }
 
-void
+void HIGHCTIDH_API
 public_key_to_bytes(char *const output, const public_key *const pk)
 {
 	uint64_t *output_u64 = (uint64_t *)output;
@@ -61,7 +63,7 @@ long long csidh_stattried[primes_batches];
 long long csidh_statsucceeded[primes_batches];
 
 /* goal: constant time */
-void action(public_key *out, public_key const *in, private_key const *priv)
+void HIGHCTIDH_API action(public_key *out, public_key const *in, private_key const *priv)
 {
   proj A = {in->A,fp_1};
   proj A24;
@@ -316,7 +318,7 @@ void action(public_key *out, public_key const *in, private_key const *priv)
 }
 
 /* includes public-key validation. */
-bool csidh(public_key *out, public_key const *in, private_key const *priv)
+bool HIGHCTIDH_API csidh(public_key *out, public_key const *in, private_key const *priv)
 {
     if (!validate(in)) {
         fp_random(&out->A);

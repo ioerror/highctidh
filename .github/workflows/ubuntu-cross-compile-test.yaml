@@ -20,5 +20,8 @@ jobs:
     - name: Install cross compiler deps
       run: sudo ./misc/install-ubuntu-latest-cross-deps.sh
 
+    - name: Run autoreconf
+      run: autoreconf -fi
+
     - name: Build with cross compiler
-      run: CFLAGS="-fno-lto" ./misc/test-c-lib-cross-${{ matrix.CC }}.sh
+      run: misc/test-c-lib-cross-${{ matrix.CC }}.sh

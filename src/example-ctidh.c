@@ -2,29 +2,33 @@
  * This program shows basic usage with the highctidh csidh API.
  *
  * Compile this example program for each key size using the system installed
- * headers and linked against the installed shared library:
+ * header and linked against the installed shared libraries:
  *
- *  gcc -DBITS=511 -D'NAMESPACEBITS(x)=highctidh_511_##x' \
- *  -D'NAMESPACEGENERIC(x)=highctidh_##x' -o example-ctidh511 example-ctidh.c \
- *  -l highctidh_511
+ *  gcc -DBITS=511 -o example-ctidh511 example-ctidh.c -lhighctidh_511
  *
- *  gcc -DBITS=512 -D'NAMESPACEBITS(x)=highctidh_512_##x' \
- *  -D'NAMESPACEGENERIC(x)=highctidh_##x' -o example-ctidh512 example-ctidh.c \
- *  -l highctidh_512
+ *  gcc -DBITS=512 -o example-ctidh512 example-ctidh.c -lhighctidh_512
  *
- *  gcc -DBITS=1024 -D'NAMESPACEBITS(x)=highctidh_1024_##x' \
- *  -D'NAMESPACEGENERIC(x)=highctidh_##x' -o example-ctidh1024 example-ctidh.c \
- *  -l highctidh_1024
+ *  gcc -DBITS=1024 -o example-ctidh1024 example-ctidh.c -lhighctidh_1024
  *
- *  gcc -DBITS=2048 -D'NAMESPACEBITS(x)=highctidh_2048_##x' \
- *  -D'NAMESPACEGENERIC(x)=highctidh_##x' -o example-ctidh2048 example-ctidh.c \
- *  -l highctidh_2048
+ *  gcc -DBITS=2048 -o example-ctidh2048 example-ctidh.c -lhighctidh_2048
  *
  * */
 
 #include <stdio.h>
 #include <stdbool.h>
-#include <libhighctidh/csidh.h>
+#include <string.h>
+#include <highctidh.h>
+
+/* Adapt to the key size defined in BITS. */
+#define PREFIX2(SIZE,x) highctidh_ ## SIZE ## _ ## x
+#define PREFIX1(SIZE,x) PREFIX2(SIZE,x)
+#define PREFIX(x) PREFIX1(BITS,x)
+#define base PREFIX(base)
+#define private_key PREFIX(private_key)
+#define public_key PREFIX(public_key)
+#define csidh_private PREFIX(csidh_private)
+#define csidh PREFIX(csidh)
+#define validate PREFIX(validate)
 
 void print_hex_key(void *k, unsigned int l)
 { 

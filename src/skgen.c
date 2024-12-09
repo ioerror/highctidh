@@ -1,11 +1,13 @@
+#include <config.h>
 #include <string.h>
 #include <assert.h>
 
 #include "csidh.h"
 #include "primes.h"
 #include "random.h"
+#include "api.h"
 
-void csidh_private_withrng(private_key *priv, uintptr_t rng_context,
+void HIGHCTIDH_API csidh_private_withrng(private_key *priv, uintptr_t rng_context,
     ctidh_fillrandom rng_callback)
 {
   memset(&priv->e, 0, sizeof(priv->e));
@@ -21,7 +23,7 @@ void csidh_private_withrng(private_key *priv, uintptr_t rng_context,
   assert(pos <= primes_num);
 }
 
-void csidh_private(private_key *priv)
+void HIGHCTIDH_API csidh_private(private_key *priv)
 {
 	csidh_private_withrng(priv, (uintptr_t) priv, ctidh_fillrandom_default);
 }

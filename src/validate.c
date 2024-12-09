@@ -1,9 +1,11 @@
+#include <config.h>
 #include <string.h>
 #include <assert.h>
 #include <stdbool.h>
 
 #include "csidh.h"
 #include "primes.h"
+#include "api.h"
 
 // XXX: use affine initial P to save time in xMUL
 
@@ -71,7 +73,7 @@ int validate_cutofforder_v2(uintbig *order,const fp *P,const fp *A)
 
 // output: true if key is valid
 // output: false if key is invalid
-bool validate(public_key const *in)
+bool HIGHCTIDH_API validate(public_key const *in)
 {
   uintbig tmp;
   if (!uintbig_sub3(&tmp,&in->A.x,&uintbig_p))
@@ -88,7 +90,6 @@ bool validate(public_key const *in)
     fp P;
     memset(&P, 0, sizeof(P));
     fp_random(&P);
-    uintbig tmp;
     memset(&tmp, 0, sizeof(tmp));
     switch(validate_cutofforder_v2(&tmp,&P,&in->A)) {
       case 1: return true;
