@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Test cross compile of c library using clang cross compilers
+# Test cross compile of c library using clang cross compilers TODO
 #
 set -eu;
 set -x;

@@ -1,0 +1,34 @@
+name: Solaris 11.4 i86pc build with gcc
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ASM: [asm=yes, asm=no]
+    env:
+      LANG: "C"
+      CC: "gcc"
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build and test in Solaris
+      id: test
+      uses: vmactions/solaris-vm@v1
+      with:
+        release: "11.4-gcc"
+        envs: 'LANG CC'
+        usesh: true
+        prepare: |
+          uname -a
+          isainfo -v
+          pkgutil -U
+          pkg install autoconf
+          pkg install automake
+          pkg install libtool
+
+        run: |
+          autoreconf -fi
+          ./configure --disable-silent-rules --enable-${{ matrix.ASM }}
+          make test-quick

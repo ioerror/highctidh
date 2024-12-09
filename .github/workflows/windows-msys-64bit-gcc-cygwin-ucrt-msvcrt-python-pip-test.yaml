@@ -33,6 +33,8 @@ jobs:
           mingw-w64-x86_64-gcc
           mingw-w64-ucrt-x86_64-gcc
           make
+          autotools
+          libtool
 
     - name: Gather runtime environment
       shell: msys2 {0}
@@ -43,18 +45,23 @@ jobs:
        bash --version
        ${{ matrix.CC }} -v
 
+    - name: Build and install C library
+      shell: msys2 {0}
+      run: |
+        autoreconf -fi
+        ./configure --prefix="${HOME}/inst" --disable-silent-rules CC=${{ matrix.CC }}
+        make install
+        echo PKG_LIBRARY_PATH="${HOME}/inst/lib/pkgconfig" >> $GITHUB_ENV
+
     - name: Build highctidh
       shell: msys2 {0}
       run: |
         export SETUPTOOLS_USE_DISTUTILS=local
         export SOURCE_DATE_EPOCH=`git log -1 --pretty=%ct`
-        export HIGHCTIDH_PORTABLE=1
-        export WINDOWS=1
-        export MAKE=make
-        CC=${{ matrix.CC }} OPT="" pip install -v --break-system-packages -e src/
+        OPT="" pip install -v --break-system-packages -e .
 
     - name: Test with pytest
       shell: msys2 {0}
       run: |
-        python -c 'from highctidh import bench; bench.simple_bench()'
+        cd src && python -c 'from highctidh import bench; bench.simple_bench()'
         pytest -v

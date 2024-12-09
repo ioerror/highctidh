@@ -1,3 +1,4 @@
+#include <namespace.h>
 #define powpow8mod NAMESPACEBITS(powpow8mod)
 #define exp_by_squaring_ NAMESPACEBITS(exp_by_squaring_)
 #define biquad_precompute_curve NAMESPACEBITS(biquad_precompute_curve)

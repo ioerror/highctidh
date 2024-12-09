@@ -16,6 +16,7 @@ jobs:
       fail-fast: false
     steps:
     - uses: actions/checkout@v4
+
     - name: Setup Go ${{ matrix.go-version }}
       uses: actions/setup-go@v5
       with:
@@ -26,5 +27,8 @@ jobs:
     - name: Install Golang deps
       run: sudo ./misc/install-debian-go-deps-by-arch.sh ${{ matrix.ARCH }}
 
-    - name: Build Golang cgo
+    - name: Run autoreconf
+      run: autoreconf -fi
+
+    - name: Cross compile
       run: ./misc/test-golang-cross.sh ${{ matrix.ARCH }}

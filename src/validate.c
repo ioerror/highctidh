@@ -1,3 +1,4 @@
+#include <config.h>
 #include <string.h>
 #include <assert.h>
 #include <stdbool.h>
@@ -88,7 +89,6 @@ bool validate(public_key const *in)
     fp P;
     memset(&P, 0, sizeof(P));
     fp_random(&P);
-    uintbig tmp;
     memset(&tmp, 0, sizeof(tmp));
     switch(validate_cutofforder_v2(&tmp,&P,&in->A)) {
       case 1: return true;
