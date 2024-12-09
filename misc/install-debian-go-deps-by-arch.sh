@@ -3,7 +3,7 @@ set -e;
 
 ARCH=$1;
 # This BASE_PACKAGES list assumes a Docker image with golang installed
-BASE_PACKAGES="ca-certificates clang git make";
+BASE_PACKAGES="ca-certificates clang git make autoconf automake libtool pkg-config";
 
 if [ -n "$ARCH" ];
 then

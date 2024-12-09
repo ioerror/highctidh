@@ -6,7 +6,6 @@ on:
     branches: [ "main" ]
 
 env:
-  CGO_CFLAGS: -fsanitize=address -fpie -fPIC -fPIE -fno-omit-frame-pointer -g3 -fno-lto
   CC: clang
 
 jobs:
@@ -14,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        PORTABLE: ["0", "1"]
+        ASM: ["asm=yes", "asm=no"]
         CONTAINER: ["ubuntu:24.04", "ubuntu:24.10"]
       fail-fast: false
     container: ${{ matrix.CONTAINER }}
@@ -24,8 +23,17 @@ jobs:
     - name: Install Ubuntu miminal golang deps
       run: ./misc/install-debian-deps-go-sanitizer.sh
 
+    - name: Build and install C library with asan
+      env:
+        CFLAGS: -fsanitize=address -fno-omit-frame-pointer -g3 -fno-lto
+      run: |
+        autoreconf -fi
+        ./configure --prefix="${HOME}/inst" --disable-silent-rules --disable-shared --enable-static --enable-${{ matrix.ASM }}
+        make install
+        echo PKG_CONFIG_PATH="${HOME}/inst/lib/pkgconfig" >> $GITHUB_ENV
+
     - name: Show go env
       run: go env
 
     - name: Build and test with asan
-      run: cd src/ctidh1024 && HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} go test -timeout 0 -asan -v ./...
+      run: cd src/ctidh1024 && go test -timeout 0 -asan -v ./...

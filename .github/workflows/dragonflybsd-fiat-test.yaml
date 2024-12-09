@@ -7,11 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     name: DragonflyBSD clang build of fiat backend
     env:
-      LANG: "C"
-      LD: "/usr/bin/ld"
       CC: "/usr/local/bin/clang16"
-      MAKE: "gmake"
-      HIGHCTIDH_PORTABLE: "1"
     steps:
     - uses: actions/checkout@v4
     - name: Test in DragonflyBSD
@@ -19,17 +15,19 @@ jobs:
       uses: vmactions/dragonflybsd-vm@v1
       with:
         release: "6.4.0"
-        envs: 'LANG LD CC MAKE HIGHCTIDH_PORTABLE'
+        envs: 'CC'
         usesh: true
         prepare: |
           uname -a
-          pkg install -y gmake
           pkg install -y llvm16-16.0.6_9
           pkg install -y bash
-          gmake -v
+          pkg install -y autoconf
+          pkg install -y automake
+          pkg install -y libtool
           /usr/local/bin/clang16 -v
           echo $SHELL
 
         run: |
-          HIGHCTIDH_PORTABLE=1 gmake
-          HIGHCTIDH_PORTABLE=1 gmake test-quick
+          autoreconf -fi
+          ./configure --disable-silent-rules
+          make test-quick

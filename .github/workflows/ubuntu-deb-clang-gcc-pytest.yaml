@@ -1,4 +1,4 @@
-name: Build Debian GNU/Linux package and run pytest
+name: Build Debian GNU/Linux Python binding package and run pytest
 
 on:
   push:
@@ -11,15 +11,22 @@ jobs:
     strategy:
       matrix:
         CC: ["clang", "gcc"]
-        PORTABLE: ["0", "1"]
+        ASM: ["asm=yes", "asm=no"]
     steps:
     - uses: actions/checkout@v4
 
     - name: Install Python deps for testing
       run: sudo bash -c ./misc/install-debian-deps.sh
 
-    - name: Build Debian package with assembler backend
-      run: CC=${{ matrix.CC }} CFLAGS="-fno-lto" HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make deb
+    - name: Build and install C library
+      run: |
+        autoreconf -fi
+        ./configure --prefix="${HOME}/inst" --disable-silent-rules --enable-${{ matrix.ASM }} CC=${{ matrix.CC }} CFLAGS="-fno-lto"
+        make install
+        echo LD_LIBRARY_PATH="${HOME}/inst/lib" >> $GITHUB_ENV
+
+    - name: Build Debian package
+      run: make deb
 
     - name: Install Debian package
       run: sudo dpkg -i dist/python3-highctidh_*.deb

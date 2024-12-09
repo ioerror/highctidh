@@ -21,13 +21,16 @@ jobs:
       run: sudo ./misc/install-ubuntu-latest-cross-deps.sh
 
     - name: Build 
-      run: CC=${{ matrix.CC }} make
+      run: |
+        autoreconf -fi
+        ./configure --prefix=/usr/local --disable-silent-rules --enable-shared CC=${{ matrix.CC }}
+        make
 
     - name: Install
-      run: CC=${{ matrix.CC }} sudo make install && sudo ldconfig
+      run: sudo make install && sudo ldconfig
 
     - name: Build C library examples
-      run: CC=${{ matrix.CC }} make examples
+      run: make examples
 
     - name: Run C library examples
       run: make examples-run

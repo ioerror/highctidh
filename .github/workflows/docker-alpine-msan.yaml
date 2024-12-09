@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        PORTABLE: ["0", "1"]
+        ASM: ["asm=yes", "asm=no"]
         CONTAINER: ["alpine:3.19.1", "alpine:3.19", "alpine:3.18.6",
                     "alpine:3.18", "alpine:3.17.7", "alpine:3.17"]
       fail-fast: false
@@ -26,17 +26,38 @@ jobs:
     - name: Install alpine deps
       run: ./misc/install-alpine-deps.sh
 
+    - name: Build C library with msan and large stack
+      if: ${{ matrix.ASM == 'asm=no' }}
+      env:
+        CFLAGS: -fsanitize=memory -fno-omit-frame-pointer -fsanitize-memory-param-retval -fsanitize-memory-track-origins -g3 -fno-lto
+        LDFLAGS: -Wl,-z,stack-size=0x1F40000
+      run: |
+        autoreconf -fi
+        ./configure --prefix="${HOME}/inst" --disable-silent-rules --disable-shared --enable-static --enable-${{ matrix.ASM }}
+        make install
+        echo "PKG_CONFIG_PATH=${HOME}/inst/lib/pkgconfig" >> $GITHUB_ENV
+
+    - name: Build C library with msan and default stack
+      if: ${{ matrix.ASM == 'asm=yes' }}
+      env:
+        CFLAGS: -fsanitize=memory -fno-omit-frame-pointer -fsanitize-memory-param-retval -fsanitize-memory-track-origins -g3 -fno-lto
+      run: |
+        autoreconf -fi
+        ./configure --prefix="${HOME}/inst" --disable-shared --enable-static --enable-${{ matrix.ASM }}
+        make install
+        echo "PKG_CONFIG_PATH=${HOME}/inst/lib/pkgconfig" >> $GITHUB_ENV
+
     - name: Show go env
       run: go env
 
     - name: Build and test 511 with msan
-      run: cd src/ctidh511 && HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} go test -v -o msan-test -msan ./...
+      run: cd src/ctidh511 && go test -v -o msan-test -msan ./...
 
     - name: Build and test 512 with msan
-      run: cd src/ctidh512 && HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} go test -v -o msan-test -msan ./...
+      run: cd src/ctidh512 && go test -v -o msan-test -msan ./...
 
     - name: Build and test 1024 with msan
-      run: cd src/ctidh1024 && HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} go test -v -o msan-test -msan ./...
+      run: cd src/ctidh1024 && go test -v -o msan-test -msan ./...
 
     - name: Build and test 2048 with msan
-      run: cd src/ctidh2048 && HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} go test -v -o msan-test -msan ./...
+      run: cd src/ctidh2048 && go test -v -o msan-test -msan ./...

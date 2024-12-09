@@ -7,11 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     name: FreeBSD clang build of fiat backend
     env:
-      LANG: "C"
-      LD: "/usr/bin/ld"
       CC: "clang"
-      MAKE: "gmake"
-      HIGHCTIDH_PORTABLE: "1"
     steps:
     - uses: actions/checkout@v4
     - name: Test in FreeBSD
@@ -19,18 +15,20 @@ jobs:
       uses: vmactions/freebsd-vm@v1
       with:
         release: "14.0"
-        envs: 'LANG LD CC MAKE HIGHCTIDH_PORTABLE'
+        envs: 'CC'
         usesh: true
         prepare: |
           uname -a
           freebsd-version
-          pkg install -y gmake
           pkg install -y llvm-13
           pkg install -y bash
+          pkg install -y autoconf
+          pkg install -y automake
+          pkg install -y libtool
           clang -v
-          gmake -v
           echo $SHELL
 
         run: |
-          HIGHCTIDH_PORTABLE=1 gmake
-          HIGHCTIDH_PORTABLE=1 gmake test-quick
+          autoreconf -fi
+          ./configure --disable-silent-rules
+          make test-quick

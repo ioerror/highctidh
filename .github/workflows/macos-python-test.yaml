@@ -19,21 +19,34 @@ jobs:
       with:
         python-version:  ${{ matrix.python-version }}
 
+    - name: Set up Homebrew
+      id: set-up-homebrew
+      uses: Homebrew/actions/setup-homebrew@master
+
+    - name: Install tools
+      run: brew install make autoconf automake libtool
+
     - name: Gather runtime environment
       shell: bash
       run: |
        python -V
        bash --version
 
-    - name: Install dependencies
+    - name: Build and install C library
+      shell: bash
+      run: |
+        autoreconf -fi
+        ./configure --prefix="${HOME}/inst" --disable-silent-rules
+        make install
+        export DYLD_LIBRARY_PATH="${HOME}/inst/lib"
+
+    - name: Install Python dependencies
       shell: bash
       run: python -m pip install --upgrade build pip setuptools wheel pytest pytest-xdist
 
     - name: Build wheel
       shell: bash
       run: |
-        export HIGHCTIDH_PORTABLE=1
-        export MAKE=make
         cd src && python -m build
         pip install --force-reinstall dist/highctidh-*.whl
 

@@ -7,11 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     name: OpenBSD clang build of fiat backend
     env:
-      LANG: "C"
-      LD: "/usr/bin/ld"
       CC: "clang"
-      MAKE: "gmake"
-      HIGHCTIDH_PORTABLE: "1"
     steps:
     - uses: actions/checkout@v4
     - name: Test in OpenBSD
@@ -19,16 +15,16 @@ jobs:
       uses: vmactions/openbsd-vm@v1
       with:
         release: "7.5"
-        envs: 'LANG LD CC MAKE HIGHCTIDH_PORTABLE'
+        envs: 'CC'
         usesh: true
         prepare: |
           uname -a
-          pkg_add gmake
-          pkg_add bash
-          gmake -v
+          pkg_add autoconf-2.71 automake-1.16.5 libtool
+          make -v
           clang -v
           echo $SHELL
 
         run: |
-          HIGHCTIDH_PORTABLE=1 gmake
-          HIGHCTIDH_PORTABLE=1 gmake test-quick
+          AUTOCONF_VERSION=2.71 AUTOMAKE_VERSION=1.16.5 autoreconf -fi
+          ./configure --disable-silent-rules
+          make test-quick

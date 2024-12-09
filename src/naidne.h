@@ -1,6 +1,8 @@
 #ifndef HIGHCTIDH_NAIDNE_H
 #define HIGHCTIDH_NAIDNE_H
 
+#include "config.h"
+
 #if defined(__linux__)
 #include <endian.h>
 #elif defined(__FreeBSD__)
@@ -24,6 +26,9 @@
 #define le64toh(x) LE_64(x)
 #elif (defined(__Windows__) || defined(_WIN64) || defined(_WIN32))
 #include <stdlib.h>
+#ifdef HAVE_SYS_PARAM_H
+#include <sys/param.h>
+#endif
 #if (BYTE_ORDER == LITTLE_ENDIAN)
 #define htole32(x) (x)
 #define le32toh(x) (x)

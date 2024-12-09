@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         CC: ["clang", "gcc"]
-        PORTABLE: ["0", "1"]
+        ASM: ["asm=yes", "asm=no"]
         CONTAINER: ["ubuntu:22.04", "ubuntu:24.04", "ubuntu:24.10"]
       fail-fast: false
     container: ${{ matrix.CONTAINER }}
@@ -22,18 +22,22 @@ jobs:
       run: ./misc/install-debian-deps.sh
 
     - name: Build
-      run: CC=${{ matrix.CC }} CFLAGS="-fno-lto" HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make
+      run: |
+        autoreconf -fi
+        ./configure --prefix=/usr/local --disable-silent-rules --enable-shared --enable-${{ matrix.ASM }} CC=${{ matrix.CC }} CFLAGS="-fno-lto"
+        make
+
     - name: Test install
-      run: CC=${{ matrix.CC }} HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make install
+      run: make install
 
     - name: Register libraries
       run: sudo ldconfig /usr/local/lib
 
     - name: Build examples
-      run: CC=${{ matrix.CC }} HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make examples
+      run: make examples
 
     - name: Run examples
-      run: CC=${{ matrix.CC }} HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make examples-run
+      run: make examples-run
 
     - name: Examine build artifacts
-      run: ls -alh dist/*.so && sha256sum dist/*.so
+      run: ls -alh .libs/*.so && sha256sum .libs/*.so

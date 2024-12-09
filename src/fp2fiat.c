@@ -10,16 +10,6 @@
 #include "fp.h"
 #include "annotations.h"
 
-#if HIGHCTIDH_PORTABLE == 0 && (defined(__x86_64__) || defined(__i86pc__))
-#define highctidh_macro_stringize(x) #x
-#define highctidh_macro_str(y) highctidh_macro_stringize(y)
-__asm__ (".include \"uintbig" highctidh_macro_str(BITS)  ".S\"");
-__asm__ (".include \"fp" highctidh_macro_str(BITS) ".S\"");
-
-#else
-#if defined(CGONUTS)
-#define DONTMINDIFIDO
-#endif
 /*
  * The definitions in this unit are only needed when they are not provided
  * by the optimizied assembly units.
@@ -480,5 +470,3 @@ fp_sq2(fp *const x, fp const *const y)
 	fp_sq_count += 1;
 	FIAT_BITS(square)(x->x.c, y->x.c);
 }
-
-#endif /* HIGHCTIDH_PORTABLE */
