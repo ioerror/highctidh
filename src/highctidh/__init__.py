@@ -230,10 +230,15 @@ class ctidh(object):
         self.base = self.public_key()
         try:
             flib = f"highctidh_{self.field_size}"
-            flib = util.find_spec(flib).origin
+            spec = util.find_spec(flib)
+            if spec == None:
+                #raise LibraryNotFound
+                flib = './lib' + flib + '.so'
+            else:
+                flib = spec.origin
             self._lib = ctypes.CDLL(flib)
         except OSError as e:
-            print("Unable to load highctidh_" + str(self.field_size) + ".so".format(e))
+            print("Unable to load " + flib.format(e))
             raise LibraryNotFound
 
         csidh_private = self._lib.__getattr__(
