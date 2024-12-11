@@ -1,9 +1,9 @@
 [project]
 name = "highctidh"
 version = "1.0.2024092800"
-description = "highctidh bindings with included C library"
+description = "highctidh bindings for shared libraries"
 readme = "README.md"
-requires-python = ">=3.9.6"
+requires-python = ">=3.9"
 keywords = ["post-quantum cryptography", "cryptography", "csidh", "ctidh", "C", "highctidh"]
 authors = [ {email = "jacob@appelbaum.net"}, {name = "Jacob Appelbaum"} ]
 maintainers = [ {email = "jacob@appelbaum.net"}, {name = "Jacob Appelbaum"} ]

@@ -9,6 +9,7 @@ highctidh wraps the original highctidh C implementation using ctypes.
 >>> ctidh2048 = ctidh(2048)
 """
 
+import platform
 import ctypes
 import ctypes.util
 import hashlib
@@ -228,12 +229,23 @@ class ctidh(object):
             self.pk_size, ctypes.sizeof(public_key))
 
         self.base = self.public_key()
-        try:
+        if platform.system() == 'Windows':
+            import os
+            try:
+                for dir in os.getenv('LD_LIBRARY_PATH').split(';'):
+                    os.add_dll_directory(dir)
+            except:
+                pass
+            flib = f"libhighctidh_{self.field_size}.dll"
+        else:
             flib = f"highctidh_{self.field_size}"
-            flib = util.find_spec(flib).origin
-            self._lib = ctypes.CDLL(flib)
+        try:
+            flibfn = ctypes.util.find_library(flib)
+            if flibfn == None:
+                raise OSError('Library not found')
+            self._lib = ctypes.CDLL(flibfn)
         except OSError as e:
-            print("Unable to load highctidh_" + str(self.field_size) + ".so".format(e))
+            print("Unable to load " + flib.format(e))
             raise LibraryNotFound
 
         csidh_private = self._lib.__getattr__(

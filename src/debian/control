@@ -10,7 +10,7 @@ X-Python3-Version: >= 3.9
 Package: python3-highctidh
 Architecture: any
 Depends: ${misc:Depends}, ${python3:Depends}, ${shlibs:Depends}, python3
-Description: highctidh bindings with included C library
+Description: highctidh bindings for shared libraries
  This is an unofficial fork of high-ctidh. This is highly experimental software
  and it has not yet been reviewed for security considerations. We encourage
  users of this software to assume that there are vulnerabilities until a review
