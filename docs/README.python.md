@@ -13,7 +13,7 @@ hbsdcontrol pax disable mprotect /usr/local/bin/python3.11
 
 To use this module with pip: `pip install highctidh`
 
-Run the unit tests in the root of the project:
+Run the unit tests in the src/ subdirectory:
 
     python3 -m unittest -v
 
@@ -21,7 +21,7 @@ Alternatively with pytest in the root of the project:
 
     pytest-3 -v
 
-Build and install the Python module:
+Build and install the Python module in the root of the project:
 
     python3 -m build
     pip install dist/highctidh-*-py3-none-any.whl
