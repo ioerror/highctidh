@@ -1,0 +1,5 @@
+include VERSION
+include src/GNUmakefile
+include src/*.S
+include src/*.c
+include src/*.h
