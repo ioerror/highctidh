@@ -3,7 +3,6 @@
 #include <stdlib.h>
 
 #include "crypto_classify.h"
-#include "random_namespace.h"
 
 #if defined(GETRANDOM) && (defined(__linux__) || defined(__sun))
 #include <sys/random.h>

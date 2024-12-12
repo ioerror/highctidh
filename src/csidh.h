@@ -1,10 +1,6 @@
 #ifndef CSIDH_H
 #define CSIDH_H
 
-#ifdef CGONUTS
-#include "cgo.h"
-#endif // CGONUTS
-
 #include <stdbool.h>
 #include "naidne.h"
 #include "uintbig.h"
