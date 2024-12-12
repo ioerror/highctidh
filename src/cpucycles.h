@@ -4,7 +4,7 @@
 static inline unsigned long long cpucycles(void) {
   unsigned long long result;
 
-  asm volatile("rdtsc; shlq $32,%%rdx; orq %%rdx,%%rax"
+  __asm__ volatile("rdtsc; shlq $32,%%rdx; orq %%rdx,%%rax"
     : "=a" (result) : : "%rdx");
 
   return result;
