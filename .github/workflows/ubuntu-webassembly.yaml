@@ -8,9 +8,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        CC: ["emcc"]
     steps:
     - uses: actions/checkout@v4
 
@@ -20,5 +17,5 @@ jobs:
     - name: Display compiler version
       run: ${{ matrix.CC }} -v
 
-    - name: Build
-      run: CC=${{ matrix.CC }} make wasm
+    - name: Build 
+      run: ./configure && make wasm

@@ -6,7 +6,6 @@ on:
     branches: [ "main" ]
 
 env:
-  CGO_CFLAGS: -fsanitize=memory -fpie -fPIC -fPIE -fno-omit-frame-pointer -fsanitize-memory-param-retval -fsanitize-memory-track-origins -g3 -fno-lto
   CC: clang
 
 jobs:
@@ -14,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        PORTABLE: ["0", "1"]
+        ASM: ["yes", "no"]
         CONTAINER: ["ubuntu:23.10", "ubuntu:24.04"]
       fail-fast: false
     container: ${{ matrix.CONTAINER }}
@@ -24,8 +23,14 @@ jobs:
     - name: Install Ubuntu miminal golang deps
       run: ./misc/install-debian-deps-go-sanitizer.sh
 
+    - name: Build C library with msan
+      env:
+        CFLAGS: -fsanitize=memory -fno-omit-frame-pointer -fsanitize-memory-param-retval -fsanitize-memory-track-origins -g3 -fno-lto
+        LDFLAGS: -Wl,-z,stack-size=0x1F40000
+      run: ./configure --prefix=$HOME/inst --enable-asm=${{ matrix.ASM }} && make install
+
     - name: Show go env
       run: go env
 
-    - name: Build and test with asan
-      run: cd src/ctidh1024 && HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} go test -v -msan ./...
+    - name: Build and test with msan
+      run: cd src/ctidh1024 && PKG_CONFIG_PATH="$HOME/inst/lib/pkgconfig" go test -v -msan ./...

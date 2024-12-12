@@ -34,4 +34,4 @@ jobs:
         make -v
 
     - name: compile and test-quick
-      run: HIGHCTIDH_PORTABLE=1 CC=${{ matrix.CC }} MAKE=gmake gmake test-quick
+      run: CC=${{ matrix.CC }} ./configure && make test-quick

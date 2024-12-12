@@ -6,8 +6,6 @@ on:
     branches: [ "main" ]
 
 env:
-  CGO_CFLAGS: -fsanitize=memory -fpie -fPIC -fPIE -fno-omit-frame-pointer -fsanitize-memory-param-retval -fsanitize-memory-track-origins -g3 -fno-lto
-  CGO_LDFLAGS: -Wl,-z,stack-size=0x1F40000
   CC: clang
 
 jobs:
@@ -15,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        PORTABLE: ["0", "1"]
+        ASM: ["yes", "no"]
         CONTAINER: ["alpine:3.19.1", "alpine:3.19", "alpine:3.18.6",
                     "alpine:3.18", "alpine:3.17.7", "alpine:3.17"]
       fail-fast: false
@@ -26,17 +24,23 @@ jobs:
     - name: Install alpine deps
       run: ./misc/install-alpine-deps.sh
 
+    - name: Build C library with msan
+      env:
+        CFLAGS: -fsanitize=memory -fno-omit-frame-pointer -fsanitize-memory-param-retval -fsanitize-memory-track-origins -g3 -fno-lto
+        LDFLAGS: -Wl,-z,stack-size=0x1F40000
+      run: ./configure --prefix=$HOME/inst --enable-asm=${{ matrix.ASM }} && make install
+
     - name: Show go env
       run: go env
 
     - name: Build and test 511 with msan
-      run: cd src/ctidh511 && HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} go test -v -o msan-test -msan ./...
+      run: cd src/ctidh511 && PKG_CONFIG_PATH="$HOME/inst/lib/pkgconfig" go test -v -o msan-test -msan ./...
 
     - name: Build and test 512 with msan
-      run: cd src/ctidh512 && HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} go test -v -o msan-test -msan ./...
+      run: cd src/ctidh512 && PKG_CONFIG_PATH="$HOME/inst/lib/pkgconfig" go test -v -o msan-test -msan ./...
 
     - name: Build and test 1024 with msan
-      run: cd src/ctidh1024 && HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} go test -v -o msan-test -msan ./...
+      run: cd src/ctidh1024 && PKG_CONFIG_PATH="$HOME/inst/lib/pkgconfig" go test -v -o msan-test -msan ./...
 
     - name: Build and test 2048 with msan
-      run: cd src/ctidh2048 && HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} go test -v -o msan-test -msan ./...
+      run: cd src/ctidh2048 && PKG_CONFIG_PATH="$HOME/inst/lib/pkgconfig" go test -v -o msan-test -msan ./...

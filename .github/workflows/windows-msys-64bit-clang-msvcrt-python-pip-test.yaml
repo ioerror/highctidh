@@ -37,23 +37,28 @@ jobs:
     - name: Gather runtime environment
       shell: msys2 {0}
       run: |
+       echo ${{ matrix.ENVIRONMENT }}
        uname -a
        python -V
        bash --version
        ${{ matrix.CC }} -v
+
+    - name: Build and install C library
+      shell: msys2 {0}
+      run: |
+        CC=${{ matrix.CC }} ./configure --prefix="$HOME/inst"
+        make install
 
     - name: Build highctidh
       shell: msys2 {0}
       run: |
         export SETUPTOOLS_USE_DISTUTILS=local
         export SOURCE_DATE_EPOCH=`git log -1 --pretty=%ct`
-        export HIGHCTIDH_PORTABLE=1
-        export WINDOWS=1
-        export MAKE=make
-        CC=${{ matrix.CC }} OPT="" pip install --break-system-packages -v -e src/
+        OPT="" pip install -v --break-system-packages -e src/
 
     - name: Test with pytest
       shell: msys2 {0}
       run: |
+        export LD_LIBRARY_PATH="$HOME/inst/lib"
         python -c 'from highctidh import bench; bench.simple_bench()'
         pytest -v

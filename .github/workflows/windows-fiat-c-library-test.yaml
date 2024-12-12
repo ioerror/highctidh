@@ -24,10 +24,4 @@ jobs:
 
     - name: compile and test-quick
       shell: bash
-      run: |
-        export HIGHCTIDH_PORTABLE=1
-        export WINDOWS=1
-        export CC=${{ matrix.CC }} MAKE=make
-        mkdir -p src/build/src
-        mkdir -p src/dist/tmp
-        cd src/ && make && make testrandom test512 && ./testrandom && ./test512
+      run: ./configure && make test-quick

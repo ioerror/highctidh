@@ -16,10 +16,15 @@ jobs:
       fail-fast: false
     steps:
     - uses: actions/checkout@v4
+
+    - name: Build
+      run: CC=${{ matrix.CC }} ./configure --prefix="$HOME/inst" && make install
+
     - name: Setup Go ${{ matrix.go-version }}
       uses: actions/setup-go@v5
       with:
         go-version: ${{ matrix.go-version }}
+
     - name: Display Go version
       run: go version
 
@@ -27,4 +32,4 @@ jobs:
       run: sudo ./misc/install-debian-go-deps-by-arch.sh ${{ matrix.ARCH }}
 
     - name: Build Golang cgo
-      run: ./misc/test-golang-cross.sh ${{ matrix.ARCH }}
+      run: PKG_CONFIG_PATH="$HOME/inst/lib/pkgconfig" ./misc/test-golang-cross.sh ${{ matrix.ARCH }}
