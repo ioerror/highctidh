@@ -28,7 +28,11 @@
 #if (defined(__ARM32__) || defined(__i386__))
 #define STR_FMT "%u"
 #else
-#define STR_FMT "%lu"
+#ifdef WIN32
+#define STR_FMT "%llu"
+#else
+#define STR_FMT "%zu"
+#endif
 #endif
 
 void print_hex_key(void *k, unsigned int l)
