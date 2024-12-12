@@ -27,6 +27,8 @@
 
 #if (defined(__ARM32__) || defined(__i386__))
 #define STR_FMT "%u"
+#elif defined(WIN32)
+#define STR_FMT "%llu"
 #else
 #define STR_FMT "%lu"
 #endif
