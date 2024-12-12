@@ -60,6 +60,7 @@ typedef struct highctidh_512_private_key {
 typedef struct highctidh_512_public_key {
     highctidh_512_fp A;
 } highctidh_512_public_key;
+
 extern const highctidh_512_public_key highctidh_512_base;
 void highctidh_512_public_key_from_bytes(highctidh_512_public_key *const pk, const char *const input);
 void highctidh_512_public_key_to_bytes(char *const output, const highctidh_512_public_key *const pk);
@@ -84,6 +85,7 @@ typedef struct highctidh_1024_private_key {
 typedef struct highctidh_1024_public_key {
     highctidh_1024_fp A;
 } highctidh_1024_public_key;
+
 extern const highctidh_1024_public_key highctidh_1024_base;
 void highctidh_1024_public_key_from_bytes(highctidh_1024_public_key *const pk, const char *const input);
 void highctidh_1024_public_key_to_bytes(char *const output, const highctidh_1024_public_key *const pk);
@@ -108,6 +110,7 @@ typedef struct highctidh_2048_private_key {
 typedef struct highctidh_2048_public_key {
     highctidh_2048_fp A;
 } highctidh_2048_public_key;
+
 extern const highctidh_2048_public_key highctidh_2048_base;
 void highctidh_2048_public_key_from_bytes(highctidh_2048_public_key *const pk, const char *const input);
 void highctidh_2048_public_key_to_bytes(char *const output, const highctidh_2048_public_key *const pk);
