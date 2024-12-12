@@ -1,7 +1,9 @@
+#define _XOPEN_SOURCE 600
 #include <assert.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <inttypes.h>
 #include "naidne.h"
 #include "steps.h"
 #include "elligator.h"
@@ -9,23 +11,7 @@
 #include "primes.h"
 #include "random.h"
 
-#if defined(__ARM32__) || defined(__i386__)
-#define DFMT "%#llxU, "
-#elif defined(__Darwin__)
-#define DFMT "%#llxU, "
-#elif defined(__OpenBSD__)
-#define DFMT "%#llxU, "
-#elif defined(__sun) && !defined(__i86pc__)
-#define DFMT "%#llxU, "
-#elif defined(__sun) && defined(__i86pc__)
-#define DFMT "%#lxU, "
-#elif (defined(__Windows__) || defined(__WIN64))
-#define DFMT "%#llxU, "
-#else
-#define DFMT "%#lxU, "
-#endif
-
-#define dump_uintbig(X) {for (size_t i=0; i<sizeof((X).c)/sizeof((X).c[0]);i++) { printf(DFMT, htole64((X).c[i])); };printf("\n"); }
+#define dump_uintbig(X) {for (size_t j=0; j<sizeof((X).c)/sizeof((X).c[0]);j++) { printf("%#" PRIx64 "U, ", htole64((X).c[j])); };printf("\n"); }
 #define assert_uintbig_eq(X,Y) { \
 	for (size_t i = 0; i<sizeof(X.c)/sizeof(X.c[0]); i++) { \
 	if (X.c[i] != Y.c[i]) { \
