@@ -26,7 +26,7 @@
 #define DFMT "%#lxU, "
 #endif
 
-#define dump_uintbig(X) {for (size_t i=0; i<sizeof((X).c)/sizeof((X).c[0]);i++) { printf(DFMT, htole64((X).c[i])); };printf("\n"); }
+#define dump_uintbig(X) {for (size_t j=0; i<sizeof((X).c)/sizeof((X).c[0]);j++) { printf(DFMT, htole64((X).c[j])); };printf("\n"); }
 #define assert_uintbig_eq(X,Y) { \
 	for (size_t i = 0; i<sizeof(X.c)/sizeof(X.c[0]); i++) { \
 	if (X.c[i] != Y.c[i]) { \
