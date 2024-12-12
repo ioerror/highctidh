@@ -17,9 +17,6 @@ __asm__ (".include \"uintbig" highctidh_macro_str(BITS)  ".S\"");
 __asm__ (".include \"fp" highctidh_macro_str(BITS) ".S\"");
 
 #else
-#if defined(CGONUTS)
-#define DONTMINDIFIDO
-#endif
 /*
  * The definitions in this unit are only needed when they are not provided
  * by the optimizied assembly units.
