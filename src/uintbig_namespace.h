@@ -1,10 +1,6 @@
 #ifndef UINTBIG_NAMESPACE_H
 #define UINTBIG_NAMESPACE_H
 
-#ifdef CGONUTS
-#include "cgo.h"
-#endif // CGONUTS
-
 #define uintbig_p NAMESPACEBITS(uintbig_p)
 #define uintbig_1 NAMESPACEBITS(uintbig_1)
 #define uintbig_bit NAMESPACEBITS(uintbig_bit)
