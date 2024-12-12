@@ -89,11 +89,6 @@ typedef struct highctidh_1024_public_key {
 extern const highctidh_1024_public_key highctidh_1024_base;
 void highctidh_1024_public_key_from_bytes(highctidh_1024_public_key *const pk, const char *const input);
 void highctidh_1024_public_key_to_bytes(char *const output, const highctidh_1024_public_key *const pk);
-typedef void ((ctidh_fillrandom)(
-  void *const outbuf,
-  const size_t outsz,
-  const uintptr_t context));
-
 void highctidh_1024_csidh_private_withrng(highctidh_1024_private_key *priv, uintptr_t rng_context, ctidh_fillrandom rng_callback);
 void highctidh_1024_csidh_private(highctidh_1024_private_key *const priv);
 _Bool highctidh_1024_csidh(highctidh_1024_public_key *out, highctidh_1024_public_key const *in, highctidh_1024_private_key const *priv);

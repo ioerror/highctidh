@@ -3,14 +3,12 @@
 package ctidh1024
 
 /*
+#define BITS 1024
 #include "binding1024.h"
-#include <csidh.h>
+#include <highctidh.h>
 
-extern ctidh_fillrandom fillrandom_1024_custom;
-
-__attribute__((weak))
-void custom_gen_private(void *const context, private_key *priv) {
-  csidh_private_withrng(priv, (uintptr_t)context, fillrandom_1024_custom);
+void custom_gen_private(void *const context, highctidh_1024_private_key *priv) {
+  highctidh_1024_csidh_private_withrng(priv, (uintptr_t)context, fillrandom_1024_custom);
 }
 */
 import "C"
@@ -33,7 +31,7 @@ var (
 
 // PublicKey is a public CTIDH key.
 type PublicKey struct {
-	publicKey C.public_key
+	publicKey C.highctidh_1024_public_key
 }
 
 // NewEmptyPublicKey returns an uninitialized
@@ -73,7 +71,7 @@ func (p *PublicKey) Reset() {
 
 // Bytes returns the PublicKey as a byte slice.
 func (p *PublicKey) Bytes() []byte {
-	return C.GoBytes(unsafe.Pointer(&p.publicKey.A.x.c), C.int(C.UINTBIG_LIMBS*8))
+	return C.GoBytes(unsafe.Pointer(&p.publicKey.A.x.c), C.int(((C.BITS+63)/64)*8))
 }
 
 // FromBytes loads a PublicKey from the given byte slice.
@@ -82,8 +80,8 @@ func (p *PublicKey) FromBytes(data []byte) error {
 		return ErrPublicKeySize
 	}
 
-	p.publicKey = *((*C.public_key)(unsafe.Pointer(&data[0])))
-	if !C.validate(&p.publicKey) {
+	p.publicKey = *((*C.highctidh_1024_public_key)(unsafe.Pointer(&data[0])))
+	if !C.highctidh_1024_validate(&p.publicKey) {
 		return ErrPublicKeyValidation
 	}
 
@@ -137,7 +135,7 @@ func (p *PublicKey) UnmarshalText(data []byte) error {
 
 // PrivateKey is a private CTIDH key.
 type PrivateKey struct {
-	privateKey C.private_key
+	privateKey C.highctidh_1024_private_key
 }
 
 // NewEmptyPrivateKey returns an uninitialized
@@ -170,7 +168,7 @@ func (p *PrivateKey) Reset() {
 
 // Bytes serializes PrivateKey into a byte slice.
 func (p *PrivateKey) Bytes() []byte {
-	return C.GoBytes(unsafe.Pointer(&p.privateKey), C.primes_num)
+	return C.GoBytes(unsafe.Pointer(&p.privateKey), C.sizeof_highctidh_1024_private_key)
 }
 
 // FromBytes loads a PrivateKey from the given byte slice.
@@ -179,7 +177,7 @@ func (p *PrivateKey) FromBytes(data []byte) error {
 		return ErrPrivateKeySize
 	}
 
-	p.privateKey = *((*C.private_key)(unsafe.Pointer(&data[0])))
+	p.privateKey = *((*C.highctidh_1024_private_key)(unsafe.Pointer(&data[0])))
 	return nil
 }
 
@@ -224,7 +222,7 @@ func (p *PrivateKey) UnmarshalText(data []byte) error {
 
 // DerivePublicKey derives a public key given a private key.
 func DerivePublicKey(privKey *PrivateKey) *PublicKey {
-	var base C.public_key
+	var base C.highctidh_1024_public_key
 	baseKey := new(PublicKey)
 	baseKey.publicKey = base
 	return GroupAction(privKey, baseKey)
@@ -234,7 +232,7 @@ func DerivePublicKey(privKey *PrivateKey) *PublicKey {
 // attempts to compute the Ctidh1024 public key.
 func GenerateKeyPair() (*PrivateKey, *PublicKey) {
 	privKey := new(PrivateKey)
-	C.csidh_private(&privKey.privateKey)
+	C.highctidh_1024_csidh_private(&privKey.privateKey)
 	return privKey, DerivePublicKey(privKey)
 }
 
@@ -257,7 +255,7 @@ func GenerateKeyPairWithRNG(rng io.Reader) (*PrivateKey, *PublicKey) {
 
 func GroupAction(privateKey *PrivateKey, publicKey *PublicKey) *PublicKey {
 	sharedKey := new(PublicKey)
-	ok := C.csidh(&sharedKey.publicKey, &publicKey.publicKey, &privateKey.privateKey)
+	ok := C.highctidh_1024_csidh(&sharedKey.publicKey, &publicKey.publicKey, &privateKey.privateKey)
 	if !ok {
 		panic(ErrCTIDH)
 	}
@@ -280,15 +278,6 @@ func init() {
 		panic("CTIDH/cgo: C.BITS must match template Bits")
 	}
 	validateBitSize(C.BITS)
-	PrivateKeySize = C.primes_num
-	switch C.BITS {
-	case 511:
-		PublicKeySize = 64
-	case 512:
-		PublicKeySize = 64
-	case 1024:
-		PublicKeySize = 128
-	case 2048:
-		PublicKeySize = 256
-	}
+	PublicKeySize = 128
+	PrivateKeySize = C.sizeof_highctidh_1024_private_key
 }
