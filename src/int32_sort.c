@@ -4,9 +4,7 @@
 #if defined(__AVX2__) && HIGHCTIDH_PORTABLE == 0
 
 // This is the original high-ctidh x86_64 sorting code
-#ifndef CGONUTS
 #include "int32_sort_x86.c"
-#endif // CGONUTS
 
 #else /* fallback to portable C code: */
 
