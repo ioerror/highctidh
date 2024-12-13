@@ -19,9 +19,7 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Install Arch deps
-      run: |
-        ./misc/install-arch-deps.sh
-        pacman -Syu --noconfirm autoconf automake libtool
+      run: ./misc/install-arch-deps.sh
 
     - name: Build
       run: |

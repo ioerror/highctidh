@@ -24,7 +24,6 @@ jobs:
     - name: Install alpine deps
       run: |
         ./misc/install-alpine-deps.sh
-        apk add --no-cache autoconf automake libtool
         echo "PKG_CONFIG_PATH=${HOME}/inst/lib/pkgconfig" >> $GITHUB_ENV
 
     - name: Build C library with msan and large stack

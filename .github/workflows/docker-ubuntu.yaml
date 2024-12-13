@@ -19,9 +19,7 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Install Ubuntu deps
-      run: |
-        ./misc/install-debian-deps.sh
-        sudo apt install -y --no-install-recommends autoconf automake libtool
+      run: ./misc/install-debian-deps.sh
 
     - name: Build
       run: |
@@ -41,4 +39,4 @@ jobs:
       run: make examples-run
 
     - name: Examine build artifacts
-      run: ls -alh dist/*.so && sha256sum dist/*.so
+      run: ls -alh .libs/*.so && sha256sum .libs/*.so

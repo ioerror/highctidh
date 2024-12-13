@@ -24,8 +24,8 @@ jobs:
           isainfo -v
           pkgutil -U
           pkg install autoconf automake libtool
-          autoreconf -fi
 
         run: |
+          autoreconf -fi
           ./configure --enable-asm=${{ matrix.ASM }}
           make test-quick

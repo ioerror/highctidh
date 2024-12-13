@@ -19,9 +19,7 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Install Debian testing deps
-      run: |
-        ./misc/install-debian-testing-deps.sh
-        apt install -y --no-install-recommends autoconf automake libtool
+      run: ./misc/install-debian-testing-deps.sh
 
     - name: Build
       run: |

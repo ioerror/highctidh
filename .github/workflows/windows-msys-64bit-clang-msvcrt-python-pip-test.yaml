@@ -24,7 +24,7 @@ jobs:
           python-pip
           python-build
           python-setuptools
-          python-wheel
+          mingw-w64-python-wheel
           python-pytest
           git
           clang

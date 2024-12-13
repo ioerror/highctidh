@@ -275,7 +275,7 @@ func Blind(blindingFactor *PrivateKey, publicKey *PublicKey) (*PublicKey, error)
 }
 
 func init() {
-	if C.BITS != 512 {
+	if C.BITS != 511 {
 		panic("CTIDH/cgo: C.BITS must match template Bits")
 	}
 	validateBitSize(C.BITS)

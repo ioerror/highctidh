@@ -18,9 +18,7 @@ jobs:
       run: ${{ matrix.CC }} -v
 
     - name: Install cross compiler deps
-      run: |
-        sudo ./misc/install-ubuntu-latest-cross-deps.sh
-        sudo apt install -y --no-install-recommends autoconf automake libtool
+      run: sudo ./misc/install-ubuntu-latest-cross-deps.sh
 
     - name: Build 
       run: |

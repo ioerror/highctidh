@@ -19,9 +19,7 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Install Fedora deps
-      run: |
-        ./misc/install-fedora-deps.sh
-        dnf install -y autoconf automake libtool
+      run: ./misc/install-fedora-deps.sh
 
     - name: Build
       run: |

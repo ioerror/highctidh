@@ -21,6 +21,9 @@ jobs:
       run: |
         sudo apt install -y --no-install-recommends autoconf automake libtool pkg-config
         autoreconf -fi
+        ./configure --prefix="${HOME}/inst"
+        make install
+        echo "PKG_CONFIG_PATH=${HOME}/inst/lib/pkgconfig" >> $GITHUB_ENV
 
     - name: Setup Go ${{ matrix.go-version }}
       uses: actions/setup-go@v5

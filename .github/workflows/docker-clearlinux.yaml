@@ -22,9 +22,7 @@ jobs:
       run: swupd info
 
     - name: Install Clear Linux deps
-      run: |
-        ./misc/install-clearlinux-deps.sh
-        swupd bundle-add -y c-basic
+      run: ./misc/install-clearlinux-deps.sh
 
     - name: Build
       run: |

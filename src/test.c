@@ -3,6 +3,9 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#ifdef HAVE_STDINT_H
+#include <stdint.h>
+#endif
 #include "naidne.h"
 #include "steps.h"
 #include "elligator.h"
@@ -10,20 +13,10 @@
 #include "primes.h"
 #include "random.h"
 
-#if defined(__ARM32__) || defined(__i386__)
-#define DFMT "%#llxU, "
-#elif defined(__Darwin__)
-#define DFMT "%#llxU, "
-#elif defined(__OpenBSD__)
-#define DFMT "%#llxU, "
-#elif defined(__sun) && !defined(__i86pc__)
-#define DFMT "%#llxU, "
-#elif defined(__sun) && defined(__i86pc__)
-#define DFMT "%#lxU, "
-#elif (defined(__Windows__) || defined(__WIN64))
-#define DFMT "%#llxU, "
+#ifdef HAVE_STDINT_H
+#define DFMT "%#" PRIx64 "U, "
 #else
-#define DFMT "%#lxU, "
+#define DFMT "%#llxU, "
 #endif
 
 #define dump_uintbig(X) {for (size_t j=0; j<sizeof((X).c)/sizeof((X).c[0]);j++) { printf(DFMT, htole64((X).c[j])); };printf("\n"); }

@@ -19,9 +19,7 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Install devuan deps
-      run: |
-        ./misc/install-devuan-deps.sh
-        apt install -y --no-install-recommends autoconf automake libtool
+      run: ./misc/install-devuan-deps.sh
 
     - name: Build
       run: |

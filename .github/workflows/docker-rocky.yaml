@@ -19,9 +19,7 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Install Rockylinux deps
-      run: |
-        ./misc/install-rocky-deps.sh
-        dnf install -y autoconf automake libtool
+      run: ./misc/install-rocky-deps.sh
 
     - name: Build
       run: |

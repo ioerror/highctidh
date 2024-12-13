@@ -41,7 +41,7 @@ jobs:
 
       - name: Install golang dependencies
         shell: bash
-        run: go get -v src/ctidh511
+        run: go get -v ./src/ctidh511
 
       - name: Build golang
         shell: bash

@@ -19,9 +19,7 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Install Oracle Linux deps
-      run: |
-        ./misc/install-oraclelinux-deps.sh
-        dnf install -y autoconf automake libtool
+      run: ./misc/install-oraclelinux-deps.sh
 
     - name: Build
       run: |

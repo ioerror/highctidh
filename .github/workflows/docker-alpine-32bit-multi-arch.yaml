@@ -24,6 +24,7 @@ jobs:
 
     - name: Install requirements
       run : |
+        sudo apt remove -y containerd
         sudo apt install -y --no-install-recommends docker.io autoconf automake libtool
 
     - name: check kernel

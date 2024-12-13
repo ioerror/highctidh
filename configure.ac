@@ -21,6 +21,9 @@ AM_PROG_AS
 AC_C_INLINE
 AC_DEFINE([_DEFAULT_SOURCE], 1, [htole64])
 
+AC_CHECK_HEADERS([stdint.h])
+AC_CHECK_HEADERS([sys/param.h])
+
 AC_MSG_CHECKING([for Windows])
 case $host in
 cygwin* | mingw* | pw32* | cegcc* | os2* | aix*)
@@ -33,7 +36,6 @@ cygwin* | mingw* | pw32* | cegcc* | os2* | aix*)
 	LTLDFLAGS="-version-info ${lt_current}:${lt_revision}:${lt_age}"
 	LTPROGLDFLAGS="-no-install"
 esac
-AC_CHECK_HEADERS([sys/param.h])
 
 AC_MSG_CHECKING([whether to use ubigint and fp assembly])
 AC_ARG_ENABLE([asm],
