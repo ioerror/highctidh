@@ -23,7 +23,8 @@ jobs:
     - name: Install Ubuntu miminal golang deps
       run: |
         ./misc/install-debian-deps-go-sanitizer.sh
-        apt install -y --no-install-recommends autoconf automake libtool
+        apt install -y --no-install-recommends autoconf automake libtool pkg-config
+        echo "PKG_CONFIG_PATH=${HOME}/inst/lib/pkgconfig" >> $GITHUB_ENV
 
     - name: Build C library with msan
       env:
@@ -31,10 +32,10 @@ jobs:
         LDFLAGS: -Wl,-z,stack-size=0x1F40000
       run: |
         autoreconf -fi
-        ./configure --prefix=$HOME/inst --enable-asm=${{ matrix.ASM }} && make install
+        ./configure --prefix="${HOME}/inst" --disable-shared --enable-static --enable-asm=${{ matrix.ASM }} && make install
 
     - name: Show go env
       run: go env
 
     - name: Build and test with msan
-      run: cd src/ctidh1024 && PKG_CONFIG_PATH="$HOME/inst/lib/pkgconfig" go test -v -msan ./...
+      run: cd src/ctidh1024 && go test -v -msan ./...

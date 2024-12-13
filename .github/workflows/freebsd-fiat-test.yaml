@@ -15,7 +15,7 @@ jobs:
       uses: vmactions/freebsd-vm@v1
       with:
         release: "14.0"
-        envs: 'LANG LD CC MAKE HIGHCTIDH_PORTABLE'
+        envs: 'CC'
         usesh: true
         prepare: |
           uname -a

@@ -25,26 +25,36 @@ jobs:
       run: |
         ./misc/install-alpine-deps.sh
         apk add --no-cache autoconf automake libtool
+        echo "PKG_CONFIG_PATH=${HOME}/inst/lib/pkgconfig" >> $GITHUB_ENV
 
-    - name: Build C library with msan
+    - name: Build C library with msan and large stack
+      if: ${{ matrix.ASM == 'no' }}
       env:
         CFLAGS: -fsanitize=memory -fno-omit-frame-pointer -fsanitize-memory-param-retval -fsanitize-memory-track-origins -g3 -fno-lto
         LDFLAGS: -Wl,-z,stack-size=0x1F40000
       run: |
         autoreconf -fi
-        ./configure --prefix=$HOME/inst --enable-asm=${{ matrix.ASM }} && make install
+        ./configure --prefix="${HOME}/inst" --disable-shared --enable-static --enable-asm=${{ matrix.ASM }} && make install
+
+    - name: Build and install C library with asan and default stack
+      if: ${{ matrix.ASM == 'yes' }}
+      env:
+        CFLAGS: -fsanitize=address -fno-omit-frame-pointer -g3 -fno-lto
+      run: |
+        autoreconf -fi
+        ./configure --prefix="${HOME}/inst" --disable-shared --enable-static --enable-asm=${{ matrix.ASM }} && make install
 
     - name: Show go env
       run: go env
 
     - name: Build and test 511 with msan
-      run: cd src/ctidh511 && PKG_CONFIG_PATH="$HOME/inst/lib/pkgconfig" go test -v -o msan-test -msan ./...
+      run: cd src/ctidh511 && go test -v -o msan-test -msan ./...
 
     - name: Build and test 512 with msan
-      run: cd src/ctidh512 && PKG_CONFIG_PATH="$HOME/inst/lib/pkgconfig" go test -v -o msan-test -msan ./...
+      run: cd src/ctidh512 && go test -v -o msan-test -msan ./...
 
     - name: Build and test 1024 with msan
-      run: cd src/ctidh1024 && PKG_CONFIG_PATH="$HOME/inst/lib/pkgconfig" go test -v -o msan-test -msan ./...
+      run: cd src/ctidh1024 && go test -v -o msan-test -msan ./...
 
     - name: Build and test 2048 with msan
-      run: cd src/ctidh2048 && PKG_CONFIG_PATH="$HOME/inst/lib/pkgconfig" go test -v -o msan-test -msan ./...
+      run: cd src/ctidh2048 && go test -v -o msan-test -msan ./...

@@ -24,27 +24,37 @@ jobs:
     - name: Install alpine deps
       run: |
         ./misc/install-alpine-deps.sh
-        apk add --no-cache autoconf automake libtool
+        apk add --no-cache autoconf automake libtool pkg-config
+        echo "PKG_CONFIG_PATH=${HOME}/inst/lib/pkgconfig" >> $GITHUB_ENV
 
-    - name: Build and install C library with asan
+    - name: Build and install C library with asan and large stack
+      if: ${{ matrix.ASM == 'no' }}
       env:
         CFLAGS: -fsanitize=address -fno-omit-frame-pointer -g3 -fno-lto
         LDFLAGS: -Wl,-z,stack-size=0x1F40000
       run: |
         autoreconf -fi
-        ./configure --prefix="$HOME/inst" --enable-asm=${{ matrix.ASM }} && make install
+        ./configure --prefix="${HOME}/inst" --disable-shared --enable-static --enable-asm=${{ matrix.ASM }} && make install
+
+    - name: Build and install C library with asan and default stack
+      if: ${{ matrix.ASM == 'yes' }}
+      env:
+        CFLAGS: -fsanitize=address -fno-omit-frame-pointer -g3 -fno-lto
+      run: |
+        autoreconf -fi
+        ./configure --prefix="${HOME}/inst" --disable-shared --enable-static --enable-asm=${{ matrix.ASM }} && make install
 
     - name: Show go env
       run: go env
 
     - name: Build and test 511 with asan
-      run: cd src/ctidh511 && PKG_CONFIG_PATH="$HOME/inst/lib/pkgconfig" go test -o asan-test -timeout 0 -asan -v ./...
+      run: cd src/ctidh511 && go test -o asan-test -timeout 0 -asan -v ./...
 
     - name: Build and test 512 with asan
-      run: cd src/ctidh512 && PKG_CONFIG_PATH="$HOME/inst/lib/pkgconfig" go test -o asan-test -timeout 0 -asan -v ./...
+      run: cd src/ctidh512 && go test -o asan-test -timeout 0 -asan -v ./...
 
     - name: Build and test 1024 with asan
-      run: cd src/ctidh1024 && PKG_CONFIG_PATH="$HOME/inst/lib/pkgconfig" go test -o asan-test -timeout 0 -asan -v ./...
+      run: cd src/ctidh1024 && go test -o asan-test -timeout 0 -asan -v ./...
 
     - name: Build and test 2048 with asan
-      run: cd src/ctidh2048 && PKG_CONFIG_PATH="$HOME/inst/lib/pkgconfig" go test -o asan-test -timeout 0 -asan -v ./...
+      run: cd src/ctidh2048 && go test -o asan-test -timeout 0 -asan -v ./...

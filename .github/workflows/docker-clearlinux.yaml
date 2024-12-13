@@ -24,12 +24,12 @@ jobs:
     - name: Install Clear Linux deps
       run: |
         ./misc/install-clearlinux-deps.sh
-        swupd bundle-add -y autoconf automake libtool
+        swupd bundle-add -y c-basic
 
     - name: Build
       run: |
         autoreconf -fi
-        CC=${{ matrix.CC }} CFLAGS="-fno-lto" ./configure --prefix=/usr/local --enable-asm=${{ matrix.ASM }} && make
+        ./configure --prefix=/usr/local --enable-shared --enable-asm=${{ matrix.ASM }} CC=${{ matrix.CC }} CFLAGS="-fno-lto" && make
 
     - name: Test install
       run: sudo make install

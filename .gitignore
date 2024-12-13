@@ -24,6 +24,7 @@ test512
 testrandom
 docker_build_output/
 src/example-ctidh*
+m4/*
 aclocal.m4
 ar-lib
 autom4te.cache/
@@ -35,7 +36,6 @@ depcomp
 install-sh
 libtool
 ltmain.sh
-m4/
 missing
 stamp-h1
 .deps

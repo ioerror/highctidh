@@ -31,4 +31,3 @@ jobs:
           autoreconf -fi
           ./configure
           make
-          # make test-quick

@@ -17,7 +17,7 @@ jobs:
         sudo apt install -y --no-install-recommends autoconf automake libtool
 
     - name: Display compiler version
-      run: ${{ matrix.CC }} -v
+      run: emcc -v
 
-    - name: Build 
-      run: autoreconf -fi && ./configure && make wasm
+    - name: Build
+      run: autoreconf -fi && emconfigure ./configure --disable-shared --enable-static && make wasm

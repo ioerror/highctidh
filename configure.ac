@@ -1,4 +1,4 @@
-AC_INIT([libhighctidh], 1.0.0, [authors], [libhighctidh])
+AC_INIT([libhighctidh],[1.0.0],[authors],[libhighctidh])
 
 # http://www.gnu.org/software/libtool/manual/html_node/Updating-version-info.html
 # http://sourceware.org/autobook/autobook/autobook_91.html
@@ -6,19 +6,18 @@ lt_current="0"
 lt_revision="0"
 lt_age="0"
 
-AM_INIT_AUTOMAKE([1.14 foreign dist-xz no-define subdir-objects])
+AM_INIT_AUTOMAKE([1.14 foreign dist-xz no-define no-dependencies subdir-objects])
 LT_INIT([win32-dll])
 
 AM_MAINTAINER_MODE([disable])
 AC_CONFIG_SRCDIR([src/highctidh.h])
 AC_CONFIG_MACRO_DIR([m4])
-AM_CONFIG_HEADER([config.h])
+AC_CONFIG_HEADERS([config.h])
 m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 
-AC_PREREQ([2.50])
+AC_PREREQ([2.69])
 AC_PROG_CC
 AM_PROG_AS
-AC_PROG_LIBTOOL
 AC_C_INLINE
 AC_DEFINE([_DEFAULT_SOURCE], 1, [htole64])
 

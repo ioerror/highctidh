@@ -210,7 +210,8 @@ pytest:
 
 
 # This produces wasm as a shared library module
-wasm: libhighctidh.la
+wasm: src/dist/highctidh.wasm
+src/dist/highctidh.wasm: libhighctidh.la
 	emcc -v --no-entry -O1 .libs/libhighctidh.a -sSIDE_MODULE=1 -o src/dist/highctidh.wasm
 	ls -al src/dist/highctidh.wasm
 

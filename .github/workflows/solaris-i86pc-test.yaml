@@ -1,11 +1,13 @@
-name: Solaris 11.4 asm i86pc build with gcc
+name: Solaris 11.4 i86pc build with gcc
 
 on: [push]
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    name: Solaris i86pc gcc build of asm backend
+    strategy:
+      matrix:
+        ASM: ["yes", "no"]
     env:
       CC: "gcc"
     steps:
@@ -21,7 +23,9 @@ jobs:
           uname -a
           isainfo -v
           pkgutil -U
+          pkg install autoconf automake libtool
+          autoreconf -fi
 
         run: |
-          ./configure --enable-asm=yes
+          ./configure --enable-asm=${{ matrix.ASM }}
           make test-quick

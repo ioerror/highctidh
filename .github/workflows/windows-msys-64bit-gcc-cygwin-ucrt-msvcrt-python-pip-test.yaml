@@ -51,8 +51,9 @@ jobs:
       shell: msys2 {0}
       run: |
         autoreconf -fi
-        CC=${{ matrix.CC }} ./configure --prefix="$HOME/inst"
+        ./configure --prefix="${HOME}/inst" CC=${{ matrix.CC }}
         make install
+        echo "LD_LIBRARY_PATH=${HOME}/inst/lib" >> $GITHUB_ENV
 
     - name: Build highctidh
       shell: msys2 {0}
@@ -64,6 +65,5 @@ jobs:
     - name: Test with pytest
       shell: msys2 {0}
       run: |
-        export LD_LIBRARY_PATH="$HOME/inst/lib"
         python -c 'from highctidh import bench; bench.simple_bench()'
         pytest -v

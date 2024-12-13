@@ -22,11 +22,13 @@ jobs:
         uses: Homebrew/actions/setup-homebrew@master
 
       - name: Install tools
-        run: brew install make autoconf automake libtool
+        run: |
+          brew install make autoconf automake libtool pkg-config
+          echo PKG_CONFIG_PATH="${HOME}/inst/lib/pkgconfig" >> $GITHUB_ENV
 
       - name: Build and install C library
         shell: bash
-        run: autoreconf -fi && ./configure --prefix="$HOME/inst" --disable-shared --enable-static && make install
+        run: autoreconf -fi && ./configure --prefix="${HOME}/inst" --disable-shared --enable-static && make install
 
       - name: Setup Go ${{ matrix.go-version }}
         uses: actions/setup-go@v5
@@ -44,13 +46,12 @@ jobs:
       - name: Build golang
         shell: bash
         run: |
-          export PKG_CONFIG_PATH="$HOME/inst/lib/pkgconfig"
           go build -v ./...
 
       - name: Golang test
         shell: bash
         run: |
-          go test -v src/ctidh511
-          go test -v src/ctidh512
-          go test -v src/ctidh1024
-          go test -v src/ctidh2048
+          go test -v ./src/ctidh511
+          go test -v ./src/ctidh512
+          go test -v ./src/ctidh1024
+          go test -v ./src/ctidh2048

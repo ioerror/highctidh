@@ -26,7 +26,7 @@
 #define DFMT "%#lxU, "
 #endif
 
-#define dump_uintbig(X) {for (size_t j=0; i<sizeof((X).c)/sizeof((X).c[0]);j++) { printf(DFMT, htole64((X).c[j])); };printf("\n"); }
+#define dump_uintbig(X) {for (size_t j=0; j<sizeof((X).c)/sizeof((X).c[0]);j++) { printf(DFMT, htole64((X).c[j])); };printf("\n"); }
 #define assert_uintbig_eq(X,Y) { \
 	for (size_t i = 0; i<sizeof(X.c)/sizeof(X.c[0]); i++) { \
 	if (X.c[i] != Y.c[i]) { \
@@ -533,22 +533,13 @@ test_deterministic_keygen(void)
 	assert_uintbig_eq(pub_gh3.A.x, deserialized_gh3.A.x);
 	/* to_bytes is a no-op on little-endian archs, and not on big-endian: */
 
-// gcc -E -dM - </dev/null|grep -i __BYTE_ORDER
-# if defined(PLATFORM) && (PLATFORM == sun4v || PLATFORM == i86pc)
-# if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
-  assert(0 != memcmp((void*)&pub_gh3, serialized_gh3, sizeof(pub_gh3)));
-# else
-	assert(0 == memcmp((void*)&pub_gh3, serialized_gh3, sizeof(pub_gh3)));
-# endif
-# endif
-
-# if !defined(__sun)
-# if __BYTE_ORDER == __LITTLE_ENDIAN
-	assert(0 == memcmp((void*)&pub_gh3, serialized_gh3, sizeof(pub_gh3)));
-# else
-	assert(0 != memcmp((void*)&pub_gh3, serialized_gh3, sizeof(pub_gh3)));
-# endif
-# endif
+	char equal = 0 == memcmp((void*)&pub_gh3, serialized_gh3, sizeof(pub_gh3));
+	short int word = 0x0001;
+	char *byte = (char *)&word;
+	if (byte[0])
+		assert(equal);	/* little endian */
+	else
+		assert(!equal);	/* big endian */
 }
 
 static void

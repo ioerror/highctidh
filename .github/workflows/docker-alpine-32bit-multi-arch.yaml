@@ -24,7 +24,7 @@ jobs:
 
     - name: Install requirements
       run : |
-        sudo apt install -y --no-install-recommends docker autoconf automake libtool
+        sudo apt install -y --no-install-recommends docker.io autoconf automake libtool
 
     - name: check kernel
       run: |

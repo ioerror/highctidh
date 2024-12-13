@@ -27,7 +27,7 @@ jobs:
     - name: Build
       run: |
         autoreconf -fi
-        CC=${{ matrix.CC }} CFLAGS="-fno-lto" ./configure --prefix="$HOME/inst" --enable-asm=${{ matrix.ASM }} && make
+        ./configure --prefix="${HOME}/inst" --enable-asm=${{ matrix.ASM }} CC=${{ matrix.CC }} CFLAGS="-fno-lto" && make
 
     - name: Test install
       run: make install

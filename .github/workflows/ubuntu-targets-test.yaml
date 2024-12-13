@@ -25,7 +25,7 @@ jobs:
     - name: Build 
       run: |
         autoreconf -fi
-        CC=${{ matrix.CC }} ./configure --prefix=/usr/local && make
+        ./configure --prefix=/usr/local --enable-shared CC=${{ matrix.CC }} && make
 
     - name: Install
       run: sudo make install && sudo ldconfig

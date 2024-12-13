@@ -21,8 +21,9 @@ jobs:
     - name: Build and install C library
       run: |
         autoreconf -fi
-        CC=${{ matrix.CC }} CFLAGS="-fno-lto" ./configure --prefix="${HOME}/inst" --enable-asm=${{ matrix.ASM }}
+        ./configure --prefix="${HOME}/inst" --enable-asm=${{ matrix.ASM }} CC=${{ matrix.CC }} CFLAGS="-fno-lto"
         make install
+        echo "LD_LIBRARY_PATH=${HOME}/inst/lib" >> $GITHUB_ENV
 
     - name: Build Debian package
       run: make deb
@@ -34,7 +35,7 @@ jobs:
       run: dpkg -L python3-highctidh
 
     - name: Run pytest
-      run: LD_LIBRARY_PATH="${HOME}/inst/lib" make pytest
+      run: make pytest
 
     - name: Print hashes
       run: sha256sum dist/*.deb && ls -alh dist/*.deb
