@@ -3,9 +3,6 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#ifdef HAVE_STDINT_H
-#include <stdint.h>
-#endif
 #include "naidne.h"
 #include "steps.h"
 #include "elligator.h"
@@ -14,6 +11,7 @@
 #include "random.h"
 
 #ifdef HAVE_STDINT_H
+#include <stdint.h>
 #define DFMT "%#" PRIx64 "U, "
 #else
 #define DFMT "%#llxU, "

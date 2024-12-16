@@ -21,7 +21,7 @@ jobs:
       uses: Homebrew/actions/setup-homebrew@master
 
     - name: Install tools
-      run: brew install make autoconf automake libtool
+      run: brew install --force make autoconf automake libtool
 
     - name: Gather kernel environment
       run: |

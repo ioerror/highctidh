@@ -36,7 +36,6 @@ libtool
 ltmain.sh
 missing
 stamp-h1
-.deps
 .dirstamp
 .libs
 *.lo
@@ -63,6 +62,7 @@ libhighctidh.pc
 configure
 config.h
 config.h.in
+config.h.in~
 config.log
 Makefile.in
 Makefile

@@ -37,7 +37,7 @@ jobs:
 
       - name: Build and install C library
         shell: bash
-        run: autoreconf -fi && ./configure --prefix="${HOME}/inst" --disable-shared --enable-static && make install
+        run: misc/autogen.sh && ./configure --prefix="${HOME}/inst" --disable-shared --enable-static && make install
 
       - name: Setup Go ${{ matrix.go-version }}
         uses: actions/setup-go@v5

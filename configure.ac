@@ -41,17 +41,15 @@ AC_MSG_CHECKING([whether to use ubigint and fp assembly])
 AC_ARG_ENABLE([asm],
 	[AS_HELP_STRING([--enable-asm], [use ubigint and fp assembly for x86_64 BMI2 or armv8 SVE2])],
 	[case "$enableval" in
-		yes) asm=true ;;
-		no) asm=false ;;
+		yes) asm=yes ;;
+		no) asm=no ;;
 		*) AC_MSG_ERROR([bad value ${enableval} for --enable-asm]) ;;
-	esac], [asm=false])
-if test "x$asm" = "xtrue"; then
-	AC_MSG_RESULT([yes])
+	esac], [asm=no])
+AC_MSG_RESULT([$asm])
+if test "x$asm" = "xyes"; then
 	AC_DEFINE([ENABLE_ASM], 1, [optimized ubigint and fp assembly])
-elif test "x$asm" = "xfalse"; then
-	AC_MSG_RESULT([no])
 fi
-AM_CONDITIONAL(ENABLE_ASM, test "x$asm" = "xtrue")
+AM_CONDITIONAL(ENABLE_ASM, test "x$asm" = "xyes")
 
 AM_CFLAGS="-std=c11 -O2 -pedantic \
 	-Wall -Wundef -Wunused -Wshadow -Wextra -Werror \

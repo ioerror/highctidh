@@ -1,25 +1,9 @@
-#ifndef HIGHCTIDH_INT32_SORT_H
-#define HIGHCTIDH_INT32_SORT_H
-
 #include "config.h"
 
 #if defined(ENABLE_ASM) && defined(__AVX2__)
 
 // This is the original high-ctidh x86_64 sorting code
-#define int32_MINMAX(a,b)			\
-do { \
-  int32 temp1; \
-  __asm__( \
-    ".att_syntax prefix\n\t" \
-    "cmpl %1,%0\n\t" \
-    "mov %0,%2\n\t" \
-    "cmovg %1,%0\n\t" \
-    "cmovg %2,%1\n\t" \
-    : "+r"(a), "+r"(b), "=r"(temp1) \
-    : \
-    : "cc" \
-  ); \
-} while(0)
+#include "int32_sort_x86.c"
 
 #else /* fallback to portable C code: */
 
@@ -27,12 +11,7 @@ do { \
 #include "int32_sort.h"
 #define int32 int32_t
 
-#define int32_MINMAX(a,b) do {			\
-  register const int32_t big = (a > b ? a : b); \
-  register const int32_t small = (a > b ? b : a); \
-  a = small; \
-  b = big; \
-} while (0);
+#include "int32_minmax.h"
 
 void int32_sort(int32 *x,long long n)
 {
@@ -61,4 +40,3 @@ void int32_sort(int32 *x,long long n)
 }
 
 #endif /* end ENABLE_ASM */
-#endif /* HIGHCTIDH_INT32_SORT_H */

@@ -28,6 +28,6 @@ jobs:
           echo $SHELL
 
         run: |
-          autoreconf -fi
+          misc/autogen.sh
           ./configure
           make test-quick

@@ -7,6 +7,7 @@ on:
 
 env:
   CC: clang
+  CGO_LDFLAGS: -Wl,-z,stack-size=0x1F40000
 
 jobs:
   docker:
@@ -35,10 +36,10 @@ jobs:
         autoreconf -fi
         ./configure --prefix="${HOME}/inst" --disable-shared --enable-static --enable-asm=${{ matrix.ASM }} && make install
 
-    - name: Build and install C library with asan and default stack
+    - name: Build C library with msan and default stack
       if: ${{ matrix.ASM == 'yes' }}
       env:
-        CFLAGS: -fsanitize=address -fno-omit-frame-pointer -g3 -fno-lto
+        CFLAGS: -fsanitize=memory -fno-omit-frame-pointer -fsanitize-memory-param-retval -fsanitize-memory-track-origins -g3 -fno-lto
       run: |
         autoreconf -fi
         ./configure --prefix="${HOME}/inst" --disable-shared --enable-static --enable-asm=${{ matrix.ASM }} && make install
