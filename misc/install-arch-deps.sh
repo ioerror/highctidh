@@ -1,5 +1,5 @@
 #!/bin/sh
-set -e;
+set -ex;
 
 echo "Installing required packages...";
 pacman -Syu --noconfirm gcc clang make sudo python3 python-devtools python-build python-flit \
