@@ -16,7 +16,7 @@ void poly_mul_high(fp *c,long long cstart,const fp *a,long long alen,const fp *b
 void poly_mul_mid(fp *c,long long cstart,long long clen,const fp *a,long long alen,const fp *b,long long blen);
 
 /* input (and output) polynomials are self-reciprocal */
-void poly_mul_selfreciprocal(fp *c,const fp *a,long long alen,const fp *b,long long blen);
+void poly_mul_selfreciprocal(fp *c,fp *a,long long alen,fp *b,long long blen);
 
 /* input: T[0...3n-1] has n 3-coeff polys */
 /* output: T[0...2n] has 1 (2n+1)-coeff poly */
