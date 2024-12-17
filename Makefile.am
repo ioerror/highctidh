@@ -204,7 +204,7 @@ test-go:
 
 PYTEST ?= pytest-3
 pytest:
-	$(PYTEST) --rootdir=src -v -n auto --doctest-modules
+	$(PYTEST) --rootdir=src --import-mode=importlib --ignore=upstream-python -v -n auto --doctest-modules
 
 
 # This produces wasm as a shared library module

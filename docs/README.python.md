@@ -15,7 +15,7 @@ To use this module with pip: `pip install highctidh`
 
 Run the unit tests in the root of the project:
 
-    python3 -m unittest -v
+    python3 -m unittest -v src
 
 Alternatively with pytest in the root of the project:
 
@@ -23,8 +23,8 @@ Alternatively with pytest in the root of the project:
 
 Build and install the Python module:
 
-    python3 -m build
-    pip install dist/highctidh-*-py3-none-any.whl
+    python3 -m build src
+    pip install src/dist/highctidh-*-py3-none-any.whl
 
 Alternatively, rather than using `python3 -m build` pip may be used:
 
