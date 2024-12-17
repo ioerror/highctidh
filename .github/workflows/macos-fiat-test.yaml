@@ -9,7 +9,7 @@ jobs:
   build:
     strategy:
       matrix:
-        OS: ["macos-12", "macos-13", "macos-14", "macos-latest"]
+        OS: ["macos-13", "macos-14", "macos-latest"]
         CC: ["clang"]
       fail-fast: false
     runs-on: ${{ matrix.OS }}

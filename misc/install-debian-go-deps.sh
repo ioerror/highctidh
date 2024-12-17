@@ -4,7 +4,7 @@ set -e
 dpkg --add-architecture i386;
 apt update > /dev/null #2>&1;
 echo "Installing required packages...";
-apt install -y --no-install-recommends make gcc clang git build-essential \
+apt install -y --no-install-recommends make gcc clang git build-essential gcc-multilib \
     gcc-mipsel-linux-gnu gcc-mips64-linux-gnuabi64 gcc-mips64el-linux-gnuabi64 \
     gccgo-i686-linux-gnu gcc-powerpc64le-linux-gnu gcc-riscv64-linux-gnu \
     gcc-s390x-linux-gnu gcc-aarch64-linux-gnu gcc-arm-linux-gnueabi golang \
