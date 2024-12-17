@@ -5,7 +5,7 @@ on:
     branches: [ "main" ]
 jobs:
   multiarch:
-    runs-on: ubuntu-latest
+    runs-on: ["ubuntu:24.10"]
     strategy:
       matrix:
         CC: ["clang"]
