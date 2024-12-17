@@ -20,14 +20,13 @@ jobs:
         prepare: |
           uname -a
           pkg_add bash
-          pkg_add autoconf
-          pkg_add automake
-          pkg_add libtool
+          pkg_add autoconf-2.71 automake-1.16.5 libtool
           make -v
           clang -v
           echo $SHELL
 
         run: |
+          autoreconf -fi || echo okay anyway
           misc/autogen.sh
           ./configure --disable-silent-rules
           make test-quick

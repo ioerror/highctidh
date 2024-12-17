@@ -23,7 +23,9 @@ jobs:
           uname -a
           isainfo -v
           pkgutil -U
-          pkg install autoconf automake libtool
+          pkg install autoconf
+          pkg install automake
+          pkg install libtool
 
         run: |
           autoreconf -fi
