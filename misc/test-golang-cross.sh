@@ -3,7 +3,7 @@
 # Test cross compile of golang module using clang
 # This is meant to be called as part of `.woodpecker/golang.yaml`
 #
-set -e;
+set -ex;
 
 export ARCH=$1;
 export ARCH_ALT=$ARCH;
@@ -38,7 +38,7 @@ then
     then
         export ARCH_ALT=arm-linux-gnueabihf;
         export CGO_CFLAGS_ALLOW="-fforce-enable-int128";
-        export EXTRA_FLAGS="-fforce-enable-int128 -mfloat-abi=hard";
+        export EXTRA_FLAGS="-fforce-enable-int128 -mfloat-abi=soft";
         export EXTRA_INCLUDE="-I /usr/$ARCH_ALT/include/";
         export GOARCH=arm;
         export GOARM=5;
