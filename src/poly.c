@@ -386,7 +386,7 @@ void poly_mul_low(fp *c,long long clen,const fp *a,long long alen,const fp *b,lo
   return;
 }
 
-void poly_mul_selfreciprocal(fp *c,const fp *a,long long alen,const fp *b,long long blen)
+void poly_mul_selfreciprocal(fp *c,fp *a,long long alen,fp *b,long long blen)
 {
   if (!alen) return;
   if (!blen) return;
