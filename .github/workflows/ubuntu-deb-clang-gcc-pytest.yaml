@@ -11,17 +11,17 @@ jobs:
     strategy:
       matrix:
         CC: ["clang", "gcc"]
-        ASM: ["yes", "no"]
+        ASM: ["asm=yes", "asm=no"]
     steps:
     - uses: actions/checkout@v4
 
     - name: Install Python deps for testing
-      run: sudo bash -c "./misc/install-debian-deps.sh && apt install -y --no-install-recommends autoconf automake libtool"
+      run: sudo bash -c ./misc/install-debian-deps.sh
 
     - name: Build and install C library
       run: |
         autoreconf -fi
-        ./configure --prefix="${HOME}/inst" --enable-asm=${{ matrix.ASM }} CC=${{ matrix.CC }} CFLAGS="-fno-lto"
+        ./configure --prefix="${HOME}/inst" --disable-silent-rules --enable-${{ matrix.ASM }} CC=${{ matrix.CC }} CFLAGS="-fno-lto"
         make install
         echo "LD_LIBRARY_PATH=${HOME}/inst/lib" >> $GITHUB_ENV
 

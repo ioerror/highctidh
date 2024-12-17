@@ -53,8 +53,8 @@ EXTRA_LTLIBRARIES = libbase.la libcommon511.la libcommon512.la libcommon1024.la 
 libbase_la_SOURCES = \
 	src/crypto_classify.c \
 	src/crypto_declassify.c \
-	src/randombytes.c \
 	src/int32_sort.c \
+	src/randombytes.c \
 	src/random.c \
 	src/steps.c \
 	src/steps_untuned.c

@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         CC: ["clang", "gcc"]
-        ASM: ["yes", "no"]
+        ASM: ["asm=yes", "asm=no"]
         CONTAINER: ["ubuntu:22.04", "ubuntu:23.10", "ubuntu:24.04"]
       fail-fast: false
     container: ${{ matrix.CONTAINER }}
@@ -24,7 +24,7 @@ jobs:
     - name: Build
       run: |
         autoreconf -fi
-        ./configure --prefix=/usr/local --enable-shared --enable-asm=${{ matrix.ASM }} CC=${{ matrix.CC }} CFLAGS="-fno-lto" && make
+        ./configure --prefix=/usr/local --disable-silent-rules --enable-shared --enable-${{ matrix.ASM }} CC=${{ matrix.CC }} CFLAGS="-fno-lto" && make
 
     - name: Test install
       run: make install

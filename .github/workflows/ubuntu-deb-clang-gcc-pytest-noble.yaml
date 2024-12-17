@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         CC: ["clang-14", "gcc"]
-        ASM: ["yes", "no"]
+        ASM: ["asm=yes", "asm=no"]
     steps:
     - uses: actions/checkout@v4
 
@@ -21,7 +21,7 @@ jobs:
     - name: Build and install C library
       run: |
         autoreconf -fi
-        ./configure --prefix="${HOME}/inst" --enable-asm=${{ matrix.ASM }} CC=${{ matrix.CC }} CFLAGS="-fno-lto"
+        ./configure --prefix="${HOME}/inst" --disable-silent-rules --enable-${{ matrix.ASM }} CC=${{ matrix.CC }} CFLAGS="-fno-lto"
         make install
         echo "LD_LIBRARY_PATH=${HOME}/inst/lib" >> $GITHUB_ENV
 

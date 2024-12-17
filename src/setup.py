@@ -13,4 +13,3 @@ if __name__ == "__main__":
             bdist_deb=bdist_deb, sdist_dsc=sdist_dsc
         ),
     )
-#        libraries=["highctidh_511"],

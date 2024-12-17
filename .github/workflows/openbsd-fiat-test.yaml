@@ -29,5 +29,5 @@ jobs:
 
         run: |
           misc/autogen.sh
-          ./configure
+          ./configure --disable-silent-rules
           make test-quick

@@ -51,7 +51,7 @@ jobs:
       shell: msys2 {0}
       run: |
         misc/autogen.sh
-        ./configure --prefix="${HOME}/inst" CC=${{ matrix.CC }}
+        ./configure --prefix="${HOME}/inst" --disable-silent-rules CC=${{ matrix.CC }}
         make install
         echo "LD_LIBRARY_PATH=${HOME}/inst/lib" >> $GITHUB_ENV
 

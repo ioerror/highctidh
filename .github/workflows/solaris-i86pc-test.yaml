@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ASM: ["yes", "no"]
+        ASM: ["asm=yes", "asm=no"]
     env:
       CC: "gcc"
     steps:
@@ -27,5 +27,5 @@ jobs:
 
         run: |
           autoreconf -fi
-          ./configure --enable-asm=${{ matrix.ASM }}
+          ./configure --disable-silent-rules --enable-${{ matrix.ASM }}
           make test-quick

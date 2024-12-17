@@ -34,4 +34,4 @@ jobs:
 
     - name: compile and test-quick
       shell: bash
-      run: misc/autogen.sh && ./configure && make test-quick
+      run: misc/autogen.sh && ./configure --disable-silent-rules && make test-quick

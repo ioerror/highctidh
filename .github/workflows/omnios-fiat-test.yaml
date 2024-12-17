@@ -28,5 +28,5 @@ jobs:
 
         run: |
           autoreconf -fi
-          ./configure
+          ./configure --disable-silent-rules
           make test-quick

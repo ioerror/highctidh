@@ -20,5 +20,5 @@ jobs:
     - name: Build
       run: |
         autoreconf -fi
-        emconfigure ./configure --disable-shared --enable-static || cat config.log
+        emconfigure ./configure --disable-silent-rules --disable-shared --enable-static || cat config.log
         make wasm

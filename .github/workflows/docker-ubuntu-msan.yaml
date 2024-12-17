@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ASM: ["yes", "no"]
+        ASM: ["asm=yes", "asm=no"]
         CONTAINER: ["ubuntu:23.10", "ubuntu:24.04"]
       fail-fast: false
     container: ${{ matrix.CONTAINER }}
@@ -32,7 +32,7 @@ jobs:
         LDFLAGS: -Wl,-z,stack-size=0x1F40000
       run: |
         autoreconf -fi
-        ./configure --prefix="${HOME}/inst" --disable-shared --enable-static --enable-asm=${{ matrix.ASM }} && make install
+        ./configure --prefix="${HOME}/inst" --disable-silent-rules --disable-shared --enable-static --enable-${{ matrix.ASM }} && make install
 
     - name: Show go env
       run: go env

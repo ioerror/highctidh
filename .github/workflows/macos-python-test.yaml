@@ -36,7 +36,7 @@ jobs:
       shell: bash
       run: |
         autoreconf -fi
-        ./configure --prefix="${HOME}/inst"
+        ./configure --prefix="${HOME}/inst" --disable-silent-rules
         make install
 
     - name: Install Python dependencies

@@ -23,7 +23,7 @@ jobs:
     - name: Build 
       run: |
         autoreconf -fi
-        ./configure --prefix=/usr/local --enable-shared CC=${{ matrix.CC }} && make
+        ./configure --prefix=/usr/local --disable-silent-rules --enable-shared CC=${{ matrix.CC }} && make
 
     - name: Install
       run: sudo make install && sudo ldconfig

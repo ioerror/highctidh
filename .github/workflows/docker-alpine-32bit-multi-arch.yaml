@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         CC: ["clang"]
-        ASM: ["no"]
+        ASM: ["asm=no"]
         CONTAINER: ["alpine"]
         DOCKER_ARCH_ARGS: ["--platform linux/arm/v6 arm32v6/alpine",
                            "--platform linux/arm/v7 arm32v7/alpine",
@@ -42,4 +42,4 @@ jobs:
           --rm \
           ${{ matrix.DOCKER_ARCH_ARGS}} \
           /bin/sh \
-          -c "./misc/docker-gha-fixup.sh && ./configure --enable-asm=${{ matrix.ASM }} && make alpine-multi-arch"
+          -c "./misc/docker-gha-fixup.sh && ./configure --disable-silent-rules --enable-${{ matrix.ASM }} && make alpine-multi-arch"

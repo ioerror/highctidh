@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ASM: ["yes", "no"]
+        ASM: ["asm=yes", "asm=no"]
         CONTAINER: ["alpine:3.19.1", "alpine:3.19", "alpine:3.18.6",
                     "alpine:3.18", "alpine:3.17.7", "alpine:3.17"]
       fail-fast: false
@@ -28,21 +28,21 @@ jobs:
         echo "PKG_CONFIG_PATH=${HOME}/inst/lib/pkgconfig" >> $GITHUB_ENV
 
     - name: Build C library with msan and large stack
-      if: ${{ matrix.ASM == 'no' }}
+      if: ${{ matrix.ASM == 'asm=no' }}
       env:
         CFLAGS: -fsanitize=memory -fno-omit-frame-pointer -fsanitize-memory-param-retval -fsanitize-memory-track-origins -g3 -fno-lto
         LDFLAGS: -Wl,-z,stack-size=0x1F40000
       run: |
         autoreconf -fi
-        ./configure --prefix="${HOME}/inst" --disable-shared --enable-static --enable-asm=${{ matrix.ASM }} && make install
+        ./configure --prefix="${HOME}/inst" --disable-silent-rules --disable-shared --enable-static --enable-${{ matrix.ASM }} && make install
 
     - name: Build C library with msan and default stack
-      if: ${{ matrix.ASM == 'yes' }}
+      if: ${{ matrix.ASM == 'asm=yes' }}
       env:
         CFLAGS: -fsanitize=memory -fno-omit-frame-pointer -fsanitize-memory-param-retval -fsanitize-memory-track-origins -g3 -fno-lto
       run: |
         autoreconf -fi
-        ./configure --prefix="${HOME}/inst" --disable-shared --enable-static --enable-asm=${{ matrix.ASM }} && make install
+        ./configure --prefix="${HOME}/inst" --disable-shared --enable-static --enable-${{ matrix.ASM }} && make install
 
     - name: Show go env
       run: go env
