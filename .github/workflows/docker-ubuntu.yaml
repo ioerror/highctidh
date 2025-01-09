@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         CC: ["clang", "gcc"]
-        ASM: ["asm=yes", "asm=no"]
+        ASM: ["asm=no", "asm=yes"]
         CONTAINER: ["ubuntu:22.04", "ubuntu:24.04", "ubuntu:24.10"]
       fail-fast: false
     container: ${{ matrix.CONTAINER }}
