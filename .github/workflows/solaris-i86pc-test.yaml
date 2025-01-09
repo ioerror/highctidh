@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-24.04
     strategy:
       matrix:
-        ASM: [asm=yes, asm=no]
+        ASM: [asm=no, asm=yes]
     env:
       LANG: "C"
       CC: "gcc"

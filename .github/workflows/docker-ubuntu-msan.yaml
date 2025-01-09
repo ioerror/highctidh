@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-24.04
     strategy:
       matrix:
-        ASM: [asm=yes, asm=no]
+        ASM: [asm=no, asm=yes]
         CONTAINER: ["ubuntu:24.04", "ubuntu:24.10"]
       fail-fast: false
     container: ${{ matrix.CONTAINER }}
