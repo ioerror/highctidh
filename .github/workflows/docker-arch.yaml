@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         CC: ["clang", "gcc"]
-        ASM: [asm=yes, asm=no]
+        ASM: [asm=no, asm=yes]
         CONTAINER: ["archlinux:latest"]
       fail-fast: false
     container: ${{ matrix.CONTAINER }}
