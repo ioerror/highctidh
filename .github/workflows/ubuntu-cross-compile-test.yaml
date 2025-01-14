@@ -14,11 +14,11 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Display compiler version
-      run: ${{ matrix.CC }} -v
-
     - name: Install cross compiler deps
       run: sudo ./misc/install-ubuntu-latest-cross-deps.sh
+
+    - name: Display compiler version
+      run: ${{ matrix.CC }} -v
 
     - name: Build with cross compiler
       run: misc/test-c-lib-cross-${{ matrix.CC }}.sh
