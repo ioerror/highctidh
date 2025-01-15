@@ -43,16 +43,14 @@ void randombytes(void *x, size_t l)
  * FOR A CVE!
  */
 
-ssize_t getrandom(char *buf, size_t buflen);
 #include <windows.h>
 #include <ntsecapi.h>
-#define getrandom(x, y) RtlGenRandom(x, y)
 
 void randombytes(void *x, size_t l)
 {
   ssize_t n;
   for (size_t i = 0; i < l; i += n)
-    if (0 >= (n = getrandom((char *) x + i, l - i)))
+    if (0 >= (n = RtlGenRandom((char *) x + i, l - i)))
       exit(2);
   crypto_classify(x,l);
 }
