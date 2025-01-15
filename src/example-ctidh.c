@@ -33,7 +33,6 @@ void print_hex_key(void *k, unsigned int l)
     printf("%02x", i[(unsigned char *) k]);
   }
   printf("\n");
-  fflush(stdout);
 }
 
 int main(void);
@@ -44,15 +43,14 @@ int main(void)
   public_key s_a, s_b;
   bool ok = 0;
 
+  setvbuf(stdout, NULL, _IOLBF, 4096);
+
   printf("CTIDH %i vector example\n\n", BITS);
-  fflush(stdout);
 
   printf("Generating Alice's private_key (%zu bytes):\n", sizeof sk_a);
-  fflush(stdout);
   csidh_private(&sk_a);
   print_hex_key(&sk_a, sizeof sk_a);
   printf("Generating Alice's public_key (%zu bytes):\n", sizeof pk_a);
-  fflush(stdout);
   ok = csidh(&pk_a, &base, &sk_a);
   if (!validate(&pk_a))
   {
@@ -61,14 +59,11 @@ int main(void)
   print_hex_key(&pk_a, sizeof pk_a);
   printf("Result: %i\n", ok);
   printf("\n");
-  fflush(stdout);
 
   printf("Generating Bob's private_key (%zu bytes):\n", sizeof sk_b);
-  fflush(stdout);
   csidh_private(&sk_b);
   print_hex_key(&sk_b, sizeof sk_b);
   printf("Generating Bob's public_key (%zu bytes):\n", sizeof pk_b);
-  fflush(stdout);
   ok = csidh(&pk_b, &base, &sk_b);
   if (!validate(&pk_a))
   {
@@ -77,23 +72,18 @@ int main(void)
   print_hex_key(&pk_b, sizeof pk_b);
   printf("Result: %i\n", ok);
   printf("\n");
-  fflush(stdout);
 
   printf("Computing DH for Alice (%zu bytes):\n", sizeof s_a);
-  fflush(stdout);
   ok = csidh(&s_a, &pk_b, &sk_a);
   print_hex_key(&s_a, sizeof s_a);
   printf("Result: %i\n", ok);
   printf("\n");
-  fflush(stdout);
 
   printf("Computing DH for Bob (%zu bytes):\n", sizeof s_b);
-  fflush(stdout);
   ok = csidh(&s_b, &pk_a, &sk_b);
   print_hex_key(&s_b, sizeof s_b);
   printf("Result: %i\n", ok);
   printf("\n");
-  fflush(stdout);
 
   printf("Shared keys ...");
   if (!memcmp(&s_a, &s_b, sizeof s_a))
@@ -104,6 +94,5 @@ int main(void)
     printf(" do not match\n");
     ok = 1;
   }
-  fflush(stdout);
   return ok;
 }
