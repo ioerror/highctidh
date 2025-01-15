@@ -77,10 +77,10 @@ fp_mul3(fp *const x, fp const *const y, fp const *const z)
 */
 //void fp_mul3 () __attribute__ ((weak, alias ("fiat_p512_mul")));
 #if HIGHCTIDH_PORTABLE == 1
-#define highctidh_511_fp_mul3(a,b,c) FIAT_BITS(mul)((uint64_t *)a,(const uint64_t*)b,(const uint64_t*)c)
-#define highctidh_512_fp_mul3(a,b,c) FIAT_BITS(mul)((uint64_t *)a,(const uint64_t*)b,(const uint64_t*)c)
-#define highctidh_1024_fp_mul3(a,b,c) FIAT_BITS(mul)((uint64_t *)a,(const uint64_t*)b,(const uint64_t*)c)
-#define highctidh_2048_fp_mul3(a,b,c) FIAT_BITS(mul)((uint64_t *)a,(const uint64_t*)b,(const uint64_t*)c)
+#define highctidh_511_fp_mul3(a,b,c) fiat_p511_mul((uint64_t *)a,(const uint64_t*)b,(const uint64_t*)c)
+#define highctidh_512_fp_mul3(a,b,c) fiat_p512_mul((uint64_t *)a,(const uint64_t*)b,(const uint64_t*)c)
+#define highctidh_1024_fp_mul3(a,b,c) fiat_p1024_mul((uint64_t *)a,(const uint64_t*)b,(const uint64_t*)c)
+#define highctidh_2048_fp_mul3(a,b,c) fiat_p2048_mul((uint64_t *)a,(const uint64_t*)b,(const uint64_t*)c)
 #endif
 
 #if HIGHCTIDH_PORTABLE == 0
