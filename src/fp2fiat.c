@@ -225,7 +225,8 @@ uintbig_setbit(uintbig *const x, const uint64_t bitoffset)
 	assert(sizeof(x->c)*8 > bitoffset); // bounds check
 	_Static_assert(sizeof(x->c[0]) == 64/8, "element not 64 bits long");
 	// TODO not tested
-	x->c[bitoffset / 64] |= (1 << (bitoffset % 64));
+	if (bitoffset < sizeof(x->c)*8)
+		x->c[bitoffset / 64] |= 1 << (bitoffset % 64);
 	assert(uintbig_bit(x, bitoffset) == 1);
 }
 
