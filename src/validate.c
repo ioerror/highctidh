@@ -1,5 +1,6 @@
 #include <string.h>
 #include <assert.h>
+#include <stdbool.h>
 
 #include "csidh.h"
 #include "primes.h"

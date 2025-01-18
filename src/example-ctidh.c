@@ -23,6 +23,7 @@
  * */
 
 #include <stdio.h>
+#include <stdbool.h>
 #include <libhighctidh/csidh.h>
 
 void print_hex_key(void *k, unsigned int l)
