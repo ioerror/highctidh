@@ -3,7 +3,6 @@
 
 #include "uintbig_namespace.h"
 
-#include <stdbool.h>
 #include <stdint.h>
 #include "annotations.h"
 
