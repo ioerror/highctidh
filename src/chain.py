@@ -18,7 +18,7 @@ def chain(m,n):
   assert m&1
   assert n >= 0
 
-  if n == 2 or ((n&1) and n <= m): 
+  if n == 2 or ((n&1) and n <= m):
     return [1,2]+list(range(3,m+1,2))
 
   if n == m+2:
