@@ -1,4 +1,4 @@
-name: Alpine multi-arch docker 64bit build and test (clang)
+name: Alpine multi-arch docker build and test (clang)
 on:
   push:
   pull_request:
@@ -11,11 +11,16 @@ jobs:
         CC: ["clang"]
         ASM: ["asm=no"]
         CONTAINER: ["alpine"]
-        DOCKER_ARCH_ARGS: ["--platform linux/arm64/v8 arm64v8/alpine",
+        DOCKER_ARCH_ARGS: [
+                      "--platform linux/arm/v6 arm32v6/alpine",
+                      "--platform linux/arm/v7 arm32v7/alpine",
+                      "--platform linux/i386 i386/alpine",
+                      "--platform linux/arm64/v8 arm64v8/alpine",
                       "--platform linux/amd64 amd64/alpine",
                       "--platform linux/riscv64 riscv64/alpine:edge",
                       "--platform linux/ppc64le ppc64le/alpine",
-                      "--platform linux/s390x s390x/alpine"]
+                      "--platform linux/s390x s390x/alpine",
+        ]
       fail-fast: false
     steps:
     - name: Set up QEMU
