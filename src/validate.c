@@ -9,7 +9,7 @@
 
 static int validate_rec(proj *P, proj const *A, long long lower, long long upper, uintbig *order, int *criticaltestdone)
 {
-    proj Q;
+    proj Q = { fp_1, fp_0 };
     proj A24;
     xA24(&A24,A);
 
