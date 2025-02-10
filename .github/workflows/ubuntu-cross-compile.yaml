@@ -29,8 +29,8 @@ jobs:
       with:
         go-version: ${{ matrix.go-version }}
 
-    - name: Install Golang deps
-      run: sudo ./misc/install-debian-go-deps-by-arch.sh ${{ matrix.ARCH }}
+    - name: Install cross compiler deps
+      run: misc/install-deps.sh x-ubuntu-24.04-cross ${{ matrix.ARCH }}
 
     - name: Run autoreconf
       run: autoreconf -fi

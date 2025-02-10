@@ -17,7 +17,7 @@ steps:
      - PATH=$PATH:~/.local/bin
      - export WORKDIR=`pwd`
      - export CC=${CC}
-     - ./misc/install-alpine-deps.sh
+     - misc/install-deps.sh alpine
      - mkdir dist
      - CC=$CC make
      - CC=$CC make install
