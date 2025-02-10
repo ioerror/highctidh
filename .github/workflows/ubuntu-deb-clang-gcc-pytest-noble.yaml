@@ -16,7 +16,7 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Install Python deps for testing
-      run: sudo bash -c ./misc/install-ubuntu-deps.sh
+      run: misc/install-deps.sh ubuntu
 
     - name: Build and install C library
       run: |

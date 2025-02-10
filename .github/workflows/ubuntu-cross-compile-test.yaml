@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.10
     strategy:
       matrix:
         CC: ["clang", "gcc"]
@@ -18,7 +18,7 @@ jobs:
       run: ${{ matrix.CC }} -v
 
     - name: Install cross compiler deps
-      run: sudo ./misc/install-ubuntu-latest-cross-deps.sh
+      run: misc/install-deps.sh x-ubuntu-24.10-cross
 
     - name: Build with cross compiler
       run: CFLAGS="-fno-lto" ./misc/test-c-lib-cross-${{ matrix.CC }}.sh

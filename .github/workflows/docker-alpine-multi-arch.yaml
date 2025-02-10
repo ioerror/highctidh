@@ -48,4 +48,4 @@ jobs:
           --rm \
           ${{ matrix.DOCKER_ARCH_ARGS}} \
           /bin/sh \
-          -c "./misc/install-alpine-deps.sh && ./misc/docker-gha-fixup.sh && autoreconf -fi && ./configure --disable-silent-rules --enable-${{ matrix.ASM }} && make install examples-run test-python && ls -alh .libs/*.so* && sha256sum .libs/*.so"
+          -c "misc/install-deps.sh alpine && ./misc/docker-gha-fixup.sh && autoreconf -fi && ./configure --disable-silent-rules --enable-${{ matrix.ASM }} && make install examples-run test-python && ls -alh .libs/*.so* && sha256sum .libs/*.so"
