@@ -30,7 +30,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Install requirements
-      run : sudo apt update && sudo apt install -y --no-install-recommends autoconf automake libtool
+      run: misc/install-deps.sh ubuntu
 
     - name: check kernel
       run: |
@@ -47,4 +47,4 @@ jobs:
           --rm \
           ${{ matrix.DOCKER_ARCH_ARGS}} \
           /bin/sh \
-          -c "./misc/install-alpine-deps.sh && ./misc/docker-gha-fixup.sh && autoreconf -fi && ./configure --disable-silent-rules --enable-${{ matrix.ASM }} && make install examples-run test-python && ls -alh .libs/*.so* && sha256sum .libs/*.so"
+          -c "misc/install-deps.sh alpine --python && misc/docker-gha-fixup.sh && autoreconf -fi && ./configure --disable-silent-rules --enable-${{ matrix.ASM }} && make install examples-run test-python && ls -alh .libs/*.so* && sha256sum .libs/*.so"
