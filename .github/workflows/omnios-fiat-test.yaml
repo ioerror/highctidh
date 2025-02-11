@@ -11,6 +11,13 @@ jobs:
       CC: "gcc"
     steps:
     - uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: misc/install-deps.sh ubuntu
+
+    - name: Run autoreconf
+      run: autoreconf -fi
+
     - name: Test in Omnios
       id: test
       uses: vmactions/omnios-vm@v1
@@ -23,11 +30,6 @@ jobs:
           psrinfo -vp
           cat /etc/release
           pkg install developer/object-file developer/linker system/header system/library/math shell/bash developer/gcc12
-          pkg install developer/build/autoconf developer/build/automake developer/build/libtool
           make -v
           gcc -v
-
-        run: |
-          autoreconf -fi
-          ./configure --disable-silent-rules
-          make test-quick
+        run: ./configure --disable-silent-rules && make test-quick
