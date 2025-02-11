@@ -11,6 +11,13 @@ jobs:
       CC: "clang"
     steps:
     - uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: misc/install-deps.sh ubuntu
+
+    - name: Run autoreconf
+      run: autoreconf -fi
+
     - name: Build and test in FreeBSD
       id: test
       uses: vmactions/freebsd-vm@v1
@@ -22,14 +29,6 @@ jobs:
           uname -a
           freebsd-version
           pkg install -y llvm-13
-          pkg install -y bash
-          pkg install -y autoconf
-          pkg install -y automake
-          pkg install -y libtool
           clang -v
           echo $SHELL
-
-        run: |
-          autoreconf -fi
-          ./configure --disable-silent-rules
-          make test-quick
+        run: ./configure --disable-silent-rules && make test-quick
