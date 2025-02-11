@@ -11,6 +11,13 @@ jobs:
       CC: "clang"
     steps:
     - uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: misc/install-deps.sh ubuntu
+
+    - name: Run autoreconf
+      run: autoreconf -fi
+
     - name: Test in OpenBSD
       id: test
       uses: vmactions/openbsd-vm@v1
@@ -20,12 +27,7 @@ jobs:
         usesh: true
         prepare: |
           uname -a
-          pkg_add autoconf-2.71 automake-1.16.5 libtool
           make -v
           clang -v
           echo $SHELL
-
-        run: |
-          AUTOCONF_VERSION=2.71 AUTOMAKE_VERSION=1.16.5 autoreconf -fi
-          ./configure --disable-silent-rules
-          make test-quick
+        run: ./configure --disable-silent-rules && make test-quick

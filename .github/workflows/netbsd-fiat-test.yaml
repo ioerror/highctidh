@@ -11,6 +11,13 @@ jobs:
       CC: "gcc"
     steps:
     - uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: misc/install-deps.sh ubuntu
+
+    - name: Run autoreconf
+      run: autoreconf -fi
+
     - name: Test in NetBSD
       id: test
       uses: vmactions/netbsd-vm@v1
@@ -23,11 +30,4 @@ jobs:
           /usr/sbin/pkg_add gcc10
           gcc -v
           make -v
-          /usr/sbin/pkg_add autoconf
-          /usr/sbin/pkg_add automake
-          /usr/sbin/pkg_add libtool
-
-        run: |
-          autoreconf -fi
-          ./configure --disable-silent-rules
-          make test-quick
+        run: ./configure --disable-silent-rules && make test-quick

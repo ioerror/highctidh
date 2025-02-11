@@ -11,6 +11,13 @@ jobs:
       CC: "/usr/local/bin/clang16"
     steps:
     - uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: misc/install-deps.sh ubuntu
+
+    - name: Run autoreconf
+      run: autoreconf -fi
+
     - name: Test in DragonflyBSD
       id: test
       uses: vmactions/dragonflybsd-vm@v1
@@ -22,13 +29,6 @@ jobs:
           uname -a
           pkg install -y llvm16-16.0.6_9
           pkg install -y bash
-          pkg install -y autoconf
-          pkg install -y automake
-          pkg install -y libtool
           /usr/local/bin/clang16 -v
           echo $SHELL
-
-        run: |
-          autoreconf -fi
-          ./configure --disable-silent-rules
-          make test-quick
+        run: ./configure --disable-silent-rules && make test-quick
