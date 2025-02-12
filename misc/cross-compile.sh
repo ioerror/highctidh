@@ -24,20 +24,36 @@ amd64*)
 	fi
 	;;
 
-arm|arm32v5)
-	GOARCH="arm"
-	export GOARM="5"
-	GNUTRIPLE="arm-linux-gnueabi"
-	CLANG_TARGET="arm-pc-linux-gnu"
-	CFLAGS="-mfloat-abi=soft"
-	;;
-
-arm32v6|arm32v7)
+arm|arm32v5*)
 	GOARCH="arm"
 	export GOARM="${ARCH#arm32v}"
-	GNUTRIPLE="arm-linux-gnueabi"
-	CLANG_TARGET="arm-pc-linux-gnu"
-	CFLAGS="-mfloat-abi=hard"
+	test "$GOARM" = "$ARCH" && export GOARM="5"
+
+	if test "${GOARM#*,}" = "hardfloat"; then
+		GNUTRIPLE="arm-linux-gnueabihf"
+		CFLAGS="-mfloat-abi=hard"
+	else
+		GNUTRIPLE="arm-linux-gnueabi"
+		CFLAGS="-mfloat-abi=soft"
+	fi
+	CLANG_TARGET="$GNUTRIPLE"
+	;;
+
+arm32v6*|arm32v7*)
+	GOARCH="arm"
+	export GOARM="${ARCH#arm32v}"
+
+	V="${GOARM%%,*}"
+	if test "${GOARM#*,}" = "softfloat"; then
+		test "$V" = "7" && V="7-a"
+		GNUTRIPLE="arm-linux-gnueabi"
+		CLANG_TARGET="arm-linux-gnueabi"
+		CFLAGS="-march=armv${V} -mfloat-abi=soft"
+	else
+		test "$V" = "7" && V="7a"
+		GNUTRIPLE="arm-linux-gnueabihf"
+		CLANG_TARGET="armv${V}-linux-gnueabihf"
+	fi
 	;;
 
 arm64*)
