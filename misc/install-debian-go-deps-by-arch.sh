@@ -11,11 +11,11 @@ ARCH="$1"
 BASE_PACKAGES="ca-certificates clang lld make pkg-config";
 
 case "$ARCH" in
-386 | i386)
+386|i386)
 	PACKAGES="gcc-i686-linux-gnu libc6-dev-i386-cross" ;;
 
-arm | arm32v*)
-	PACKAGES="gcc-arm-linux-gnueabi libc6-dev-armel-cross libc6-dev-armhf-cross" ;;
+arm|arm32v*)
+	PACKAGES="gcc-arm-linux-gnueabi gcc-arm-linux-gnueabihf libc6-dev-armel-cross libc6-dev-armhf-cross" ;;
 
 arm64)
 	PACKAGES="gcc-aarch64-linux-gnu libc6-dev-arm64-cross" ;;
@@ -23,19 +23,19 @@ arm64)
 ppc64)
 	PACKAGES="gcc-powerpc64-linux-gnu libc6-dev-powerpc-ppc64-cross" ;;
 
-mipsle | mipsel)
+mipsle|mipsel)
 	PACKAGES="gcc-mipsel-linux-gnu libc6-dev-mipsel-cross" ;;
 
 mips64)
 	PACKAGES="gcc-mips64-linux-gnuabi64 libc6-dev-mips64-cross" ;;
 
-mips64le | mips64el)
+mips64le|mips64el)
 	PACKAGES="gcc-mips64el-linux-gnuabi64 libc6-dev-mipsn32-mips64el-cross" ;;
 
 ppc64le)
 	PACKAGES="gcc-powerpc64le-linux-gnu libc6-dev-ppc64el-cross" ;;
 
-mips | riscv64 | s390x)
+mips|riscv64|s390x)
 	PACKAGES="gcc-$ARCH-linux-gnu libc6-dev-$ARCH-cross" ;;
 esac
 

@@ -8,50 +8,68 @@ set -e
 test -n "$1"
 ARCH="$1"
 
-TARGET="$ARCH-pc-linux-gnu"
 GNUTRIPLE="$ARCH-linux-gnu"
+TARGET="$ARCH-pc-linux-gnu"
 export GOARCH="$ARCH"
 
 case "$ARCH" in
 amd64*)
+	export GOARCH="amd64"
+
 	GNUTRIPLE="x86_64-linux-gnu"
 	TARGET="x86_64-pc-linux-gnu"
-	test "${ARCH#amd64.v}" != "$ARCH" && test "${ARCH#amd64.v}" -ge 3 && CONFIGURE_ARGS="--enable-asm"
 
-	export GOARCH="amd64"
-	export GOAMD64="${ARCH#amd64.}"
-	test "$GOAMD64" = "$ARCH" && unset GOAMD64
+	V="${ARCH#amd64}"
+	if test "$V" != "$ARCH"; then
+		export GOAMD64="$V"
+		test "${V#v}" -ge 3 && CONFIGURE_ARGS="--enable-asm"
+	fi
 	;;
 
-arm|arm32v5)
-	GNUTRIPLE="arm-linux-gnueabi"
-	TARGET="arm-pc-linux-gnu"
-	CFLAGS="-mfloat-abi=soft"
-
-	export GOARCH="arm"
-	export GOARM="5"
-	;;
-
-arm32v6|arm32v7)
-	GNUTRIPLE="arm-linux-gnueabi"
-	TARGET="arm-pc-linux-gnu"
-	CFLAGS="-mfloat-abi=hard"
-
+arm|arm32v5*)
 	export GOARCH="arm"
 	export GOARM="${ARCH#arm32v}"
+	test "$GOARM" = "$ARCH" && export GOARM="5"
+
+	if test "${GOARM#*,}" = "hardfloat"; then
+		GNUTRIPLE="arm-linux-gnueabihf"
+		CFLAGS="-mfloat-abi=hard"
+	else
+		GNUTRIPLE="arm-linux-gnueabi"
+		CFLAGS="-mfloat-abi=soft"
+	fi
+	TARGET="$GNUTRIPLE"
+	;;
+
+arm32v6*|arm32v7*)
+	export GOARCH="arm"
+	export GOARM="${ARCH#arm32v}"
+
+	V="${GOARM%%,*}"
+	if test "${GOARM#*,}" = "softfloat"; then
+		test "$V" = "7" && V="7-a"
+		GNUTRIPLE="arm-linux-gnueabi"
+		TARGET="arm-linux-gnueabi"
+		CFLAGS="-march=armv${V} -mfloat-abi=soft"
+	else
+		test "$V" = "7" && V="7a"
+		GNUTRIPLE="arm-linux-gnueabihf"
+		TARGET="armv${V}-linux-gnueabihf"
+	fi
 	;;
 
 arm64*)
 	GNUTRIPLE="aarch64-linux-gnu"
-	V="${ARCH#arm64v}"
+
+	export GOARCH="arm64"
+	V="${ARCH#arm64}"
 	if test "$V" != "$ARCH"; then
+		export GOARM64="$V"
+		V="${V#v}"
 		V="${V%%.*}"
 		V="${V%%,*}"
 		test "$V" -ge 9 && CONFIGURE_ARGS="--enable-asm"
 	fi
-
-	export GOARM64="${ARCH#arm64}"
-	test "$GOARM64" = "$ARCH" && unset GOARM64
 	;;
 
 i386|386|i686)
@@ -100,7 +118,7 @@ else
 	LDFLAGS="-fuse-ld=lld"
 fi
 
-./configure --host="$GNUTRIPLE" --prefix="$HOME/inst" --disable-silent-rules $CONFIGURE_ARGS CC="$CC" CFLAGS="$CFLAGS" LD="$LD" LDFLAGS="$LDFLAGS"
+./configure --host="$GNUTRIPLE" --prefix="$HOME/inst" --disable-silent-rules --disable-shared $CONFIGURE_ARGS CC="$CC" CFLAGS="$CFLAGS" LD="$LD" LDFLAGS="$LDFLAGS"
 make install
 export PKG_CONFIG_PATH="$HOME/inst/lib/pkgconfig"
 
