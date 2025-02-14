@@ -7,8 +7,7 @@ jobs:
     runs-on: ubuntu-24.04
     name: Omnios gcc build of fiat backend
     env:
-      LANG: "C"
-      CC: "gcc"
+      LANG: C
     steps:
     - uses: actions/checkout@v4
 
@@ -22,13 +21,13 @@ jobs:
       id: test
       uses: vmactions/omnios-vm@v1
       with:
-        release: "r151046"
-        envs: 'LANG CC'
+        release: r151052
+        envs: LANG
         usesh: true
         prepare: |
           uname -a
           psrinfo -vp
           cat /etc/release
-          pkg install developer/object-file developer/linker system/header system/library/math developer/gcc12
+          pkg install developer/gcc14
           gcc -v
         run: ./configure --disable-silent-rules && make test-quick
