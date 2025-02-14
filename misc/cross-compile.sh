@@ -56,7 +56,7 @@ arm64*)
 	;;
 
 i386|386|i686)
-	GOARCH=386
+	GOARCH="386"
 	GNUTRIPLE="i686-linux-gnu"
 	CLANG_TARGET="i386-pc-linux-gnu"
 	;;
@@ -66,21 +66,27 @@ mips)
 	;;
 
 mipsle|mipsel)
-	GOARCH=mipsle
+	GOARCH="mipsle"
 	GNUTRIPLE="mipsel-linux-gnu"
 	CLANG_TARGET="mipsel-pc-linux-gnu"
 	CONFIGURE_ARGS="--disable-shared"
 	;;
 
+mips64)
+	GOARCH="mips64"
+	GNUTRIPLE="mips64-linux-gnuabi64"
+	CLANG_TARGET="mips64-pc-linux-gnu"
+	;;
+
 mips64le|mips64el)
-	GOARCH=mips64le
+	GOARCH="mips64le"
 	GNUTRIPLE="mips64el-linux-gnuabi64"
 	CLANG_TARGET="mips64el-pc-linux-gnu"
 	;;
 
 ppc64)
 	GNUTRIPLE="powerpc64-linux-gnu"
-	BUILD_LIB_WITH_GCC=1
+	BUILD_LIB_WITH_GCC="true"
 	;;
 
 ppc64le)
@@ -88,11 +94,11 @@ ppc64le)
 	;;
 
 riscv64|s390x)
-	BUILD_LIB_WITH_GCC=1
+	BUILD_LIB_WITH_GCC="true"
 	;;
 esac
 
-if test "$BUILD_LIB_WITH_GCC"; then
+if test "$BUILD_LIB_WITH_GCC" = "true"; then
 	CC="${GNUTRIPLE}-gcc"
 	LD="${GNUTRIPLE}-ld"
 else
@@ -104,13 +110,15 @@ fi
 ./configure --host="$GNUTRIPLE" --prefix="$HOME/inst" --disable-silent-rules $CONFIGURE_ARGS CC="$CC" CFLAGS="$CFLAGS" LD="$LD" LDFLAGS="$LDFLAGS"
 make
 
+test "$2" != "with-golang" && exit
+
 make install
 export PKG_CONFIG_PATH="$HOME/inst/lib/pkgconfig"
 
 export GOARCH
 export GOOS=linux
 export CGO_ENABLED=1
-export CC="clang --target=$CLANG_TARGET $CFLAGS"
+export CC="$CC $CFLAGS"
 
 CHECKMARK="\xE2\x9C\x94"
 
