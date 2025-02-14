@@ -80,7 +80,7 @@ mips64le|mips64el)
 
 ppc64)
 	GNUTRIPLE="powerpc64-linux-gnu"
-	BUILD_LIB_WITH_GCC=1
+	BUILD_LIB_WITH_GCC="true"
 	;;
 
 ppc64le)
@@ -88,11 +88,11 @@ ppc64le)
 	;;
 
 riscv64|s390x)
-	BUILD_LIB_WITH_GCC=1
+	BUILD_LIB_WITH_GCC="true"
 	;;
 esac
 
-if test "$BUILD_LIB_WITH_GCC"; then
+if test "$BUILD_LIB_WITH_GCC" = "true"; then
 	CC="${GNUTRIPLE}-gcc"
 	LD="${GNUTRIPLE}-ld"
 else
@@ -104,13 +104,15 @@ fi
 ./configure --host="$GNUTRIPLE" --prefix="$HOME/inst" --disable-silent-rules --disable-shared $CONFIGURE_ARGS CC="$CC" CFLAGS="$CFLAGS" LD="$LD" LDFLAGS="$LDFLAGS"
 make
 
+test "$2" != "with-golang" && exit
+
 make install
 export PKG_CONFIG_PATH="$HOME/inst/lib/pkgconfig"
 
 export GOARCH
 export GOOS=linux
 export CGO_ENABLED=1
-export CC="clang --target=$CLANG_TARGET $CFLAGS"
+export CC="$CC $CFLAGS"
 
 CHECKMARK="\xE2\x9C\x94"
 
