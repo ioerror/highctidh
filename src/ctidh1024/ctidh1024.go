@@ -1,9 +1,8 @@
-// DO NOT EDIT: generated code, see gen/main.go
-
 package ctidh1024
 
 /*
 #cgo pkg-config: libhighctidh_1024
+#include <string.h>
 #define BITS 1024
 #include "binding1024.h"
 #include <highctidh.h>

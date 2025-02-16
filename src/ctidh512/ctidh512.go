@@ -2,6 +2,7 @@ package ctidh512
 
 /*
 #cgo pkg-config: libhighctidh_512
+#include <string.h>
 #define BITS 512
 #include "binding512.h"
 #include <highctidh.h>

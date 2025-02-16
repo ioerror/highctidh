@@ -2,6 +2,7 @@ package ctidh2048
 
 /*
 #cgo pkg-config: libhighctidh_2048
+#include <string.h>
 #define BITS 2048
 #include "binding2048.h"
 #include <highctidh.h>
