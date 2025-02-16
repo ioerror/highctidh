@@ -123,7 +123,7 @@ void xMUL_dac(proj *Q, proj const *A24, int Aaffine, proj const *P, long long da
 
     collision |= want&fp_iszero(&P2.z);
 
-    proj next;
+    proj next = { fp_1, fp_0 };
     xADD(&next,&P3,&P1,&P2);
     P2 = P3;
     P3 = next;
