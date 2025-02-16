@@ -72,7 +72,7 @@ debian|devuan|ubuntu|x-ubuntu*)
 	fi
 
 	PKGS="$DEB_PKGS"
-	test "$with_san" && PKGS="$PKGS libclang-rt-dev"
+	test "$with_san" && PKGS="$PKGS libclang-rt-dev libtsan2"
 	test "$with_go" && PKGS="$PKGS golang"
 	test "$with_py" && PKGS="$PKGS $DEB_PKGS_PY"
 	;;
