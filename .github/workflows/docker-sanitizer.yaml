@@ -23,7 +23,7 @@ jobs:
           "ubuntu:24.04",
           "ubuntu:24.10",
         ]
-        SANITIZER: [asan, msan]
+        SANITIZER: [asan, msan, tsan]
         ASM: [asm=no, asm=yes]
       fail-fast: false
     container: ${{ matrix.CONTAINER }}
@@ -40,6 +40,10 @@ jobs:
     - name: msan CFLAGS
       if: matrix.SANITIZER == 'msan'
       run: echo CFLAGS="-fsanitize=memory -fsanitize-memory-param-retval -fsanitize-memory-track-origins" >> $GITHUB_ENV
+
+    - name: tsan CFLAGS
+      if: matrix.SANITIZER == 'tsan'
+      run: echo CFLAGS="-fsanitize=thread" >> $GITHUB_ENV
 
     - name: Build and install library
       run: |
