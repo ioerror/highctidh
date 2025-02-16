@@ -104,8 +104,8 @@ void xMUL_dac(proj *Q, proj const *A24, int Aaffine, proj const *P, long long da
 {
   proj Pinput = *P; // keeping copy since Q can overlap P
   proj P1 = Pinput;
-  proj P2; xDBL(&P2,&P1,A24,Aaffine);
-  proj P3; xADD(&P3,&P2,&P1,&P1);
+  proj P2 = { fp_1, fp_0 }; xDBL(&P2,&P1,A24,Aaffine);
+  proj P3 = { fp_1, fp_0 }; xADD(&P3,&P2,&P1,&P1);
   long long collision = fp_iszero(&Pinput.z);
 
   for (;;) {
