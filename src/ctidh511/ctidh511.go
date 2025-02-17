@@ -221,17 +221,24 @@ func (p *PrivateKey) UnmarshalText(data []byte) error {
 
 // DerivePublicKey derives a public key given a private key.
 func DerivePublicKey(privKey *PrivateKey) *PublicKey {
+	t.Logf("out: ba")
 	var base C.highctidh_511_public_key = C.highctidh_511_base
+	t.Logf("out: bb")
 	baseKey := new(PublicKey)
+	t.Logf("out: bc")
 	baseKey.publicKey = base
+	t.Logf("out: bd")
 	return GroupAction(privKey, baseKey)
 }
 
 // GenerateKeyPair generates a new Ctidh511 private and then
 // attempts to compute the Ctidh511 public key.
 func GenerateKeyPair() (*PrivateKey, *PublicKey) {
+	t.Logf("out: aa")
 	privKey := new(PrivateKey)
+	t.Logf("out: ab")
 	C.highctidh_511_csidh_private(&privKey.privateKey)
+	t.Logf("out: ac")
 	return privKey, DerivePublicKey(privKey)
 }
 
