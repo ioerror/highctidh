@@ -74,13 +74,4 @@ jobs:
     - name: Show config.log
       if: failure()
       run: |
-        sanitized_container="${{ matrix.CONTAINER }}"
-        sanitized_container="${sanitized_container//:/-}"
-        echo "sanitized_container=$sanitized_container" >> $GITHUB_ENV
-
-    - name: Upload artifact
-      if: failure()
-      uses: actions/upload-artifact@v4
-      with:
-        name: config-log-${{ env.sanitized_container }}-${{ matrix.SANITIZER }}-${{ matrix.ASM }}
-        path: config.log
+        cat config.log
