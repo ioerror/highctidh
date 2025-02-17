@@ -39,7 +39,7 @@ jobs:
 
     - name: msan CFLAGS
       if: matrix.SANITIZER == 'msan'
-      run: echo MSANCFLAGS="-fsanitize=memory -fsanitize-memory-param-retval -fsanitize-memory-track-origins" >> $GITHUB_ENV
+      run: echo CFLAGS="-fsanitize=memory -fsanitize-memory-param-retval -fsanitize-memory-track-origins" >> $GITHUB_ENV
 
     - name: Build and install library
       run: |

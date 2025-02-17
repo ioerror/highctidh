@@ -10,15 +10,22 @@ import (
 )
 
 func TestBlindingOperation(t *testing.T) {
+	t.Logf("out: a")
 	mixPrivateKey, mixPublicKey := GenerateKeyPair()
+	t.Logf("out: b")
 	clientPrivateKey, clientPublicKey := GenerateKeyPair()
 
+	t.Logf("out: c")
 	blindingFactor := GeneratePrivateKey(rand.Reader)
+	t.Logf("out: d")
 	value1, err := Blind(blindingFactor, NewPublicKey(DeriveSecret(clientPrivateKey, mixPublicKey)))
+	t.Logf("out: e")
 	require.NoError(t, err)
 	blinded, err := Blind(blindingFactor, clientPublicKey)
+	t.Logf("out: f")
 	require.NoError(t, err)
 	value2 := DeriveSecret(mixPrivateKey, blinded)
+	t.Logf("out: g")
 
 	require.Equal(t, value1.Bytes(), value2)
 }
