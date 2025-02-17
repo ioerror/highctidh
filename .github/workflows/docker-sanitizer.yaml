@@ -23,7 +23,7 @@ jobs:
           "ubuntu:24.04",
           "ubuntu:24.10",
         ]
-        SANITIZER: [asan, msan]
+        SANITIZER: [tsan, msan]
         ASM: [asm=no, asm=yes]
       fail-fast: false
     container: ${{ matrix.CONTAINER }}
@@ -39,7 +39,15 @@ jobs:
 
     - name: msan CFLAGS
       if: matrix.SANITIZER == 'msan'
-      run: echo CFLAGS="-fsanitize=memory -fsanitize-memory-param-retval -fsanitize-memory-track-origins -enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang -ftrivial-auto-var-init=zero -Wno-unused-command-line-argument" >> $GITHUB_ENV
+      run: echo MSANCFLAGS="-fsanitize=memory -fsanitize-memory-param-retval -fsanitize-memory-track-origins" >> $GITHUB_ENV
+
+    - name: MSAN CFLAGS Alpine
+      if: startsWith(matrix.CONTAINER, 'alpine:')
+      run: echo CFLAGS=$MSANCFLAGS -enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang -ftrivial-auto-var-init=zero -Wno-unused-command-line-argument  >> $GITHUB_ENV
+
+    - name: MSAN CFLAGS Ubuntu
+      if: startsWith(matrix.CONTAINER, 'ubuntu:')
+      run: echo CFLAGS=$MSANCFLAGS -ftrivial-auto-var-init=zero >> $GITHUB_ENV
 
     - name: tsan CFLAGS
       if: matrix.SANITIZER == 'tsan'
