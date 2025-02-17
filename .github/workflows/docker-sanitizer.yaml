@@ -43,7 +43,7 @@ jobs:
 
     - name: tsan CFLAGS
       if: matrix.SANITIZER == 'tsan'
-      run: echo CFLAGS="-fsanitize=thread -ftrivial-auto-var-init=zero" >> $GITHUB_ENV
+      run: echo CFLAGS="-fsanitize=thread -static-libtsan -ftrivial-auto-var-init=zero" >> $GITHUB_ENV
 
     - name: Build and install library
       run: |
