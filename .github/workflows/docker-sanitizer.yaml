@@ -24,7 +24,7 @@ jobs:
           "ubuntu:24.10",
         ]
         SANITIZER: [msan]
-        ASM: [asm=no, asm=yes]
+        ASM: [asm=yes]
       fail-fast: false
     container: ${{ matrix.CONTAINER }}
     steps:
