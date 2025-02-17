@@ -39,7 +39,7 @@ jobs:
 
     - name: msan CFLAGS
       if: matrix.SANITIZER == 'msan'
-      run: echo CFLAGS="-fsanitize=memory -fsanitize-memory-param-retval -fsanitize-memory-track-origins -enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang" >> $GITHUB_ENV
+      run: echo CFLAGS="-fsanitize=memory -fsanitize-memory-param-retval -fsanitize-memory-track-origins -enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang -ftrivial-auto-var-init=zero" >> $GITHUB_ENV
 
     - name: tsan CFLAGS
       if: matrix.SANITIZER == 'tsan'
