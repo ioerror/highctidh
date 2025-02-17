@@ -35,7 +35,7 @@ jobs:
 
     - name: asan CFLAGS
       if: matrix.SANITIZER == 'asan'
-      run: echo CFLAGS="-fsanitize=address -ftrivial-auto-var-init=zero" >> $GITHUB_ENV
+      run: echo CFLAGS="-fsanitize=address" >> $GITHUB_ENV
 
     - name: msan CFLAGS
       if: matrix.SANITIZER == 'msan'
@@ -43,7 +43,7 @@ jobs:
 
     - name: tsan CFLAGS
       if: matrix.SANITIZER == 'tsan'
-      run: echo CFLAGS="-fsanitize=thread -static-libtsan -ftrivial-auto-var-init=zero" >> $GITHUB_ENV
+      run: echo CFLAGS="-fsanitize=thread -static-libtsan" >> $GITHUB_ENV
 
     - name: Build and install library
       run: |
@@ -75,5 +75,5 @@ jobs:
       if: failure()
       uses: actions/upload-artifact@v4
       with:
-        name: config-log
+        name: config-log-${{ matrix.CONTAINER }}-${{ matrix.SANITIZER }}-${{ matrix.ASM }}
         path: config.log
