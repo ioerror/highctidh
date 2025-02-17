@@ -70,3 +70,10 @@ jobs:
 
     - name: Build and test 2048
       run: cd src/ctidh2048 && go test -v -o san-test -timeout 0 -${{ matrix.SANITIZER }} ./...
+
+    - name: Show config.log
+      if: failure()
+      uses: actions/upload-artifact@v2
+      with:
+        name: config-log
+        path: config.log
