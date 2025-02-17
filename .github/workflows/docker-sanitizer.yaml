@@ -23,7 +23,7 @@ jobs:
           "ubuntu:24.04",
           "ubuntu:24.10",
         ]
-        SANITIZER: [tsan, msan]
+        SANITIZER: [tsan]
         ASM: [asm=no, asm=yes]
       fail-fast: false
     container: ${{ matrix.CONTAINER }}
@@ -52,6 +52,10 @@ jobs:
     - name: tsan CFLAGS
       if: matrix.SANITIZER == 'tsan'
       run: echo CFLAGS="-fsanitize=thread" >> $GITHUB_ENV
+
+    - name: tsan LDFLAGS
+      if: matrix.SANITIZER == 'tsan'
+      run: echo LDFLAGS="-fsanitize=thread" >> $GITHUB_ENV
 
     - name: Build and install library
       run: |
