@@ -265,6 +265,8 @@ func GroupAction(privateKey *PrivateKey, publicKey *PublicKey) *PublicKey {
 	fmt.Println("out: ca")
 	sharedKey := new(PublicKey)
 // XXX: sharedKey likely needs a correct C.highctidh_511_base
+	var base C.highctidh_511_public_key = C.highctidh_511_base
+	sharedKey.publicKey = base
 	fmt.Println("out: cb")
 	ok := C.highctidh_511_csidh(&sharedKey.publicKey, &publicKey.publicKey, &privateKey.privateKey)
 	fmt.Println("out: cc")
