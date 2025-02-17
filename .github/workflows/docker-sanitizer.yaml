@@ -41,24 +41,6 @@ jobs:
       if: matrix.SANITIZER == 'msan'
       run: echo MSANCFLAGS="-fsanitize=memory -fsanitize-memory-param-retval -fsanitize-memory-track-origins" >> $GITHUB_ENV
 
-    - name: MSAN CFLAGS Alpine
-      if: startsWith(matrix.CONTAINER, 'alpine:')
-      run: echo CFLAGS=$MSANCFLAGS -enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang -ftrivial-auto-var-init=zero -Wno-unused-command-line-argument  >> $GITHUB_ENV
-
-    - name: MSAN CFLAGS Ubuntu
-      if: startsWith(matrix.CONTAINER, 'ubuntu:')
-      run: echo CFLAGS=$MSANCFLAGS -ftrivial-auto-var-init=zero >> $GITHUB_ENV
-
-    - name: tsan CFLAGS
-      if: matrix.SANITIZER == 'tsan'
-      run: |
-        echo CFLAGS="-fsanitize=thread" >> $GITHUB_ENV
-        echo LLVM_USE_SANITIZER=Thread >> $GITHUB_ENV
-
-    - name: tsan LDFLAGS
-      if: matrix.SANITIZER == 'tsan'
-      run: echo LDFLAGS="-ltsan" >> $GITHUB_ENV
-
     - name: Build and install library
       run: |
         autoreconf -fi
