@@ -55,7 +55,7 @@ jobs:
 
     - name: tsan LDFLAGS
       if: matrix.SANITIZER == 'tsan'
-      run: echo LDFLAGS="-fsanitize=thread" >> $GITHUB_ENV
+      run: echo LDFLAGS="-fsanitize=thread -ltsan" >> $GITHUB_ENV
 
     - name: Build and install library
       run: |
