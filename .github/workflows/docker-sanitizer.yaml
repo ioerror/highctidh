@@ -75,5 +75,5 @@ jobs:
       if: failure()
       uses: actions/upload-artifact@v4
       with:
-        name: config-log-${{ matrix.CONTAINER }}-${{ matrix.SANITIZER }}-${{ matrix.ASM }}
+        name: config-log-${{ matrix.CONTAINER//:/- }}-${{ matrix.SANITIZER }}-${{ matrix.ASM }}
         path: config.log
