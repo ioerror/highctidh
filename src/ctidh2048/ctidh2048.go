@@ -2,7 +2,6 @@ package ctidh2048
 
 /*
 #cgo pkg-config: libhighctidh_2048
-#include <string.h>
 #define BITS 2048
 #include "binding2048.h"
 #include <highctidh.h>
@@ -223,7 +222,6 @@ func (p *PrivateKey) UnmarshalText(data []byte) error {
 // DerivePublicKey derives a public key given a private key.
 func DerivePublicKey(privKey *PrivateKey) *PublicKey {
 	var base C.highctidh_2048_public_key
-	C.memset(unsafe.Pointer(&base), 0, C.sizeof_highctidh_2048_public_key)
 	baseKey := new(PublicKey)
 	baseKey.publicKey = base
 	return GroupAction(privKey, baseKey)
