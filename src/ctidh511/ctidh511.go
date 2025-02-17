@@ -248,6 +248,7 @@ func GenerateKeyPair() (*PrivateKey, *PublicKey) {
 // entropy source is deterministic, for example an HKDF.
 func GeneratePrivateKey(rng io.Reader) *PrivateKey {
 	privKey := &PrivateKey{}
+// XXX: ? 	privKey := new(PrivateKey)
 	p := gopointer.Save(rng)
 	C.custom_gen_private(p, &privKey.privateKey)
 	gopointer.Unref(p)
@@ -261,11 +262,16 @@ func GenerateKeyPairWithRNG(rng io.Reader) (*PrivateKey, *PublicKey) {
 }
 
 func GroupAction(privateKey *PrivateKey, publicKey *PublicKey) *PublicKey {
+	fmt.Println("out: ca")
 	sharedKey := new(PublicKey)
+// XXX: sharedKey likely needs a correct C.highctidh_511_base
+	fmt.Println("out: cb")
 	ok := C.highctidh_511_csidh(&sharedKey.publicKey, &publicKey.publicKey, &privateKey.privateKey)
+	fmt.Println("out: cc")
 	if !ok {
 		panic(ErrCTIDH)
 	}
+	fmt.Println("out: cd")
 	return sharedKey
 }
 
