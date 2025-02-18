@@ -1,4 +1,4 @@
-name: Windows Msys2 64bit (msvcrt) clang Python pip build and test
+name: Windows Msys2 64bit Python pip build and test
 
 on: [push]
 
@@ -8,8 +8,11 @@ jobs:
     strategy:
       matrix:
         OS: ["windows-2022"]
-        CC: ["clang"]
-        ENVIRONMENT: ["MINGW64"] # https://www.msys2.org/docs/environments/
+        CC: ["gcc"]
+        ENVIRONMENT: ["MSYS", "UCRT64", "MINGW64"] # https://www.msys2.org/docs/environments/
+        include:
+        - ENVIRONMENT: MINGW64
+          CC: clang
       fail-fast: false
 
     steps:
@@ -26,11 +29,12 @@ jobs:
           python-setuptools
           python-pytest
           git
-          clang
+          ${{ matrix.CC }}
           mingw-w64-clang-x86_64-python-pytest-xdist
           mingw-w64-clang-x86_64-python-flit
           mingw-w64-clang-x86_64-python-distutils-extra
-          mingw-w64-x86_64-clang
+          mingw-w64-x86_64-${{ matrix.CC }
+          mingw-w64-ucrt-x86_64-gcc
           make
           autotools
           libtool
@@ -38,6 +42,7 @@ jobs:
     - name: Gather runtime environment
       shell: msys2 {0}
       run: |
+       echo ${{ matrix.ENVIRONMENT }}
        uname -a
        python -V
        bash --version
@@ -47,7 +52,7 @@ jobs:
       shell: msys2 {0}
       run: |
         autoreconf -fi
-        ./configure --prefix="${HOME}/inst" --disable-silent-rules CC=${{ matrix.CC }}
+        ./configure --prefix="${HOME}/inst" --disable-silent-rules --disable-static CC=${{ matrix.CC }}
         make install
         echo PKG_LIBRARY_PATH="${HOME}/inst/lib/pkgconfig" >> $GITHUB_ENV
 
