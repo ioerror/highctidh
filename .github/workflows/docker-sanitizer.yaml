@@ -23,8 +23,8 @@ jobs:
           "ubuntu:24.04",
           "ubuntu:24.10",
         ]
-        SANITIZER: [msan]
-        ASM: [asm=yes]
+        SANITIZER: [tsan]
+        ASM: [asm=no]
       fail-fast: false
     container: ${{ matrix.CONTAINER }}
     steps:
@@ -40,6 +40,17 @@ jobs:
     - name: msan CFLAGS
       if: matrix.SANITIZER == 'msan'
       run: echo CFLAGS="-fsanitize=memory -fsanitize-memory-param-retval -fsanitize-memory-track-origins" >> $GITHUB_ENV
+
+    - name: tsan CFLAGS
+      if: matrix.SANITIZER == 'tsan'
+      run: |
+        echo CFLAGS="-fsanitize=thread" >> $GITHUB_ENV
+        echo LLVM_USE_SANITIZER=Thread >> $GITHUB_ENV
+        echo CC=gcc >> $GITHUB_ENV
+
+    - name: tsan LDFLAGS
+      if: matrix.SANITIZER == 'tsan'
+      run: echo LDFLAGS="-fsanitize=thread -ltsan" >> $GITHUB_ENV
 
     - name: Build and install library
       run: |
