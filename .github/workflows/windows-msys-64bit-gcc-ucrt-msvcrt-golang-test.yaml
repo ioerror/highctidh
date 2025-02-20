@@ -4,7 +4,6 @@ on: [push]
 
 jobs:
   windows-build-and-test-golang:
-    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         OS: ["windows-2019", "windows-2022"]
@@ -12,6 +11,7 @@ jobs:
         ENVIRONMENT: ["UCRT64", "MINGW64"] # https://www.msys2.org/docs/environments/
         go-version: [ "1.19", "1.20", "1.21.x", "1.22.x"]
       fail-fast: false
+    runs-on: ${{ matrix.OS }}
     steps:
       - uses: actions/checkout@v4
 
