@@ -26,13 +26,13 @@ jobs:
           libtool
 
     - name: Gather toolchain info
-      shell: bash
+      shell: msys2 {0}
       run: |
         make -v
         ${{ matrix.CC }} -v
 
     - name: compile and test-quick
-      shell: bash
+      shell: msys2 {0}
       run: |
         autoreconf -fi
         ./configure --disable-silent-rules

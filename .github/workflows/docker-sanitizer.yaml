@@ -48,7 +48,7 @@ jobs:
         echo PKG_CONFIG_PATH="${HOME}/inst/lib/pkgconfig" >> $GITHUB_ENV
 
     - name: Run C examples, with 1MB stack on Alpine
-      run: make examples-run ${{ startsWith(matrix.CONTAINER, 'alpine:') && 'LDFLAGS=-Wl,-z,stack-size=0x100000' }}
+      run: make examples-run LDFLAGS=${{ startsWith(matrix.CONTAINER, 'alpine:') && '-Wl,-z,stack-size=0x100000' || '' }}
 
     - name: Set CGO_LDFLAGS for 1MB stack on Alpine
       if: startsWith(matrix.CONTAINER, 'alpine:')

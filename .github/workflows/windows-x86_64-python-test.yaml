@@ -33,8 +33,7 @@ jobs:
           mingw-w64-clang-x86_64-python-pytest-xdist
           mingw-w64-clang-x86_64-python-flit
           mingw-w64-clang-x86_64-python-distutils-extra
-          mingw-w64-x86_64-${{ matrix.CC }
-          mingw-w64-ucrt-x86_64-gcc
+          mingw-w64-x86_64-${{ matrix.CC }}
           make
           autotools
           libtool

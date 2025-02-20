@@ -1,4 +1,4 @@
-name: Windows Msys2 64bit (cygwin,msvcrt,ucrt) gcc golang build and test
+name: Windows Msys2 64bit go build and test
 
 on: [push]
 
@@ -35,7 +35,7 @@ jobs:
             libtool
 
       - name: Build and install C library
-        shell: bash
+        shell: msys2 {0}
         run: |
           autoreconf -fi
           ./configure --prefix="${HOME}/inst" --disable-silent-rules --disable-shared --enable-static
