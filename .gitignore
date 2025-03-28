@@ -24,3 +24,5 @@ test512
 testrandom
 docker_build_output/
 src/example-ctidh*
+/.pre-commit-config.yaml
+/result
