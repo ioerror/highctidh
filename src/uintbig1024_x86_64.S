@@ -7,42 +7,23 @@
 
 .section .rodata
 
-.global highctidh_512_uintbig_1
-highctidh_512_uintbig_1:
-    .quad 1, 0, 0, 0
-    .quad 0, 0, 0, 0
-    .size highctidh_512_uintbig_1, 64
-    .type highctidh_512_uintbig_1, @object
-
-.global highctidh_512_uintbig_p
-highctidh_512_uintbig_p:
-    .quad 0x1b81b90533c6c87b, 0xc2721bf457aca835, 0x516730cc1f0b4f25, 0xa7aac6c567f35507
-    .quad 0x5afbfcc69322c9cd, 0xb42d083aedc88c42, 0xfc8ab0d15e3e4c4a, 0x65b48e8f740f89bf
-    .size highctidh_512_uintbig_p, 64
-    .type highctidh_512_uintbig_p, @object
-
-.global highctidh_512_uintbig_four_sqrt_p
-highctidh_512_uintbig_four_sqrt_p:
-    .quad 0x17895e71e1a20b3f, 0x38d0cd95f8636a56, 0x142b9541e59682cd, 0x856f1399d91d6592
-    .quad 2, 0, 0, 0
-    .size highctidh_512_uintbig_four_sqrt_p, 64
-    .type highctidh_512_uintbig_four_sqrt_p, @object
+#include "uintbig_const_le_1024.s"
 
 .section .text
 
-.global highctidh_512_uintbig_set
-highctidh_512_uintbig_set:
+.global highctidh_1024_uintbig_set
+highctidh_1024_uintbig_set:
     cld
     mov rax, rsi
     stosq
     xor rax, rax
-    mov rcx, 7
+    mov rcx, 15
     rep stosq
     ret
 
 
-.global highctidh_512_uintbig_bit
-highctidh_512_uintbig_bit:
+.global highctidh_1024_uintbig_bit
+highctidh_1024_uintbig_bit:
     mov rcx, rsi
     and rcx, 0x3f
     shr rsi, 6
@@ -52,13 +33,13 @@ highctidh_512_uintbig_bit:
     ret
 
 
-.global highctidh_512_uintbig_add3
-highctidh_512_uintbig_add3:
+.global highctidh_1024_uintbig_add3
+highctidh_1024_uintbig_add3:
     mov rax, [rsi +  0]
     add rax, [rdx +  0]
     mov [rdi +  0], rax
     .set k, 1
-    .rept 7
+    .rept 15
         mov rax, [rsi + 8*k]
         adc rax, [rdx + 8*k]
         mov [rdi + 8*k], rax
@@ -68,13 +49,13 @@ highctidh_512_uintbig_add3:
     movzx rax, al
     ret
 
-.global highctidh_512_uintbig_sub3
-highctidh_512_uintbig_sub3:
+.global highctidh_1024_uintbig_sub3
+highctidh_1024_uintbig_sub3:
     mov rax, [rsi +  0]
     sub rax, [rdx +  0]
     mov [rdi +  0], rax
     .set k, 1
-    .rept 7
+    .rept 15
         mov rax, [rsi + 8*k]
         sbb rax, [rdx + 8*k]
         mov [rdi + 8*k], rax
@@ -85,8 +66,8 @@ highctidh_512_uintbig_sub3:
     ret
 
 
-.global highctidh_512_uintbig_mul3_64
-highctidh_512_uintbig_mul3_64:
+.global highctidh_1024_uintbig_mul3_64
+highctidh_1024_uintbig_mul3_64:
 
     mulx r10, rax, [rsi +  0]
     mov [rdi +  0], rax
@@ -118,6 +99,38 @@ highctidh_512_uintbig_mul3_64:
     mulx r11, rax, [rsi + 56]
     adcx rax, r10
     mov [rdi + 56], rax
+
+    mulx r10, rax, [rsi + 64]
+    adcx rax, r11
+    mov [rdi + 64], rax
+
+    mulx r11, rax, [rsi + 72]
+    adcx rax, r10
+    mov [rdi + 72], rax
+
+    mulx r10, rax, [rsi + 80]
+    adcx rax, r11
+    mov [rdi + 80], rax
+
+    mulx r11, rax, [rsi + 88]
+    adcx rax, r10
+    mov [rdi + 88], rax
+
+    mulx r10, rax, [rsi + 96]
+    adcx rax, r11
+    mov [rdi + 96], rax
+
+    mulx r11, rax, [rsi + 104]
+    adcx rax, r10
+    mov [rdi + 104], rax
+
+    mulx r10, rax, [rsi + 112]
+    adcx rax, r11
+    mov [rdi + 112], rax
+
+    mulx r11, rax, [rsi + 120]
+    adcx rax, r10
+    mov [rdi + 120], rax
 
     ret
 

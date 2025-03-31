@@ -6,7 +6,7 @@ HOST_OS := $(shell uname -s)
 
 ### override these for cross-building:
 PLATFORM ?= $(shell uname -m)
-ifeq	($(PLATFORM), $(filter $(PLATFORM), arm64 amd64 i86pc loongarch64 mips64 mips64el ppc64 ppc64le riscv64 s390x sparc sparc4v sparc64 x86_64))
+ifeq	($(PLATFORM), $(filter $(PLATFORM), arm64 aarch64 amd64 i86pc loongarch64 mips64 mips64el ppc64 ppc64le riscv64 s390x sparc sparc4v sparc64 x86_64))
 PLATFORM_SIZE ?= 64
 else ifeq ($(PLATFORM), $(filter $(PLATFORM), armv7l i386 i686 mips mipsel))
 PLATFORM_SIZE ?= 32
@@ -75,6 +75,13 @@ BASE_CFLAGS += -DHIGHCTIDH_PORTABLE=1
 	libhighctidh_2048_OBJS := fp2fiat2048.o fiat_p2048.o
 else
 BASE_CFLAGS += -DHIGHCTIDH_PORTABLE=0
+ifeq ($(PLATFORM),amd64)
+ASM_PLATFORM := x86_64
+else ifeq ($(PLATFORM),arm64)
+ASM_PLATFORM := aarch64
+else
+ASM_PLATFORM := $(PLATFORM)
+endif
 	libhighctidh_511_OBJS := uintbig511.o fp511.o
 	libhighctidh_512_OBJS := uintbig512.o fp512.o
 	libhighctidh_1024_OBJS := uintbig1024.o fp1024.o
@@ -227,146 +234,196 @@ checkct2048untuned checkct2048mults checkct2048cycles \
 checkct511cycles: checkct.c \
 libhighctidh_511.a libhighctidh_base.a libhighctidh_tunecycles511.a libtest.a
 	$(CC) -DBITS=511 -D'NAMESPACEBITS(x)=highctidh_511_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o checkct511cycles checkct.c \
 		libhighctidh_511.a libhighctidh_base.a libhighctidh_tunecycles511.a libtest.a
 
 checkct512cycles: checkct.c \
 libhighctidh_512.a libhighctidh_base.a libhighctidh_tunecycles512.a libtest.a
 	$(CC) -DBITS=512 -D'NAMESPACEBITS(x)=highctidh_512_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o checkct512cycles checkct.c \
 		libhighctidh_512.a libhighctidh_base.a libhighctidh_tunecycles512.a libtest.a
 
 checkct1024cycles: checkct.c \
 libhighctidh_1024.a libhighctidh_base.a libhighctidh_tunecycles1024.a libtest.a
 	$(CC) -DBITS=1024 -D'NAMESPACEBITS(x)=highctidh_1024_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o checkct1024cycles checkct.c \
 		libhighctidh_1024.a libhighctidh_base.a libhighctidh_tunecycles1024.a libtest.a
 
 checkct2048cycles: checkct.c \
 libhighctidh_2048.a libhighctidh_base.a libhighctidh_tunecycles2048.a libtest.a
 	$(CC) -DBITS=2048 -D'NAMESPACEBITS(x)=highctidh_2048_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o checkct2048cycles checkct.c \
 		libhighctidh_2048.a libhighctidh_base.a libhighctidh_tunecycles2048.a libtest.a
 
 checkct511mults: checkct.c \
-libhighctidh_511.a libhighctidh_base.a libhighctidh_tunemults511.a libtest.a
+libhighctidh_511.a libhighctidh_base.a libtest.a
 	$(CC) -DBITS=511 -D'NAMESPACEBITS(x)=highctidh_511_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o checkct511mults checkct.c \
-		libhighctidh_511.a libhighctidh_base.a libhighctidh_tunemults511.a libtest.a
+		libhighctidh_511.a libhighctidh_base.a libtest.a
 
 checkct512mults: checkct.c \
-libhighctidh_512.a libhighctidh_base.a libhighctidh_tunemults512.a libtest.a
+libhighctidh_512.a libhighctidh_base.a libtest.a
 	$(CC) -DBITS=512 -D'NAMESPACEBITS(x)=highctidh_512_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o checkct512mults checkct.c \
-		libhighctidh_512.a libhighctidh_base.a libhighctidh_tunemults512.a libtest.a
+		libhighctidh_512.a libhighctidh_base.a libtest.a
 
 checkct1024mults: checkct.c \
-libhighctidh_1024.a libhighctidh_base.a libhighctidh_tunemults1024.a libtest.a
+libhighctidh_1024.a libhighctidh_base.a libtest.a
 	$(CC) -DBITS=1024 -D'NAMESPACEBITS(x)=highctidh_1024_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o checkct1024mults checkct.c \
-		libhighctidh_1024.a libhighctidh_base.a libhighctidh_tunemults1024.a libtest.a
+		libhighctidh_1024.a libhighctidh_base.a libtest.a
 
 checkct2048mults: checkct.c \
-libhighctidh_2048.a libhighctidh_base.a libhighctidh_tunemults2048.a libtest.a
+libhighctidh_2048.a libhighctidh_base.a libtest.a
 	$(CC) -DBITS=2048 -D'NAMESPACEBITS(x)=highctidh_2048_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o checkct2048mults checkct.c \
-		libhighctidh_2048.a libhighctidh_base.a libhighctidh_tunemults2048.a libtest.a
+		libhighctidh_2048.a libhighctidh_base.a libtest.a
 
 checkct511untuned: checkct.c \
 libhighctidh_511.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 	$(CC) -DBITS=511 -D'NAMESPACEBITS(x)=highctidh_511_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o checkct511untuned checkct.c \
 		libhighctidh_511.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 
 checkct512untuned: checkct.c \
 libhighctidh_512.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 	$(CC) -DBITS=512 -D'NAMESPACEBITS(x)=highctidh_512_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o checkct512untuned checkct.c \
 		libhighctidh_512.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 
 checkct1024untuned: checkct.c \
 libhighctidh_1024.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 	$(CC) -DBITS=1024 -D'NAMESPACEBITS(x)=highctidh_1024_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o checkct1024untuned checkct.c \
 		libhighctidh_1024.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 
 checkct2048untuned: checkct.c \
 libhighctidh_2048.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 	$(CC) -DBITS=2048 -D'NAMESPACEBITS(x)=highctidh_2048_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o checkct2048untuned checkct.c \
 		libhighctidh_2048.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 
 bench511cycles: bench.c \
 libhighctidh_511.a libhighctidh_base.a libhighctidh_tunecycles511.a libtest.a
 	$(CC) -DBITS=511 -D'NAMESPACEBITS(x)=highctidh_511_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o bench511cycles bench.c \
 		libhighctidh_511.a libhighctidh_base.a libhighctidh_tunecycles511.a libtest.a
 
 bench512cycles: bench.c \
 libhighctidh_512.a libhighctidh_base.a libhighctidh_tunecycles512.a libtest.a
 	$(CC) -DBITS=512 -D'NAMESPACEBITS(x)=highctidh_512_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o bench512cycles bench.c \
 		libhighctidh_512.a libhighctidh_base.a libhighctidh_tunecycles512.a libtest.a
 
 bench1024cycles: bench.c \
 libhighctidh_1024.a libhighctidh_base.a libhighctidh_tunecycles1024.a libtest.a
 	$(CC) -DBITS=1024 -D'NAMESPACEBITS(x)=highctidh_1024_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o bench1024cycles bench.c \
 		libhighctidh_1024.a libhighctidh_base.a libhighctidh_tunecycles1024.a libtest.a
 
 bench2048cycles: bench.c \
 libhighctidh_2048.a libhighctidh_base.a libhighctidh_tunecycles2048.a libtest.a
 	$(CC) -DBITS=2048 -D'NAMESPACEBITS(x)=highctidh_2048_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o bench2048cycles bench.c \
 		libhighctidh_2048.a libhighctidh_base.a libhighctidh_tunecycles2048.a libtest.a
 
 bench511mults: bench.c \
-libhighctidh_511.a libhighctidh_base.a libhighctidh_tunemults511.a libtest.a
+libhighctidh_511.a libhighctidh_base.a libtest.a
 	$(CC) -DBITS=511 -D'NAMESPACEBITS(x)=highctidh_511_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o bench511mults bench.c \
-		libhighctidh_511.a libhighctidh_base.a libhighctidh_tunemults511.a libtest.a
+		libhighctidh_511.a libhighctidh_base.a libtest.a
 
 bench512mults: bench.c \
-libhighctidh_512.a libhighctidh_base.a libhighctidh_tunemults512.a libtest.a
+libhighctidh_512.a libhighctidh_base.a libtest.a
 	$(CC) -DBITS=512 -D'NAMESPACEBITS(x)=highctidh_512_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o bench512mults bench.c \
-		libhighctidh_512.a libhighctidh_base.a libhighctidh_tunemults512.a libtest.a
+		libhighctidh_512.a libhighctidh_base.a libtest.a
 
 bench1024mults: bench.c \
-libhighctidh_1024.a libhighctidh_base.a libhighctidh_tunemults1024.a libtest.a
+libhighctidh_1024.a libhighctidh_base.a libtest.a
 	$(CC) -DBITS=1024 -D'NAMESPACEBITS(x)=highctidh_1024_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o bench1024mults bench.c \
-		libhighctidh_1024.a libhighctidh_base.a libhighctidh_tunemults1024.a libtest.a
+		libhighctidh_1024.a libhighctidh_base.a libtest.a
 
 bench2048mults: bench.c \
-libhighctidh_2048.a libhighctidh_base.a libhighctidh_tunemults2048.a libtest.a
+libhighctidh_2048.a libhighctidh_base.a libtest.a
 	$(CC) -DBITS=2048 -D'NAMESPACEBITS(x)=highctidh_2048_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o bench2048mults bench.c \
-		libhighctidh_2048.a libhighctidh_base.a libhighctidh_tunemults2048.a libtest.a
+		libhighctidh_2048.a libhighctidh_base.a libtest.a
 
 bench511untuned: bench.c \
 libhighctidh_511.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 	$(CC) -DBITS=511 -D'NAMESPACEBITS(x)=highctidh_511_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o bench511untuned bench.c \
 		libhighctidh_511.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 
 bench512untuned: bench.c \
 libhighctidh_512.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 	$(CC) -DBITS=512 -D'NAMESPACEBITS(x)=highctidh_512_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o bench512untuned bench.c \
 		libhighctidh_512.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 
 bench1024untuned: bench.c \
 libhighctidh_1024.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 	$(CC) -DBITS=1024 -D'NAMESPACEBITS(x)=highctidh_1024_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o bench1024untuned bench.c \
 		libhighctidh_1024.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 
 bench2048untuned: bench.c \
 libhighctidh_2048.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 	$(CC) -DBITS=2048 -D'NAMESPACEBITS(x)=highctidh_2048_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o bench2048untuned bench.c \
 		libhighctidh_2048.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
+
+# ----- uintbig tests require HIGHCTIDH_PORTABLE=0 and never run automatically:
+
+testuintbig511: test.c uintbig511_$(ASM_PLATFORM).S
+	$(CC) -DBITS=511 -D'NAMESPACEBITS(x)=highctidh_511_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
+		-DTEST_UINTBIG \
+		-o $@ $^
+
+testuintbig512: test.c uintbig512_$(ASM_PLATFORM).S
+	$(CC) -DBITS=512 -D'NAMESPACEBITS(x)=highctidh_512_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
+		-DTEST_UINTBIG \
+		-o $@ $^
+
+testuintbig1024: test.c uintbig1024_$(ASM_PLATFORM).S
+	$(CC) -DBITS=1024 -D'NAMESPACEBITS(x)=highctidh_1024_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
+		-DTEST_UINTBIG \
+		-o $@ $^
+
+testuintbig2048: test.c uintbig2048_$(ASM_PLATFORM).S
+	$(CC) -DBITS=2048 -D'NAMESPACEBITS(x)=highctidh_2048_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
+		-DTEST_UINTBIG \
+		-o $@ $^
 
 # ----- tests run automatically:
 
@@ -385,24 +442,28 @@ testrandom.o: testrandom.c random.h GNUmakefile
 test511: test.c \
 libhighctidh_511.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 	$(CC) -DBITS=511 -D'NAMESPACEBITS(x)=highctidh_511_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o test511 test.c \
 		libhighctidh_511.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 
 test512: test.c \
 libhighctidh_512.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 	$(CC) -DBITS=512 -D'NAMESPACEBITS(x)=highctidh_512_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o test512 test.c \
 		libhighctidh_512.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 
 test1024: test.c \
 libhighctidh_1024.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 	$(CC) -DBITS=1024 -D'NAMESPACEBITS(x)=highctidh_1024_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o test1024 test.c \
 		libhighctidh_1024.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 
 test2048: test.c \
 libhighctidh_2048.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 	$(CC) -DBITS=2048 -D'NAMESPACEBITS(x)=highctidh_2048_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o test2048 test.c \
 		libhighctidh_2048.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 
@@ -447,156 +508,88 @@ costpoly2048.out: costpoly2048
 costpoly511: costpoly.c \
 libhighctidh_511.a libhighctidh_base.a libtest.a
 	$(CC) -DBITS=511 -D'NAMESPACEBITS(x)=highctidh_511_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o costpoly511 costpoly.c \
 		libhighctidh_511.a libhighctidh_base.a libtest.a
 
 costpoly512: costpoly.c \
 libhighctidh_512.a libhighctidh_base.a libtest.a
 	$(CC) -DBITS=512 -D'NAMESPACEBITS(x)=highctidh_512_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o costpoly512 costpoly.c \
 		libhighctidh_512.a libhighctidh_base.a libtest.a
 
 costpoly1024: costpoly.c \
 libhighctidh_1024.a libhighctidh_base.a libtest.a
 	$(CC) -DBITS=1024 -D'NAMESPACEBITS(x)=highctidh_1024_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o costpoly1024 costpoly.c \
 		libhighctidh_1024.a libhighctidh_base.a libtest.a
 
 costpoly2048: costpoly.c \
 libhighctidh_2048.a libhighctidh_base.a libtest.a
 	$(CC) -DBITS=2048 -D'NAMESPACEBITS(x)=highctidh_2048_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o costpoly2048 costpoly.c \
 		libhighctidh_2048.a libhighctidh_base.a libtest.a
 
 umults511: umults.c \
 libhighctidh_511.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 	$(CC) -DBITS=511 -D'NAMESPACEBITS(x)=highctidh_511_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o umults511 umults.c \
 		libhighctidh_511.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 
 umults512: umults.c \
 libhighctidh_512.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 	$(CC) -DBITS=512 -D'NAMESPACEBITS(x)=highctidh_512_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o umults512 umults.c \
 		libhighctidh_512.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 
 umults1024: umults.c \
 libhighctidh_1024.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 	$(CC) -DBITS=1024 -D'NAMESPACEBITS(x)=highctidh_1024_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o umults1024 umults.c \
 		libhighctidh_1024.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 
 umults2048: umults.c \
 libhighctidh_2048.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 	$(CC) -DBITS=2048 -D'NAMESPACEBITS(x)=highctidh_2048_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o umults2048 umults.c \
 		libhighctidh_2048.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 
 ubench511: ubench.c \
 libhighctidh_511.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 	$(CC) -DBITS=511 -D'NAMESPACEBITS(x)=highctidh_511_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o ubench511 ubench.c \
 		libhighctidh_511.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 
 ubench512: ubench.c \
 libhighctidh_512.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 	$(CC) -DBITS=512 -D'NAMESPACEBITS(x)=highctidh_512_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o ubench512 ubench.c \
 		libhighctidh_512.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 
 ubench1024: ubench.c \
 libhighctidh_1024.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 	$(CC) -DBITS=1024 -D'NAMESPACEBITS(x)=highctidh_1024_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o ubench1024 ubench.c \
 		libhighctidh_1024.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 
 ubench2048: ubench.c \
 libhighctidh_2048.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 	$(CC) -DBITS=2048 -D'NAMESPACEBITS(x)=highctidh_2048_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o ubench2048 ubench.c \
 		libhighctidh_2048.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 
-# ----- libhighctidh_tune{mults,cycles}:
-
-libhighctidh_tunemults511.a: steps_tunemults511.o GNUmakefile
-	$(AR) crs libhighctidh_tunemults511.a steps_tunemults511.o
-
-libhighctidh_tunemults512.a: steps_tunemults512.o GNUmakefile
-	$(AR) crs libhighctidh_tunemults512.a steps_tunemults512.o
-
-libhighctidh_tunemults1024.a: steps_tunemults1024.o GNUmakefile
-	$(AR) crs libhighctidh_tunemults1024.a steps_tunemults1024.o
-
-libhighctidh_tunemults2048.a: steps_tunemults2048.o GNUmakefile
-	$(AR) crs libhighctidh_tunemults2048.a steps_tunemults2048.o
-
-steps_tunemults511.o: steps_tunemults511.c steps.h GNUmakefile
-	$(CC) -DBITS=511 -D'NAMESPACEBITS(x)=highctidh_511_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
-		-c steps_tunemults511.c
-
-steps_tunemults512.o: steps_tunemults512.c steps.h GNUmakefile
-	$(CC) -DBITS=512 -D'NAMESPACEBITS(x)=highctidh_512_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
-		-c steps_tunemults512.c
-
-steps_tunemults1024.o: steps_tunemults1024.c steps.h GNUmakefile
-	$(CC) -DBITS=1024 -D'NAMESPACEBITS(x)=highctidh_1024_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
-		-c steps_tunemults1024.c
-
-steps_tunemults2048.o: steps_tunemults2048.c steps.h GNUmakefile
-	$(CC) -DBITS=2048 -D'NAMESPACEBITS(x)=highctidh_2048_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
-		-c steps_tunemults2048.c
-
-steps_tunemults511.c: tunemults511.out tune2c GNUmakefile
-	./tune2c < tunemults511.out > steps_tunemults511.c
-
-steps_tunemults512.c: tunemults512.out tune2c GNUmakefile
-	./tune2c < tunemults512.out > steps_tunemults512.c
-
-steps_tunemults1024.c: tunemults1024.out tune2c GNUmakefile
-	./tune2c < tunemults1024.out > steps_tunemults1024.c
-
-steps_tunemults2048.c: tunemults2048.out tune2c GNUmakefile
-	./tune2c < tunemults2048.out > steps_tunemults2048.c
-
-tunemults511.out: tunemults511 GNUmakefile
-	[ -f tunemults511.time ] && cat tunemults511.time || :
-	time ./tunemults511 > tunemults511.out
-
-tunemults512.out: tunemults512 GNUmakefile
-	[ -f tunemults512.time ] && cat tunemults512.time || :
-	time ./tunemults512 > tunemults512.out
-
-tunemults1024.out: tunemults1024 GNUmakefile
-	[ -f tunemults1024.time ] && cat tunemults1024.time || :
-	time ./tunemults1024 > tunemults1024.out
-
-tunemults2048.out: tunemults2048 GNUmakefile
-	[ -f tunemults2048.time ] && cat tunemults2048.time || :
-	time ./tunemults2048 > tunemults2048.out
-
-tunemults511: tunemults.c \
-libhighctidh_511.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
-	$(CC) -DBITS=511 -D'NAMESPACEBITS(x)=highctidh_511_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
-		-o tunemults511 tunemults.c \
-		libhighctidh_511.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
-
-tunemults512: tunemults.c \
-libhighctidh_512.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
-	$(CC) -DBITS=512 -D'NAMESPACEBITS(x)=highctidh_512_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
-		-o tunemults512 tunemults.c \
-		libhighctidh_512.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
-
-tunemults1024: tunemults.c \
-libhighctidh_1024.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
-	$(CC) -DBITS=1024 -D'NAMESPACEBITS(x)=highctidh_1024_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
-		-o tunemults1024 tunemults.c \
-		libhighctidh_1024.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
-
-tunemults2048: tunemults.c \
-libhighctidh_2048.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
-	$(CC) -DBITS=2048 -D'NAMESPACEBITS(x)=highctidh_2048_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
-		-o tunemults2048 tunemults.c \
-		libhighctidh_2048.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
+# ----- libhighctidh_tunecycles:
 
 libhighctidh_tunecycles511.a: steps_tunecycles511.o GNUmakefile
 	$(AR) crs libhighctidh_tunecycles511.a steps_tunecycles511.o
@@ -657,24 +650,28 @@ tunecycles2048.out: tunecycles2048 GNUmakefile
 tunecycles511: tunecycles.c \
 libhighctidh_511.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 	$(CC) -DBITS=511 -D'NAMESPACEBITS(x)=highctidh_511_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o tunecycles511 tunecycles.c \
 		libhighctidh_511.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 
 tunecycles512: tunecycles.c \
 libhighctidh_512.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 	$(CC) -DBITS=512 -D'NAMESPACEBITS(x)=highctidh_512_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o tunecycles512 tunecycles.c \
 		libhighctidh_512.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 
 tunecycles1024: tunecycles.c \
 libhighctidh_1024.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 	$(CC) -DBITS=1024 -D'NAMESPACEBITS(x)=highctidh_1024_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o tunecycles1024 tunecycles.c \
 		libhighctidh_1024.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 
 tunecycles2048: tunecycles.c \
 libhighctidh_2048.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 	$(CC) -DBITS=2048 -D'NAMESPACEBITS(x)=highctidh_2048_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o tunecycles2048 tunecycles.c \
 		libhighctidh_2048.a libhighctidh_base.a libhighctidh_untuned.a libtest.a
 
@@ -697,179 +694,215 @@ libhighctidh.a: crypto_classify.o crypto_declassify.o randombytes.o random.o int
 
 csidh511.o: csidh.c naidne.h csidh.h cgo.h binding511.h binding512.h binding1024.h binding2048.h uintbig.h uintbig_namespace.h annotations.h fp.h fp_namespace.h fiat_p511.h fiat_p512.h fiat_p1024.h fiat_p2048.h randombytes.h crypto_declassify.h crypto_declassify_namespace.h mont.h proj.h mont_namespace.h primes.h primes_namespace.h csidh_namespace.h int64mask.h elligator.h elligator_namespace.h random.h random_namespace.h GNUmakefile
 	$(CC) -DBITS=511 -D'NAMESPACEBITS(x)=highctidh_511_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o csidh511.o -c csidh.c
 
 csidh512.o: csidh.c naidne.h csidh.h cgo.h binding511.h binding512.h binding1024.h binding2048.h uintbig.h uintbig_namespace.h annotations.h fp.h fp_namespace.h fiat_p511.h fiat_p512.h fiat_p1024.h fiat_p2048.h randombytes.h crypto_declassify.h crypto_declassify_namespace.h mont.h proj.h mont_namespace.h primes.h primes_namespace.h csidh_namespace.h int64mask.h elligator.h elligator_namespace.h random.h random_namespace.h GNUmakefile
 	$(CC) -DBITS=512 -D'NAMESPACEBITS(x)=highctidh_512_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o csidh512.o -c csidh.c
 
 csidh1024.o: csidh.c naidne.h csidh.h cgo.h binding511.h binding512.h binding1024.h binding2048.h uintbig.h uintbig_namespace.h annotations.h fp.h fp_namespace.h fiat_p511.h fiat_p512.h fiat_p1024.h fiat_p2048.h randombytes.h crypto_declassify.h crypto_declassify_namespace.h mont.h proj.h mont_namespace.h primes.h primes_namespace.h csidh_namespace.h int64mask.h elligator.h elligator_namespace.h random.h random_namespace.h GNUmakefile
 	$(CC) -DBITS=1024 -D'NAMESPACEBITS(x)=highctidh_1024_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o csidh1024.o -c csidh.c
 
 csidh2048.o: csidh.c naidne.h csidh.h cgo.h binding511.h binding512.h binding1024.h binding2048.h uintbig.h uintbig_namespace.h annotations.h fp.h fp_namespace.h fiat_p511.h fiat_p512.h fiat_p1024.h fiat_p2048.h randombytes.h crypto_declassify.h crypto_declassify_namespace.h mont.h proj.h mont_namespace.h primes.h primes_namespace.h csidh_namespace.h int64mask.h elligator.h elligator_namespace.h random.h random_namespace.h GNUmakefile
 	$(CC) -DBITS=2048 -D'NAMESPACEBITS(x)=highctidh_2048_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o csidh2048.o -c csidh.c
 
 validate511.o: validate.c csidh.h cgo.h binding511.h binding512.h binding1024.h binding2048.h naidne.h uintbig.h uintbig_namespace.h annotations.h fp.h fp_namespace.h fiat_p511.h fiat_p512.h fiat_p1024.h fiat_p2048.h randombytes.h crypto_declassify.h crypto_declassify_namespace.h mont.h proj.h mont_namespace.h primes.h primes_namespace.h csidh_namespace.h GNUmakefile
 	$(CC) -DBITS=511 -D'NAMESPACEBITS(x)=highctidh_511_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o validate511.o -c validate.c
 
 validate512.o: validate.c csidh.h cgo.h binding511.h binding512.h binding1024.h binding2048.h naidne.h uintbig.h uintbig_namespace.h annotations.h fp.h fp_namespace.h fiat_p511.h fiat_p512.h fiat_p1024.h fiat_p2048.h randombytes.h crypto_declassify.h crypto_declassify_namespace.h mont.h proj.h mont_namespace.h primes.h primes_namespace.h csidh_namespace.h GNUmakefile
 	$(CC) -DBITS=512 -D'NAMESPACEBITS(x)=highctidh_512_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o validate512.o -c validate.c
 
 validate1024.o: validate.c csidh.h cgo.h binding511.h binding512.h binding1024.h binding2048.h naidne.h uintbig.h uintbig_namespace.h annotations.h fp.h fp_namespace.h fiat_p511.h fiat_p512.h fiat_p1024.h fiat_p2048.h randombytes.h crypto_declassify.h crypto_declassify_namespace.h mont.h proj.h mont_namespace.h primes.h primes_namespace.h csidh_namespace.h GNUmakefile
 	$(CC) -DBITS=1024 -D'NAMESPACEBITS(x)=highctidh_1024_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o validate1024.o -c validate.c
 
 validate2048.o: validate.c csidh.h cgo.h binding511.h binding512.h binding1024.h binding2048.h naidne.h uintbig.h uintbig_namespace.h annotations.h fp.h fp_namespace.h fiat_p511.h fiat_p512.h fiat_p1024.h fiat_p2048.h randombytes.h crypto_declassify.h crypto_declassify_namespace.h mont.h proj.h mont_namespace.h primes.h primes_namespace.h csidh_namespace.h GNUmakefile
 	$(CC) -DBITS=2048 -D'NAMESPACEBITS(x)=highctidh_2048_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o validate2048.o -c validate.c
 
 skgen511.o: skgen.c csidh.h cgo.h binding511.h binding512.h binding1024.h binding2048.h naidne.h uintbig.h uintbig_namespace.h annotations.h fp.h fp_namespace.h fiat_p511.h fiat_p512.h fiat_p1024.h fiat_p2048.h randombytes.h crypto_declassify.h crypto_declassify_namespace.h mont.h proj.h mont_namespace.h primes.h primes_namespace.h csidh_namespace.h random.h random_namespace.h GNUmakefile
 	$(CC) -DBITS=511 -D'NAMESPACEBITS(x)=highctidh_511_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o skgen511.o -c skgen.c
 
 skgen512.o: skgen.c csidh.h cgo.h binding511.h binding512.h binding1024.h binding2048.h naidne.h uintbig.h uintbig_namespace.h annotations.h fp.h fp_namespace.h fiat_p511.h fiat_p512.h fiat_p1024.h fiat_p2048.h randombytes.h crypto_declassify.h crypto_declassify_namespace.h mont.h proj.h mont_namespace.h primes.h primes_namespace.h csidh_namespace.h random.h random_namespace.h GNUmakefile
 	$(CC) -DBITS=512 -D'NAMESPACEBITS(x)=highctidh_512_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o skgen512.o -c skgen.c
 
 skgen1024.o: skgen.c csidh.h cgo.h binding511.h binding512.h binding1024.h binding2048.h naidne.h uintbig.h uintbig_namespace.h annotations.h fp.h fp_namespace.h fiat_p511.h fiat_p512.h fiat_p1024.h fiat_p2048.h randombytes.h crypto_declassify.h crypto_declassify_namespace.h mont.h proj.h mont_namespace.h primes.h primes_namespace.h csidh_namespace.h random.h random_namespace.h GNUmakefile
 	$(CC) -DBITS=1024 -D'NAMESPACEBITS(x)=highctidh_1024_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o skgen1024.o -c skgen.c
 
 skgen2048.o: skgen.c csidh.h cgo.h binding511.h binding512.h binding1024.h binding2048.h naidne.h uintbig.h uintbig_namespace.h annotations.h fp.h fp_namespace.h fiat_p511.h fiat_p512.h fiat_p1024.h fiat_p2048.h randombytes.h crypto_declassify.h crypto_declassify_namespace.h mont.h proj.h mont_namespace.h primes.h primes_namespace.h csidh_namespace.h random.h random_namespace.h GNUmakefile
 	$(CC) -DBITS=2048 -D'NAMESPACEBITS(x)=highctidh_2048_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o skgen2048.o -c skgen.c
 
 elligator511.o: elligator.c crypto_declassify.h cgo.h binding511.h binding512.h binding1024.h binding2048.h crypto_declassify_namespace.h elligator.h proj.h fp.h fp_namespace.h uintbig.h uintbig_namespace.h annotations.h fiat_p511.h fiat_p512.h fiat_p1024.h fiat_p2048.h randombytes.h elligator_namespace.h GNUmakefile
 	$(CC) -DBITS=511 -D'NAMESPACEBITS(x)=highctidh_511_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o elligator511.o -c elligator.c
 
 elligator512.o: elligator.c crypto_declassify.h cgo.h binding511.h binding512.h binding1024.h binding2048.h crypto_declassify_namespace.h elligator.h proj.h fp.h fp_namespace.h uintbig.h uintbig_namespace.h annotations.h fiat_p511.h fiat_p512.h fiat_p1024.h fiat_p2048.h randombytes.h elligator_namespace.h GNUmakefile
 	$(CC) -DBITS=512 -D'NAMESPACEBITS(x)=highctidh_512_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o elligator512.o -c elligator.c
 
 elligator1024.o: elligator.c crypto_declassify.h cgo.h binding511.h binding512.h binding1024.h binding2048.h crypto_declassify_namespace.h elligator.h proj.h fp.h fp_namespace.h uintbig.h uintbig_namespace.h annotations.h fiat_p511.h fiat_p512.h fiat_p1024.h fiat_p2048.h randombytes.h elligator_namespace.h GNUmakefile
 	$(CC) -DBITS=1024 -D'NAMESPACEBITS(x)=highctidh_1024_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o elligator1024.o -c elligator.c
 
 elligator2048.o: elligator.c crypto_declassify.h cgo.h binding511.h binding512.h binding1024.h binding2048.h crypto_declassify_namespace.h elligator.h proj.h fp.h fp_namespace.h uintbig.h uintbig_namespace.h annotations.h fiat_p511.h fiat_p512.h fiat_p1024.h fiat_p2048.h randombytes.h elligator_namespace.h GNUmakefile
 	$(CC) -DBITS=2048 -D'NAMESPACEBITS(x)=highctidh_2048_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o elligator2048.o -c elligator.c
 
 mont511.o: mont.c steps.h cgo.h binding511.h binding512.h binding1024.h binding2048.h steps_namespace.h mont.h uintbig.h uintbig_namespace.h annotations.h proj.h fp.h fp_namespace.h fiat_p511.h fiat_p512.h fiat_p1024.h fiat_p2048.h randombytes.h crypto_declassify.h crypto_declassify_namespace.h mont_namespace.h poly.h poly_namespace.h int64mask.h GNUmakefile
 	$(CC) -DBITS=511 -D'NAMESPACEBITS(x)=highctidh_511_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o mont511.o -c mont.c
 
 mont512.o: mont.c steps.h cgo.h binding511.h binding512.h binding1024.h binding2048.h steps_namespace.h mont.h uintbig.h uintbig_namespace.h annotations.h proj.h fp.h fp_namespace.h fiat_p511.h fiat_p512.h fiat_p1024.h fiat_p2048.h randombytes.h crypto_declassify.h crypto_declassify_namespace.h mont_namespace.h poly.h poly_namespace.h int64mask.h GNUmakefile
 	$(CC) -DBITS=512 -D'NAMESPACEBITS(x)=highctidh_512_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o mont512.o -c mont.c
 
 mont1024.o: mont.c steps.h cgo.h binding511.h binding512.h binding1024.h binding2048.h steps_namespace.h mont.h uintbig.h uintbig_namespace.h annotations.h proj.h fp.h fp_namespace.h fiat_p511.h fiat_p512.h fiat_p1024.h fiat_p2048.h randombytes.h crypto_declassify.h crypto_declassify_namespace.h mont_namespace.h poly.h poly_namespace.h int64mask.h GNUmakefile
 	$(CC) -DBITS=1024 -D'NAMESPACEBITS(x)=highctidh_1024_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o mont1024.o -c mont.c
 
 mont2048.o: mont.c steps.h cgo.h binding511.h binding512.h binding1024.h binding2048.h steps_namespace.h mont.h uintbig.h uintbig_namespace.h annotations.h proj.h fp.h fp_namespace.h fiat_p511.h fiat_p512.h fiat_p1024.h fiat_p2048.h randombytes.h crypto_declassify.h crypto_declassify_namespace.h mont_namespace.h poly.h poly_namespace.h int64mask.h GNUmakefile
 	$(CC) -DBITS=2048 -D'NAMESPACEBITS(x)=highctidh_2048_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o mont2048.o -c mont.c
 
 poly511.o: poly.c mont.h uintbig.h uintbig_namespace.h cgo.h binding511.h binding512.h binding1024.h binding2048.h annotations.h proj.h fp.h fp_namespace.h fiat_p511.h fiat_p512.h fiat_p1024.h fiat_p2048.h randombytes.h crypto_declassify.h crypto_declassify_namespace.h mont_namespace.h poly.h poly_namespace.h GNUmakefile
 	$(CC) -DBITS=511 -D'NAMESPACEBITS(x)=highctidh_511_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o poly511.o -c poly.c
 
 poly512.o: poly.c mont.h uintbig.h uintbig_namespace.h cgo.h binding511.h binding512.h binding1024.h binding2048.h annotations.h proj.h fp.h fp_namespace.h fiat_p511.h fiat_p512.h fiat_p1024.h fiat_p2048.h randombytes.h crypto_declassify.h crypto_declassify_namespace.h mont_namespace.h poly.h poly_namespace.h GNUmakefile
 	$(CC) -DBITS=512 -D'NAMESPACEBITS(x)=highctidh_512_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o poly512.o -c poly.c
 
 poly1024.o: poly.c mont.h uintbig.h uintbig_namespace.h cgo.h binding511.h binding512.h binding1024.h binding2048.h annotations.h proj.h fp.h fp_namespace.h fiat_p511.h fiat_p512.h fiat_p1024.h fiat_p2048.h randombytes.h crypto_declassify.h crypto_declassify_namespace.h mont_namespace.h poly.h poly_namespace.h GNUmakefile
 	$(CC) -DBITS=1024 -D'NAMESPACEBITS(x)=highctidh_1024_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o poly1024.o -c poly.c
 
 poly2048.o: poly.c mont.h uintbig.h uintbig_namespace.h cgo.h binding511.h binding512.h binding1024.h binding2048.h annotations.h proj.h fp.h fp_namespace.h fiat_p511.h fiat_p512.h fiat_p1024.h fiat_p2048.h randombytes.h crypto_declassify.h crypto_declassify_namespace.h mont_namespace.h poly.h poly_namespace.h GNUmakefile
 	$(CC) -DBITS=2048 -D'NAMESPACEBITS(x)=highctidh_2048_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-o poly2048.o -c poly.c
 
 fp_inv511.o: fp_inv511.c fp.h fp_namespace.h uintbig.h uintbig_namespace.h cgo.h binding511.h binding512.h binding1024.h binding2048.h annotations.h fiat_p511.h fiat_p512.h fiat_p1024.h fiat_p2048.h randombytes.h crypto_declassify.h crypto_declassify_namespace.h GNUmakefile
 	$(CC) -DBITS=511 -D'NAMESPACEBITS(x)=highctidh_511_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-c fp_inv511.c
 
 fp_inv512.o: fp_inv512.c fp.h fp_namespace.h uintbig.h uintbig_namespace.h cgo.h binding511.h binding512.h binding1024.h binding2048.h annotations.h fiat_p511.h fiat_p512.h fiat_p1024.h fiat_p2048.h randombytes.h crypto_declassify.h crypto_declassify_namespace.h GNUmakefile
 	$(CC) -DBITS=512 -D'NAMESPACEBITS(x)=highctidh_512_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-c fp_inv512.c
 
 fp_inv1024.o: fp_inv1024.c fp.h fp_namespace.h uintbig.h uintbig_namespace.h cgo.h binding511.h binding512.h binding1024.h binding2048.h annotations.h fiat_p511.h fiat_p512.h fiat_p1024.h fiat_p2048.h randombytes.h crypto_declassify.h crypto_declassify_namespace.h GNUmakefile
 	$(CC) -DBITS=1024 -D'NAMESPACEBITS(x)=highctidh_1024_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-c fp_inv1024.c
 
 fp_inv2048.o: fp_inv2048.c fp.h fp_namespace.h uintbig.h uintbig_namespace.h cgo.h binding511.h binding512.h binding1024.h binding2048.h annotations.h fiat_p511.h fiat_p512.h fiat_p1024.h fiat_p2048.h randombytes.h crypto_declassify.h crypto_declassify_namespace.h GNUmakefile
 	$(CC) -DBITS=2048 -D'NAMESPACEBITS(x)=highctidh_2048_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-c fp_inv2048.c
 
 fp_sqrt511.o: fp_sqrt511.c fp.h fp_namespace.h uintbig.h uintbig_namespace.h cgo.h binding511.h binding512.h binding1024.h binding2048.h annotations.h fiat_p511.h fiat_p512.h fiat_p1024.h fiat_p2048.h randombytes.h crypto_declassify.h crypto_declassify_namespace.h GNUmakefile
 	$(CC) -DBITS=511 -D'NAMESPACEBITS(x)=highctidh_511_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-c fp_sqrt511.c
 
 fp_sqrt512.o: fp_sqrt512.c fp.h fp_namespace.h uintbig.h uintbig_namespace.h cgo.h binding511.h binding512.h binding1024.h binding2048.h annotations.h fiat_p511.h fiat_p512.h fiat_p1024.h fiat_p2048.h randombytes.h crypto_declassify.h crypto_declassify_namespace.h GNUmakefile
 	$(CC) -DBITS=512 -D'NAMESPACEBITS(x)=highctidh_512_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-c fp_sqrt512.c
 
 fp_sqrt1024.o: fp_sqrt1024.c fp.h fp_namespace.h uintbig.h uintbig_namespace.h cgo.h binding511.h binding512.h binding1024.h binding2048.h annotations.h fiat_p511.h fiat_p512.h fiat_p1024.h fiat_p2048.h randombytes.h crypto_declassify.h crypto_declassify_namespace.h GNUmakefile
 	$(CC) -DBITS=1024 -D'NAMESPACEBITS(x)=highctidh_1024_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-c fp_sqrt1024.c
 
 fp_sqrt2048.o: fp_sqrt2048.c fp.h fp_namespace.h uintbig.h uintbig_namespace.h cgo.h binding511.h binding512.h binding1024.h binding2048.h annotations.h fiat_p511.h fiat_p512.h fiat_p1024.h fiat_p2048.h randombytes.h crypto_declassify.h crypto_declassify_namespace.h GNUmakefile
 	$(CC) -DBITS=2048 -D'NAMESPACEBITS(x)=highctidh_2048_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-c fp_sqrt2048.c
 
 primes511.o: primes511.c primes.h primes_namespace.h cgo.h binding511.h binding512.h binding1024.h binding2048.h GNUmakefile
 	$(CC) -DBITS=511 -D'NAMESPACEBITS(x)=highctidh_511_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-c primes511.c
 
 primes512.o: primes512.c primes.h primes_namespace.h cgo.h binding511.h binding512.h binding1024.h binding2048.h GNUmakefile
 	$(CC) -DBITS=512 -D'NAMESPACEBITS(x)=highctidh_512_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-c primes512.c
 
 primes1024.o: primes1024.c primes.h primes_namespace.h cgo.h binding511.h binding512.h binding1024.h binding2048.h GNUmakefile
 	$(CC) -DBITS=1024 -D'NAMESPACEBITS(x)=highctidh_1024_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-c primes1024.c
 
 primes2048.o: primes2048.c primes.h primes_namespace.h cgo.h binding511.h binding512.h binding1024.h binding2048.h GNUmakefile
 	$(CC) -DBITS=2048 -D'NAMESPACEBITS(x)=highctidh_2048_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
+		$(CFLAGS) \
 		-c primes2048.c
 
-fp511.o: fp511.S fp.h fp_namespace.h uintbig.h uintbig_namespace.h GNUmakefile
+fp511.o: fp511_$(ASM_PLATFORM).S fp_const_le_511.s fp.h fp_namespace.h uintbig.h uintbig_namespace.h GNUmakefile
 	$(SCC) -DBITS=511 -D'NAMESPACEBITS(x)=highctidh_511_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
-		-c fp511.S
+		-o $@ -c $<
 
-fp512.o: fp512.S fp.h fp_namespace.h uintbig.h uintbig_namespace.h GNUmakefile
+fp512.o: fp512_$(ASM_PLATFORM).S fp_const_le_512.s fp.h fp_namespace.h uintbig.h uintbig_namespace.h GNUmakefile
 	$(SCC) -DBITS=512 -D'NAMESPACEBITS(x)=highctidh_512_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
-		-c fp512.S
+		-o $@ -c $<
 
-fp1024.o: fp1024.S fp.h fp_namespace.h uintbig.h uintbig_namespace.h GNUmakefile
+fp1024.o: fp1024_$(ASM_PLATFORM).S fp_const_le_1024.s fp.h fp_namespace.h uintbig.h uintbig_namespace.h GNUmakefile
 	$(SCC) -DBITS=1024 -D'NAMESPACEBITS(x)=highctidh_1024_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
-		-c fp1024.S
+		-o $@ -c $<
 
-fp2048.o: fp2048.S fp.h fp_namespace.h uintbig.h uintbig_namespace.h GNUmakefile
+fp2048.o: fp2048_$(ASM_PLATFORM).S fp_const_le_2048.s fp.h fp_namespace.h uintbig.h uintbig_namespace.h GNUmakefile
 	$(SCC) -DBITS=2048 -D'NAMESPACEBITS(x)=highctidh_2048_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
-		-c fp2048.S
+		-o $@ -c $<
 
-uintbig511.o: uintbig511.S uintbig.h uintbig_namespace.h GNUmakefile
+uintbig511.o: uintbig511_$(ASM_PLATFORM).S uintbig_const_le_511.s uintbig.h uintbig_namespace.h GNUmakefile
 	$(SCC) -DBITS=511 -D'NAMESPACEBITS(x)=highctidh_511_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
-		-c uintbig511.S
+		-o $@ -c $<
 
-uintbig512.o: uintbig512.S uintbig.h uintbig_namespace.h GNUmakefile
+uintbig512.o: uintbig512_$(ASM_PLATFORM).S uintbig_const_le_512.s uintbig.h uintbig_namespace.h GNUmakefile
 	$(SCC) -DBITS=512 -D'NAMESPACEBITS(x)=highctidh_512_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
-		-c uintbig512.S
+		-o $@ -c $<
 
-uintbig1024.o: uintbig1024.S uintbig.h uintbig_namespace.h GNUmakefile
+uintbig1024.o: uintbig1024_$(ASM_PLATFORM).S uintbig_const_le_1024.s uintbig.h uintbig_namespace.h GNUmakefile
 	$(SCC) -DBITS=1024 -D'NAMESPACEBITS(x)=highctidh_1024_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
-		-c uintbig1024.S
+		-o $@ -c $<
 
-uintbig2048.o: uintbig2048.S uintbig.h uintbig_namespace.h GNUmakefile
+uintbig2048.o: uintbig2048_$(ASM_PLATFORM).S uintbig_const_le_2048.s uintbig.h uintbig_namespace.h GNUmakefile
 	$(SCC) -DBITS=2048 -D'NAMESPACEBITS(x)=highctidh_2048_##x' -D'NAMESPACEGENERIC(x)=highctidh_##x' \
-		-c uintbig2048.S
+		-o $@ -c $<
 
 fiat_p511.o: fiat_p511.c fiat_p511.h
 	$(SCC) -c fiat_p511.c -o fiat_p511.o
@@ -1031,10 +1064,9 @@ install: libhighctidh.so libhighctidh.a
 
 clean:
 		-rm -f *.a *.o *.out *.so
-		-rm -f *.s *.bc
 		-rm -f bench1024cycles bench1024mults bench1024untuned bench2048cycles bench2048mults bench2048untuned bench511cycles bench511mults bench511untuned bench512cycles bench512mults bench512untuned
 		-rm -f checkct1024cycles checkct1024mults checkct1024untuned checkct2048cycles checkct2048mults checkct2048untuned checkct511cycles checkct511mults checkct511untuned checkct512cycles checkct512mults checkct512untuned costpoly1024 costpoly2048 costpoly511 example-ctidh1024 example-ctidh2048
-		-rm -f example-ctidh511 example-ctidh512 test1024 test2048 test511 test511 test512 test512-dyn test*-dyn testrandom tunecycles1024 tunecycles2048 tunecycles511 tunecycles512 tunemults1024 tunemults2048 tunemults511 tunemults512 ubench1024 ubench2048 ubench511 ubench512 umults1024 umults2048 umults511 umults512
+		-rm -f example-ctidh511 example-ctidh512 test1024 test2048 test511 test511 test512 test512-dyn test*-dyn testuintbig1024 testuintbig2048 testuintbig511 testuintbig512 testrandom tunecycles1024 tunecycles2048 tunecycles511 tunecycles512 ubench1024 ubench2048 ubench511 ubench512 umults1024 umults2048 umults511 umults512
 		-rm -rf UNKNOWN.egg-info/ __pycache__/
 		-rm -rf build/ deb_dist/ dist/
 		-rm -rf highctidh.egg-info/ highctidh/__pycache__/

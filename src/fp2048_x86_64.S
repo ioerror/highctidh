@@ -11,6 +11,8 @@
 .set pbits,2047
 .set pbytes,256
 .set plimbs,32
+
+.hidden .uintbig_p_local
 .uintbig_p_local:
     .quad 0x7790d615ea034943, 0xdc703f0cd8c4d918, 0x95a98036c813c788, 0xe111b0d22ab8ecaa
     .quad 0x6478407d7a9a56ee, 0xa7bec86fabaf787f, 0x44454e851cf305ab, 0x44084e1a73c76cb2
@@ -21,61 +23,7 @@
     .quad 0xb8523d6a302abf28, 0x33a8779a1ec8b8c2, 0x584eb12932f72abb, 0xdbd1fc2133770253
     .quad 0xddffdcf1aee53f12, 0x4d8854e8b3e19c53, 0x97fefc90e8196ed9, 0x438efcab10254c64
 
-.highctidh_2048_inv_min_p_mod_r: /* -p^-1 mod 2^64 */
-    .quad 0x22249689c54c7495
-
-.global highctidh_2048_fp_0
-highctidh_2048_fp_0:
-    .zero 256
-    .size highctidh_2048_fp_0, 256
-    .type highctidh_2048_fp_0, @object
-
-.global highctidh_2048_fp_1
-highctidh_2048_fp_1: /* 2^2048 mod p */
-    .quad 0x994d7dbe41f62437, 0x6aaf42d975b174b6, 0x3f037f5ba7c4a965, 0x5ccaed897fd53a00
-    .quad 0xd2973e879030fb33, 0x08c3a6b0fcf19681, 0x33301470a926eefd, 0x33e715b0a4a9b9e9
-    .quad 0x8737cc516cf9ace5, 0xf5464238325eccd4, 0x393cd9de4f760e82, 0x059880446fb9a315
-    .quad 0x8b19e3b333b22e4a, 0x65ac4ae7830805fa, 0xd71b975ca89c8fcd, 0x37314ebe2cf1f23b
-    .quad 0x565f6b8c9e61cfb9, 0x87712cf7de06573f, 0x6d8736050fb35ad2, 0xe3efa60224957edb
-    .quad 0x444a4fc8b855012d, 0xac7f2394665a0905, 0xcff83c43b74af366, 0x167df91c271503fd
-    .quad 0xd70947c16f7fc287, 0x65069931a3a5d5b7, 0xf713ec84671a7fce, 0x6c8a0b9c659af905
-    .quad 0x6600692af35042c7, 0x17670145e45b2b04, 0x38030a4d47b3b374, 0x355309fecf901ad2
-    .size highctidh_2048_fp_1, 256
-    .type highctidh_2048_fp_1, @object
-
-.global highctidh_2048_fp_2
-highctidh_2048_fp_2: /* 2^2049 mod p */
-    .quad 0xbb0a256699e8ff2b, 0xf8ee46a6129e1054, 0xe85d7e8087758b41, 0xd8842a40d4f18755
-    .quad 0x40b63c91a5c79f77, 0x69c884f24e33b484, 0x221ada5c355ad84e, 0x23c5dd46d58c0720
-    .quad 0xe62cdcbdfe46936c, 0x91a3efd87587ddef, 0xdae351b164137731, 0xb7b92b4a5a067c86
-    .quad 0x99e7134ccdf516ac, 0x4292041c31bd6348, 0xa095b682dec2a4df, 0xd61db7bbbe348a8b
-    .quad 0xc98950481c398f5a, 0x915d68ed060ecb93, 0xaa3b7e0bcf4d2940, 0xbe84835a555cd2aa
-    .quad 0xf4ad64d458c65815, 0x927dfdaf997cbfb6, 0x3a988c9e010437ef, 0xdf25efec5b310950
-    .quad 0xf5c05218aed4c5e5, 0x9664bac92882f2ac, 0x95d927df9b3dd4e1, 0xfd421b1797beefb8
-    .quad 0xee00f56437bb467b, 0xe145ada314d4b9b4, 0xd8071809a74df80e, 0x271717528efae93f
-    .size highctidh_2048_fp_2, 256
-    .type highctidh_2048_fp_2, @object
-
-.highctidh_2048_r_squared_mod_p: /* (2^2048)^2 mod p */
-    .quad 0x6e940162ecb00f8c, 0x24c744036302b024, 0xc892a6ce3f16637b, 0x37733ccc6ac611b0
-    .quad 0xe5361a2cfb50bcf7, 0xe06f5b5f3f269a1f, 0x67d1d25e92181152, 0xab5a12bd6902fcfc
-    .quad 0x82c060ea7daaebd0, 0x22029cf3781c2b9e, 0x0cfdf6fb51053d83, 0xd0af69954ce04fb3
-    .quad 0x015a5254e7ef0c6d, 0x834839d5541a461a, 0x6768d972de4e269a, 0x71a06dcb2a0a7a7f
-    .quad 0x0e11b7d51a8ef22f, 0x9d655dcdeb3d4934, 0x28dfab822c934ea8, 0x60a2ba69a0862d99
-    .quad 0xf1286b89b68ee540, 0xb16c9ae335599258, 0x4a30cb66a64be15f, 0xd021ee65d62b98ce
-    .quad 0xae101149f5e60533, 0x2ad923e56bee4dc3, 0x5ccb61e26b6f93b5, 0xa4ee09d81cc595af
-    .quad 0xdc3497d89520ca1f, 0x2ab20fe509190878, 0xcb8fab09772c236e, 0x2dc5652f8085f6a5
-
-.section .data
-.global highctidh_2048_fp_mulsq_count
-highctidh_2048_fp_mulsq_count:
-    .quad 0
-.global highctidh_2048_fp_sq_count
-highctidh_2048_fp_sq_count:
-    .quad 0
-.global highctidh_2048_fp_addsub_count
-highctidh_2048_fp_addsub_count:
-    .quad 0
+#include "fp_const_le_2048.s"
 
 .section .text
 .p2align 4,,15
@@ -299,8 +247,6 @@ highctidh_2048_fp_add2:
     mov rdx, rdi
 .global highctidh_2048_fp_add3
 highctidh_2048_fp_add3:
-    mov rax, [rip + highctidh_2048_fp_addsub_count@GOTPCREL]
-    add qword ptr [rax], 1
     push rdi
     call highctidh_2048_uintbig_add3
     pop rdi
@@ -312,8 +258,6 @@ highctidh_2048_fp_sub2:
   xchg rsi, rdx
 .global highctidh_2048_fp_sub3
 highctidh_2048_fp_sub3:
-    mov rax, [rip + highctidh_2048_fp_addsub_count@GOTPCREL]
-    add qword ptr [rax], 1
     push rdi
     call highctidh_2048_uintbig_sub3
     pop rdi
@@ -356,9 +300,6 @@ highctidh_2048_fp_mul2:
 highctidh_2048_fp_mul3:
     push rbp
     push rbx
-
-  mov rax, [rip + highctidh_2048_fp_mulsq_count@GOTPCREL]
-  add qword ptr [rax], 1
 
   sub rsp,272
   mov [rsp+264],rdi
@@ -923,8 +864,6 @@ highctidh_2048_fp_sq1:
 highctidh_2048_fp_sq2:
     /* TODO implement optimized Montgomery squaring */
     mov rdx, rsi
-    mov rax, [rip + highctidh_2048_fp_sq_count@GOTPCREL]
-    add qword ptr [rax], 1
     jmp highctidh_2048_fp_mul3
 
 #endif
