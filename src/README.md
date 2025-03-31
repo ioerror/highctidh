@@ -189,11 +189,9 @@ MacOS 14 supports the Python module with Python 3.9, 3.10, 3.11, and 3.12.
 Windows support is extremely experimental.  Building the main C library on
 Windows Server 2019 and Windows Server 2022 should be possible with `clang` as
 is demonstrated in the continuous integration configuration
-`windows-fiat-c-library-test.yaml`.  It has only been tested with the Windows
-Server 2022 image preloaded with `clang`, `bash`, `make`, and other related
-tools
-[https://github.com/actions/runner-images/blob/main/images/windows/Windows2022-Readme.md](available
-as a part of the CI configuration).
+`windows-fiat-c-library-test.yaml`.  It has only been tested with the [Windows
+Server 2022 image](https://github.com/actions/runner-images/blob/main/images/windows/Windows2022-Readme.md) preloaded with `clang`, `bash`, `make`, and other related
+tools (available as a part of the CI configuration).
 
 Building the C library and performing minimal testing manually requires using
 `bash` as provided by `git` on Windows, GNU `make`, and `clang` using the
