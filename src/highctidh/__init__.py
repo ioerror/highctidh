@@ -144,6 +144,9 @@ class ctidh(object):
             def __repr__(self):
                 return f'<highctidh.ctidh({ctidh_self.field_size}).private_key>'
 
+            def __len__(self):
+                return ctidh_self.field_size
+
             @classmethod
             def frombytes(cls, byt:bytes):
                 '''restore bytes(private_key_object) in canonical byte
@@ -192,6 +195,9 @@ class ctidh(object):
 
             def __repr__(self):
                 return f'<highctidh.ctidh({ctidh_self.field_size}).public_key>'
+
+            def __len__(self):
+                return ctidh_self.field_size
 
             @classmethod
             def frombytes(cls, byt:bytes, validate=True):
@@ -343,6 +349,8 @@ class ctidh(object):
         >>> ctidh511.validate(pk511_a)
         True
         """
+        if self.field_size != len(pk):
+            raise InvalidFieldSize
         if self._validate(pk):
             return True
         else:
@@ -376,6 +384,8 @@ class ctidh(object):
         >>> pk511_b == ctidh511.derive_public_key(sk511_b)
         False
         """
+        if self.field_size != len(pk0) or len(pk0) != len(pk1) or len(pk1) != len(sk):
+            raise InvalidFieldSize
         if self._csidh(pk0, pk1, sk):
             return True
         else:
@@ -399,6 +409,8 @@ class ctidh(object):
         >>> sk511_b
         <highctidh.ctidh(511).private_key>
         """
+        if self.field_size != len(sk):
+            raise InvalidFieldSize
         if rng:
 
             @ctypes.CFUNCTYPE(None, ctypes.c_void_p, ctypes.c_size_t, ctypes.c_void_p)
@@ -446,6 +458,8 @@ class ctidh(object):
         >>> pk511_a
         <highctidh.ctidh(511).public_key>
         """
+        if self.field_size != len(sk):
+            raise InvalidFieldSize
         return sk.derive_public_key()
 
     def dh(
@@ -471,6 +485,8 @@ class ctidh(object):
         >>> ctidh511.dh(sk511_a, pk511_b) == ctidh511.dh(sk511_b, pk511_a)
         True
         """
+        if self.field_size != len(sk) or len(sk) != len(pk):
+            raise InvalidFieldSize
         assert type(pk) is self.public_key
         assert type(sk) is self.private_key
         shared_key = self.public_key()
@@ -492,6 +508,8 @@ class ctidh(object):
         >>> ctidh511.blind(sk511_a, pk511_b)
         <highctidh.ctidh(511).public_key>
         """
+        if self.field_size != len(blinding_factor_sk) or len(blinding_factor_sk) != len(pk):
+            raise InvalidFieldSize
         blinded_key = self.public_key()
         self.csidh(blinded_key, pk, blinding_factor_sk)
         return blinded_key
@@ -520,6 +538,8 @@ class ctidh(object):
         >>> ctidh511.blind_dh(sk511_a, sk511_b, pk511_c)
         <highctidh.ctidh(511).public_key>
         """
+        if self.field_size != len(blind_sk) or len(blind_sk) != len(sk) or len(sk) != len(pk):
+            raise InvalidFieldSize
         shared_key = self.public_key()
         blinded_result = self.public_key()
         if self.csidh(shared_key, pk, sk):
