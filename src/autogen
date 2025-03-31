@@ -857,10 +857,14 @@ for bits,primes,batchsize,batchbound in data:
       f.write('.endm\n')
       f.write('\n')
 
-      for i in range(plimbs):
-        indices = ['%d' % (8*((j+i+1)%(plimbs+1))) for j in range(plimbs+1)]
-        indices = ', '.join(indices)
-        f.write('    MULSTEP %d, %s\n' % (i,indices))
+      indices = ['8*(k+1)']
+      indices += ['(8*(k+%d))%%%d' % (j, 8*(plimbs+1)) for j in range(2,plimbs+1)]
+      indices += ['8*k']
+      f.write('    .set k, 0\n')
+      f.write('    .rept plimbs\n')
+      f.write('        MULSTEP k, %s\n' % ', '.join(indices))
+      f.write('        .set k, k+1\n')
+      f.write('    .endr\n')
       f.write('\n')
       f.write('    mov rdi,[rsp+%d]\n' % (8*plimbs+8))
       f.write('\n')
@@ -988,6 +992,9 @@ with open(fn+'.tmp','w') as f:
   f.write('ASM_PLATFORM := aarch64\n')
   f.write('else\n')
   f.write('ASM_PLATFORM := $(PLATFORM)\n')
+  f.write('endif\n')
+  f.write('ifeq ($(ASM_PLATFORM), aarch64)\n')
+  f.write('ASFLAGS := -march=armv8-a+sve2\n')
   f.write('endif\n')
   f.write('\tlibhighctidh_511_OBJS := uintbig511.o fp511.o\n')
   f.write('\tlibhighctidh_512_OBJS := uintbig512.o fp512.o\n')
@@ -1261,6 +1268,7 @@ with open(fn+'.tmp','w') as f:
   for bits in databits:
     f.write('fp{0}.o: fp{0}_$(ASM_PLATFORM).S fp_const_le_{0}.s fp.h fp_namespace.h uintbig.h uintbig_namespace.h GNUmakefile\n'.format(bits))
     f.write(scc.format(bits))
+    f.write('\t\t$(ASFLAGS) \\\n')
     f.write('\t\t-o $@ -c $<\n')
     f.write('\n')
 

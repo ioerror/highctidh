@@ -162,3 +162,46 @@
 	adds	\r0, \r0, \r1
 	adc	xover, xover, xzr
 .endm
+
+.macro MAA rterm1, rterm2, raddto
+	ADCX	\raddto, x5
+	MULX	x5, x4, \rterm1, \rterm2
+	ADOX	\raddto, x4
+.endm
+
+.macro MAAx2V rterm2, raddto2,  rterm3, raddto3
+	ADCX	\raddto2, x5
+
+	dup	z1.d, \rterm2
+	mov	z1.d, p1/m, \rterm3
+
+	umulh	z3.d, z0.d, z1.d
+	mul	z2.d, z0.d, z1.d
+
+	lastb	x5, p0, z2.d
+	ADOX	\raddto2, x5
+
+	lastb	x5, p0, z3.d
+	ADCX	\raddto3, x5
+
+	lastb	x5, p1, z2.d
+	ADOX	\raddto3, x5
+
+	lastb	x5, p1, z3.d
+.endm
+
+.macro MAAx7 rterm1
+	MAA	\rterm1, x22, x10
+	dup	z0.d, \rterm1
+	MAAx2V	x23, x11,  x24, x12
+	MAAx2V	x25, x13,  x26, x14
+	MAAx2V	x27, x15,  x28, x16
+.endm
+
+.macro MAAx8 rterm1
+	dup	z0.d, \rterm1
+	MAAx2V	x21, x9,  x22, x10
+	MAAx2V	x23, x11,  x24, x12
+	MAAx2V	x25, x13,  x26, x14
+	MAAx2V	x27, x15,  x28, x16
+.endm
