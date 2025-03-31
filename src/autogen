@@ -916,6 +916,7 @@ for bits,primes,batchsize,batchbound in data:
 cctest = '\t$(CC) -D\'NAMESPACEGENERIC(x)=highctidh_##x\' \\\n'
 ccgeneric = '\t$(CC) -D\'NAMESPACEGENERIC(x)=highctidh_##x\' \\\n'
 ccbits = '\t$(CC) -DBITS={0} -D\'NAMESPACEBITS(x)=highctidh_{0}_##x\' -D\'NAMESPACEGENERIC(x)=highctidh_##x\' \\\n'
+ccbits += '\t\t$(CFLAGS) \\\n'
 scc = '\t$(SCC) -DBITS={0} -D\'NAMESPACEBITS(x)=highctidh_{0}_##x\' -D\'NAMESPACEGENERIC(x)=highctidh_##x\' \\\n'
 
 def includes(fn):
