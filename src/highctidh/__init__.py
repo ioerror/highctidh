@@ -27,7 +27,8 @@ except PackageNotFoundError:
     __version__ = highctidh_version
 
 class InvalidFieldSize(Exception):
-    """Raised when a field is not one of (511, 512, 1024, 2048).
+    """
+    Raised when a field is not one of (511, 512, 1024, 2048).
 
     >>> from highctidh import InvalidFieldSize
     >>> raise InvalidFieldSize
@@ -40,7 +41,8 @@ class InvalidFieldSize(Exception):
 
 
 class InvalidPublicKey(Exception):
-    """Raised when a public key is not validated by the validate() function.
+    """
+    Raised when a public key is not validated by the validate() function.
 
     >>> from highctidh import InvalidPublicKey
     >>> raise InvalidPublicKey
@@ -52,7 +54,8 @@ class InvalidPublicKey(Exception):
     pass
 
 class DecodingError(Exception):
-    """Raised when a serialized value is not in the expected format.
+    """
+    Raised when a serialized value is not in the expected format.
 
     >>> from highctidh import DecodingError
     >>> raise DecodingError
@@ -64,7 +67,8 @@ class DecodingError(Exception):
     pass
 
 class CSIDHError(Exception):
-    """Raised when csidh() fails to return True.
+    """
+    Raised when csidh() fails to return True.
 
     >>> from highctidh import CSIDHError
     >>> raise CSIDHError
@@ -77,7 +81,8 @@ class CSIDHError(Exception):
 
 
 class LibraryNotFound(Exception):
-    """Raised when the shared library cannot be located and opened.
+    """
+    Raised when the shared library cannot be located and opened.
 
     >>> from highctidh import LibraryNotFound
     >>> raise LibraryNotFound
@@ -138,7 +143,7 @@ class ctidh(object):
             ]
 
             def __bytes__(self) -> bytes:
-                """canonical byte representation"""
+                """Canonical byte representation"""
                 return bytes(self.e)
 
             def __repr__(self):
@@ -149,8 +154,8 @@ class ctidh(object):
 
             @classmethod
             def frombytes(cls, byt:bytes):
-                '''restore bytes(private_key_object) in canonical byte
-                representation as a private_key() instance'''
+                '''Restore bytes(private_key_object) in canonical byte
+                representation as a private_key() instance.'''
                 if type(byt) is not bytes:
                     raise DecodingError("Private key is not bytes")
                 if len(byt) != ctypes.sizeof(cls):
@@ -159,8 +164,8 @@ class ctidh(object):
 
             @classmethod
             def fromhex(cls, h:str):
-                '''restore bytes(private_key_object).hex() in canonical byte
-                representation as a private_key() instance'''
+                '''Restore bytes(private_key_object).hex() in canonical byte
+                representation as a private_key() instance.'''
                 if type(h) is not str:
                     raise DecodingError("Private key is not str")
                 try:
@@ -173,7 +178,7 @@ class ctidh(object):
                 return cls.from_buffer(ctypes.create_string_buffer(h))
 
             def derive_public_key(self):
-                """Compute return the corresponding public key *pk*."""
+                """Compute and return the corresponding public key *pk*."""
                 pk = ctidh_self.public_key()
                 ctidh_self.csidh(pk, ctidh_self.base, self)
                 return pk
@@ -190,7 +195,7 @@ class ctidh(object):
             _fields_ = [("A", ctypes.c_uint64 * (self.pk_size // 8))]
 
             def __bytes__(self):
-                """pack to canonical little-endian representation"""
+                """Pack to canonical little-endian representation."""
                 return struct.pack("<" + "Q" * (ctypes.sizeof(self) // 8), *self.A)
 
             def __repr__(self):
@@ -204,8 +209,8 @@ class ctidh(object):
                 """
                 Restores a public_key instance from canonical little-endian representation.
                 If the optional validate= parameter is True, the public key is validated.
-                If not, the caller must ensure that the public key is valid and
-                comes from a trusted source.
+                If not, the caller must ensure that the public key is valid and comes from 
+                a trusted source.
                 """
                 if type(byt) is not bytes:
                     raise DecodingError("Public key is not bytes")
@@ -278,7 +283,7 @@ class ctidh(object):
     def private_key_from_bytes(self, h:bytes):
         """
         Restores a private_key instance from bytes in the canonical
-        (little-endian) representation
+        little-endian representation
 
         >>> from highctidh import ctidh
         >>> ctidh511 = ctidh(511)
@@ -292,7 +297,7 @@ class ctidh(object):
     def public_key_from_bytes(self, h:bytes):
         """
         Restores a public_key instance from bytes in the canonical
-        (little-endian) representation
+        little-endian representation.
 
         >>> from highctidh import ctidh
         >>> ctidh511 = ctidh(511)
@@ -309,7 +314,7 @@ class ctidh(object):
     def private_key_from_hex(self, h:str):
         """
         Restores a private_key instance from hex in the canonical
-        (little-endian) representation
+        little-endian representation.
 
         >>> from highctidh import ctidh
         >>> ctidh511 = ctidh(511)
@@ -323,7 +328,7 @@ class ctidh(object):
     def public_key_from_hex(self, h:str):
         """
         Restores a public_key instance from hex in the canonical
-        (little-endian) representation
+        little-endian representation.
 
         >>> from highctidh import ctidh
         >>> ctidh511 = ctidh(511)
@@ -364,9 +369,9 @@ class ctidh(object):
         successful.
 
         This function mutates the value of *pk1* and returns a bool that
-        indicates if the result passes csidh validation as this is what the
+        indicates if the result passes csidh validation, which is what the
         original C library does. This mutation may make some Python programmers
-        unhappy and this documentation serves to warning to would-be callers.
+        unhappy and this documentation serves as a warning to would-be callers.
 
         This API is likely to change to ensure that mutation is hidden from
         Python callers and as a result it should be considered experimental.
@@ -392,15 +397,19 @@ class ctidh(object):
             raise CSIDHError
 
     def generate_secret_key_inplace(self, sk, rng=None, context=None):
-        """Generate a secret key *sk* without allocating memory, overwriting *sk*.
+        """
+        Generate a secret key *sk* without allocating memory, overwriting *sk*.
         Optionally takes a callable argument *rng* which is called with two
-        arguments: rng(buf, context)
-        Where *buf* is a bytearray() to be filled with random data and
+        arguments: 
+        
+        rng(buf, context)
+        
+        where *buf* is a bytearray() to be filled with random data and
         *context* is an int() context identifier to enable thread-safe calls.
         If *context* is left blank, it is a pointer to the buffer.
         Note that in order to achieve portable reproducible results, a PRNG
-        must fill buf as though it was an array of int32_t values in
-        HOST-ENDIAN/NATIVE byte order, see comment in csidh.h:ctidh_fillrandom
+        must fill buf as though it were an array of int32_t values in
+        HOST-ENDIAN/NATIVE byte order; see comment in csidh.h:ctidh_fillrandom.
 
         >>> from highctidh import ctidh
         >>> ctidh511 = ctidh(511)
@@ -429,15 +438,19 @@ class ctidh(object):
         return sk
 
     def generate_secret_key(self, rng=None, context=None):
-        """Generate a secret key *sk*, return it.
+        """
+        Generate a secret key *sk*, return it.
         Optionally takes a callable argument *rng* which is called with two
-        arguments: rng(buf, context)
-        Where *buf* is a bytearray() to be filled with random data and
+        arguments: 
+        
+        rng(buf, context)
+        
+        where *buf* is a bytearray() to be filled with random data and
         *context* is an int() context identifier to enable thread-safe calls.
         If *context* is left blank, it is a pointer to the buffer.
         Note that in order to achieve portable reproducible results, a PRNG
-        must fill buf as though it was an array of int32_t values in
-        HOST-ENDIAN/NATIVE byte order, see comment in csidh.h:ctidh_fillrandom
+        must fill buf as though it wwere an array of int32_t values in
+        HOST-ENDIAN/NATIVE byte order; see comment in csidh.h:ctidh_fillrandom
 
         >>> from highctidh import ctidh
         >>> ctidh511 = ctidh(511)
@@ -449,7 +462,8 @@ class ctidh(object):
             self.private_key(), rng=rng, context=context)
 
     def derive_public_key(self, sk):
-        """Given a secret key *sk*, return the corresponding public key *pk*.
+        """
+        Given a secret key *sk*, return the corresponding public key *pk*.
 
         >>> from highctidh import ctidh
         >>> ctidh511 = ctidh(511)
@@ -471,8 +485,8 @@ class ctidh(object):
         """
         This is a classic Diffie-Hellman function which takes a secret key
         *sk* and a public key *pk* and computes a random element. It then
-        computes a uniformly random bit string from the random element using a
-        variable length hash function. The returned value is a bytes() object.
+        computes a uniformly random bit-string from the random element using a
+        variable-length hash function. The returned value is a bytes() object.
         The size of the hash output is dependent on the field size. The *_hash*
         may be overloaded as needed.
 
@@ -496,7 +510,7 @@ class ctidh(object):
     def blind(self, blinding_factor_sk, pk):
         """
         This blind function takes a secret blinding factor key as
-        *blinding_factor_sk* and a public key pk. It calls the *csidh* group
+        *blinding_factor_sk* and a public key *pk*. It calls the *csidh* group
         action and returns the blinded public key *blinded_key*.
 
         >>> from highctidh import ctidh
@@ -518,7 +532,7 @@ class ctidh(object):
         """
         This is a Diffie-Hellman function for use with blinding factors. This
         is a specialized function that should only be use with very specific
-        cryptographic protocols such as those using the sphinx packet format.
+        cryptographic protocols such as those using the Sphinx packet format.
         It takes a blinding factor *blind_sk* that is a private_key() object, a
         second secret key *sk* that is a private_key() object, a public key
         *pk* that is a public_key() object, and it computes a random element.
