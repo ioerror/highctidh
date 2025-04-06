@@ -15,6 +15,11 @@ same underlying C or assembler implementations:
 - Python module
 - Golang module
 
+## Nix
+
+There's a flake file that provides packages, development shells and more.
+Use `nix flake show` to see its contents.
+
 ## C library
 
 Build and install the C library for each field size with required headers:
