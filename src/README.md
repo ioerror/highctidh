@@ -17,7 +17,7 @@ same underlying C or assembler implementations:
 
 ## Nix
 
-There's a flake file that provides packages, development shells and more.
+There's a [Nix](https://nix.dev/) flake file that provides packages, development shells and more.
 Use `nix flake show` to see its contents.
 
 ## C library
