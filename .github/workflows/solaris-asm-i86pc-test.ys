@@ -1,3 +1,5 @@
+!YS-v0:
+
 name: Solaris 11.4 asm i86pc build with gcc
 
 on: [push]

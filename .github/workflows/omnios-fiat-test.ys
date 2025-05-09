@@ -1,3 +1,5 @@
+!YS-v0:
+
 name: Omnios fiat build with gcc
 
 on: [push]

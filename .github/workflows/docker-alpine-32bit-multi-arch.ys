@@ -1,3 +1,5 @@
+!YS-v0:
+
 name: Alpine multi-arch docker 32bit build and test (clang)
 on:
   push:
