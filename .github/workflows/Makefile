@@ -10,9 +10,12 @@ YAML-FILES := $(wildcard .*.yaml)
 
 export YSPATH := $(ROOT)/lib
 
+ifneq (,$(force))
+  _ := $(shell touch Makefile)
+endif
+
 
 default:
-	@echo $(YAML-FILES)
 
 update: $(YS) $(YAML-FILES)
 
