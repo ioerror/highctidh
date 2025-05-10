@@ -8,10 +8,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        CC: ["clang", "gcc"]
-        PORTABLE: ["0", "1"]
-        CONTAINER: ["alpine:3.19.1", "alpine:3.19", "alpine:3.18.6",
-                    "alpine:3.18", "alpine:3.17.7", "alpine:3.17"]
+        CC: [clang, gcc]
+        PORTABLE: ['0', '1']
+        CONTAINER: [alpine:3.19.1, alpine:3.19, alpine:3.18.6,
+                    alpine:3.18, alpine:3.17.7, alpine:3.17]
       fail-fast: false
     container: ${{ matrix.CONTAINER }}
     steps:

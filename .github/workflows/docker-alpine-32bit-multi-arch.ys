@@ -10,12 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        CC: ["clang"]
-        PORTABLE: ["1"]
-        CONTAINER: ["alpine"]
-        DOCKER_ARCH_ARGS: ["--platform linux/arm/v6 arm32v6/alpine",
-                           "--platform linux/arm/v7 arm32v7/alpine",
-                           "--platform linux/i386 i386/alpine"]
+        CC: [clang]
+        PORTABLE: ['1']
+        CONTAINER: [alpine]
+        DOCKER_ARCH_ARGS: [--platform linux/arm/v6 arm32v6/alpine,
+                           --platform linux/arm/v7 arm32v7/alpine,
+                           --platform linux/i386 i386/alpine]
       fail-fast: false
     steps:
     - name: Set up QEMU

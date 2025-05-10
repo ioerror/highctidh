@@ -8,9 +8,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        CC: ["clang", "gcc"]
-        PORTABLE: ["0", "1"]
-        CONTAINER: ["almalinux:latest"]
+        CC: [clang, gcc]
+        PORTABLE: ['0', '1']
+        CONTAINER: [almalinux:latest]
       fail-fast: false
 
     container: ${{ matrix.CONTAINER }}

@@ -10,9 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        CC: ["clang"]
-        PORTABLE: ["1"]
-        CONTAINER: ["alpine"]
+        CC: [clang]
+        PORTABLE: ['1']
+        CONTAINER: [alpine]
         DOCKER_ARCH_ARGS::
           clang-platforms()
           .map(\('--platform ' + _))
