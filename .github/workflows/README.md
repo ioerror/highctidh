@@ -7,6 +7,8 @@ Written in YS
 
 ```
 $ make update
+$ make update force=1
+$ make update force=1 devel=1
 ```
 
 ## Overview
@@ -15,6 +17,18 @@ Each `.name.yaml` workflow file is generated from a `name.ys` file.
 
 GHA uses the "hidden" `.yaml` file, but you can easily refactor them by using
 YS as the inputs.
+
+
+## Makefile Options
+
+The `make update force=1` command will rebuild all `.yaml` files.
+
+By default `ys` is used from a Docker container which is more portable but
+slow.
+
+With `make update devel=1` a local copy of `ys` is installed under the `.git/`
+directory the first time and then used.
+This runs much faster.
 
 
 ## How to Refactor the Workflows
