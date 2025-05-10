@@ -16,7 +16,7 @@ default:
 
 update: $(YS) $(YAML-FILES)
 
-.%.yaml: %.ys
+.%.yaml: %.ys Makefile lib/* bash/*
 	$(YS) -Y $< > $@
 
 $(YS):
