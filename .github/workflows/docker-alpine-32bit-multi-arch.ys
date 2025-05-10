@@ -17,6 +17,7 @@ jobs:
                            --platform linux/arm/v7 arm32v7/alpine,
                            --platform linux/i386 i386/alpine]
       fail-fast: false
+
     steps:
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
@@ -25,7 +26,10 @@ jobs:
       uses: actions/checkout@v4
 
    #- name: Install requirements
-   #  run : sudo apt update && sudo apt install -y --no-install-recommends docker.io autoconf automake libtool
+   #  run : sudo apt update &&
+   #        sudo apt install -ys
+   #            --no-install-recommends
+   #            docker.io autoconf automake libtool
 
     - name: check kernel
       run: |

@@ -39,7 +39,7 @@ jobs:
       run:: make('examples')
 
     - name: Run examples
-      run: CC=${{ matrix.CC }} HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make examples-run
+      run:: make('examples-run')
 
     - name: Examine build artifacts
       run: ls -alh dist/*.so && sha256sum dist/*.so
