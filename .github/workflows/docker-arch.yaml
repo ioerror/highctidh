@@ -5,6 +5,10 @@ on:
   pull_request:
     branches: [ "main" ]
 
+env:
+  CFLAGS_GCC: "-fno-lto -Wno-error=maybe-uninitialized"
+  CFLAGS_CLANG: "-fno-lto"
+
 jobs:
   docker:
     runs-on: ubuntu-latest
@@ -14,26 +18,37 @@ jobs:
         PORTABLE: ["0", "1"]
         CONTAINER: ["archlinux:latest"]
       fail-fast: false
+
     container: ${{ matrix.CONTAINER }}
+
     steps:
     - uses: actions/checkout@v4
 
     - name: Install Arch deps
       run: ./misc/install-arch-deps.sh
 
+    - name: Set compiler specific CFLAGS
+      id: setflags
+      run: |
+        if [[ "${{ matrix.CC }}" == "gcc" ]]; then
+          echo "CFLAGS=${CFLAGS_GCC}" >> "$GITHUB_ENV"
+        else
+          echo "CFLAGS=${CFLAGS_CLANG}" >> "$GITHUB_ENV"
+        fi
+
     - name: Build
-      run: CC=${{ matrix.CC }} CFLAGS="-fno-lto" HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make
+      run: CC=${{ matrix.CC }} CFLAGS=$CFLAGS HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make
     - name: Test install
-      run: CC=${{ matrix.CC }} HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make install
+      run: CC=${{ matrix.CC }} CFLAGS=$CFLAGS HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make install
 
     - name: Build examples
-      run: CC=${{ matrix.CC }} HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make examples
+      run: CC=${{ matrix.CC }} CFLAGS=$CFLAGS HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make examples
 
     - name: Register libraries
       run: sudo ldconfig /usr/local/lib
 
     - name: Run examples
-      run: CC=${{ matrix.CC }} HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make examples-run
+      run: CC=${{ matrix.CC }} CFLAGS=$CFLAGS HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make examples-run
 
     - name: Examine build artifacts
       run: ls -alh dist/*.so && sha256sum dist/*.so

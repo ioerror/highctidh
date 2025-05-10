@@ -86,9 +86,18 @@ ALPINE_DEPS := \
   install \
   examples \
   examples-run \
-  test-python \
 
 alpine-multi-arch: $(ALPINE_DEPS)
+	@echo 'Hopefully the above was successful'
+	ls -alh dist/*.so && sha256sum dist/*.so
+
+ALPINE_DEPS_PYTHON := \
+  alpine-multi-arch-deps \
+  library \
+  install \
+  test-python \
+
+alpine-multi-arch-python: $(ALPINE_DEPS_PYTHON)
 	@echo 'Hopefully the above was successful'
 	ls -alh dist/*.so && sha256sum dist/*.so
 

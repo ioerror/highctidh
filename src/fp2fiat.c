@@ -16,6 +16,11 @@
 __asm__ (".include \"uintbig" highctidh_macro_str(BITS)  "_x86_64.S\"");
 __asm__ (".include \"fp" highctidh_macro_str(BITS) "_x86_64.S\"");
 
+#if defined(_PYTHON) || defined(_CLANG_CROSS_FIXUP)
+__asm__ (".include \"uintbig_const_le_" highctidh_macro_str(BITS) ".s\"");
+__asm__ (".include \"fp_const_le_"     highctidh_macro_str(BITS) ".s\"");
+#endif
+
 #else
 #if defined(CGONUTS)
 #define DONTMINDIFIDO

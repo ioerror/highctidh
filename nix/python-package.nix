@@ -41,6 +41,7 @@
                     file:
                     lib.any file.hasExt (
                       lib.optional (backend == "assembly") "S"
+                      ++ lib.optional (backend == "assembly") "s"
                       ++ [
                         "c"
                         "go"

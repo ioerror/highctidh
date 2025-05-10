@@ -56,7 +56,7 @@ Detailed Python module usage and test vectors are available in
 To build a Debian package that includes the Python module and the relevant .so
 files for internal Python use, run:
 
-    python3 setup.py bdist_deb
+    make deb
 
 ## Binary packages
 

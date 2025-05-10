@@ -12,6 +12,7 @@ CHECKMARK="\xE2\x9C\x94";
 
 # these are passed on to `make`:
 export AR CC CC_MARCH CFLAGS LD PLATFORM PLATFORM_SIZE prefix;
+export CFLAGS="$CFLAGS -D_CLANG_CROSS_FIXUP"
 
 make_and_clean() {
     rm -fv *.o *.so;

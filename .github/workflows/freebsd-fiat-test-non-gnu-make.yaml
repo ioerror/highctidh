@@ -24,7 +24,7 @@ jobs:
         prepare: |
           uname -a
           freebsd-version
-          pkg install -y llvm-13
+          pkg install -y llvm13
           clang -v
           echo $SHELL
 

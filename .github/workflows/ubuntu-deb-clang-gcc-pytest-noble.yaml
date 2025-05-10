@@ -12,6 +12,7 @@ jobs:
       matrix:
         CC: ["clang-14", "gcc"]
         PORTABLE: ["0", "1"]
+      fail-fast: false
     steps:
     - uses: actions/checkout@v4
 

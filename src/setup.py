@@ -1,6 +1,11 @@
 from warnings import filterwarnings
 
+try:
+    from setuptools._deprecation import SetuptoolsDeprecationWarning
+except ImportError:
+    from setuptools import SetuptoolsDeprecationWarning
 filterwarnings("ignore", category=DeprecationWarning)
+filterwarnings("ignore", category=SetuptoolsDeprecationWarning)
 
 from os import environ, getcwd, mkdir, path, stat, umask
 from subprocess import PIPE, Popen
@@ -18,13 +23,6 @@ from setuptools.command.build_ext import build_ext
 OS = uname().system
 PLATFORM = uname().machine
 PLATFORM_SIZE = int(architecture()[0][0:2])
-
-try:
-    from stdeb.command.bdist_deb import bdist_deb
-    from stdeb.command.sdist_dsc import sdist_dsc
-except ImportError:
-    bdist_deb = None
-    sdist_dsc = None
 
 
 class build_ext_helper(build_ext):
@@ -59,7 +57,7 @@ class build_ext_helper(build_ext):
     #
     def build_extensions(self):
         print(self.compiler)
-        if OS != 'Windows':
+        if OS != "Windows":
             print(f"Compiler was: {self.compiler.linker_exe}")
             print(f"Linker was: {self.compiler.linker_so}")
             # NOTE:
@@ -72,8 +70,10 @@ class build_ext_helper(build_ext):
             # only impacts users of an alternative compiler, we hot patch only the
             # linker executable name:
             self.compiler.linker_so[0] = self.compiler.linker_exe[0]
-            cflags = [x.replace('-D_FORTIFY_SOURCE=2', '-D_FORTIFY_SOURCE=3')
-                      for x in self.compiler.linker_so]
+            cflags = [
+                x.replace("-D_FORTIFY_SOURCE=2", "-D_FORTIFY_SOURCE=3")
+                for x in self.compiler.linker_so
+            ]
             print(f"Compiler is now: {self.compiler.linker_exe}")
             print(f"Linker is now: {self.compiler.linker_so}")
         build_ext.build_extensions(self)
@@ -100,7 +100,7 @@ else:
     sda = str(int(environ["SOURCE_DATE_EPOCH"]))
     print(f"SOURCE_DATE_EPOCH={sda}")
 if "HIGHCTIDH_PORTABLE" in environ:
-    if environ.get("HIGHCTIDH_PORTABLE") == "0" :
+    if environ.get("HIGHCTIDH_PORTABLE") == "0":
         HIGHCTIDH_PORTABLE = str(0)
     else:
         HIGHCTIDH_PORTABLE = str(1)
@@ -160,11 +160,24 @@ base_src = [
 
 cflags = get_config_var("CFLAGS")
 if cflags is not None and cflags is str:
-  cflags = cflags.split()
+    cflags = cflags.split()
 else:
-  cflags = ["-Wextra"]
-cflags += ["-Wall", "-fpie", "-fPIC", "-fwrapv", "-pedantic", "-O2", "-g0", "-fno-lto"]
-cflags += ["-DGETRANDOM", f"-DPLATFORM={PLATFORM}", f"-DPLATFORM_SIZE={PLATFORM_SIZE}"]
+    cflags = ["-Wextra"]
+cflags += [
+    "-Wall",
+    "-fpie",
+    "-fPIC",
+    "-fwrapv",
+    "-pedantic",
+    "-O2",
+    "-g0",
+    "-fno-lto",
+]
+cflags += [
+    "-DGETRANDOM",
+    f"-DPLATFORM={PLATFORM}",
+    f"-DPLATFORM_SIZE={PLATFORM_SIZE}",
+]
 cflags += [
     "-Wformat",
     "-Werror=format-security",
@@ -177,7 +190,7 @@ if CC == "clang":
     cflags += ["-Wno-ignored-optimization-argument", "-Wno-unreachable-code"]
 if CC == "gcc":
     if OS == "Linux":
-        cflags += ["-Wextra"] # was -Werror
+        cflags += ["-Wextra"]  # was -Werror
         ldflags += [
             "-Wl,-Bsymbolic-functions",
             "-Wl,-z,noexecstack",
@@ -191,13 +204,17 @@ print(f"Building for platform: {PLATFORM} on {OS}")
 if PLATFORM == "aarch64" or PLATFORM == "arm64":
     cflags += ["-D__ARM64__"]
     if OS == "Darwin":
-      cflags += ["-D__Darwin__"]
-      cflags += ["-DHIGHCTIDH_PORTABLE=1"]
+        cflags += ["-D__Darwin__"]
+        cflags += ["-DHIGHCTIDH_PORTABLE=1"]
     else:
-      if CC == "clang":
-          cflags += ["-DHIGHCTIDH_PORTABLE=1"]
-      if CC == "gcc":
-          cflags += ["-march=native", "-mtune=native", "-DHIGHCTIDH_PORTABLE=1"]
+        if CC == "clang":
+            cflags += ["-DHIGHCTIDH_PORTABLE=1"]
+        if CC == "gcc":
+            cflags += [
+                "-march=native",
+                "-mtune=native",
+                "-DHIGHCTIDH_PORTABLE=1",
+            ]
 elif PLATFORM == "armv7l":
     # clang required
     if CC == "clang":
@@ -266,7 +283,7 @@ elif PLATFORM == "sun4v" or PLATFORM == "i86pc":
     cflags += [f"-DPLATFORM={PLATFORM}", f"-DPLATFORM_SIZE={PLATFORM_SIZE}"]
 elif PLATFORM == "x86_64" or PLATFORM == "AMD64":
     print("x86_64 or AMD64")
-    if OS == 'Windows' or OS.startswith('MINGW') or OS.startswith('MSYS'):
+    if OS == "Windows" or OS.startswith("MINGW") or OS.startswith("MSYS"):
         print(f"{OS=}")
         # Windows only builds with clang on Windows under the CI
         # It should also build with other compilers.
@@ -276,13 +293,13 @@ elif PLATFORM == "x86_64" or PLATFORM == "AMD64":
         # Set Windows specific build options
         cflags = ["-D__Windows__"]
         ldflags = ["-LAdvapi32.lib"]
-        if OS.startswith('MINGW64'):
+        if OS.startswith("MINGW64"):
             cflags += ["-D_WIN64"]
             cflags += ["-D__MINGW64"]
-        if OS.startswith('MINGW32'):
+        if OS.startswith("MINGW32"):
             cflags += ["-D_WIN32"]
             cflags += ["-D__MINGW32"]
-        if OS.startswith('MSYS'):
+        if OS.startswith("MSYS"):
             cflags += ["-D_WIN64"]
             cflags += ["-D__MSYS"]
     if PLATFORM == "AMD64":
@@ -308,10 +325,10 @@ else:
 if (
     HIGHCTIDH_PORTABLE == "0"
     and PLATFORM_SIZE == 64
-    and (PLATFORM == "x86_64"
-    or PLATFORM == "i86pc")
+    and (PLATFORM == "x86_64" or PLATFORM == "i86pc")
 ):
     print("Selecting x86_64 asm backend")
+    cflags += ["-D_PYTHON"]
     src_511 = base_src + [
         "fp_inv511.c",
         "fp_sqrt511.c",
@@ -359,7 +376,9 @@ else:
         "primes2048.c",
     ]
 
-cflags = [x.replace('-D_FORTIFY_SOURCE=2', '-D_FORTIFY_SOURCE=3') for x in cflags]
+cflags = [
+    x.replace("-D_FORTIFY_SOURCE=2", "-D_FORTIFY_SOURCE=3") for x in cflags
+]
 extra_compile_args = cflags
 extra_compile_args_511 = cflags + [
     "-DBITS=511",
@@ -398,9 +417,7 @@ if __name__ == "__main__":
         author_email="jacob@appelbaum.net",
         packages=["highctidh"],
         install_requires=[],
-        cmdclass=dict(
-            bdist_deb=bdist_deb, sdist_dsc=sdist_dsc, build_ext=build_ext_helper
-        ),
+        cmdclass=dict(build_ext=build_ext_helper),
         ext_modules=[
             Extension(
                 "highctidh_511",

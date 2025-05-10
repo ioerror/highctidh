@@ -25,7 +25,7 @@ jobs:
           uname -a
           freebsd-version
           pkg install -y gmake
-          pkg install -y llvm-13
+          pkg install -y llvm13
           pkg install -y bash
           clang -v
           gmake -v

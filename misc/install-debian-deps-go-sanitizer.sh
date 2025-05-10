@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+set -x
 
 echo "Installing required packages...";
 apt update > /dev/null 2>&1;

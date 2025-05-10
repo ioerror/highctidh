@@ -36,9 +36,9 @@ then
 
     if [ "$ARCH" == "arm32v5" ];
     then
-        export ARCH_ALT=arm-linux-gnueabihf;
+        export ARCH_ALT=arm-linux-gnueabi;
         export CGO_CFLAGS_ALLOW="-fforce-enable-int128";
-        export EXTRA_FLAGS="-fforce-enable-int128 -mfloat-abi=hard";
+        export EXTRA_FLAGS="-fforce-enable-int128 -mfloat-abi=soft";
         export EXTRA_INCLUDE="-I /usr/$ARCH_ALT/include/";
         export GOARCH=arm;
         export GOARM=5;

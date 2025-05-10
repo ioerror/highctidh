@@ -18,7 +18,7 @@ jobs:
       id: test
       uses: vmactions/openbsd-vm@v1
       with:
-        release: "7.5"
+        release: "7.7"
         envs: 'LANG LD CC MAKE HIGHCTIDH_PORTABLE'
         usesh: true
         prepare: |

@@ -24,7 +24,6 @@ jobs:
           python-pip
           python-build
           python-setuptools
-          python-wheel
           python-pytest
           git
           gcc

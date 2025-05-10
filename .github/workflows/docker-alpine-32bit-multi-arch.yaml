@@ -5,7 +5,7 @@ on:
     branches: [ "main" ]
 jobs:
   multiarch:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         CC: ["clang"]
@@ -14,6 +14,7 @@ jobs:
         DOCKER_ARCH_ARGS: ["--platform linux/arm/v6 arm32v6/alpine",
                            "--platform linux/arm/v7 arm32v7/alpine",
                            "--platform linux/i386 i386/alpine"]
+        ARCH_TARGET: ["alpine-multi-arch", "alpine-multi-arch-python"]
       fail-fast: false
     steps:
     - name: Set up QEMU
@@ -21,10 +22,6 @@ jobs:
 
     - name: checkout
       uses: actions/checkout@v4
-
-    - name: Install requirements
-      run : |
-        sudo apt install -y --no-install-recommends docker
 
     - name: check kernel
       run: |
@@ -44,4 +41,4 @@ jobs:
           --rm \
           ${{ matrix.DOCKER_ARCH_ARGS}} \
           /bin/sh \
-          -c "./misc/install-alpine-deps.sh && ./misc/docker-gha-fixup.sh && make alpine-multi-arch"
+          -c "./misc/install-alpine-deps.sh && ./misc/docker-gha-fixup.sh && make ${{ matrix.ARCH_TARGET }}"
