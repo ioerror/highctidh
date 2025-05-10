@@ -1,5 +1,7 @@
 #include <assert.h>
+#ifndef TEST_UINTBIG
 #include <string.h>
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include "naidne.h"
@@ -41,15 +43,27 @@ static void test_iszero(void)
   uintbig u;
   unsigned char *x = (void *) &u;
 
+#ifdef TEST_UINTBIG
+  uintbig_set(&u,0);
+#else
   memset(x,0,sizeof u);
+#endif
   assert(uintbig_iszero(&u));
 
-  for (unsigned long long i = 0;i < 8*sizeof u;++i) {
+  for (unsigned long long i = 0;i < BITS;++i) {
+#ifdef TEST_UINTBIG
+    uintbig_set(&u,0);
+#else
     memset(x,0,sizeof u);
+#endif
     x[i/8] = 1<<(i&7);
     assert(!uintbig_iszero(&u));
-    for (unsigned long long j = 0;j < 8*sizeof u;++j) {
+    for (unsigned long long j = 0;j < BITS;++j) {
+#ifdef TEST_UINTBIG
+      uintbig_set(&u,0);
+#else
       memset(x,0,sizeof u);
+#endif
       x[i/8] = 1<<(i&7);
       x[j/8] = 1<<(j&7);
       assert(!uintbig_iszero(&u));
@@ -83,10 +97,35 @@ test_uintbig_bit(void)
 	printf("uintbig_set\n"); fflush(stdout);
 	x.c[1] = 2ULL;
 	assert(66 == uintbig_bits_vartime(&x));
-	x.c[7] = -1ULL;
-	assert(512 == uintbig_bits_vartime(&x));
+	x.c[(BITS-1)/64] = -1ULL;
+	assert(BITS == uintbig_bits_vartime(&x));
 	uintbig_set(&x, 5ULL); /* should clear the high limbs */
 	assert(3 == uintbig_bits_vartime(&x));
+}
+
+static void
+test_uintbig_addsub(void)
+{
+	printf("uintbig_addsub\n");
+	fflush(stdout);
+
+	size_t i;
+
+	uintbig x = uintbig_1;
+	uintbig o = {0};
+
+	assert(0 == uintbig_sub3(&o, &x, &o));
+	assert(!memcmp(&o, &uintbig_1, sizeof o));
+
+	for (i = 0; i < sizeof o / sizeof o.c[0]; i++)
+		o.c[i] = -1ULL;
+
+	assert(1 == uintbig_add3(&x, &o, &uintbig_1));
+	assert(uintbig_iszero(&x));
+
+	assert(1 == uintbig_sub3(&x, &x, &uintbig_1));
+	for (i = 0; i < sizeof o / sizeof o.c[0]; i++)
+		assert(-1ULL == o.c[i]);
 }
 
 void
@@ -123,6 +162,7 @@ test_uintbig_mul3_64(void)
     }
 }
 
+#ifndef TEST_UINTBIG
 static void test_sqrt(void)
 {
   printf("fp_sqrt\n");
@@ -1495,6 +1535,7 @@ static void test_nike(void)
     }
   }
 }
+#endif /* TEST_UINTBIG */
 
 int main(void);
 int main(void)
@@ -1503,7 +1544,9 @@ int main(void)
   fflush(stdout);
   test_iszero();
   test_uintbig_bit();
+  test_uintbig_addsub();
   test_uintbig_mul3_64();
+#ifndef TEST_UINTBIG
   test_fillrandom();
   test_random_boundedl1();
   test_deterministic_keygen();
@@ -1514,5 +1557,6 @@ int main(void)
   test_validate();
   test_isog();
   test_nike();
+#endif /* TEST_UINTBIG */
   return 0;
 }

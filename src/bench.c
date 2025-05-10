@@ -87,20 +87,18 @@ int main(int argc,char **argv)
     test_nike_1();
 
     for (long long key = 0;key < KEYS;++key) {
-      fp_mulsq_count = fp_sq_count = fp_addsub_count = 0;
       long long cycles = cpucycles();
       bool ok = validate(&pub_bob[key]);
       cycles = cpucycles()-cycles;
-      printf("%lld %lld validate mulsq %lld sq %lld addsub %lld cycles %lld\n",loop,key,fp_mulsq_count,fp_sq_count,fp_addsub_count,cycles);
+      printf("%lld %lld validate cycles %lld\n",loop,key,cycles);
       assert(ok);
 
       for (long long b = 0;b < primes_batches;++b)
         csidh_statsucceeded[b] = csidh_stattried[b] = 0;
-      fp_mulsq_count = fp_sq_count = fp_addsub_count = 0;
       cycles = cpucycles();
       action(&action_output[key],&pub_bob[key],&priv_alice[key]);
       cycles = cpucycles()-cycles;
-      printf("%lld %lld action mulsq %lld sq %lld addsub %lld cycles %lld\n",loop,key,fp_mulsq_count,fp_sq_count,fp_addsub_count,cycles);
+      printf("%lld %lld action cycles %lld\n",loop,key,cycles);
       printf("%lld %lld action stattried",loop,key);
       for (long long b = 0;b < primes_batches;++b) printf(" %lld",csidh_stattried[b]);
       printf("\n");

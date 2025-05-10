@@ -90,10 +90,6 @@ void fp_mul3(fp *const a, const fp *const b, const fp *const c);
 void fp_sq1(fp *x);
 void fp_sq2(fp *const x, fp const *const y);
 
-extern long long fp_mulsq_count;
-extern long long fp_sq_count;
-extern long long fp_addsub_count;
-
 static inline void fp_sq1_rep(fp *const x,long long n)
 {
   while (n > 0) {

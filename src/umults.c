@@ -6,8 +6,6 @@
 
 int main(void)
 {
-  long long t = fp_mulsq_count;
-
   for (long long alen = 0;alen < 20;++alen) {
     fp a[alen];
     for (long long blen = 0;blen < 20;++blen) {
@@ -20,9 +18,8 @@ int main(void)
       fp ab[ablen];
       for (long long i = 0;i < ablen;++i) fp_random(&ab[i]);
 
-      t = fp_mulsq_count;
       poly_mul(ab,a,alen,b,blen);
-      printf("poly_mul %lld %lld %lld\n",alen,blen,fp_mulsq_count-t);
+      printf("poly_mul %lld %lld\n",alen,blen);
 
       for (long long i = 0;i < ablen;++i) {
         fp t = fp_0;
@@ -39,10 +36,9 @@ int main(void)
       for (long long clen = 0;clen <= ablen;++clen) {
         fp c[clen];
 	for (long long i = 0;i < clen;++i) fp_random(&c[i]);
-        t = fp_mulsq_count;
 	poly_mul_low(c,clen,a,alen,b,blen);
 	if (clen >= alen && clen >= blen)
-          printf("poly_mul_low %lld %lld %lld %lld\n",clen,alen,blen,fp_mulsq_count-t);
+          printf("poly_mul_low %lld %lld %lld\n",clen,alen,blen);
 	for (long long i = 0;i < clen;++i)
 	  assert(!memcmp(ab,c,clen*sizeof(fp)));
       }
@@ -50,9 +46,8 @@ int main(void)
 	long long clen = ablen-cstart;
 	fp c[clen];
 	for (long long i = 0;i < clen;++i) fp_random(&c[i]);
-        t = fp_mulsq_count;
 	poly_mul_high(c,cstart,a,alen,b,blen);
-        printf("poly_mul_high %lld %lld %lld %lld\n",cstart,alen,blen,fp_mulsq_count-t);
+        printf("poly_mul_high %lld %lld %lld\n",cstart,alen,blen);
 	for (long long i = 0;i < clen;++i)
 	  assert(!memcmp(ab+cstart,c,clen*sizeof(fp)));
       }
@@ -60,9 +55,8 @@ int main(void)
         for (long long clen = 0;clen <= ablen-cstart;++clen) {
 	  fp c[clen];
 	  for (long long i = 0;i < clen;++i) fp_random(&c[i]);
-          t = fp_mulsq_count;
 	  poly_mul_mid(c,cstart,clen,a,alen,b,blen);
-          printf("poly_mul_mid %lld %lld %lld %lld %lld\n",cstart,clen,alen,blen,fp_mulsq_count-t);
+          printf("poly_mul_mid %lld %lld %lld %lld\n",cstart,clen,alen,blen);
 	  for (long long i = 0;i < clen;++i)
 	    assert(!memcmp(ab+cstart,c,clen*sizeof(fp)));
 	}
@@ -77,9 +71,8 @@ int main(void)
         if (i > blen-1-i)
           b[i] = b[blen-1-i];
       for (long long i = 0;i < ablen;++i) fp_random(&ab[i]);
-      t = fp_mulsq_count;
       poly_mul_selfreciprocal(ab,a,alen,b,blen);
-      printf("poly_mul_selfreciprocal %lld %lld %lld\n",alen,blen,fp_mulsq_count-t);
+      printf("poly_mul_selfreciprocal %lld %lld\n",alen,blen);
 
       for (long long i = 0;i < ablen;++i) {
         fp t = fp_0;
