@@ -1,48 +1,35 @@
 name: Windows Msys2 64bit (cygwin,msvcrt,ucrt) gcc Python pip build and test
-
-on: [push]
-
+'on':
+- push
 jobs:
   build:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        OS: ["windows-2022"]
-        CC: ["gcc"]
-        ENVIRONMENT: ["MSYS", "UCRT64", "MINGW64"] # https://www.msys2.org/docs/environments/
+        OS:
+        - windows-2022
+        CC:
+        - gcc
+        ENVIRONMENT:
+        - MSYS
+        - UCRT64
+        - MINGW64
       fail-fast: false
-
     steps:
     - uses: actions/checkout@v4
-
     - name: Set up Msys2
       uses: msys2/setup-msys2@v2
       with:
         msystem: ${{ matrix.ENVIRONMENT }}
-        install: >-
-          python
-          python-pip
-          python-build
-          python-setuptools
-          python-pytest
-          git
-          gcc
-          mingw-w64-clang-x86_64-python-pytest-xdist
-          mingw-w64-clang-x86_64-python-flit
-          mingw-w64-clang-x86_64-python-distutils-extra
-          mingw-w64-x86_64-gcc
-          mingw-w64-ucrt-x86_64-gcc
-          make
-
+        install: python python-pip python-build python-setuptools python-pytest git gcc mingw-w64-clang-x86_64-python-pytest-xdist mingw-w64-clang-x86_64-python-flit mingw-w64-clang-x86_64-python-distutils-extra mingw-w64-x86_64-gcc mingw-w64-ucrt-x86_64-gcc make
     - name: Gather runtime environment
       shell: msys2 {0}
       run: |
-       echo ${{ matrix.ENVIRONMENT }}
-       uname -a
-       python -V
-       bash --version
-       ${{ matrix.CC }} -v
-
+        echo ${{ matrix.ENVIRONMENT }}
+        uname -a
+        python -V
+        bash --version
+        ${{ matrix.CC }} -v
     - name: Build highctidh
       shell: msys2 {0}
       run: |
@@ -52,7 +39,6 @@ jobs:
         export WINDOWS=1
         export MAKE=make
         CC=${{ matrix.CC }} OPT="" pip install -v --break-system-packages -e src/
-
     - name: Test with pytest
       shell: msys2 {0}
       run: |

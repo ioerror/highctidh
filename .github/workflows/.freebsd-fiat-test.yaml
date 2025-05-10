@@ -1,25 +1,24 @@
 name: FreeBSD fiat build with clang
-
-on: [push]
-
+'on':
+- push
 jobs:
   test:
     runs-on: ubuntu-latest
     name: FreeBSD clang build of fiat backend
     env:
-      LANG: "C"
-      LD: "/usr/bin/ld"
-      CC: "clang"
-      MAKE: "gmake"
-      HIGHCTIDH_PORTABLE: "1"
+      LANG: C
+      LD: /usr/bin/ld
+      CC: clang
+      MAKE: gmake
+      HIGHCTIDH_PORTABLE: '1'
     steps:
     - uses: actions/checkout@v4
     - name: Test in FreeBSD
       id: test
       uses: vmactions/freebsd-vm@v1
       with:
-        release: "14.0"
-        envs: 'LANG LD CC MAKE HIGHCTIDH_PORTABLE'
+        release: '14.0'
+        envs: LANG LD CC MAKE HIGHCTIDH_PORTABLE
         usesh: true
         prepare: |
           uname -a
@@ -30,7 +29,6 @@ jobs:
           clang -v
           gmake -v
           echo $SHELL
-
         run: |
           HIGHCTIDH_PORTABLE=1 gmake
           HIGHCTIDH_PORTABLE=1 gmake test-quick

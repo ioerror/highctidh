@@ -1,27 +1,27 @@
 name: Windows fiat build
-
-on:
-  push:
+'on':
+  push: null
   pull_request:
-    branches: [ "main" ]
-
+    branches:
+    - main
 jobs:
   build:
     strategy:
       matrix:
-        OS: ["windows-2022", "windows-2019"]
-        CC: ["clang"]
+        OS:
+        - windows-2022
+        - windows-2019
+        CC:
+        - clang
       fail-fast: false
     runs-on: ${{ matrix.OS }}
     steps:
     - uses: actions/checkout@v4
-
     - name: Gather toolchain info
       shell: bash
       run: |
         make -v
         ${{ matrix.CC }} -v
-
     - name: compile and test-quick
       shell: bash
       run: |
