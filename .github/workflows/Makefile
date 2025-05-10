@@ -19,6 +19,9 @@ default:
 
 update: $(YS) $(YAML-FILES)
 
+env:
+	@echo PATH=$(GIT-BIN):$(PATH)
+
 .%.yaml: %.ys Makefile lib/* bash/*
 	$(YS) -Y $< > $@
 
