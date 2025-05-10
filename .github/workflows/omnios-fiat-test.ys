@@ -1,0 +1,36 @@
+!YS-v0:
+
+name: Omnios fiat build with gcc
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: Omnios gcc build of fiat backend
+    env:
+      LANG: "C"
+      LD: "/usr/bin/ld"
+      CC: "gcc"
+      MAKE: "gmake"
+      HIGHCTIDH_PORTABLE: "1"
+    steps:
+    - uses: actions/checkout@v4
+    - name: Test in Omnios
+      id: test
+      uses: vmactions/omnios-vm@v1
+      with:
+        release: "r151046"
+        envs: 'LANG LD CC MAKE HIGHCTIDH_PORTABLE'
+        usesh: true
+        prepare: |
+          uname -a
+          psrinfo -vp
+          cat /etc/release
+          pkg install developer/object-file developer/linker developer/build/gnu-make system/header system/library/math shell/bash developer/gcc12
+          gmake -v
+          gcc -v
+
+        run: |
+          HIGHCTIDH_PORTABLE=1 gmake
+          HIGHCTIDH_PORTABLE=1 gmake test-quick

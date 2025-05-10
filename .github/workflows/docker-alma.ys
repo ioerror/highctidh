@@ -1,0 +1,32 @@
+!YS-v0:
+:use common: :all
+
+:: workflow-setup('Almalinux')
+
+jobs:
+  docker:
+    :: docker-ubuntu-clang-gcc('almalinux:latest')
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Almalinux deps
+      run: ./misc/install-alma-deps.sh
+
+    - name: Build
+      run:: make(nil 'CFLAGS="-fno-lto"')
+
+    - name: Test install
+      run:: make('install')
+
+    - name: Register libraries
+      run: sudo ldconfig /usr/local/lib
+
+    - name: Build examples
+      run:: make('examples')
+
+    - name: Run examples
+      run:: make('examples-run')
+
+    - name: Examine build artifacts
+      run: ls -alh dist/*.so && sha256sum dist/*.so

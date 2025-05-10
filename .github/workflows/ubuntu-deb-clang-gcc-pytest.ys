@@ -1,0 +1,36 @@
+!YS-v0:
+
+name: Build Debian GNU/Linux package and run pytest
+
+on:
+  push:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        CC: ["clang", "gcc"]
+        PORTABLE: ["0", "1"]
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Python deps for testing
+      run: sudo bash -c ./misc/install-debian-deps.sh
+
+    - name: Build Debian package with assembler backend
+      run: CC=${{ matrix.CC }} CFLAGS="-fno-lto" HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make deb
+
+    - name: Install Debian package
+      run: sudo dpkg -i dist/python3-highctidh_*.deb
+
+    - name: List Debian package contents
+      run: dpkg -L python3-highctidh
+
+    - name: Run pytest
+      run: make pytest
+
+    - name: Print hashes
+      run: sha256sum dist/*.deb && ls -alh dist/*.deb

@@ -1,0 +1,32 @@
+name: OpenBSD fiat build with clang
+'on':
+- push
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: OpenBSD clang build of fiat backend
+    env:
+      LANG: C
+      LD: /usr/bin/ld
+      CC: clang
+      MAKE: gmake
+      HIGHCTIDH_PORTABLE: '1'
+    steps:
+    - uses: actions/checkout@v4
+    - name: Test in OpenBSD
+      id: test
+      uses: vmactions/openbsd-vm@v1
+      with:
+        release: '7.5'
+        envs: LANG LD CC MAKE HIGHCTIDH_PORTABLE
+        usesh: true
+        prepare: |
+          uname -a
+          pkg_add gmake
+          pkg_add bash
+          gmake -v
+          clang -v
+          echo $SHELL
+        run: |
+          HIGHCTIDH_PORTABLE=1 gmake
+          HIGHCTIDH_PORTABLE=1 gmake test-quick

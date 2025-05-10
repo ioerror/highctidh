@@ -1,0 +1,29 @@
+!YS-v0:
+:use common: :all
+
+:: workflow-setup('Alpine')
+
+jobs:
+  docker:
+    :: docker-ubuntu-clang-gcc(alpine-containers)
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install alpine deps
+      run: ./misc/install-alpine-deps.sh
+
+    - name: Build
+      run:: make(nil 'CFLAGS="-fno-lto"')
+
+    - name: Test install
+      run:: make('install')
+
+    - name: Build examples
+      run:: make('examples')
+
+    - name: Run examples
+      run:: make('examples-run')
+
+    - name: Examine build artifacts
+      run: ls -alh dist/*.so && sha256sum dist/*.so

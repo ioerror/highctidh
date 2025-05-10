@@ -1,0 +1,49 @@
+name: MacOS Golang build and test
+'on':
+- push
+env:
+  CGO_LDFLAGS: -Wl,-stack_size,0x1F40000
+  CC: clang
+jobs:
+  build:
+    runs-on: ${{ matrix.OS }}
+    strategy:
+      matrix:
+        OS:
+        - macos-14
+        go-version:
+        - 1.20.x
+        - 1.21.x
+        - 1.22.7
+        - 1.23.x
+      fail-fast: false
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup Go ${{ matrix.go-version }}
+      uses: actions/setup-go@v5
+      with:
+        go-version: ${{ matrix.go-version }}
+    - name: Display Go version
+      shell: bash
+      run: go version
+    - name: Install golang dependencies
+      shell: bash
+      run: |
+        export HIGHCTIDH_PORTABLE=1
+        export CGO_ENABLED=1
+        go get -v ./src/ctidh511
+    - name: Build golang
+      shell: bash
+      run: |
+        export HIGHCTIDH_PORTABLE=1
+        export CGO_ENABLED=1
+        go build -v ./...
+    - name: Golang test
+      shell: bash
+      run: |
+        export HIGHCTIDH_PORTABLE=1
+        export CGO_ENABLED=1
+        go test -v ./src/ctidh511;
+        go test -v ./src/ctidh512;
+        go test -v ./src/ctidh1024;
+        go test -v ./src/ctidh2048;

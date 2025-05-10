@@ -97,6 +97,9 @@ _prep:
 	-ln -s src/build build
 	-ln -s src/dist dist
 
+workflows:
+	$(MAKE) -C .github/$@ update
+
 clean:
 	-$(RM) -r build
 	-$(RM) -r dist

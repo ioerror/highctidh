@@ -1,0 +1,30 @@
+name: Solaris 11.4 asm i86pc build with gcc
+'on':
+- push
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: Solaris i86pc gcc build of asm backend
+    env:
+      LANG: C
+      LD: /usr/bin/ld
+      CC: gcc
+      MAKE: /usr/bin/gmake
+      HIGHCTIDH_PORTABLE: '0'
+    steps:
+    - uses: actions/checkout@v4
+    - name: Test in Solaris
+      id: test
+      uses: vmactions/solaris-vm@v1
+      with:
+        release: 11.4-gcc
+        envs: LANG LD CC MAKE HIGHCTIDH_PORTABLE
+        usesh: true
+        prepare: |
+          uname -a
+          isainfo -v
+          pkgutil -U
+          pkgutil -y -i gmake
+        run: |
+          HIGHCTIDH_PORTABLE=0 gmake
+          HIGHCTIDH_PORTABLE=0 gmake test-quick

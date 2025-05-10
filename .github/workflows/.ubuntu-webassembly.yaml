@@ -1,0 +1,21 @@
+name: Ubuntu WebAssembly build
+'on':
+  push: null
+  pull_request:
+    branches:
+    - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        CC:
+        - emcc
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install cross compiler deps
+      run: sudo ./misc/install-ubuntu-webassembly-deps.sh
+    - name: Display compiler version
+      run: ${{ matrix.CC }} -v
+    - name: Build
+      run: CC=${{ matrix.CC }} make wasm

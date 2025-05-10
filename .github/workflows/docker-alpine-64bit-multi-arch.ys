@@ -1,0 +1,31 @@
+!YS-v0:
+:use common: :all
+
+name: Alpine multi-arch docker 64bit build and test (clang)
+
+:: workflow-setup()
+
+jobs:
+  multiarch:
+    :: docker-ubuntu-clang(clang-platforms)
+
+    steps:
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v3
+
+    - name: checkout
+      uses: actions/checkout@v4
+
+   #- name: Install requirements
+   #  run : sudo apt update &&
+   #        sudo apt install -y --no-install-recommends
+   #        docker.io autoconf automake libtool
+
+    - name: check kernel
+      run: |
+        mount | grep binfmt_misc
+        docker info
+        uname -a
+
+    - name: Run in Docker
+      run: !:bash docker-run-2

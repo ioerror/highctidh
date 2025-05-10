@@ -1,0 +1,28 @@
+name: Ubuntu C library cross compile
+'on':
+  push: null
+  pull_request:
+    branches:
+    - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        CC:
+        - clang
+        - gcc
+    steps:
+    - uses: actions/checkout@v4
+    - name: Display compiler version
+      run: ${{ matrix.CC }} -v
+    - name: Install cross compiler deps
+      run: sudo ./misc/install-ubuntu-latest-cross-deps.sh
+    - name: Build
+      run: CC=${{ matrix.CC }} make
+    - name: Install
+      run: CC=${{ matrix.CC }} sudo make install && sudo ldconfig
+    - name: Build C library examples
+      run: CC=${{ matrix.CC }} make examples
+    - name: Run C library examples
+      run: make examples-run

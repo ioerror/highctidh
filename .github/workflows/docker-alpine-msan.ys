@@ -1,0 +1,46 @@
+!YS-v0:
+:use common: :all
+
+name: Alpine memory sanitizer
+
+::
+  defn test(type):
+    "cd src/ctidh$type &&
+       HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }}
+       go test -v -o msan-test -msan ./..."
+
+  workflow-setup:
+
+env:
+  CGO_CFLAGS: -fsanitize=memory -fpie -fPIC -fPIE
+              -fno-omit-frame-pointer
+              -fsanitize-memory-param-retval
+              -fsanitize-memory-track-origins
+              -g3 -fno-lto
+  CGO_LDFLAGS: -Wl,-z,stack-size=0x1F40000
+  CC: clang
+
+jobs:
+  docker:
+    :: docker-ubuntu(alpine-containers)
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install alpine deps
+      run: ./misc/install-alpine-deps.sh
+
+    - name: Show go env
+      run: go env
+
+    - name: Build and test 511 with msan
+      run:: test(511)
+
+    - name: Build and test 512 with msan
+      run:: test(512)
+
+    - name: Build and test 1024 with msan
+      run:: test(1024)
+
+    - name: Build and test 2048 with msan
+      run:: test(2048)

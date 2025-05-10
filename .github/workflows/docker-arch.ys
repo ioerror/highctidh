@@ -1,0 +1,32 @@
+!YS-v0:
+:use common: :all
+
+:: workflow-setup('Archlinux')
+
+jobs:
+  docker:
+    :: docker-ubuntu-clang-gcc('archlinux:latest')
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Arch deps
+      run: ./misc/install-arch-deps.sh
+
+    - name: Build
+      run:: make(nil 'CFLAGS="-fno-lto"')
+
+    - name: Test install
+      run:: make('install')
+
+    - name: Build examples
+      run:: make('examples')
+
+    - name: Register libraries
+      run: sudo ldconfig /usr/local/lib
+
+    - name: Run examples
+      run:: make('examples-run')
+
+    - name: Examine build artifacts
+      run: ls -alh dist/*.so && sha256sum dist/*.so

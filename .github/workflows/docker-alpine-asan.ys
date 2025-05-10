@@ -1,0 +1,44 @@
+!YS-v0:
+:use common: :all
+
+name: 'Alpine address sanitizer'
+
+::
+  defn test(type):
+    "cd src/ctidh$type &&
+       HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }}
+       go test -o asan-test -timeout 0 -asan -v ./..."
+
+  workflow-setup:
+
+env:
+  CGO_CFLAGS: -fsanitize=address -fpie -fPIC -fPIE
+              -fno-omit-frame-pointer
+              -g3 -fno-lto
+  CGO_LDFLAGS: -Wl,-z,stack-size=0x1F40000
+  CC: clang
+
+jobs:
+  docker:
+    :: docker-ubuntu(alpine-containers)
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install alpine deps
+      run: ./misc/install-alpine-deps.sh
+
+    - name: Show go env
+      run: go env
+
+    - name: Build and test 511 with asan
+      run:: test(511)
+
+    - name: Build and test 512 with asan
+      run:: test(512)
+
+    - name: Build and test 1024 with asan
+      run:: test(1024)
+
+    - name: Build and test 2048 with asan
+      run:: test(2048)

@@ -1,0 +1,31 @@
+name: NetBSD fiat build with gcc
+'on':
+- push
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: NetBSD gcc build of fiat backend
+    env:
+      LANG: C
+      LD: /usr/bin/ld
+      CC: gcc
+      MAKE: gmake
+      HIGHCTIDH_PORTABLE: '1'
+    steps:
+    - uses: actions/checkout@v4
+    - name: Test in NetBSD
+      id: test
+      uses: vmactions/netbsd-vm@v1
+      with:
+        release: '10.0'
+        envs: LANG LD CC MAKE HIGHCTIDH_PORTABLE
+        usesh: true
+        prepare: |
+          uname -a
+          /usr/sbin/pkg_add gmake
+          /usr/sbin/pkg_add gcc10
+          gcc -v
+          gmake -v
+        run: |
+          HIGHCTIDH_PORTABLE=1 gmake
+          HIGHCTIDH_PORTABLE=1 gmake test-quick

@@ -1,0 +1,33 @@
+name: Windows fiat build
+'on':
+  push: null
+  pull_request:
+    branches:
+    - main
+jobs:
+  build:
+    strategy:
+      matrix:
+        OS:
+        - windows-2022
+        - windows-2019
+        CC:
+        - clang
+      fail-fast: false
+    runs-on: ${{ matrix.OS }}
+    steps:
+    - uses: actions/checkout@v4
+    - name: Gather toolchain info
+      shell: bash
+      run: |
+        make -v
+        ${{ matrix.CC }} -v
+    - name: compile and test-quick
+      shell: bash
+      run: |
+        export HIGHCTIDH_PORTABLE=1
+        export WINDOWS=1
+        export CC=${{ matrix.CC }} MAKE=make
+        mkdir -p src/build/src
+        mkdir -p src/dist/tmp
+        cd src/ && make && make testrandom test512 && ./testrandom && ./test512

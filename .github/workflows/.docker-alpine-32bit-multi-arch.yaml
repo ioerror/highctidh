@@ -1,0 +1,45 @@
+name: Alpine multi-arch docker 32bit build and test (clang)
+'on':
+  push: null
+  pull_request:
+    branches:
+    - main
+jobs:
+  multiarch:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        CC:
+        - clang
+        PORTABLE:
+        - '1'
+        CONTAINER:
+        - alpine
+        DOCKER_ARCH_ARGS:
+        - --platform linux/arm/v6 arm32v6/alpine
+        - --platform linux/arm/v7 arm32v7/alpine
+        - --platform linux/i386 i386/alpine
+      fail-fast: false
+    steps:
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v3
+    - name: checkout
+      uses: actions/checkout@v4
+    - name: check kernel
+      run: |
+        mount | grep binfmt_misc
+        docker info
+        uname -a
+    - name: Run in Docker
+      run: |
+        docker run \
+          -v $(pwd):/${{ github.workspace }} \
+          -w ${{ github.workspace }} \
+          -e "CC=${{ matrix.CC }}" \
+          -e "HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }}" \
+          -e "CFLAGS=-fno-lto -fforce-enable-int128" \
+          -e "PLATFORM_SIZE=32" \
+          --rm \
+          ${{ matrix.DOCKER_ARCH_ARGS}} \
+          /bin/sh \
+          -c "./misc/install-alpine-deps.sh && ./misc/docker-gha-fixup.sh && make alpine-multi-arch"
