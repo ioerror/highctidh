@@ -19,7 +19,7 @@ default:
 env:
 	@echo PATH=$(GIT-BIN):$(PATH)
 
-# Using 'make update devel=1` is much faster than 
+# Using 'make update devel=1` is much faster than the default Docker container.
 ifdef devel
 YS := $(GIT-BIN)/ys-$(YS-VERSION)
 
