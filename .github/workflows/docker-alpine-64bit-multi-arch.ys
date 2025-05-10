@@ -7,16 +7,7 @@ name: Alpine multi-arch docker 64bit build and test (clang)
 
 jobs:
   multiarch:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        CC: [clang]
-        PORTABLE: ['1']
-        CONTAINER: [alpine]
-        DOCKER_ARCH_ARGS::
-          clang-platforms
-            .map(\('--platform ' + _))
-      fail-fast: false
+    :: docker-ubuntu-clang(clang-platforms)
 
     steps:
     - name: Set up QEMU

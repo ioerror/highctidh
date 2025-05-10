@@ -5,14 +5,7 @@
 
 jobs:
   docker:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        CC: [clang, gcc]
-        PORTABLE: ['0', '1']
-        CONTAINER: [amazonlinux:latest]
-      fail-fast: false
-    container: ${{ matrix.CONTAINER }}
+    :: docker-ubuntu-clang-gcc('amazonlinux:latest')
 
     steps:
     - name: Install Amazon Linux pre-deps

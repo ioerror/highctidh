@@ -20,6 +20,48 @@ defn make(target args=""):
         HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }}
         make$target"
 
+defn asan-test(type): "\
+  cd src/ctidh$type &&
+    HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }}
+    go test -o asan-test -timeout 0 -asan -v ./..."
+
+defn docker-ubuntu(container):
+  containers =:
+    if string?(container): + [container] container
+  =>::
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        PORTABLE: ['0', '1']
+        CONTAINER:: containers
+      fail-fast: false
+    container: ${{ matrix.CONTAINER }}
+
+defn docker-ubuntu-clang-gcc(container):
+  containers =:
+    if string?(container): + [container] container
+  =>::
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        CC: [clang, gcc]
+        PORTABLE: ['0', '1']
+        CONTAINER:: containers
+      fail-fast: false
+    container: ${{ matrix.CONTAINER }}
+
+defn docker-ubuntu-clang(platforms)::
+  runs-on: ubuntu-latest
+  strategy:
+    matrix:
+      CC: [clang]
+      PORTABLE: ['1']
+      CONTAINER: [alpine]
+      DOCKER_ARCH_ARGS::
+        platforms.map(\('--platform ' + _))
+    fail-fast: false
+
+
 alpine-containers =::
 - alpine:3.19.1
 - alpine:3.19
@@ -39,8 +81,3 @@ clang-platforms-2 =::
 - linux/arm/v6 arm32v6/alpine
 - linux/arm/v7 arm32v7/alpine
 - linux/i386 i386/alpine
-
-defn asan-test(type): "\
-  cd src/ctidh$type &&
-    HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }}
-    go test -o asan-test -timeout 0 -asan -v ./..."
