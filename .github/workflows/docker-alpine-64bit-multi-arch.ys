@@ -14,8 +14,8 @@ jobs:
         PORTABLE: ['1']
         CONTAINER: [alpine]
         DOCKER_ARCH_ARGS::
-          clang-platforms()
-          .map(\('--platform ' + _))
+          clang-platforms
+            .map(\('--platform ' + _))
       fail-fast: false
 
     steps:

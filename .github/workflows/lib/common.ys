@@ -20,7 +20,7 @@ defn make(target args=""):
         HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }}
         make$target"
 
-defn alpine-containers()::
+alpine-containers =::
 - alpine:3.19.1
 - alpine:3.19
 - alpine:3.18.6
@@ -28,12 +28,17 @@ defn alpine-containers()::
 - alpine:3.17.7
 - alpine:3.17
 
-defn clang-platforms()::
+clang-platforms =::
 - linux/arm64/v8 arm64v8/alpine
 - linux/amd64 amd64/alpine
 - linux/riscv64 riscv64/alpine:edge
 - linux/ppc64le ppc64le/alpine
 - linux/s390x s390x/alpine
+
+clang-platforms-2 =::
+- linux/arm/v6 arm32v6/alpine
+- linux/arm/v7 arm32v7/alpine
+- linux/i386 i386/alpine
 
 defn asan-test(type): "\
   cd src/ctidh$type &&

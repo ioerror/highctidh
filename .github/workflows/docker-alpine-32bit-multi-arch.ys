@@ -13,9 +13,9 @@ jobs:
         CC: [clang]
         PORTABLE: ['1']
         CONTAINER: [alpine]
-        DOCKER_ARCH_ARGS: [--platform linux/arm/v6 arm32v6/alpine,
-                           --platform linux/arm/v7 arm32v7/alpine,
-                           --platform linux/i386 i386/alpine]
+        DOCKER_ARCH_ARGS::
+          clang-platforms-2
+            .map(\('--platform ' + _))
       fail-fast: false
 
     steps:
