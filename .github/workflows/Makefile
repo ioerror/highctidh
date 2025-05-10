@@ -1,4 +1,5 @@
 SHELL := bash
+ROOT := $(shell pwd)
 
 YS-VERSION := 0.1.96
 GIT-PREFIX := ../../.git/.local
@@ -6,6 +7,8 @@ GIT-BIN := $(GIT-PREFIX)/bin
 YS := $(GIT-BIN)/ys-$(YS-VERSION)
 
 YAML-FILES := $(wildcard .*.yaml)
+
+export YSPATH := $(ROOT)/lib
 
 
 default:

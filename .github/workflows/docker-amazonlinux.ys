@@ -1,11 +1,7 @@
 !YS-v0:
+:use common: :all
 
-name: Amazon Linux
-
-on:
-  push:
-  pull_request:
-    branches: [ "main" ]
+:: workflow-setup('Amazon Linux')
 
 jobs:
   docker:
@@ -17,8 +13,8 @@ jobs:
         CONTAINER: ["amazonlinux:latest"]
       fail-fast: false
     container: ${{ matrix.CONTAINER }}
-    steps:
 
+    steps:
     - name: Install Amazon Linux pre-deps
       run: yum install -y sudo tar gzip git > /dev/null 2>&1;
 
@@ -31,15 +27,16 @@ jobs:
       run: gcc -v && clang -v
 
     - name: Build
-      run: CC=${{ matrix.CC }} CFLAGS="-fno-lto" HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make
+      run:: make(nil 'CFLAGS="-fno-lto"')
+
     - name: Test install
-      run: CC=${{ matrix.CC }} HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make install
+      run:: make('install')
 
     - name: Register libraries
       run: sudo ldconfig /usr/local/lib
 
     - name: Build examples
-      run: CC=${{ matrix.CC }} HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make examples
+      run:: make('examples')
 
     - name: Run examples
       run: CC=${{ matrix.CC }} HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make examples-run
