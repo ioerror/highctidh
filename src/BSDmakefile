@@ -2,26 +2,30 @@
 
 .PHONY: clean
 HOST_PLATFORM := ${MACHINE_ARCH}
-HOST_OS := ${MACHINE_OS}
+HOST_OS != uname -s
 
-PLATFORMS_64 := arm64 aarch64 amd64 i86pc loongarch64 mips64 mips64el ppc64 ppc64le riscv64 s390x sparc sparc4v sparc64 x86_64
+PLATFORMS_64 := arm64 aarch64 amd64 i86pc loongarch64 mips64 mips64el ppc64 ppc64le riscv64 s390x sparc sun4v sparc64 x86_64
 PLATFORMS_32 := armv7l i386 i686 mips mipsel
 
 ### override these for cross-building:
 PLATFORM ?= ${MACHINE_ARCH}
 .for P in ${PLATFORMS_64}
-.if ${P} == ${PLATFORM}
+.if "${P}" == "${PLATFORM}"
 PLATFORM_SIZE ?= 64
 .endif
 .endfor
 
 .for P in ${PLATFORMS_32}
-.if ${P} == ${PLATFORM}
+.if "${P}" == "${PLATFORM}"
 PLATFORM_SIZE ?= 32
 .endif
 .endfor
 
 .ifndef PLATFORM_SIZE
+PLATFORM_SIZE != expr $$(echo __SIZEOF_LONG__ | ${CC} -E -P -x c - 2>/dev/null) \* 8 2>/dev/null || :
+.endif
+
+.if empty(PLATFORM_SIZE)
 .error Set PLATFORM_SIZE to 32 or 64 and try again
 .endif
 
@@ -32,15 +36,16 @@ CC_MARCH ?= native
 .endif
 CC_MTUNE ?= ${CC_MARCH}
 
-SEC_CFLAGS := -Wformat -Werror=format-security -D_FORTIFY_SOURCE=2 -fstack-protector-strong
+STACK_PROTECTOR != ${CC} -Werror -fstack-protector-strong -E -x c /dev/null >/dev/null 2>&1 && echo -fstack-protector-strong || :
+SEC_CFLAGS := -Wformat -Werror=format-security -D_FORTIFY_SOURCE=2 ${STACK_PROTECTOR}
 BASE_CFLAGS := -fpie -fPIC -Wall -Wextra -pedantic -O2 -fwrapv -DGETRANDOM -Werror
 BASE_CFLAGS+=-DPLATFORM=${PLATFORM} -DPLATFORM_SIZE=${PLATFORM_SIZE}
 BASE_CFLAGS+=${SEC_CFLAGS}
 # XXX refactor into bmake dialect
 #BASE_CFLAGS+=$(if $(strip $(CC_MARCH)),-march=$(CC_MARCH) -mtune=$(CC_MTUNE),)
 
-.for H in ${HOST_OS} OpenBSD DragonFly Darwin
-.if ${H} == ${HOST_OS} 
+.for H in OpenBSD DragonFly Darwin
+.if "${H}" == "${HOST_OS}"
 BASE_CFLAGS+=-D__${HOST_OS}__
 .endif
 .endfor
@@ -53,7 +58,7 @@ LDFLAGS+=-Wl,-Bsymbolic-functions
 LDFLAGS+=-Wl,--reduce-memory-overheads -Wl,--no-keep-memory
 .endif
 
-.if ${CC} == clang
+.if !empty(CC:M*clang*)
 BASE_CFLAGS+=-Wno-unused-command-line-argument
 .endif
 
@@ -75,7 +80,7 @@ BASE_CFLAGS+=-DPLATFORM=${PLATFORM} -DPLATFORM_SIZE=${PLATFORM_SIZE}
 BASE_CFLAGS+=-fpie -fPIC
 CFLAGS = ${BASE_CFLAGS}
 .endif
-.if ${CC} clang
+.if ${CC} == clang
 HIGHCTIDH_PORTABLE ?=1
 BASE_CFLAGS+=-DPLATFORM=${PLATFORM} -DPLATFORM_SIZE=${PLATFORM_SIZE}
 CFLAGS = ${BASE_CFLAGS} -Wno-unused-command-line-argument
@@ -114,7 +119,7 @@ libhighctidh_2048_OBJS := uintbig2048.o fp2048.o
 
 
 .for P in arm64 aarch64
-.if ${P} == ${PLATFORM}
+.if "${P}" == "${PLATFORM}"
 CFLAGS+= ${BASE_CFLAGS}
 .endif
 .endfor
@@ -166,10 +171,9 @@ CFLAGS+= -march=z10 -mtune=z10
 
 .if ${HOST_OS} == SunOS
 .for P in sparc sun4u sun4v sparc64 i86pc i386 
-.if ${P} == ${PLATFORM}
+.if "${P}" == "${PLATFORM}"
 BASE_CFLAGS+=${SEC_CFLAGS}
 CFLAGS+=${BASE_CFLAGS} -m64 -D__sun
-LDFLAGS+=${LDFLAGS}
 .if ${PLATFORM} == i86pc
 CFLAGS+=-D__i86pc__
 .if ${CC} == gcc
@@ -182,8 +186,7 @@ CFLAGS+=-D__i386__
 CFLAGS+=-mimpure-text
 .endif
 .endif
-.for P in sparc sun4u sun4v sparc64
-.if ${P} == ${PLATFORM}
+.if !empty(PLATFORM:Msparc*) || !empty(PLATFORM:Msun4*)
 CFLAGS+=-DHIGHCTIDH_PORTABLE=1 -D__sun4v__
 .if ${CC} == gcc
 CFLAGS+=-mcpu=native -mtune=native -D_REENTRANT
@@ -193,13 +196,9 @@ CFLAGS+=-mcpu=native -mtune=native -D_REENTRANT
 .endfor
 .endif
 
-.if ${PLATFORM} == unknown
-CFLAGS+= ${BASE_CFLAGS}
-.endif
-
 .if ${HOST_OS} != SunOS
 .for P in amd64 x86_64 i386 i686
-.if ${P} == ${PLATFORM}
+.if "${P}" == "${PLATFORM}"
 .if ${PLATFORM_SIZE} == 32
 CFLAGS+= ${BASE_CFLAGS} -D__i386__
 .if ${CC} == clang
@@ -210,6 +209,10 @@ CFLAGS+= ${BASE_CFLAGS} -D__x86_64__
 .endif
 .endif
 .endfor
+.endif
+
+.if empty(CFLAGS:M-DPLATFORM_SIZE*)
+CFLAGS+= ${BASE_CFLAGS}
 .endif
 
 CC += ${CFLAGS} ${LDFLAGS}

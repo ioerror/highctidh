@@ -102,9 +102,9 @@ alpine-multi-arch-python: $(ALPINE_DEPS_PYTHON)
 	ls -alh dist/*.so && sha256sum dist/*.so
 
 _prep:
-	-mkdir src/dist
-	-ln -s src/build build
-	-ln -s src/dist dist
+	mkdir -p src/dist
+	[ -L build ] || ln -s src/build build
+	[ -L dist ] || ln -s src/dist dist
 
 clean:
 	-$(RM) -r build

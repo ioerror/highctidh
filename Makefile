@@ -1,9 +1,6 @@
 # This is a minimal Makefile that is called by bmake as gmake will autodetect
 # and use GNUmakefile
 #
-export CC ?= clang
-export MAKE ?= make
-
 library: _prep
 	$(MAKE) -C src -f BSDmakefile
 	cp src/*.so dist/
@@ -22,9 +19,9 @@ examples-run:
 	cd src; time ./example-ctidh2048
 
 _prep:
-	-mkdir src/dist
-	-ln -s src/build build
-	-ln -s src/dist dist
+	mkdir -p src/dist
+	[ -L build ] || ln -s src/build build
+	[ -L dist ] || ln -s src/dist dist
 
 clean:
 	-$(RM) -r build

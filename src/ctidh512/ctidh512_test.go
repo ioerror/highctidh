@@ -1,5 +1,3 @@
-// DO NOT EDIT: generated code, see gen/main.go
-
 package ctidh512
 
 import (
