@@ -6,16 +6,16 @@ HOST_OS := $(shell uname -s)
 
 ### override these for cross-building:
 PLATFORM ?= $(shell uname -m)
-ifeq	($(PLATFORM), $(filter $(PLATFORM), arm64 aarch64 amd64 i86pc loongarch64 mips64 mips64el ppc64 ppc64le riscv64 s390x sparc sparc4v sparc64 x86_64))
+ifeq	($(PLATFORM), $(filter $(PLATFORM), arm64 aarch64 amd64 i86pc loongarch64 mips64 mips64el ppc64 ppc64le riscv64 s390x sparc sun4v sparc64 x86_64))
 PLATFORM_SIZE ?= 64
 else ifeq ($(PLATFORM), $(filter $(PLATFORM), armv7l i386 i686 mips mipsel))
 PLATFORM_SIZE ?= 32
-else
-PLATFORM_SIZE ?= $(shell getconf LONG_BIT)
+else ifndef PLATFORM_SIZE
+PLATFORM_SIZE := $(patsubst 8,64,$(patsubst 4,32,$(shell echo __SIZEOF_LONG__ | $(CC) -E -P -x c - 2>/dev/null)))
 endif
 
 ifndef PLATFORM_SIZE
-	$(error "Set PLATFORM_SIZE to 32 or 64 and try again")
+$(error "Set PLATFORM_SIZE to 32 or 64 and try again")
 endif
 
 ifeq	(HOST_PLATFORM,PLATFORM)
@@ -25,12 +25,12 @@ CC_MARCH ?= native
 endif
 CC_MTUNE ?= $(CC_MARCH)
 
-SEC_CFLAGS := -Wformat -Werror=format-security -D_FORTIFY_SOURCE=2 -fstack-protector-strong
+SEC_CFLAGS := -Wformat -Werror=format-security -D_FORTIFY_SOURCE=2 $(shell $(CC) -Werror -fstack-protector-strong -E -x c /dev/null >/dev/null 2>&1 && echo -fstack-protector-strong)
 BASE_CFLAGS := -fpie -fPIC -Wall -Wextra -pedantic -O2 -fwrapv -DGETRANDOM -Werror
 BASE_CFLAGS+=-DPLATFORM=${PLATFORM} -DPLATFORM_SIZE=${PLATFORM_SIZE}
 BASE_CFLAGS+=$(SEC_CFLAGS)
 BASE_CFLAGS+=$(if $(strip $(CC_MARCH)),-march=$(CC_MARCH) -mtune=$(CC_MTUNE),)
-ifeq    ($(HOST_OS), $(filter $(HOST_OS), OpenBSD, DragonFly, Darwin))
+ifeq    ($(HOST_OS), $(filter $(HOST_OS), OpenBSD DragonFly Darwin))
 BASE_CFLAGS+=-D__$(HOST_OS)__
 endif
 LDFLAGS :=
@@ -39,7 +39,7 @@ LDFLAGS+=-Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now
 LDFLAGS+=-Wl,-Bsymbolic-functions
 LDFLAGS+=-Wl,--reduce-memory-overheads -Wl,--no-keep-memory
 endif
-ifeq ($(CC),clang)
+ifneq ($(findstring clang,$(CC)),)
 BASE_CFLAGS+=-Wno-unused-command-line-argument
 endif
 ifeq ($(CC),gcc)
@@ -164,9 +164,6 @@ ifeq   ($(PLATFORM), $(filter $(PLATFORM), sparc sun4u sun4v sparc64))
 endif
 endif
 endif
-ifeq	($(PLATFORM),unknown)
-	CFLAGS+= $(BASE_CFLAGS)
-endif
 
 ifneq	($(HOST_OS), $(filter $(HOST_OS), SunOS))
 ifeq	($(PLATFORM), $(filter $(PLATFORM), amd64 x86_64 i386 i686))
@@ -181,6 +178,10 @@ else
 
 endif
 endif
+endif
+
+ifeq	($(filter -DPLATFORM_SIZE=$(PLATFORM_SIZE),$(CFLAGS)),)
+	CFLAGS+= $(BASE_CFLAGS)
 endif
 
 SCC ?= $(CC) $(CFLAGS) $(LDFLAGS)

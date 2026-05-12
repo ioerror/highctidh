@@ -49,6 +49,7 @@ package ctidh1024
 
  // CC=gcc CGO_ENABLED=1 GOOS=solaris GOARCH=sparc64 go build
  #cgo solaris/sparc64 CFLAGS: -m64 -DPLATFORM=sun4v -DPLATFORM_SIZE=64 -D__sun -DHIGHCTIDH_PORTABLE=1
+ #cgo sparc64 CFLAGS: -DHIGHCTIDH_PORTABLE=1
 
  // CC=s390x-linux-gnu-gcc CGO_ENABLED=1 GOOS=linux GOARCH=s390x go build -v
  #cgo s390x CFLAGS: -DPLATFORM=s390x -DPLATFORM_SIZE=64 -DHIGHCTIDH_PORTABLE=1

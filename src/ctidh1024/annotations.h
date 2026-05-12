@@ -4,7 +4,7 @@
 /*
  * Denote that the first argument is a write-only pointer.
  */
-#if defined(__GNUC__) && !defined(__clang__) && !defined(__INTEL_COMPILER)
+#if defined(__GNUC__) && __GNUC__ >= 10 && !defined(__clang__) && !defined(__INTEL_COMPILER)
 #define ANNOTATIONS_H_ONLY_GCC(x) x
 #else
 #define ANNOTATIONS_H_ONLY_GCC(x)
