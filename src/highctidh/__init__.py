@@ -12,7 +12,6 @@ highctidh wraps the original highctidh C implementation using ctypes.
 import ctypes
 import ctypes.util
 import hashlib
-import struct
 import pathlib
 from importlib import util, metadata
 from importlib.metadata import PackageNotFoundError
@@ -196,7 +195,9 @@ class ctidh(object):
 
             def __bytes__(self):
                 """Pack to canonical little-endian representation."""
-                return struct.pack("<" + "Q" * (ctypes.sizeof(self) // 8), *self.A)
+                out = ctypes.create_string_buffer(ctypes.sizeof(self))
+                ctidh_self._public_key_to_bytes(out, self)
+                return out.raw
 
             def __repr__(self):
                 return f'<highctidh.ctidh({ctidh_self.field_size}).public_key>'
@@ -214,13 +215,10 @@ class ctidh(object):
                 """
                 if type(byt) is not bytes:
                     raise DecodingError("Public key is not bytes")
-                # public keys are transferred in little-endian; we might have to
-                # byteswap to get them in native order in pk.A:
+                if len(byt) != self.pk_size:
+                    raise DecodingError(f"Public key must be {self.pk_size} bytes, is {len(byt)}")
                 pk = self.public_key()
-                try:
-                    pk.A[:] = struct.unpack("<" + "Q" * (self.pk_size // 8), byt)
-                except struct.error as e:
-                    raise DecodingError(e)
+                ctidh_self._public_key_from_bytes(pk, byt)
                 if validate:
                     assert ctidh_self.validate(pk)
                 return pk
@@ -264,6 +262,33 @@ class ctidh(object):
             ctypes.c_void_p,
         ]
         self.csidh_private_withrng = csidh_private_withrng
+
+        csidh_private_withrng_bytes = self._lib.__getattr__(
+            "highctidh_" + str(self.field_size) + "_csidh_private_withrng_bytes"
+        )
+        csidh_private_withrng_bytes.restype = None
+        csidh_private_withrng_bytes.argtypes = csidh_private_withrng.argtypes
+        self.csidh_private_withrng_bytes = csidh_private_withrng_bytes
+
+        public_key_to_bytes = self._lib.__getattr__(
+            "highctidh_" + str(self.field_size) + "_public_key_to_bytes"
+        )
+        public_key_to_bytes.restype = None
+        public_key_to_bytes.argtypes = [
+            ctypes.c_char_p,
+            ctypes.POINTER(self.public_key),
+        ]
+        self._public_key_to_bytes = public_key_to_bytes
+
+        public_key_from_bytes = self._lib.__getattr__(
+            "highctidh_" + str(self.field_size) + "_public_key_from_bytes"
+        )
+        public_key_from_bytes.restype = None
+        public_key_from_bytes.argtypes = [
+            ctypes.POINTER(self.public_key),
+            ctypes.c_char_p,
+        ]
+        self._public_key_from_bytes = public_key_from_bytes
 
         csidh = self._lib.__getattr__("highctidh_" + str(self.field_size) + "_csidh")
         csidh.restype = bool
@@ -396,7 +421,7 @@ class ctidh(object):
         else:
             raise CSIDHError
 
-    def generate_secret_key_inplace(self, sk, rng=None, context=None):
+    def generate_secret_key_inplace(self, sk, rng=None, context=None, rng_bytes=None):
         """
         Generate a secret key *sk* without allocating memory, overwriting *sk*.
         Optionally takes a callable argument *rng* which is called with two
@@ -410,6 +435,7 @@ class ctidh(object):
         Note that in order to achieve portable reproducible results, a PRNG
         must fill buf as though it were an array of int32_t values in
         HOST-ENDIAN/NATIVE byte order; see comment in csidh.h:ctidh_fillrandom.
+        *rng_bytes* is like *rng*, but buf is read as little-endian.
 
         >>> from highctidh import ctidh
         >>> ctidh511 = ctidh(511)
@@ -420,7 +446,10 @@ class ctidh(object):
         """
         if self.field_size != len(sk):
             raise InvalidFieldSize
-        if rng:
+        if rng and rng_bytes:
+            raise ValueError("pass rng or rng_bytes, not both")
+        if rng or rng_bytes:
+            fill = rng or rng_bytes
 
             @ctypes.CFUNCTYPE(None, ctypes.c_void_p, ctypes.c_size_t, ctypes.c_void_p)
             def rng_callback_wrapper(buf, bufsz, context):
@@ -429,15 +458,16 @@ class ctidh(object):
                 ).cast(
                     "B"
                 )  # uint8_t
-                rng(mv, context)
+                fill(mv, context)
             if context is None:
                 context = ctypes.byref(sk.e)
-            self.csidh_private_withrng(sk, context, rng_callback_wrapper)
+            withrng = self.csidh_private_withrng_bytes if rng_bytes else self.csidh_private_withrng
+            withrng(sk, context, rng_callback_wrapper)
         else:
             self.csidh_private(sk)
         return sk
 
-    def generate_secret_key(self, rng=None, context=None):
+    def generate_secret_key(self, rng=None, context=None, rng_bytes=None):
         """
         Generate a secret key *sk*, return it.
         Optionally takes a callable argument *rng* which is called with two
@@ -451,6 +481,7 @@ class ctidh(object):
         Note that in order to achieve portable reproducible results, a PRNG
         must fill buf as though it wwere an array of int32_t values in
         HOST-ENDIAN/NATIVE byte order; see comment in csidh.h:ctidh_fillrandom
+        *rng_bytes* is like *rng*, but buf is read as little-endian.
 
         >>> from highctidh import ctidh
         >>> ctidh511 = ctidh(511)
@@ -459,7 +490,7 @@ class ctidh(object):
         <highctidh.ctidh(511).private_key>
         """
         return self.generate_secret_key_inplace(
-            self.private_key(), rng=rng, context=context)
+            self.private_key(), rng=rng, context=context, rng_bytes=rng_bytes)
 
     def derive_public_key(self, sk):
         """

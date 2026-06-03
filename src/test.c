@@ -571,23 +571,11 @@ test_deterministic_keygen(void)
 	public_key_from_bytes(&deserialized_gh3, serialized_gh3);
 	assert_uintbig_eq(pub_gh3.A.x, deserialized_gh3.A.x);
 	/* to_bytes is a no-op on little-endian archs, and not on big-endian: */
-
-// gcc -E -dM - </dev/null|grep -i __BYTE_ORDER
-# if defined(PLATFORM) && PLATFORM == sun4v || PLATFORM == i86pc
-# if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
-  assert(0 != memcmp((void*)&pub_gh3, serialized_gh3, sizeof(pub_gh3)));
-# else
+#if HIGHCTIDH_LITTLE_ENDIAN
 	assert(0 == memcmp((void*)&pub_gh3, serialized_gh3, sizeof(pub_gh3)));
-# endif
-# endif
-
-# if !defined(__sun)
-# if __BYTE_ORDER == __LITTLE_ENDIAN
-	assert(0 == memcmp((void*)&pub_gh3, serialized_gh3, sizeof(pub_gh3)));
-# else
+#else
 	assert(0 != memcmp((void*)&pub_gh3, serialized_gh3, sizeof(pub_gh3)));
-# endif
-# endif
+#endif
 }
 
 static void

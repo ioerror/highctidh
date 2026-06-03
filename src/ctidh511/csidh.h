@@ -68,8 +68,10 @@ extern ctidh_fillrandom ctidh_fillrandom_default;
 /*
  * generate a new private key using rng_callback and write the result to (priv).
  * (context) is passed as context to the (rng_callback).
+ * The _bytes variant reads the rng output as little-endian.
  */
 void csidh_private_withrng(private_key *priv, uintptr_t rng_context, ctidh_fillrandom rng_callback);
+void csidh_private_withrng_bytes(private_key *priv, uintptr_t rng_context, ctidh_fillrandom rng_callback);
 
 /*
  * Generate a new private key and write the result to (priv).

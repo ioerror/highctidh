@@ -8,13 +8,14 @@ extern ctidh_fillrandom fillrandom_2048_custom;
 
 __attribute__((weak))
 void custom_gen_private(void *const context, private_key *priv) {
-  csidh_private_withrng(priv, (uintptr_t)context, fillrandom_2048_custom);
+  csidh_private_withrng_bytes(priv, (uintptr_t)context, fillrandom_2048_custom);
 }
 */
 import "C"
 import (
 	"crypto/hmac"
 	"encoding/base64"
+	"encoding/binary"
 	"io"
 	"unsafe"
 
@@ -71,7 +72,11 @@ func (p *PublicKey) Reset() {
 
 // Bytes returns the PublicKey as a byte slice.
 func (p *PublicKey) Bytes() []byte {
-	return C.GoBytes(unsafe.Pointer(&p.publicKey.A.x.c), C.int(C.UINTBIG_LIMBS*8))
+	out := make([]byte, PublicKeySize)
+	for i, limb := range p.publicKey.A.x.c {
+		binary.LittleEndian.PutUint64(out[8*i:], uint64(limb))
+	}
+	return out
 }
 
 // FromBytes loads a PublicKey from the given byte slice.
@@ -80,10 +85,14 @@ func (p *PublicKey) FromBytes(data []byte) error {
 		return ErrPublicKeySize
 	}
 
-	p.publicKey = *((*C.public_key)(unsafe.Pointer(&data[0])))
-	if !C.validate(&p.publicKey) {
+	var publicKey C.public_key
+	for i := range publicKey.A.x.c {
+		publicKey.A.x.c[i] = C.uint64_t(binary.LittleEndian.Uint64(data[8*i:]))
+	}
+	if !C.validate(&publicKey) {
 		return ErrPublicKeyValidation
 	}
+	p.publicKey = publicKey
 
 	return nil
 }
