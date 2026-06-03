@@ -13,7 +13,7 @@ void highctidh_1024_go_fillrandom(void *, void *, size_t);
 #define NAMESPACEBITS(x) highctidh_1024_##x
 #define NAMESPACEGENERIC(x) highctidh_1024_##x
 
-__attribute__((weak))
+static inline
 void fillrandom_1024_custom(
   void *const outptr,
   const size_t outsz,

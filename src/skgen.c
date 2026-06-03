@@ -2,6 +2,7 @@
 #include <assert.h>
 
 #include "csidh.h"
+#include "naidne.h"
 #include "primes.h"
 #include "random.h"
 
@@ -19,6 +20,32 @@ void csidh_private_withrng(private_key *priv, uintptr_t rng_context,
     pos += w;
   }
   assert(pos <= primes_num);
+}
+
+struct rng_bytes {
+  ctidh_fillrandom *callback;
+  uintptr_t context;
+};
+
+static void fillrandom_bytes(void *const outbuf, const size_t outsz,
+    const uintptr_t context)
+{
+  const struct rng_bytes *r = (const struct rng_bytes *) context;
+  unsigned char *b = outbuf;
+  uint32_t w;
+  r->callback(outbuf, outsz, r->context);
+  for (size_t i = 0;i + 4 <= outsz;i += 4) {
+    memcpy(&w, b + i, 4);
+    w = le32toh(w);
+    memcpy(b + i, &w, 4);
+  }
+}
+
+void csidh_private_withrng_bytes(private_key *priv, uintptr_t rng_context,
+    ctidh_fillrandom rng_callback)
+{
+  struct rng_bytes r = {rng_callback, rng_context};
+  csidh_private_withrng(priv, (uintptr_t) &r, fillrandom_bytes);
 }
 
 void csidh_private(private_key *priv)

@@ -41,6 +41,7 @@ void highctidh_511_public_key_from_bytes(highctidh_511_public_key *const pk, con
 void highctidh_511_public_key_to_bytes(char *const output, const highctidh_511_public_key *const pk);
 
 void highctidh_511_csidh_private_withrng(highctidh_511_private_key *priv, uintptr_t rng_context, ctidh_fillrandom rng_callback);
+void highctidh_511_csidh_private_withrng_bytes(highctidh_511_private_key *priv, uintptr_t rng_context, ctidh_fillrandom rng_callback);
 void highctidh_511_csidh_private(highctidh_511_private_key *const priv);
 _Bool highctidh_511_csidh(highctidh_511_public_key *out, highctidh_511_public_key const *in, highctidh_511_private_key const *priv);
 _Bool highctidh_511_validate(highctidh_511_public_key const *in);
@@ -65,6 +66,7 @@ extern const highctidh_512_public_key highctidh_512_base;
 void highctidh_512_public_key_from_bytes(highctidh_512_public_key *const pk, const char *const input);
 void highctidh_512_public_key_to_bytes(char *const output, const highctidh_512_public_key *const pk);
 void highctidh_512_csidh_private_withrng(highctidh_512_private_key *priv, uintptr_t rng_context, ctidh_fillrandom rng_callback);
+void highctidh_512_csidh_private_withrng_bytes(highctidh_512_private_key *priv, uintptr_t rng_context, ctidh_fillrandom rng_callback);
 void highctidh_512_csidh_private(highctidh_512_private_key *const priv);
 _Bool highctidh_512_csidh(highctidh_512_public_key *out, highctidh_512_public_key const *in, highctidh_512_private_key const *priv);
 _Bool highctidh_512_validate(highctidh_512_public_key const *in);
@@ -94,6 +96,7 @@ typedef void ((ctidh_fillrandom)(
   const uintptr_t context));
 
 void highctidh_1024_csidh_private_withrng(highctidh_1024_private_key *priv, uintptr_t rng_context, ctidh_fillrandom rng_callback);
+void highctidh_1024_csidh_private_withrng_bytes(highctidh_1024_private_key *priv, uintptr_t rng_context, ctidh_fillrandom rng_callback);
 void highctidh_1024_csidh_private(highctidh_1024_private_key *const priv);
 _Bool highctidh_1024_csidh(highctidh_1024_public_key *out, highctidh_1024_public_key const *in, highctidh_1024_private_key const *priv);
 _Bool highctidh_1024_validate(highctidh_1024_public_key const *in);
@@ -118,6 +121,7 @@ extern const highctidh_2048_public_key highctidh_2048_base;
 void highctidh_2048_public_key_from_bytes(highctidh_2048_public_key *const pk, const char *const input);
 void highctidh_2048_public_key_to_bytes(char *const output, const highctidh_2048_public_key *const pk);
 void highctidh_2048_csidh_private_withrng(highctidh_2048_private_key *priv, uintptr_t rng_context, ctidh_fillrandom rng_callback);
+void highctidh_2048_csidh_private_withrng_bytes(highctidh_2048_private_key *priv, uintptr_t rng_context, ctidh_fillrandom rng_callback);
 void highctidh_2048_csidh_private(highctidh_2048_private_key *const priv);
 _Bool highctidh_2048_csidh(highctidh_2048_public_key *out, highctidh_2048_public_key const *in, highctidh_2048_private_key const *priv);
 _Bool highctidh_2048_validate(highctidh_2048_public_key const *in);

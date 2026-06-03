@@ -39,4 +39,10 @@
 #include <endian.h>
 #endif
 
+#if defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+#define HIGHCTIDH_LITTLE_ENDIAN 0
+#else
+#define HIGHCTIDH_LITTLE_ENDIAN 1
+#endif
+
 #endif
