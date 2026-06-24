@@ -7,7 +7,7 @@ except ImportError:
 filterwarnings("ignore", category=DeprecationWarning)
 filterwarnings("ignore", category=SetuptoolsDeprecationWarning)
 
-from os import environ, getcwd, mkdir, path, stat, umask
+from os import devnull, environ, getcwd, mkdir, path, stat, umask
 from subprocess import PIPE, Popen
 from sys import exit, platform
 from sysconfig import get_config_var
@@ -185,6 +185,17 @@ cflags += [
     "-fstack-protector-strong",
 ]
 ldflags = ["-s"]
+try:
+    probe = Popen(
+        (CC or get_config_var("CC") or "cc").split()
+        + ["-Werror", "-fno-ivopts", "-c", "-x", "c", "-", "-o", devnull],
+        stdin=PIPE, stdout=PIPE, stderr=PIPE,
+    )
+    probe.communicate(b"int x;\n")
+    if probe.returncode == 0:
+        cflags += ["-fno-ivopts"]
+except OSError:
+    pass
 
 if CC == "clang":
     cflags += ["-Wno-ignored-optimization-argument", "-Wno-unreachable-code"]
@@ -207,47 +218,31 @@ if PLATFORM == "aarch64" or PLATFORM == "arm64":
         cflags += ["-D__Darwin__"]
         cflags += ["-DHIGHCTIDH_PORTABLE=1"]
     else:
-        if CC == "clang":
-            cflags += ["-DHIGHCTIDH_PORTABLE=1"]
-        if CC == "gcc":
-            cflags += [
-                "-march=native",
-                "-mtune=native",
-                "-DHIGHCTIDH_PORTABLE=1",
-            ]
+        cflags += ["-DHIGHCTIDH_PORTABLE=1"]
 elif PLATFORM == "armv7l":
     # clang required
+    cflags += ["-D__ARM32__", "-DHIGHCTIDH_PORTABLE=1"]
     if CC == "clang":
-        cflags += [
-            "-fforce-enable-int128",
-            "-D__ARM32__",
-            "-DHIGHCTIDH_PORTABLE=1",
-        ]
-    if CC == "gcc":
-        cflags += ["-D__ARM32__", "-DHIGHCTIDH_PORTABLE=1"]
+        cflags += ["-fforce-enable-int128"]
 elif PLATFORM == "loongarch64":
-    cflags += ["-march=native", "-mtune=native", "-DHIGHCTIDH_PORTABLE=1"]
+    cflags += ["-DHIGHCTIDH_PORTABLE=1"]
 elif PLATFORM == "mips":
     # clang or mips64-linux-gnuabi64-gcc cross compile required
+    cflags += ["-DHIGHCTIDH_PORTABLE=1"]
     if CC == "clang":
-        cflags += ["-fforce-enable-int128", "-DHIGHCTIDH_PORTABLE=1"]
-    if CC == "gcc":
-        cflags += ["-DHIGHCTIDH_PORTABLE=1"]
+        cflags += ["-fforce-enable-int128"]
 elif PLATFORM == "mips64":
     cflags += ["-DHIGHCTIDH_PORTABLE=1"]
 elif PLATFORM == "mips64le":
     cflags += ["-DHIGHCTIDH_PORTABLE=1"]
 elif PLATFORM == "ppc64le":
-    cflags += ["-mtune=native", "-DHIGHCTIDH_PORTABLE=1"]
+    cflags += ["-DHIGHCTIDH_PORTABLE=1"]
 elif PLATFORM == "ppc64":
-    cflags += ["-mtune=native", "-DHIGHCTIDH_PORTABLE=1"]
+    cflags += ["-DHIGHCTIDH_PORTABLE=1"]
 elif PLATFORM == "riscv64":
     cflags += ["-D__riscv", "-DHIGHCTIDH_PORTABLE=1"]
 elif PLATFORM == "s390x":
-    if CC == "clang":
-        cflags += ["-march=z10", "-mtune=z10", "-DHIGHCTIDH_PORTABLE=1"]
-    if CC == "gcc":
-        cflags += ["-march=z10", "-mtune=z10", "-DHIGHCTIDH_PORTABLE=1"]
+    cflags += ["-march=z10", "-mtune=z10", "-DHIGHCTIDH_PORTABLE=1"]
 elif PLATFORM == "sun4v" or PLATFORM == "i86pc":
     # Solaris 11, SunOS has default flags that do not work for both gcc and clang
     # compilers. We wrap the function that returns these flags internally during
@@ -256,9 +251,7 @@ elif PLATFORM == "sun4v" or PLATFORM == "i86pc":
     from distutils.sysconfig import get_config_vars as _get_config_vars
 
     _config_vars = _get_config_vars().copy()
-    default_cflags = [
-        " -O2 -DNDEBUG -Wall -m64 -fPIC -fpie -DPIC -ffile-prefix-map=..=. "
-    ]
+    default_cflags = " -O2 -DNDEBUG -Wall -m64 -fPIC -fpie -DPIC -ffile-prefix-map=..=. "
     _config_vars["CFLAGS"] = default_cflags
 
     def get_config_vars_wrapper(*a):
@@ -273,7 +266,7 @@ elif PLATFORM == "sun4v" or PLATFORM == "i86pc":
         cflags += ["-D__i86pc__"]
         cflags += ["-DHIGHCTIDH_PORTABLE=" + HIGHCTIDH_PORTABLE]
         if CC == "gcc":
-            cflags += ["-mcpu=native", "-mtune=native", "-fno-lto"]
+            cflags += ["-fno-lto"]
     if PLATFORM == "sun4v":
         cflags += ["-D__sun4v__"]
         cflags += ["-DHIGHCTIDH_PORTABLE=1"]
@@ -305,7 +298,7 @@ elif PLATFORM == "x86_64" or PLATFORM == "AMD64":
     if PLATFORM == "AMD64":
         cflags += ["-D__x86_64__"]
         cflags += ["-D__AMD64__"]
-    if PLATFORM == "x86_64":
+    if PLATFORM == "x86_64" and OS != "Darwin":
         cflags += ["-D__x86_64__"]
     if OS == "Darwin":
         cflags += ["-D__Darwin__"]
@@ -314,8 +307,6 @@ elif PLATFORM == "x86_64" or PLATFORM == "AMD64":
         cflags += ["-D__i386__"]
         if CC == "clang":
             cflags += ["-fforce-enable-int128"]
-    if CC == "gcc":
-        cflags += ["-march=native", "-mtune=native"]
     cflags += [f"-DPLATFORM={PLATFORM}", f"-DPLATFORM_SIZE={PLATFORM_SIZE}"]
     cflags += ["-DHIGHCTIDH_PORTABLE=" + HIGHCTIDH_PORTABLE]
 else:
@@ -379,6 +370,8 @@ else:
 cflags = [
     x.replace("-D_FORTIFY_SOURCE=2", "-D_FORTIFY_SOURCE=3") for x in cflags
 ]
+if environ.get("CC_MARCH"):
+    cflags += ["-march=" + environ["CC_MARCH"], "-mtune=" + environ["CC_MARCH"]]
 extra_compile_args = cflags
 extra_compile_args_511 = cflags + [
     "-DBITS=511",
