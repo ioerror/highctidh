@@ -2,6 +2,7 @@
 #include <assert.h>
 
 #include "csidh.h"
+#include "int64mask.h"
 #include "naidne.h"
 #include "primes.h"
 #include "random.h"
@@ -46,6 +47,21 @@ void csidh_private_withrng_bytes(private_key *priv, uintptr_t rng_context,
 {
   struct rng_bytes r = {rng_callback, rng_context};
   csidh_private_withrng(priv, (uintptr_t) &r, fillrandom_bytes);
+}
+
+bool csidh_private_valid(private_key const *priv)
+{
+  long long pos = 0;
+  int64_t bad = 0;
+  for (long long b = 0;b < primes_batches;++b) {
+    int64_t l1 = 0;
+    for (long long j = 0;j < primes_batchsize[b];++j) {
+      int64_t e = priv->e[pos++];
+      l1 += (e ^ int64mask_negative(e)) - int64mask_negative(e);
+    }
+    bad |= primes_batchbound[b] - l1;
+  }
+  return bad >= 0;
 }
 
 void csidh_private(private_key *priv)

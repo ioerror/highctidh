@@ -40,6 +40,7 @@
 #define public_key_to_bytes NAMESPACEBITS(public_key_to_bytes)
 #define csidh_private_withrng NAMESPACEBITS(csidh_private_withrng)
 #define csidh_private_withrng_bytes NAMESPACEBITS(csidh_private_withrng_bytes)
+#define csidh_private_valid NAMESPACEBITS(csidh_private_valid)
 #define validate NAMESPACEBITS(validate)
 #define validate_cutofforder_v2 NAMESPACEBITS(validate_cutofforder_v2)
 #define action NAMESPACEBITS(action)

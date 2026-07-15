@@ -17,6 +17,8 @@ var (
 	// ErrPrivateKeySize indicates the raw data is not the correct size for a private key.
 	ErrPrivateKeySize error = fmt.Errorf("%s: raw private key data size is wrong", Name())
 
+	ErrPrivateKeyRange error = fmt.Errorf("%s: private key exceeds a batch bound", Name())
+
 	// ErrCTIDH indicates a group action failure.
 	ErrCTIDH error = fmt.Errorf("%s: group action failure", Name())
 )

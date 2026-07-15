@@ -6,6 +6,7 @@
 #define csidh_private NAMESPACEBITS(csidh_private)
 #define csidh_private_withrng NAMESPACEBITS(csidh_private_withrng)
 #define csidh_private_withrng_bytes NAMESPACEBITS(csidh_private_withrng_bytes)
+#define csidh_private_valid NAMESPACEBITS(csidh_private_valid)
 #define csidh_statsucceeded NAMESPACEBITS(csidh_statsucceeded)
 #define csidh_stattried NAMESPACEBITS(csidh_stattried)
 #define validate NAMESPACEBITS(validate)

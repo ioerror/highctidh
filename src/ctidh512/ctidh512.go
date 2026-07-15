@@ -63,11 +63,7 @@ func (p *PublicKey) String() string {
 
 // Reset resets the PublicKey to all zeros.
 func (p *PublicKey) Reset() {
-	zeros := make([]byte, PublicKeySize)
-	err := p.FromBytes(zeros)
-	if err != nil {
-		panic(err)
-	}
+	p.publicKey = C.public_key{}
 }
 
 // Bytes returns the PublicKey as a byte slice.
@@ -89,7 +85,7 @@ func (p *PublicKey) FromBytes(data []byte) error {
 	for i := range publicKey.A.x.c {
 		publicKey.A.x.c[i] = C.uint64_t(binary.LittleEndian.Uint64(data[8*i:]))
 	}
-	if !C.validate(&publicKey) {
+	if publicKey == (C.public_key{}) || !C.validate(&publicKey) {
 		return ErrPublicKeyValidation
 	}
 	p.publicKey = publicKey
@@ -186,7 +182,11 @@ func (p *PrivateKey) FromBytes(data []byte) error {
 		return ErrPrivateKeySize
 	}
 
-	p.privateKey = *((*C.private_key)(unsafe.Pointer(&data[0])))
+	privateKey := *((*C.private_key)(unsafe.Pointer(&data[0])))
+	if !C.csidh_private_valid(&privateKey) {
+		return ErrPrivateKeyRange
+	}
+	p.privateKey = privateKey
 	return nil
 }
 

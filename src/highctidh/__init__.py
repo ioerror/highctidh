@@ -159,7 +159,10 @@ class ctidh(object):
                     raise DecodingError("Private key is not bytes")
                 if len(byt) != ctypes.sizeof(cls):
                     raise DecodingError(f"Serialized private key should be {self.sk_size}, is {len(byt)}")
-                return cls.from_buffer(ctypes.create_string_buffer(byt))
+                sk = cls.from_buffer(ctypes.create_string_buffer(byt))
+                if not ctidh_self._csidh_private_valid(sk):
+                    raise DecodingError("Private key exceeds a batch bound")
+                return sk
 
             @classmethod
             def fromhex(cls, h:str):
@@ -174,7 +177,7 @@ class ctidh(object):
                 if len(h) != ctypes.sizeof(cls):
                     # This gets bad if len(h) < sizeof
                     raise DecodingError(f"Private key must be {ctypes.sizeof(private_key)} bytes, is {len(h)}")
-                return cls.from_buffer(ctypes.create_string_buffer(h))
+                return cls.frombytes(h)
 
             def derive_public_key(self):
                 """Compute and return the corresponding public key *pk*."""
@@ -217,6 +220,8 @@ class ctidh(object):
                     raise DecodingError("Public key is not bytes")
                 if len(byt) != self.pk_size:
                     raise DecodingError(f"Public key must be {self.pk_size} bytes, is {len(byt)}")
+                if validate and not any(byt):
+                    raise InvalidPublicKey
                 pk = self.public_key()
                 ctidh_self._public_key_from_bytes(pk, byt)
                 if validate:
@@ -269,6 +274,13 @@ class ctidh(object):
         csidh_private_withrng_bytes.restype = None
         csidh_private_withrng_bytes.argtypes = csidh_private_withrng.argtypes
         self.csidh_private_withrng_bytes = csidh_private_withrng_bytes
+
+        csidh_private_valid = self._lib.__getattr__(
+            "highctidh_" + str(self.field_size) + "_csidh_private_valid"
+        )
+        csidh_private_valid.restype = bool
+        csidh_private_valid.argtypes = [ctypes.POINTER(self.private_key)]
+        self._csidh_private_valid = csidh_private_valid
 
         public_key_to_bytes = self._lib.__getattr__(
             "highctidh_" + str(self.field_size) + "_public_key_to_bytes"
