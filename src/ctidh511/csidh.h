@@ -72,6 +72,7 @@ extern ctidh_fillrandom ctidh_fillrandom_default;
  */
 void csidh_private_withrng(private_key *priv, uintptr_t rng_context, ctidh_fillrandom rng_callback);
 void csidh_private_withrng_bytes(private_key *priv, uintptr_t rng_context, ctidh_fillrandom rng_callback);
+bool csidh_private_valid(private_key const *priv);
 
 /*
  * Generate a new private key and write the result to (priv).

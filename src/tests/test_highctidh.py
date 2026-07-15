@@ -2,7 +2,7 @@
 
 import unittest
 from highctidh import ctidh
-from highctidh import InvalidFieldSize, InvalidPublicKey, CSIDHError
+from highctidh import InvalidFieldSize, InvalidPublicKey, CSIDHError, DecodingError
 from struct import pack
 
 import ctypes
@@ -635,15 +635,8 @@ class TestHighCTIDH(unittest.TestCase):
         self.public_key_serialization(2048)
 
     def test_511_blinding_static_golang_vectors(self):
-        ctidh511 = ctidh(511)
-        alice_private_key = ctidh511.private_key_from_bytes(
-            golang_blinding_factor_511_vector
-        )
-        alice_public_key = ctidh511.public_key_from_bytes(golang_blinding_pk_511_vector)
-        alice_blinded_public_key = ctidh511.blind(alice_private_key, alice_public_key)
-        self.assertEqual(
-            bytes(alice_blinded_public_key), golang_blinding_output_511_vector
-        )
+        with self.assertRaises(DecodingError):
+            ctidh(511).private_key_from_bytes(golang_blinding_factor_511_vector)
 
     def test_511_blinding_static(self):
         ctidh511 = ctidh(511)
@@ -1019,15 +1012,8 @@ class TestHighCTIDH(unittest.TestCase):
         self.assertEqual(bytes(bob_shared_key).hex(), golang_ss_511_vector.hex())
 
     def test_512_blinding_static_golang_vectors(self):
-        ctidh512 = ctidh(512)
-        alice_private_key = ctidh512.private_key_from_bytes(
-            golang_blinding_factor_512_vector
-        )
-        alice_public_key = ctidh512.public_key_from_bytes(golang_blinding_pk_512_vector)
-        alice_blinded_public_key = ctidh512.blind(alice_private_key, alice_public_key)
-        self.assertEqual(
-            bytes(alice_blinded_public_key), golang_blinding_output_512_vector
-        )
+        with self.assertRaises(DecodingError):
+            ctidh(512).private_key_from_bytes(golang_blinding_factor_512_vector)
 
     def test_512_blinding_static(self):
         ctidh512 = ctidh(512)
@@ -1261,17 +1247,8 @@ class TestHighCTIDH(unittest.TestCase):
         self.assertEqual(bytes(bob_shared_key).hex(), golang_ss_512_vector.hex())
 
     def test_1024_blinding_static_golang_vectors(self):
-        ctidh1024 = ctidh(1024)
-        alice_private_key = ctidh1024.private_key_from_bytes(
-            golang_blinding_factor_1024_vector
-        )
-        alice_public_key = ctidh1024.public_key_from_bytes(
-            golang_blinding_pk_1024_vector
-        )
-        alice_blinded_public_key = ctidh1024.blind(alice_private_key, alice_public_key)
-        self.assertEqual(
-            bytes(alice_blinded_public_key), golang_blinding_output_1024_vector
-        )
+        with self.assertRaises(DecodingError):
+            ctidh(1024).private_key_from_bytes(golang_blinding_factor_1024_vector)
 
     def test_1024_blinding_static(self):
         ctidh1024 = ctidh(1024)
@@ -1517,17 +1494,8 @@ class TestHighCTIDH(unittest.TestCase):
         self.assertEqual(bytes(bob_shared_key).hex(), golang_ss_1024_vector.hex())
 
     def test_2048_blinding_static_golang_vectors(self):
-        ctidh2048 = ctidh(2048)
-        alice_private_key = ctidh2048.private_key_from_bytes(
-            golang_blinding_factor_2048_vector
-        )
-        alice_public_key = ctidh2048.public_key_from_bytes(
-            golang_blinding_pk_2048_vector
-        )
-        alice_blinded_public_key = ctidh2048.blind(alice_private_key, alice_public_key)
-        self.assertEqual(
-            bytes(alice_blinded_public_key), golang_blinding_output_2048_vector
-        )
+        with self.assertRaises(DecodingError):
+            ctidh(2048).private_key_from_bytes(golang_blinding_factor_2048_vector)
 
     def test_2048_blinding_static(self):
         ctidh2048 = ctidh(2048)
@@ -1771,6 +1739,23 @@ class TestHighCTIDH(unittest.TestCase):
         )
         self.assertEqual(bytes(alice_shared_key).hex(), golang_ss_2048_vector.hex())
         self.assertEqual(bytes(bob_shared_key).hex(), golang_ss_2048_vector.hex())
+
+    def test_private_key_frombytes_rejects_batch_bound(self):
+        for n in (511, 512, 1024, 2048):
+            c = ctidh(n)
+            for b in (b"\x7f", b"\x80", b"\x02"):
+                with self.assertRaises(DecodingError):
+                    c.private_key.frombytes(b * c.sk_size)
+                with self.assertRaises(DecodingError):
+                    c.private_key.fromhex((b * c.sk_size).hex())
+            c.private_key.frombytes(bytes(c.sk_size))
+
+    def test_public_key_frombytes_rejects_e0(self):
+        for n in (511, 512, 1024, 2048):
+            c = ctidh(n)
+            with self.assertRaises(InvalidPublicKey):
+                c.public_key.frombytes(bytes(c.pk_size))
+            c.public_key.frombytes(bytes(c.pk_size), validate=False)
 
 
 if __name__ == "__main__":

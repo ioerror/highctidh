@@ -140,3 +140,23 @@ func TestNIKE(t *testing.T) {
 	aliceSharedBytes := DeriveSecret(alicePrivate, bobPublic)
 	require.Equal(t, bobSharedBytes, aliceSharedBytes)
 }
+
+func TestPrivateKeyFromBytesRejectsBatchBound(t *testing.T) {
+	for _, b := range []byte{0x7f, 0x80, 0x02} {
+		data := make([]byte, PrivateKeySize)
+		for i := range data {
+			data[i] = b
+		}
+		p := NewEmptyPrivateKey()
+		require.ErrorIs(t, p.FromBytes(data), ErrPrivateKeyRange)
+		require.Equal(t, make([]byte, PrivateKeySize), p.Bytes())
+	}
+	require.NoError(t, NewEmptyPrivateKey().FromBytes(make([]byte, PrivateKeySize)))
+}
+
+func TestPublicKeyFromBytesRejectsE0(t *testing.T) {
+	require.ErrorIs(t, NewEmptyPublicKey().FromBytes(make([]byte, PublicKeySize)), ErrPublicKeyValidation)
+	_, pub := GenerateKeyPair()
+	pub.Reset()
+	require.Equal(t, make([]byte, PublicKeySize), pub.Bytes())
+}
