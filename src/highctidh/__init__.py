@@ -174,9 +174,6 @@ class ctidh(object):
                     h = bytes.fromhex(h)
                 except Exception as e:
                     raise DecodingError(e)
-                if len(h) != ctypes.sizeof(cls):
-                    # This gets bad if len(h) < sizeof
-                    raise DecodingError(f"Private key must be {ctypes.sizeof(private_key)} bytes, is {len(h)}")
                 return cls.frombytes(h)
 
             def derive_public_key(self):
@@ -184,9 +181,6 @@ class ctidh(object):
                 pk = ctidh_self.public_key()
                 ctidh_self.csidh(pk, ctidh_self.base, self)
                 return pk
-
-        assert self.sk_size == ctypes.sizeof(private_key), (
-            self.sk_size, ctypes.sizeof(private_key),)
 
         self.private_key = private_key
 
@@ -225,7 +219,7 @@ class ctidh(object):
                 pk = self.public_key()
                 ctidh_self._public_key_from_bytes(pk, byt)
                 if validate:
-                    assert ctidh_self.validate(pk)
+                    ctidh_self.validate(pk)
                 return pk
 
             @classmethod
@@ -237,9 +231,6 @@ class ctidh(object):
                 return cls.frombytes(bytes.fromhex(h))
 
         self.public_key = public_key
-
-        assert self.pk_size == ctypes.sizeof(public_key), (
-            self.pk_size, ctypes.sizeof(public_key))
 
         self.base = self.public_key()
         try:
@@ -278,7 +269,7 @@ class ctidh(object):
         csidh_private_valid = self._lib.__getattr__(
             "highctidh_" + str(self.field_size) + "_csidh_private_valid"
         )
-        csidh_private_valid.restype = bool
+        csidh_private_valid.restype = ctypes.c_bool
         csidh_private_valid.argtypes = [ctypes.POINTER(self.private_key)]
         self._csidh_private_valid = csidh_private_valid
 
@@ -303,7 +294,7 @@ class ctidh(object):
         self._public_key_from_bytes = public_key_from_bytes
 
         csidh = self._lib.__getattr__("highctidh_" + str(self.field_size) + "_csidh")
-        csidh.restype = bool
+        csidh.restype = ctypes.c_bool
         csidh.argtypes = [
             ctypes.POINTER(self.public_key),
             ctypes.POINTER(self.public_key),
@@ -313,7 +304,7 @@ class ctidh(object):
         validate = self._lib.__getattr__(
             "highctidh_" + str(self.field_size) + "_validate"
         )
-        validate.restype = bool
+        validate.restype = ctypes.c_bool
         validate.argtypes = [ctypes.POINTER(self.public_key)]
         self._validate = validate
 
@@ -544,8 +535,8 @@ class ctidh(object):
         """
         if self.field_size != len(sk) or len(sk) != len(pk):
             raise InvalidFieldSize
-        assert type(pk) is self.public_key
-        assert type(sk) is self.private_key
+        if type(pk) is not self.public_key or type(sk) is not self.private_key:
+            raise TypeError("sk and pk must be this ctidh's private_key and public_key")
         shared_key = self.public_key()
         self.csidh(shared_key, pk, sk)
         return _hash(bytes(shared_key), self.pk_size)
