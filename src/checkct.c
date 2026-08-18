@@ -5,7 +5,7 @@
 #include "crypto_classify.h"
 #include "crypto_declassify.h"
 
-int main()
+int main(void)
 {
   private_key priv_alice, priv_bob;
   public_key pub_alice, pub_bob;
