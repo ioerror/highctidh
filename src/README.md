@@ -220,6 +220,9 @@ The Golang module on Windows is functional when built under MSYS2 using `gcc`
 in the `UCRT64`, or `MINGW64` environments.  These different environments are
 tested in `windows-msys-64bit-gcc-ucrt-msvcrt-golang-test.yaml`.
 
+`make timecop` passes with gcc and `-O2 -fno-ivopts`; it fails with `-O1`
+and with clang 21. Native tuning is opt-in: `CC_MARCH=native`.
+
 ### Additional notes on building the C library
 
 To build and install we recommend:

@@ -941,6 +941,7 @@ with open(fn+'.tmp','w') as f:
   f.write('CC_MTUNE ?= $(CC_MARCH)\n\n')
   f.write('SEC_CFLAGS := -Wformat -Werror=format-security -D_FORTIFY_SOURCE=2 $(shell $(CC) -Werror -fstack-protector-strong -E -x c /dev/null >/dev/null 2>&1 && echo -fstack-protector-strong)\n')
   f.write('BASE_CFLAGS := -fpie -fPIC -Wall -Wextra -pedantic -O2 -fwrapv -DGETRANDOM -Werror\n')
+  f.write('BASE_CFLAGS+=$(shell $(CC) -Werror -fno-ivopts -c -x c /dev/null -o /dev/null >/dev/null 2>&1 && echo -fno-ivopts)\n')
   f.write('BASE_CFLAGS+=-DPLATFORM=${PLATFORM} -DPLATFORM_SIZE=${PLATFORM_SIZE}\n')
   f.write('BASE_CFLAGS+=$(SEC_CFLAGS)\n')
   f.write('BASE_CFLAGS+=$(if $(strip $(CC_MARCH)),-march=$(CC_MARCH) -mtune=$(CC_MTUNE),)\n')
@@ -1094,17 +1095,15 @@ with open(fn+'.tmp','w') as f:
   f.write('\n')
   for bits in databits:
     f.write('{0}: costpoly{0}.out checkct{0}untuned bench{0}untuned test{0}.out \\\n'.format(bits))
-    f.write('checkct{0}mults bench{0}mults \\\n'.format(bits))
     f.write('checkct{0}cycles bench{0}cycles \\\n'.format(bits))
     f.write('ubench{0} umults{0}\n'.format(bits))
     f.write('\n')
   f.write('timecop: \\\n')
   for bits in databits:
-    f.write('checkct{0}untuned checkct{0}mults checkct{0}cycles \\\n'.format(bits))
+    f.write('checkct{0}untuned checkct{0}cycles \\\n'.format(bits))
   f.write('\n')
   for bits in databits:
     f.write('\tvalgrind ./checkct{0}untuned\n'.format(bits))
-    f.write('\tvalgrind ./checkct{0}mults\n'.format(bits))
     f.write('\tvalgrind ./checkct{0}cycles\n'.format(bits))
   f.write('\n')
 
@@ -1112,25 +1111,19 @@ with open(fn+'.tmp','w') as f:
   f.write('\n')
 
   for app in ('checkct','bench'):
+    tc = ' -DTIMECOP crypto_classify.c crypto_declassify.c' if app == 'checkct' else ''
     for bits in databits:
       f.write('{1}{0}cycles: {1}.c \\\n'.format(bits,app))
       f.write('libhighctidh_{0}.a libhighctidh_base.a libhighctidh_tunecycles{0}.a libtest.a\n'.format(bits))
       f.write(ccbits.format(bits))
-      f.write('\t\t-o {1}{0}cycles {1}.c \\\n'.format(bits,app))
+      f.write('\t\t-o {1}{0}cycles {1}.c{2} \\\n'.format(bits,app,tc))
       f.write('\t\tlibhighctidh_{0}.a libhighctidh_base.a libhighctidh_tunecycles{0}.a libtest.a\n'.format(bits))
-      f.write('\n')
-    for bits in databits:
-      f.write('{1}{0}mults: {1}.c \\\n'.format(bits,app))
-      f.write('libhighctidh_{0}.a libhighctidh_base.a libtest.a\n'.format(bits))
-      f.write(ccbits.format(bits))
-      f.write('\t\t-o {1}{0}mults {1}.c \\\n'.format(bits,app))
-      f.write('\t\tlibhighctidh_{0}.a libhighctidh_base.a libtest.a\n'.format(bits))
       f.write('\n')
     for bits in databits:
       f.write('{1}{0}untuned: {1}.c \\\n'.format(bits,app))
       f.write('libhighctidh_{0}.a libhighctidh_base.a libhighctidh_untuned.a libtest.a\n'.format(bits))
       f.write(ccbits.format(bits))
-      f.write('\t\t-o {1}{0}untuned {1}.c \\\n'.format(bits,app))
+      f.write('\t\t-o {1}{0}untuned {1}.c{2} \\\n'.format(bits,app,tc))
       f.write('\t\tlibhighctidh_{0}.a libhighctidh_base.a libhighctidh_untuned.a libtest.a\n'.format(bits))
       f.write('\n')
 
