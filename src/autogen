@@ -1085,6 +1085,7 @@ with open(fn+'.tmp','w') as f:
   f.write('\tCFLAGS+= $(BASE_CFLAGS)\n')
   f.write('endif\n\n')
   f.write('SCC ?= $(CC) $(CFLAGS) $(LDFLAGS)\n')
+  f.write('TEST_CC := $(CC)\n')
   f.write('CC += $(CFLAGS) $(LDFLAGS)\n')
   f.write('\n')
   f.write('default: libhighctidh.so\n')
@@ -1360,7 +1361,7 @@ with open(fn+'.tmp','w') as f:
   f.write('\t$(CC) -static -Wall -Werror -Wpedantic examples_static.c -Wl,-Bstatic -L. -l:libhighctidh.a -o examples-static\n\n')
 
   f.write('test: clean libhighctidh.so testrandom test511 test512 test1024 test2048\n')
-  f.write('\t\t./test.sh\n\n')
+  f.write('\t\tCC="$(TEST_CC)" ./test.sh\n\n')
 
   f.write('DESTDIR ?= /usr/local\n')
   f.write('install: libhighctidh.so libhighctidh.a\n')
