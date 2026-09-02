@@ -186,6 +186,7 @@ ifeq	($(filter -DPLATFORM_SIZE=$(PLATFORM_SIZE),$(CFLAGS)),)
 endif
 
 SCC ?= $(CC) $(CFLAGS) $(LDFLAGS)
+TEST_CC := $(CC)
 CC += $(CFLAGS) $(LDFLAGS)
 
 default: libhighctidh.so
@@ -994,7 +995,7 @@ examples-static: examples_static.c libhighctidh.a *.h
 	$(CC) -static -Wall -Werror -Wpedantic examples_static.c -Wl,-Bstatic -L. -l:libhighctidh.a -o examples-static
 
 test: clean libhighctidh.so testrandom test511 test512 test1024 test2048
-		./test.sh
+		CC="$(TEST_CC)" ./test.sh
 
 DESTDIR ?= /usr/local
 install: libhighctidh.so libhighctidh.a
