@@ -60,6 +60,10 @@ LDFLAGS+=-Wl,-Bsymbolic-functions
 LDFLAGS+=-Wl,--reduce-memory-overheads -Wl,--no-keep-memory
 .endif
 
+.if ${HOST_OS} == OpenBSD
+LDFLAGS+=-pthread
+.endif
+
 .if !empty(CC:M*clang*)
 BASE_CFLAGS+=-Wno-unused-command-line-argument
 .endif
