@@ -40,6 +40,9 @@ LDFLAGS+=-Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now
 LDFLAGS+=-Wl,-Bsymbolic-functions
 LDFLAGS+=-Wl,--reduce-memory-overheads -Wl,--no-keep-memory
 endif
+ifeq ($(HOST_OS),OpenBSD)
+LDFLAGS+=-pthread
+endif
 ifneq ($(findstring clang,$(CC)),)
 BASE_CFLAGS+=-Wno-unused-command-line-argument
 endif

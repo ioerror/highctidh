@@ -311,7 +311,8 @@ void action(public_key *out, public_key const *in, private_key const *priv)
 }
 
 /* includes public-key validation. */
-bool csidh(public_key *out, public_key const *in, private_key const *priv)
+static bool csidh_on_stack(public_key *out, public_key const *in,
+    private_key const *priv)
 {
     if (!validate(in)) {
         fp_random(&out->A);
@@ -320,3 +321,42 @@ bool csidh(public_key *out, public_key const *in, private_key const *priv)
     action(out, in, priv);
     return true;
 }
+
+#if defined(__OpenBSD__)
+#include <pthread.h>
+
+struct csidh_call {
+    public_key *out;
+    public_key const *in;
+    private_key const *priv;
+    bool ok;
+};
+
+static void *csidh_thread(void *arg)
+{
+    struct csidh_call *c = arg;
+    c->ok = csidh_on_stack(c->out, c->in, c->priv);
+    return NULL;
+}
+
+bool csidh(public_key *out, public_key const *in, private_key const *priv)
+{
+    struct csidh_call c = {out, in, priv, false};
+    pthread_attr_t attr;
+    pthread_t t;
+    if (pthread_attr_init(&attr) != 0)
+        return csidh_on_stack(out, in, priv);
+    int err = pthread_attr_setstacksize(&attr, 1 << 21) ||
+        pthread_create(&t, &attr, csidh_thread, &c);
+    pthread_attr_destroy(&attr);
+    if (err)
+        return csidh_on_stack(out, in, priv);
+    pthread_join(t, NULL);
+    return c.ok;
+}
+#else
+bool csidh(public_key *out, public_key const *in, private_key const *priv)
+{
+    return csidh_on_stack(out, in, priv);
+}
+#endif

@@ -185,6 +185,8 @@ cflags += [
     "-fstack-protector-strong",
 ]
 ldflags = ["-s"]
+if OS == "OpenBSD":
+    ldflags += ["-pthread"]
 try:
     probe = Popen(
         (CC or get_config_var("CC") or "cc").split()
