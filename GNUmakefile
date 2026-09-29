@@ -26,7 +26,7 @@ release-upload:
 	@echo "Please upload docker_build_output/upload/build-artifacts/*:"
 	ls -1 docker_build_output/upload/build-artifacts/
 
-packages deb: _prep
+packages deb deb-build: _prep
 	$(MAKE) -C src -f Makefile.packages $@
 
 deb-and-wheel-in-podman:
