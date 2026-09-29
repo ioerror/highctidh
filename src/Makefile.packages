@@ -19,7 +19,7 @@ else
 endif
 
 PODMAN_ARCH ?= ${ARCH}
-.PHONY: deb test packages sdist pypi-upload prepare-artifacts-for-upload
+.PHONY: deb deb-build test packages sdist pypi-upload prepare-artifacts-for-upload
 KERNEL := $(shell uname -s|tr A-Z a-z)
 DEB_NAME := ${WORKDIR}/dist/python3-highctidh_${VERSION}-1_${DEB_ARCH}.deb
 WHEEL_NAME := ${WORKDIR}/dist/highctidh-${VERSION}-cp311-cp311-${KERNEL}_${ARCH}.whl
@@ -52,7 +52,7 @@ go:
 	cd ctidh1024 && go test -v;
 	cd ctidh2048 && go test -v;
 
-deb: ${SDIST_GZ} ${DEB_NAME}
+deb deb-build: ${SDIST_GZ} ${DEB_NAME}
 ${DEB_NAME}:
 	-mkdir -p dist/source
 	-mkdir -p build/tmp
@@ -89,7 +89,7 @@ ${SDIST_GZ}:
 	-mkdir -p dist/source
 	-mkdir -p build/tmp
 	SOURCE_DATE_EPOCH=${SOURCE_DATE_EPOCH} flit build \
-			  --format sdist
+			  --use-vcs --format sdist
 	-ls -alh ${SDIST_GZ}
 	-sha256sum ${SDIST_GZ}
 
