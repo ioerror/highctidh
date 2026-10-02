@@ -14,7 +14,7 @@ jobs:
         PORTABLE: ["0", "1"]
       fail-fast: false
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
 
     - name: Install Python deps for testing
       run: sudo bash -c ./misc/install-ubuntu-deps.sh

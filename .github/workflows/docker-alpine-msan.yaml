@@ -21,7 +21,7 @@ jobs:
       fail-fast: false
     container: ${{ matrix.CONTAINER }}
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
 
     - name: Install alpine deps
       run: ./misc/install-alpine-deps.sh
@@ -40,3 +40,8 @@ jobs:
 
     - name: Build and test 2048 with msan
       run: cd src/ctidh2048 && HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} go test -v -o msan-test -msan ./...
+
+    - name: Explain an MSan startup crash
+      if: failure()
+      run: |
+        echo "MSan needs mmap_rnd_bits <= 28:"; cat /proc/sys/vm/mmap_rnd_bits

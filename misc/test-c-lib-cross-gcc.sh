@@ -12,7 +12,7 @@ CHECKMARK="\xE2\x9C\x94";
 export AR CC CC_MARCH CFLAGS LD PLATFORM PLATFORM_SIZE prefix;
 
 make_and_clean() {
-    rm -fv *.o *.so;
+    rm -fv src/*.o src/*.so;
     echo "${PLATFORM} ${CC_MARCH:-} (${PLATFORM_SIZE}):";
     make;
     mkdir -p dist/cross/$PLATFORM/$PLATFORM_SIZE/;
@@ -21,7 +21,7 @@ make_and_clean() {
 }
 
 echo "Checking to see if CI needs clean up";
-rm -fv *.o *.so;
+rm -fv src/*.o src/*.so;
 
 echo "Cross compile for GNU/Linux with gcc on $HOST_ARCH...";
 

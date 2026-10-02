@@ -13,7 +13,7 @@ jobs:
       MAKE: "gmake"
       HIGHCTIDH_PORTABLE: "1"
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - name: Test in NetBSD
       id: test
       uses: vmactions/netbsd-vm@v1
