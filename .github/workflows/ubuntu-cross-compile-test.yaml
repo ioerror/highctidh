@@ -7,19 +7,19 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         CC: ["clang", "gcc"]
       fail-fast: false
     steps:
-    - uses: actions/checkout@v4
-
-    - name: Display compiler version
-      run: ${{ matrix.CC }} -v
+    - uses: actions/checkout@v5
 
     - name: Install cross compiler deps
       run: sudo ./misc/install-ubuntu-latest-cross-deps.sh
+
+    - name: Display compiler version
+      run: ${{ matrix.CC }} -v
 
     - name: Build with cross compiler
       run: CFLAGS="-fno-lto" ./misc/test-c-lib-cross-${{ matrix.CC }}.sh

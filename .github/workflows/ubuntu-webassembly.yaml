@@ -12,7 +12,7 @@ jobs:
       matrix:
         CC: ["emcc"]
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
 
     - name: Install cross compiler deps
       run: sudo ./misc/install-ubuntu-webassembly-deps.sh

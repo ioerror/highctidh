@@ -20,7 +20,7 @@ jobs:
     - name: Install Amazon Linux pre-deps
       run: yum install -y sudo tar gzip git > /dev/null 2>&1;
 
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v5
 
     - name: Install Amazon Linux deps
       run: ./misc/install-amazonlinux-deps.sh
@@ -34,7 +34,7 @@ jobs:
       run: CC=${{ matrix.CC }} HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make install
 
     - name: Register libraries
-      run: sudo ldconfig /usr/local/lib
+      run: ldconfig /usr/local/lib
 
     - name: Build examples
       run: CC=${{ matrix.CC }} HIGHCTIDH_PORTABLE=${{ matrix.PORTABLE }} make examples

@@ -13,7 +13,7 @@ jobs:
       MAKE: "/usr/bin/gmake"
       HIGHCTIDH_PORTABLE: "0"
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - name: Test in Solaris
       id: test
       uses: vmactions/solaris-vm@v1

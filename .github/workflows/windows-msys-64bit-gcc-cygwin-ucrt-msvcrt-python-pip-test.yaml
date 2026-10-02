@@ -13,7 +13,7 @@ jobs:
       fail-fast: false
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
 
     - name: Set up Msys2
       uses: msys2/setup-msys2@v2
@@ -29,7 +29,6 @@ jobs:
           gcc
           mingw-w64-clang-x86_64-python-pytest-xdist
           mingw-w64-clang-x86_64-python-flit
-          mingw-w64-clang-x86_64-python-distutils-extra
           mingw-w64-x86_64-gcc
           mingw-w64-ucrt-x86_64-gcc
           make

@@ -15,7 +15,7 @@ export AR CC CC_MARCH CFLAGS LD PLATFORM PLATFORM_SIZE prefix;
 export CFLAGS="$CFLAGS -D_CLANG_CROSS_FIXUP"
 
 make_and_clean() {
-    rm -fv *.o *.so;
+    rm -fv src/*.o src/*.so;
     echo "${PLATFORM} ${CC_MARCH:-} (${PLATFORM_SIZE}):";
     make;
     mkdir -p dist/cross/$PLATFORM/$PLATFORM_SIZE/;
@@ -25,7 +25,7 @@ make_and_clean() {
 }
 
 echo "Checking to see if CI needs clean up";
-rm -fv *.o *.so;
+rm -fv src/*.o src/*.so;
 
 echo "Cross compile for GNU/Linux with clang on $HOST_ARCH...";
 
@@ -35,29 +35,23 @@ CC="clang --target=x86_64 -fPIC -I /usr/include/x86_64-linux-gnu/ " \
 make_and_clean;
 
 PLATFORM=arm PLATFORM_SIZE=32 \
-CC_MARCH=arm \
-LD=/usr/bin/$PLATFORM-linux-gnueabi-ld \
-CC="clang --target=$PLATFORM-pc-linux-gnu -fforce-enable-int128 -fuse-ld=$LD" \
+CC="clang --target=arm-linux-gnueabi -fforce-enable-int128" \
 make_and_clean;
 
 PLATFORM=ppc64 PLATFORM_SIZE=64 \
-LD=/usr/powerpc64-linux-gnu/bin/ld \
-CC="clang --target=$PLATFORM-pc-linux-gnu -fuse-ld=$LD" \
+CC="clang --target=powerpc64-linux-gnu" \
 make_and_clean;
 
 PLATFORM=ppc64le PLATFORM_SIZE=64 \
-LD=/usr/powerpc64le-linux-gnu/bin/ld \
-CC="clang --target=$PLATFORM-pc-linux-gnu -fuse-ld=$LD" \
+CC="clang --target=powerpc64le-linux-gnu" \
 make_and_clean;
 
 PLATFORM=riscv64 PLATFORM_SIZE=64 \
-LD=/usr/bin/$PLATFORM-linux-gnu-ld \
-CC="clang --target=$PLATFORM-pc-linux-gnu -fuse-ld=$LD" \
+CC="clang --target=riscv64-linux-gnu" \
 make_and_clean;
 
 PLATFORM=s390x PLATFORM_SIZE=64 \
-LD=/usr/bin/$PLATFORM-linux-gnu-ld \
-CC="clang --target=$PLATFORM-pc-linux-gnu -fuse-ld=$LD" \
+CC="clang --target=s390x-linux-gnu" \
 make_and_clean;
 
 if [ $CODENAME == "Codename:	mantic" ];
@@ -72,8 +66,7 @@ else
 fi
 
 PLATFORM=mips64 PLATFORM_SIZE=64 \
-LD=/usr/bin/$PLATFORM-linux-gnuabi$PLATFORM_SIZE-ld \
-CC="clang --target=$PLATFORM-pc-linux-gnu -fuse-ld=$LD" \
+CC="clang --target=mips64-linux-gnuabi64" \
 make_and_clean;
 
 if [ $CODENAME == "Codename:	mantic" ];
@@ -88,13 +81,11 @@ fi
 
 PLATFORM=i386 PLATFORM_SIZE=32 \
 CC_MARCH=i686 \
-LD=/usr/bin/x86_64-linux-gnu-ld \
-CC="clang --target=$PLATFORM-pc-linux-gnu -fforce-enable-int128 -fuse-ld=$LD" \
+CC="clang --target=i686-linux-gnu -fforce-enable-int128" \
 make_and_clean;
 
 PLATFORM=aarch64 PLATFORM_SIZE=64 \
-LD=/usr/bin/$PLATFORM-linux-gnu-ld \
-CC="clang --target=$PLATFORM-pc-linux-gnu -fuse-ld=$LD" \
+CC="clang --target=aarch64-linux-gnu" \
 make_and_clean;
 
 echo "Cross compile with clang successful:";
