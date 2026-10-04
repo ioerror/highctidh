@@ -100,12 +100,9 @@ func test_go_fillrandom(context unsafe.Pointer, outptr []byte) {
 func highctidh_1024_go_fillrandom(context unsafe.Pointer, outptr unsafe.Pointer, outsz C.size_t) {
 	rng := gopointer.Restore(context).(io.Reader)
 	buf := make([]byte, outsz)
-	count, err := rng.Read(buf)
+	_, err := io.ReadFull(rng, buf)
 	if err != nil {
 		panic(err)
-	}
-	if count != int(outsz) {
-		panic("rng fail")
 	}
 	for i := 0; i < int(outsz); i++ {
 		p := unsafe.Pointer(uintptr(outptr) + uintptr(i))
