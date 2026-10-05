@@ -6,7 +6,6 @@ import (
 	"crypto/rand"
 	"sync"
 	"testing"
-	"unsafe"
 
 	"github.com/stretchr/testify/require"
 )
@@ -161,7 +160,7 @@ func TestInvalidPublicKeyGroupActionReturnsError(t *testing.T) {
 	invalid[0] = 7
 	require.ErrorIs(t, NewEmptyPublicKey().FromBytes(invalid), ErrPublicKeyValidation)
 	k := new(PublicKey)
-	copy(unsafe.Slice((*byte)(unsafe.Pointer(&k.publicKey)), PublicKeySize), invalid)
+	setRawPublicKey(k, invalid)
 	require.Equal(t, invalid, k.Bytes())
 
 	require.NotPanics(t, func() {
@@ -228,7 +227,7 @@ func TestOutputsAreValidated(t *testing.T) {
 	requireValidated(t, GroupAction(priv, pub2))
 
 	unchecked := new(PublicKey)
-	copy(unsafe.Slice((*byte)(unsafe.Pointer(&unchecked.publicKey)), PublicKeySize), pub2.Bytes())
+	setRawPublicKey(unchecked, pub2.Bytes())
 	require.False(t, unchecked.validated)
 	shared, err := GroupActionChecked(priv, unchecked)
 	require.NoError(t, err)
@@ -281,7 +280,7 @@ func TestPrivateKeyDeriveSecretChecked(t *testing.T) {
 	invalid := new(PublicKey)
 	bad := make([]byte, PublicKeySize)
 	bad[0] = 7
-	copy(unsafe.Slice((*byte)(unsafe.Pointer(&invalid.publicKey)), PublicKeySize), bad)
+	setRawPublicKey(invalid, bad)
 	require.NotPanics(t, func() {
 		secret, err := alicePrivate.DeriveSecretChecked(invalid)
 		require.ErrorIs(t, err, ErrCTIDH)

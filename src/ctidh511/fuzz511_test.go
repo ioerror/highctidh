@@ -3,7 +3,6 @@ package ctidh511
 import (
 	"bytes"
 	"testing"
-	"unsafe"
 
 	"github.com/stretchr/testify/require"
 )
@@ -31,7 +30,7 @@ func FuzzKeys(f *testing.F) {
 			require.Equal(t, make([]byte, PublicKeySize), pk.Bytes())
 			if len(pubBytes) == PublicKeySize {
 				raw := new(PublicKey)
-				copy(unsafe.Slice((*byte)(unsafe.Pointer(&raw.publicKey)), PublicKeySize), pubBytes)
+				setRawPublicKey(raw, pubBytes)
 				shared, err := GroupActionChecked(sk, raw)
 				require.ErrorIs(t, err, ErrCTIDH)
 				require.Nil(t, shared)
