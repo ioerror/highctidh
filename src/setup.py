@@ -208,15 +208,13 @@ if PLATFORM == "aarch64" or PLATFORM == "arm64":
         cflags += ["-DHIGHCTIDH_PORTABLE=1"]
     else:
         cflags += ["-DHIGHCTIDH_PORTABLE=1"]
-        if CC == "gcc":
-            cflags += ["-march=native", "-mtune=native"]
 elif PLATFORM == "armv7l":
     # clang required
     cflags += ["-D__ARM32__", "-DHIGHCTIDH_PORTABLE=1"]
     if CC == "clang":
         cflags += ["-fforce-enable-int128"]
 elif PLATFORM == "loongarch64":
-    cflags += ["-march=native", "-mtune=native", "-DHIGHCTIDH_PORTABLE=1"]
+    cflags += ["-DHIGHCTIDH_PORTABLE=1"]
 elif PLATFORM == "mips":
     # clang or mips64-linux-gnuabi64-gcc cross compile required
     cflags += ["-DHIGHCTIDH_PORTABLE=1"]
@@ -227,13 +225,13 @@ elif PLATFORM == "mips64":
 elif PLATFORM == "mips64le":
     cflags += ["-DHIGHCTIDH_PORTABLE=1"]
 elif PLATFORM == "ppc64le":
-    cflags += ["-mtune=native", "-DHIGHCTIDH_PORTABLE=1"]
+    cflags += ["-DHIGHCTIDH_PORTABLE=1"]
 elif PLATFORM == "ppc64":
-    cflags += ["-mtune=native", "-DHIGHCTIDH_PORTABLE=1"]
+    cflags += ["-DHIGHCTIDH_PORTABLE=1"]
 elif PLATFORM == "riscv64":
     cflags += ["-D__riscv", "-DHIGHCTIDH_PORTABLE=1"]
 elif PLATFORM == "s390x":
-    cflags += ["-march=z10", "-mtune=z10", "-DHIGHCTIDH_PORTABLE=1"]
+    cflags += ["-DHIGHCTIDH_PORTABLE=1"]
 elif PLATFORM == "sun4v" or PLATFORM == "i86pc":
     # Solaris 11, SunOS has default flags that do not work for both gcc and clang
     # compilers. We wrap the function that returns these flags internally during
@@ -259,7 +257,7 @@ elif PLATFORM == "sun4v" or PLATFORM == "i86pc":
         cflags += ["-D__i86pc__"]
         cflags += ["-DHIGHCTIDH_PORTABLE=" + HIGHCTIDH_PORTABLE]
         if CC == "gcc":
-            cflags += ["-mcpu=native", "-mtune=native", "-fno-lto"]
+            cflags += ["-fno-lto"]
     if PLATFORM == "sun4v":
         cflags += ["-D__sun4v__"]
         cflags += ["-DHIGHCTIDH_PORTABLE=1"]
@@ -300,8 +298,6 @@ elif PLATFORM == "x86_64" or PLATFORM == "AMD64":
         cflags += ["-D__i386__"]
         if CC == "clang":
             cflags += ["-fforce-enable-int128"]
-    if CC == "gcc":
-        cflags += ["-march=native", "-mtune=native"]
     cflags += [f"-DPLATFORM={PLATFORM}", f"-DPLATFORM_SIZE={PLATFORM_SIZE}"]
     cflags += ["-DHIGHCTIDH_PORTABLE=" + HIGHCTIDH_PORTABLE]
 else:
