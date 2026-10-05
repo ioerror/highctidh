@@ -413,7 +413,7 @@ class TestHighCTIDH(unittest.TestCase):
                         )
                     )
                 )
-                outptr[idx : idx + 4] = struct.pack("=I", (newhash & 0xFFFFFFFF))
+                outptr[idx : idx + 4] = struct.pack("<I", (newhash & 0xFFFFFFFF))
             return newhash
 
         global fillrandom_global_hash
