@@ -163,7 +163,7 @@ The C library and bindings have been tested on the following operating systems:
 - Alpine v3.17 - v3.19.1 (musl libc)
 - Arch latest (GNU libc)
 - CheriBSD 14.0-CURRENT (FreeBSD libc)
-- Clear Linux 41560 (GNU libc)
+- Clear Linux 41560 (GNU libc; end-of-life (EOL) since July 2025)
 - Debian stable, testing, unstable (GNU libc)
 - Devuan latest (GNU libc)
 - DragonFlyBSD 6.4.0 (FreeBSD libc)
