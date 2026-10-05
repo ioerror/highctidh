@@ -46,3 +46,47 @@ func TestCgoNoCPUTuning(t *testing.T) {
 		}
 	}
 }
+
+func TestCgoPlatformLines(t *testing.T) {
+	want := map[[2]string][]string{
+		{"darwin", "amd64"}:  {"-D__Darwin__", "-DGETRANDOM", "-D__x86_64__", "-DHIGHCTIDH_PORTABLE=1"},
+		{"darwin", "arm64"}:  {"-D__ARM64__", "-D__Darwin__", "-DGETRANDOM", "-DHIGHCTIDH_PORTABLE=1"},
+		{"windows", "amd64"}: {"-D__Windows__", "-DCGONUTS", "-DPLATFORM_SIZE=64", "-DHIGHCTIDH_PORTABLE=1"},
+		{"windows", "arm64"}: {"-D__Windows__", "-DPLATFORM_SIZE=64", "-DHIGHCTIDH_PORTABLE=1"},
+		{"solaris", "amd64"}: {"-m64", "-Wno-attributes", "-D__sun", "-D__i86pc__", "-DHIGHCTIDH_PORTABLE=1"},
+		{"illumos", "amd64"}: {"-m64", "-Wno-attributes", "-D__sun", "-D__i86pc__", "-DHIGHCTIDH_PORTABLE=1"},
+	}
+	for _, bits := range sizes {
+		src, err := os.ReadFile(filepath.Join("..", "ctidh"+bits, "common.go"))
+		if err != nil {
+			t.Fatal(err)
+		}
+		for _, line := range strings.Split(string(src), "\n") {
+			f := strings.Fields(line)
+			if len(f) > 1 && f[0] == "#cgo" && strings.Contains(f[1], "/") {
+				t.Errorf("ctidh%s: constraint with a slash is ignored: %s", bits, line)
+			}
+		}
+		for p, defs := range want {
+			flags := cgoCFLAGS(t, p[0], p[1], bits)
+			seen := map[string]string{}
+			for _, f := range flags {
+				if k, v, ok := strings.Cut(f, "="); ok && strings.HasPrefix(k, "-D") {
+					if old, dup := seen[k]; dup && old != v {
+						t.Errorf("%s/%s ctidh%s: %s=%s and %s=%s", p[0], p[1], bits, k, old, k, v)
+					}
+					seen[k] = v
+				}
+			}
+			for _, d := range defs {
+				found := false
+				for _, f := range flags {
+					found = found || f == d
+				}
+				if !found {
+					t.Errorf("%s/%s ctidh%s: missing %s in %v", p[0], p[1], bits, d, flags)
+				}
+			}
+		}
+	}
+}
