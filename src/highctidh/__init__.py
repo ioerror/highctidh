@@ -13,6 +13,7 @@ import ctypes
 import ctypes.util
 import hashlib
 import struct
+import sys
 import pathlib
 from importlib import util, metadata
 from importlib.metadata import PackageNotFoundError
@@ -25,6 +26,19 @@ try:
     __version__ = metadata.version('highctidh')
 except PackageNotFoundError:
     __version__ = highctidh_version
+
+
+def _le32_to_host(buf):
+    if sys.byteorder == "big":
+        n = len(buf) & ~3
+        b = bytes(buf[:n])
+        w = bytearray(n)
+        w[0::4] = b[3::4]
+        w[1::4] = b[2::4]
+        w[2::4] = b[1::4]
+        w[3::4] = b[0::4]
+        buf[:n] = w
+
 
 class InvalidFieldSize(Exception):
     """
@@ -407,9 +421,8 @@ class ctidh(object):
         where *buf* is a bytearray() to be filled with random data and
         *context* is an int() context identifier to enable thread-safe calls.
         If *context* is left blank, it is a pointer to the buffer.
-        Note that in order to achieve portable reproducible results, a PRNG
-        must fill buf as though it were an array of int32_t values in
-        HOST-ENDIAN/NATIVE byte order; see comment in csidh.h:ctidh_fillrandom.
+        buf is read as an array of little-endian int32_t values on every
+        host, so the same bytes give the same key everywhere.
 
         >>> from highctidh import ctidh
         >>> ctidh511 = ctidh(511)
@@ -430,6 +443,7 @@ class ctidh(object):
                     "B"
                 )  # uint8_t
                 rng(mv, context)
+                _le32_to_host(mv)
             if context is None:
                 context = ctypes.byref(sk.e)
             self.csidh_private_withrng(sk, context, rng_callback_wrapper)
@@ -448,9 +462,8 @@ class ctidh(object):
         where *buf* is a bytearray() to be filled with random data and
         *context* is an int() context identifier to enable thread-safe calls.
         If *context* is left blank, it is a pointer to the buffer.
-        Note that in order to achieve portable reproducible results, a PRNG
-        must fill buf as though it wwere an array of int32_t values in
-        HOST-ENDIAN/NATIVE byte order; see comment in csidh.h:ctidh_fillrandom
+        buf is read as an array of little-endian int32_t values on every
+        host, so the same bytes give the same key everywhere.
 
         >>> from highctidh import ctidh
         >>> ctidh511 = ctidh(511)
