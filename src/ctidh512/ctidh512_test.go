@@ -159,7 +159,7 @@ func TestInvalidPublicKeyGroupActionReturnsError(t *testing.T) {
 	invalid := make([]byte, PublicKeySize)
 	invalid[0] = 7
 	require.ErrorIs(t, NewEmptyPublicKey().FromBytes(invalid), ErrPublicKeyValidation)
-	k := NewEmptyPublicKey()
+	k := new(PublicKey)
 	copy(unsafe.Slice((*byte)(unsafe.Pointer(&k.publicKey)), PublicKeySize), invalid)
 	require.Equal(t, invalid, k.Bytes())
 
@@ -208,4 +208,36 @@ func TestFromBytesPublicKeyParity(t *testing.T) {
 	loaded.Reset()
 	require.Equal(t, make([]byte, PublicKeySize), loaded.Bytes())
 	require.Equal(t, alicePublic.Bytes(), DeriveSecret(alicePrivate, loaded))
+}
+
+func requireValidated(t *testing.T, k *PublicKey) {
+	t.Helper()
+	require.True(t, k.validated)
+	require.NoError(t, new(PublicKey).FromBytes(k.Bytes()))
+}
+
+func TestOutputsAreValidated(t *testing.T) {
+	requireValidated(t, NewEmptyPublicKey())
+	priv, pub := GenerateKeyPair()
+	requireValidated(t, pub)
+	priv2, pub2 := GenerateKeyPairWithRNG(rand.Reader)
+	requireValidated(t, pub2)
+	requireValidated(t, DerivePublicKey(priv))
+	requireValidated(t, priv2.Public())
+	requireValidated(t, GroupAction(priv, pub2))
+
+	unchecked := new(PublicKey)
+	copy(unsafe.Slice((*byte)(unsafe.Pointer(&unchecked.publicKey)), PublicKeySize), pub2.Bytes())
+	require.False(t, unchecked.validated)
+	shared, err := GroupActionChecked(priv, unchecked)
+	require.NoError(t, err)
+	requireValidated(t, shared)
+	require.Equal(t, DeriveSecret(priv2, pub), shared.Bytes())
+
+	blinded, err := Blind(priv2, pub)
+	require.NoError(t, err)
+	requireValidated(t, blinded)
+	require.NoError(t, pub.Blind(priv2))
+	requireValidated(t, pub)
+	require.Equal(t, blinded.Bytes(), pub.Bytes())
 }
