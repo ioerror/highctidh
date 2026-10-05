@@ -2,8 +2,11 @@
 
 import json
 import os
+import re
+import shutil
 import subprocess
 import sys
+import tempfile
 import unittest
 
 SRC = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -78,6 +81,56 @@ class TestSetupNoCPUTuning(unittest.TestCase):
                     with self.subTest(machine=machine, cc=cc, bits=bits):
                         bad = [f for f in cflags if f.startswith(("-march", "-mcpu", "-mtune"))]
                         self.assertEqual(bad, [])
+
+
+FAKECC = """#!%s
+import json, os, sys
+args = sys.argv[1:]
+out = args[args.index("-o") + 1]
+os.makedirs(os.path.dirname(out) or ".", exist_ok=True)
+open(out, "w").close()
+with open(os.environ["FAKECC_LOG"], "a") as f:
+    f.write(json.dumps(args) + "\\n")
+"""
+
+
+class TestSetupParallelBuild(unittest.TestCase):
+    def test_build_ext_parallel_objects(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            src = os.path.join(tmp, "src")
+            shutil.copytree(SRC, src, ignore=shutil.ignore_patterns(
+                "build", "*.so", "*.o", "__pycache__", "ctidh*", "go-tests"))
+            cc = os.path.join(tmp, "fakecc")
+            with open(cc, "w") as f:
+                f.write(FAKECC % sys.executable)
+            os.chmod(cc, 0o755)
+            log = os.path.join(tmp, "log")
+            env = dict(os.environ, CC=cc, FAKECC_LOG=log)
+            env.pop("LDSHARED", None)
+            env.pop("HIGHCTIDH_PORTABLE", None)
+            subprocess.run([sys.executable, "setup.py", "build_ext", "-j", "4"],
+                           cwd=src, env=env, check=True, capture_output=True)
+            sources = build("Linux", "x86_64", "64", None)
+            want = sum(len(v[0]) for v in sources.values())
+            objects = {}
+            links = []
+            with open(log) as f:
+                for line in f:
+                    args = json.loads(line)
+                    out = args[args.index("-o") + 1]
+                    if "-c" in args:
+                        bits = [a[len("-DBITS="):] for a in args if a.startswith("-DBITS=")]
+                        objects.setdefault(out, set()).update(bits)
+                    else:
+                        links.append((out, [a for a in args if a.endswith(".o")]))
+            self.assertEqual(len(objects), want)
+            for out, bits in objects.items():
+                self.assertEqual(len(bits), 1, out)
+            self.assertEqual(len(links), 4)
+            for out, objs in links:
+                size = re.search(r"highctidh_(\d+)", os.path.basename(out)).group(1)
+                for o in objs:
+                    self.assertEqual(objects[o], {size}, (out, o))
 
 
 if __name__ == "__main__":
