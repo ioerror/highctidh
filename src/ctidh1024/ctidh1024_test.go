@@ -6,6 +6,7 @@ import (
 	"crypto/rand"
 	"sync"
 	"testing"
+	"unsafe"
 
 	"github.com/stretchr/testify/require"
 )
@@ -152,4 +153,37 @@ func TestPublicKeyFromBytesErrorLeavesKeyUnchanged(t *testing.T) {
 	invalid[0] = 7
 	require.ErrorIs(t, k.FromBytes(invalid), ErrPublicKeyValidation)
 	require.Equal(t, want, k.Bytes())
+}
+
+func TestInvalidPublicKeyGroupActionReturnsError(t *testing.T) {
+	privateKey, _ := GenerateKeyPair()
+	invalid := make([]byte, PublicKeySize)
+	invalid[0] = 7
+	require.ErrorIs(t, NewEmptyPublicKey().FromBytes(invalid), ErrPublicKeyValidation)
+	k := NewEmptyPublicKey()
+	copy(unsafe.Slice((*byte)(unsafe.Pointer(&k.publicKey)), PublicKeySize), invalid)
+	require.Equal(t, invalid, k.Bytes())
+
+	require.NotPanics(t, func() {
+		shared, err := GroupActionChecked(privateKey, k)
+		require.ErrorIs(t, err, ErrCTIDH)
+		require.Nil(t, shared)
+	})
+	require.NotPanics(t, func() {
+		secret, err := DeriveSecretChecked(privateKey, k)
+		require.ErrorIs(t, err, ErrCTIDH)
+		require.Nil(t, secret)
+	})
+	require.NotPanics(t, func() {
+		blinded, err := Blind(privateKey, k)
+		require.ErrorIs(t, err, ErrCTIDH)
+		require.Nil(t, blinded)
+	})
+	require.NotPanics(t, func() {
+		require.ErrorIs(t, k.Blind(privateKey), ErrCTIDH)
+	})
+	require.Equal(t, invalid, k.Bytes())
+
+	require.PanicsWithValue(t, ErrCTIDH, func() { GroupAction(privateKey, k) })
+	require.PanicsWithValue(t, ErrCTIDH, func() { DeriveSecret(privateKey, k) })
 }
