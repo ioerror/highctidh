@@ -98,13 +98,42 @@ func test_go_fillrandom(context unsafe.Pointer, outptr []byte) {
 //
 //export highctidh_2048_go_fillrandom
 func highctidh_2048_go_fillrandom(context unsafe.Pointer, outptr unsafe.Pointer, outsz C.size_t) {
-	rng := gopointer.Restore(context).(io.Reader)
-	buf := make([]byte, outsz)
-	_, err := io.ReadFull(rng, buf)
-	if err != nil {
-		panic(err)
+	ctx := gopointer.Restore(context).(*rngContext)
+	out := unsafe.Slice((*byte)(outptr), int(outsz))
+	if ctx.err == nil {
+		ctx.read(out)
 	}
-	copy(unsafe.Slice((*byte)(outptr), int(outsz)), buf)
+	if ctx.err != nil {
+		for i := range out {
+			out[i] = byte(i / 4)
+		}
+	}
+}
+
+type rngContext struct {
+	rng      io.Reader
+	err      error
+	panicked bool
+	value    interface{}
+}
+
+func (c *rngContext) read(out []byte) {
+	done := false
+	defer func() {
+		if !done {
+			c.value = recover()
+			c.panicked = true
+			c.err = fmt.Errorf("%s: random source panicked: %v", Name(), c.value)
+		}
+	}()
+	buf := make([]byte, len(out))
+	_, err := io.ReadFull(c.rng, buf)
+	done = true
+	if err == nil {
+		copy(out, buf)
+	} else {
+		c.err = err
+	}
 	for i := range buf {
 		buf[i] = 0
 	}

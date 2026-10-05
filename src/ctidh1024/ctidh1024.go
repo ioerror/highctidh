@@ -270,17 +270,49 @@ func GenerateKeyPair() (*PrivateKey, *PublicKey) {
 // This can be used to deterministically generate private keys if the
 // entropy source is deterministic, for example an HKDF.
 func GeneratePrivateKey(rng io.Reader) *PrivateKey {
+	privKey, ctx := generatePrivateKey(rng)
+	if ctx.panicked {
+		panic(ctx.value)
+	}
+	if ctx.err != nil {
+		panic(ctx.err)
+	}
+	return privKey
+}
+
+func GeneratePrivateKeyChecked(rng io.Reader) (*PrivateKey, error) {
+	privKey, ctx := generatePrivateKey(rng)
+	if ctx.err != nil {
+		return nil, ctx.err
+	}
+	return privKey, nil
+}
+
+func generatePrivateKey(rng io.Reader) (*PrivateKey, *rngContext) {
 	privKey := &PrivateKey{}
-	p := gopointer.Save(rng)
+	ctx := &rngContext{rng: rng}
+	p := gopointer.Save(ctx)
 	C.highctidh_1024_custom_gen_private(p, &privKey.privateKey)
 	gopointer.Unref(p)
-	return privKey
+	if ctx.err != nil {
+		privKey.privateKey = C.private_key{}
+		return nil, ctx
+	}
+	return privKey, ctx
 }
 
 // GenerateKeyPairWithRNG uses the given RNG to derive a new keypair.
 func GenerateKeyPairWithRNG(rng io.Reader) (*PrivateKey, *PublicKey) {
 	privKey := GeneratePrivateKey(rng)
 	return privKey, DerivePublicKey(privKey)
+}
+
+func GenerateKeyPairWithRNGChecked(rng io.Reader) (*PrivateKey, *PublicKey, error) {
+	privKey, err := GeneratePrivateKeyChecked(rng)
+	if err != nil {
+		return nil, nil, err
+	}
+	return privKey, DerivePublicKey(privKey), nil
 }
 
 func GroupAction(privateKey *PrivateKey, publicKey *PublicKey) *PublicKey {
