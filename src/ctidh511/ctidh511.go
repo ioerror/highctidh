@@ -41,7 +41,7 @@ type PublicKey struct {
 // via some serialization format via FromBytes
 // or FromPEMFile methods.
 func NewEmptyPublicKey() *PublicKey {
-	return new(PublicKey)
+	return &PublicKey{validated: true}
 }
 
 // NewPublicKey creates a new public key from
@@ -243,10 +243,7 @@ func (p *PrivateKey) UnmarshalText(data []byte) error {
 
 // DerivePublicKey derives a public key given a private key.
 func DerivePublicKey(privKey *PrivateKey) *PublicKey {
-	var base C.public_key
-	baseKey := new(PublicKey)
-	baseKey.publicKey = base
-	return GroupAction(privKey, baseKey)
+	return GroupAction(privKey, NewEmptyPublicKey())
 }
 
 // GenerateKeyPair generates a new Ctidh511 private and then
@@ -283,7 +280,7 @@ func GroupAction(privateKey *PrivateKey, publicKey *PublicKey) *PublicKey {
 }
 
 func GroupActionChecked(privateKey *PrivateKey, publicKey *PublicKey) (*PublicKey, error) {
-	sharedKey := new(PublicKey)
+	sharedKey := &PublicKey{validated: true}
 	if publicKey.validated {
 		C.action(&sharedKey.publicKey, &publicKey.publicKey, &privateKey.privateKey)
 		return sharedKey, nil
