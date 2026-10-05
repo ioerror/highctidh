@@ -81,11 +81,12 @@ func (p *PublicKey) FromBytes(data []byte) error {
 		return ErrPublicKeySize
 	}
 
-	p.publicKey = *((*C.public_key)(unsafe.Pointer(&data[0])))
-	if !C.validate(&p.publicKey) {
+	publicKey := *((*C.public_key)(unsafe.Pointer(&data[0])))
+	if !C.validate(&publicKey) {
 		return ErrPublicKeyValidation
 	}
 
+	p.publicKey = publicKey
 	return nil
 }
 
