@@ -101,7 +101,7 @@ func (p *PublicKey) Equal(publicKey *PublicKey) bool {
 func (p *PublicKey) Blind(blindingFactor *PrivateKey) error {
 	blinded, err := Blind(blindingFactor, p)
 	if err != nil {
-		panic(err)
+		return err
 	}
 	p.publicKey = blinded.publicKey
 	return nil
@@ -256,12 +256,20 @@ func GenerateKeyPairWithRNG(rng io.Reader) (*PrivateKey, *PublicKey) {
 }
 
 func GroupAction(privateKey *PrivateKey, publicKey *PublicKey) *PublicKey {
+	sharedKey, err := GroupActionChecked(privateKey, publicKey)
+	if err != nil {
+		panic(err)
+	}
+	return sharedKey
+}
+
+func GroupActionChecked(privateKey *PrivateKey, publicKey *PublicKey) (*PublicKey, error) {
 	sharedKey := new(PublicKey)
 	ok := C.csidh(&sharedKey.publicKey, &publicKey.publicKey, &privateKey.privateKey)
 	if !ok {
-		panic(ErrCTIDH)
+		return nil, ErrCTIDH
 	}
-	return sharedKey
+	return sharedKey, nil
 }
 
 // DeriveSecret derives a shared secret.
@@ -270,9 +278,17 @@ func DeriveSecret(privateKey *PrivateKey, publicKey *PublicKey) []byte {
 	return sharedSecret.Bytes()
 }
 
+func DeriveSecretChecked(privateKey *PrivateKey, publicKey *PublicKey) ([]byte, error) {
+	sharedSecret, err := GroupActionChecked(privateKey, publicKey)
+	if err != nil {
+		return nil, err
+	}
+	return sharedSecret.Bytes(), nil
+}
+
 // Blind performs a blinding operation returning the blinded public key.
 func Blind(blindingFactor *PrivateKey, publicKey *PublicKey) (*PublicKey, error) {
-	return GroupAction(blindingFactor, publicKey), nil
+	return GroupActionChecked(blindingFactor, publicKey)
 }
 
 func init() {
