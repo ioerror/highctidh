@@ -18,11 +18,6 @@ ifndef PLATFORM_SIZE
 	$(error "Set PLATFORM_SIZE to 32 or 64 and try again")
 endif
 
-ifeq	(HOST_PLATFORM,PLATFORM)
-CC_MARCH ?= native
-# Default to "march=native -mtune=native" when not cross-building
-# https://lemire.me/blog/2018/07/25/it-is-more-complicated-than-i-thought-mtune-march-in-gcc/
-endif
 CC_MTUNE ?= $(CC_MARCH)
 
 SEC_CFLAGS := -Wformat -Werror=format-security -D_FORTIFY_SOURCE=2 -fstack-protector-strong
