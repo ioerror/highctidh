@@ -7,6 +7,7 @@ except ImportError:
 filterwarnings("ignore", category=DeprecationWarning)
 filterwarnings("ignore", category=SetuptoolsDeprecationWarning)
 
+from copy import copy
 from os import environ, getcwd, mkdir, path, stat, umask
 from subprocess import PIPE, Popen
 from sys import exit, platform
@@ -77,6 +78,11 @@ class build_ext_helper(build_ext):
             print(f"Compiler is now: {self.compiler.linker_exe}")
             print(f"Linker is now: {self.compiler.linker_so}")
         build_ext.build_extensions(self)
+
+    def build_extension(self, ext):
+        cmd = copy(self)
+        cmd.build_temp = path.join(self.build_temp, ext.name)
+        build_ext.build_extension(cmd, ext)
 
     def run(self):
         build_ext.run(self)
