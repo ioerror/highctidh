@@ -11,6 +11,8 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime/debug"
+	"strings"
 	"testing"
 
 	"codeberg.org/vula/highctidh/src/ctidh1024"
@@ -285,7 +287,23 @@ func TestMultiSizeSamplerSymbols(t *testing.T) {
 			t.Skipf("test binary is stripped and go is not in PATH: %v", lerr)
 		}
 		bin := filepath.Join(t.TempDir(), "multisize.test")
-		out, berr := exec.Command(gotool, "test", "-c", "-o", bin, ".").CombinedOutput()
+		args := []string{"test", "-c", "-o", bin}
+		sanitized := strings.Contains(os.Getenv("CGO_CFLAGS"), "-fsanitize")
+		if bi, ok := debug.ReadBuildInfo(); ok {
+			for _, s := range bi.Settings {
+				switch s.Key {
+				case "-race", "-msan", "-asan":
+					sanitized = sanitized || s.Value == "true"
+				case "-tags":
+					args = append(args, "-tags="+s.Value)
+				}
+			}
+		}
+		if sanitized {
+			t.Skip("test binary is stripped; the symbol check rebuilds it only in a build without -race, -msan or -asan")
+		}
+		cmd := exec.Command(gotool, append(args, ".")...)
+		out, berr := cmd.CombinedOutput()
 		if berr != nil {
 			t.Fatalf("go test -c: %v\n%s", berr, out)
 		}
