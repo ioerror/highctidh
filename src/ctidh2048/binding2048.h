@@ -20,6 +20,17 @@ void fillrandom_2048_custom(
   const uintptr_t context)
 {
   highctidh_2048_go_fillrandom((void *) context, outptr, outsz);
+#if defined(__BYTE_ORDER__) && (__BYTE_ORDER__ == __ORDER_BIG_ENDIAN__)
+  unsigned char *b = outptr;
+  for (size_t i = 0; i + 4 <= outsz; i += 4) {
+    unsigned char t = b[i];
+    b[i] = b[i + 3];
+    b[i + 3] = t;
+    t = b[i + 1];
+    b[i + 1] = b[i + 2];
+    b[i + 2] = t;
+  }
+#endif
 }
 #endif
 

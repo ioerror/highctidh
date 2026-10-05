@@ -16,6 +16,7 @@ import "C"
 import (
 	"crypto/hmac"
 	"encoding/base64"
+	"encoding/binary"
 	"io"
 	"unsafe"
 
@@ -78,7 +79,11 @@ func (p *PublicKey) Reset() {
 
 // Bytes returns the PublicKey as a byte slice.
 func (p *PublicKey) Bytes() []byte {
-	return C.GoBytes(unsafe.Pointer(&p.publicKey.A.x.c), C.int(C.UINTBIG_LIMBS*8))
+	out := make([]byte, C.UINTBIG_LIMBS*8)
+	for i, limb := range p.publicKey.A.x.c {
+		binary.LittleEndian.PutUint64(out[8*i:], uint64(limb))
+	}
+	return out
 }
 
 // FromBytes loads a PublicKey from the given byte slice.
@@ -87,7 +92,10 @@ func (p *PublicKey) FromBytes(data []byte) error {
 		return ErrPublicKeySize
 	}
 
-	publicKey := *((*C.public_key)(unsafe.Pointer(&data[0])))
+	var publicKey C.public_key
+	for i := range publicKey.A.x.c {
+		publicKey.A.x.c[i] = C.uint64_t(binary.LittleEndian.Uint64(data[8*i:]))
+	}
 	if !C.validate(&publicKey) {
 		return ErrPublicKeyValidation
 	}
