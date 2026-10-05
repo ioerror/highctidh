@@ -242,3 +242,30 @@ func TestOutputsAreValidated(t *testing.T) {
 	requireValidated(t, pub)
 	require.Equal(t, blinded.Bytes(), pub.Bytes())
 }
+
+func TestNewPublicKeyChecked(t *testing.T) {
+	_, pub := GenerateKeyPair()
+	invalid := make([]byte, PublicKeySize)
+	invalid[0] = 7
+	require.NotPanics(t, func() {
+		k, err := NewPublicKeyChecked(pub.Bytes())
+		require.NoError(t, err)
+		require.Equal(t, pub.Bytes(), k.Bytes())
+		requireValidated(t, k)
+
+		k, err = NewPublicKeyChecked(invalid)
+		require.ErrorIs(t, err, ErrPublicKeyValidation)
+		require.Nil(t, k)
+
+		k, err = NewPublicKeyChecked(pub.Bytes()[1:])
+		require.ErrorIs(t, err, ErrPublicKeySize)
+		require.Nil(t, k)
+
+		k, err = NewPublicKeyChecked(nil)
+		require.ErrorIs(t, err, ErrPublicKeySize)
+		require.Nil(t, k)
+	})
+	require.Equal(t, pub.Bytes(), NewPublicKey(pub.Bytes()).Bytes())
+	require.PanicsWithValue(t, ErrPublicKeyValidation, func() { NewPublicKey(invalid) })
+	require.PanicsWithValue(t, ErrPublicKeySize, func() { NewPublicKey(nil) })
+}
