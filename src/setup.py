@@ -212,22 +212,16 @@ if PLATFORM == "aarch64" or PLATFORM == "arm64":
             cflags += ["-march=native", "-mtune=native"]
 elif PLATFORM == "armv7l":
     # clang required
+    cflags += ["-D__ARM32__", "-DHIGHCTIDH_PORTABLE=1"]
     if CC == "clang":
-        cflags += [
-            "-fforce-enable-int128",
-            "-D__ARM32__",
-            "-DHIGHCTIDH_PORTABLE=1",
-        ]
-    if CC == "gcc":
-        cflags += ["-D__ARM32__", "-DHIGHCTIDH_PORTABLE=1"]
+        cflags += ["-fforce-enable-int128"]
 elif PLATFORM == "loongarch64":
     cflags += ["-march=native", "-mtune=native", "-DHIGHCTIDH_PORTABLE=1"]
 elif PLATFORM == "mips":
     # clang or mips64-linux-gnuabi64-gcc cross compile required
+    cflags += ["-DHIGHCTIDH_PORTABLE=1"]
     if CC == "clang":
-        cflags += ["-fforce-enable-int128", "-DHIGHCTIDH_PORTABLE=1"]
-    if CC == "gcc":
-        cflags += ["-DHIGHCTIDH_PORTABLE=1"]
+        cflags += ["-fforce-enable-int128"]
 elif PLATFORM == "mips64":
     cflags += ["-DHIGHCTIDH_PORTABLE=1"]
 elif PLATFORM == "mips64le":
@@ -239,10 +233,7 @@ elif PLATFORM == "ppc64":
 elif PLATFORM == "riscv64":
     cflags += ["-D__riscv", "-DHIGHCTIDH_PORTABLE=1"]
 elif PLATFORM == "s390x":
-    if CC == "clang":
-        cflags += ["-march=z10", "-mtune=z10", "-DHIGHCTIDH_PORTABLE=1"]
-    if CC == "gcc":
-        cflags += ["-march=z10", "-mtune=z10", "-DHIGHCTIDH_PORTABLE=1"]
+    cflags += ["-march=z10", "-mtune=z10", "-DHIGHCTIDH_PORTABLE=1"]
 elif PLATFORM == "sun4v" or PLATFORM == "i86pc":
     # Solaris 11, SunOS has default flags that do not work for both gcc and clang
     # compilers. We wrap the function that returns these flags internally during
