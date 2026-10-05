@@ -141,3 +141,14 @@ func TestNIKE(t *testing.T) {
 	aliceSharedBytes := DeriveSecret(alicePrivate, bobPublic)
 	require.Equal(t, bobSharedBytes, aliceSharedBytes)
 }
+
+func TestPublicKeyFromBytesErrorLeavesKeyUnchanged(t *testing.T) {
+	_, publicKey := GenerateKeyPair()
+	want := publicKey.Bytes()
+	k := NewEmptyPublicKey()
+	require.NoError(t, k.FromBytes(want))
+	invalid := make([]byte, PublicKeySize)
+	invalid[0] = 7
+	require.ErrorIs(t, k.FromBytes(invalid), ErrPublicKeyValidation)
+	require.Equal(t, want, k.Bytes())
+}
