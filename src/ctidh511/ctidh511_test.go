@@ -268,3 +268,23 @@ func TestNewPublicKeyChecked(t *testing.T) {
 	require.PanicsWithValue(t, ErrPublicKeyValidation, func() { NewPublicKey(invalid) })
 	require.PanicsWithValue(t, ErrPublicKeySize, func() { NewPublicKey(nil) })
 }
+
+func TestPrivateKeyDeriveSecretChecked(t *testing.T) {
+	alicePrivate, alicePublic := GenerateKeyPair()
+	bobPrivate, bobPublic := GenerateKeyPair()
+	want := bobPrivate.DeriveSecret(alicePublic)
+	secret, err := alicePrivate.DeriveSecretChecked(bobPublic)
+	require.NoError(t, err)
+	require.Equal(t, want, secret)
+
+	invalid := new(PublicKey)
+	bad := make([]byte, PublicKeySize)
+	bad[0] = 7
+	copy(unsafe.Slice((*byte)(unsafe.Pointer(&invalid.publicKey)), PublicKeySize), bad)
+	require.NotPanics(t, func() {
+		secret, err := alicePrivate.DeriveSecretChecked(invalid)
+		require.ErrorIs(t, err, ErrCTIDH)
+		require.Nil(t, secret)
+	})
+	require.PanicsWithValue(t, ErrCTIDH, func() { alicePrivate.DeriveSecret(invalid) })
+}
