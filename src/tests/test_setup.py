@@ -68,5 +68,17 @@ class TestSetupPortable(unittest.TestCase):
                         self.assertIn("-DHIGHCTIDH_PORTABLE=1", cflags)
 
 
+class TestSetupNoCPUTuning(unittest.TestCase):
+    def test_no_cpu_tuning_flags(self):
+        platforms = PLATFORMS + (("Linux", "x86_64", "64", "x86_64-linux-gnu-gcc"),)
+        for system, machine, size, cross in platforms:
+            for cc in (None, "gcc", "clang", cross):
+                result = build(system, machine, size, cc)
+                for bits, (sources, cflags) in result.items():
+                    with self.subTest(machine=machine, cc=cc, bits=bits):
+                        bad = [f for f in cflags if f.startswith(("-march", "-mcpu", "-mtune"))]
+                        self.assertEqual(bad, [])
+
+
 if __name__ == "__main__":
     unittest.main()
