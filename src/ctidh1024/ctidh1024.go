@@ -161,6 +161,10 @@ func (p *PrivateKey) DeriveSecret(publicKey *PublicKey) []byte {
 	return DeriveSecret(p, publicKey)
 }
 
+func (p *PrivateKey) DeriveSecretChecked(publicKey *PublicKey) ([]byte, error) {
+	return DeriveSecretChecked(p, publicKey)
+}
+
 // String returns a string identifying
 // this type as a CTIDH private key.
 func (p *PrivateKey) String() string {
