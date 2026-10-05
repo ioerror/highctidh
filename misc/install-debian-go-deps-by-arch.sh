@@ -20,7 +20,7 @@ then
 
     if [ "$ARCH" == "arm64" ];
     then
-        PACKAGES="$BASE_PACKAGES libc6-arm64-cross libc6-dev-arm64-cross";
+        PACKAGES="$BASE_PACKAGES libc6-arm64-cross libc6-dev-arm64-cross gcc-aarch64-linux-gnu qemu-user";
     fi
 
     if [ "$ARCH" == "mips" ];
@@ -60,7 +60,7 @@ then
 
     if [ "$ARCH" == "s390x" ];
     then
-        PACKAGES="$BASE_PACKAGES libc6-dev-s390x-cross";
+        PACKAGES="$BASE_PACKAGES libc6-dev-s390x-cross gcc-s390x-linux-gnu qemu-user";
     fi
 else
     echo "ARCH appears to be unset: ARCH=$ARCH";

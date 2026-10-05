@@ -197,5 +197,26 @@ then
         done
     fi
 
+    case "$ARCH" in
+        arm64) QEMU_ARCH=aarch64; QEMU_TRIPLE=aarch64-linux-gnu;;
+        s390x) QEMU_ARCH=s390x; QEMU_TRIPLE=s390x-linux-gnu;;
+        *) QEMU_ARCH="";;
+    esac
+    if [ -n "$QEMU_ARCH" ] && command -v "qemu-$QEMU_ARCH" > /dev/null;
+    then
+        echo "Running tests on $GOARCH under qemu-$QEMU_ARCH";
+        for BITS in 511 512 1024 2048;
+        do
+            cd src/ctidh$BITS;
+            echo "$GOARCH $BITS bits:";
+            CC="clang --target=$QEMU_TRIPLE" \
+                go test -v -timeout 180m -run 'BitVectors|LittleEndian|MultiSizeGenerate' \
+                -exec "qemu-$QEMU_ARCH -L /usr/$QEMU_TRIPLE";
+            echo -n "$GOARCH $BITS bits:";
+            echo -e "$CHECKMARK";
+            cd ../../;
+        done
+    fi
+
     exit $?;
 fi
