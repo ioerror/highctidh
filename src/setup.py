@@ -207,14 +207,9 @@ if PLATFORM == "aarch64" or PLATFORM == "arm64":
         cflags += ["-D__Darwin__"]
         cflags += ["-DHIGHCTIDH_PORTABLE=1"]
     else:
-        if CC == "clang":
-            cflags += ["-DHIGHCTIDH_PORTABLE=1"]
+        cflags += ["-DHIGHCTIDH_PORTABLE=1"]
         if CC == "gcc":
-            cflags += [
-                "-march=native",
-                "-mtune=native",
-                "-DHIGHCTIDH_PORTABLE=1",
-            ]
+            cflags += ["-march=native", "-mtune=native"]
 elif PLATFORM == "armv7l":
     # clang required
     if CC == "clang":
