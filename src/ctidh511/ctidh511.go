@@ -48,12 +48,20 @@ func NewEmptyPublicKey() *PublicKey {
 // the given key material or panics if the
 // key data is not PublicKeySize.
 func NewPublicKey(key []byte) *PublicKey {
-	k := new(PublicKey)
-	err := k.FromBytes(key)
+	k, err := NewPublicKeyChecked(key)
 	if err != nil {
 		panic(err)
 	}
 	return k
+}
+
+func NewPublicKeyChecked(key []byte) (*PublicKey, error) {
+	k := new(PublicKey)
+	err := k.FromBytes(key)
+	if err != nil {
+		return nil, err
+	}
+	return k, nil
 }
 
 // String returns a string identifying
