@@ -45,6 +45,7 @@ type multiScheme struct {
 	gen        func(io.Reader) []byte
 	pair       func(io.Reader) ([]byte, []byte)
 	derive     func([]byte) []byte
+	load       func([]byte) error
 }
 
 var multiSchemes = map[string]multiScheme{
@@ -64,6 +65,7 @@ var multiSchemes = map[string]multiScheme{
 			}
 			return ctidh511.DerivePublicKey(k).Bytes()
 		},
+		func(b []byte) error { return new(ctidh511.PrivateKey).FromBytes(b) },
 	},
 	"ctidh512": {
 		ctidh512.PrivateKeySize,
@@ -81,6 +83,7 @@ var multiSchemes = map[string]multiScheme{
 			}
 			return ctidh512.DerivePublicKey(k).Bytes()
 		},
+		func(b []byte) error { return new(ctidh512.PrivateKey).FromBytes(b) },
 	},
 	"ctidh1024": {
 		ctidh1024.PrivateKeySize,
@@ -98,6 +101,7 @@ var multiSchemes = map[string]multiScheme{
 			}
 			return ctidh1024.DerivePublicKey(k).Bytes()
 		},
+		func(b []byte) error { return new(ctidh1024.PrivateKey).FromBytes(b) },
 	},
 	"ctidh2048": {
 		ctidh2048.PrivateKeySize,
@@ -115,6 +119,7 @@ var multiSchemes = map[string]multiScheme{
 			}
 			return ctidh2048.DerivePublicKey(k).Bytes()
 		},
+		func(b []byte) error { return new(ctidh2048.PrivateKey).FromBytes(b) },
 	},
 }
 
@@ -190,6 +195,58 @@ func TestMultiSizeGenerateKeyPairWithRNG(t *testing.T) {
 		}
 		if hex.EncodeToString(pub) != v.publicKey {
 			t.Errorf("%s %q: GenerateKeyPairWithRNG public key = %x, want %s", v.scheme, v.seed, pub, v.publicKey)
+		}
+	}
+}
+
+func TestMultiSizePrivateKeyFromBytesRange(t *testing.T) {
+	for name, s := range multiSchemes {
+		for _, e := range []int8{127, -128} {
+			key := bytes.Repeat([]byte{byte(e)}, s.size)
+			if s.load(key) == nil {
+				t.Errorf("%s: private key with every exponent %d accepted", name, e)
+			}
+		}
+		pos := 0
+		for b, w := range s.batchSize {
+			bound := s.batchBound[b]
+			key := make([]byte, s.size)
+			key[pos] = byte(int8(bound))
+			if err := s.load(key); err != nil {
+				t.Errorf("%s: batch %d at bound %d rejected: %v", name, b, bound, err)
+			}
+			key[pos] = byte(int8(-bound))
+			if err := s.load(key); err != nil {
+				t.Errorf("%s: batch %d at bound -%d rejected: %v", name, b, bound, err)
+			}
+			key[pos] = byte(int8(bound + 1))
+			if s.load(key) == nil {
+				t.Errorf("%s: batch %d exponent %d over bound %d accepted", name, b, bound+1, bound)
+			}
+			key[pos] = byte(int8(-bound - 1))
+			if s.load(key) == nil {
+				t.Errorf("%s: batch %d exponent %d over bound %d accepted", name, b, -bound-1, bound)
+			}
+			if w > 1 {
+				key[pos] = byte(int8(bound))
+				key[pos+w-1] = 0xff
+				if s.load(key) == nil {
+					t.Errorf("%s: batch %d L1 norm %d over bound %d accepted", name, b, bound+1, bound)
+				}
+			}
+			pos += w
+		}
+		for i := 0; i < 8; i++ {
+			key := s.gen(&detReader{seed: name, ctr: uint64(i) << 32})
+			if err := s.load(key); err != nil {
+				t.Errorf("%s: generated key %x rejected: %v", name, key, err)
+			}
+		}
+	}
+	for _, v := range multiVectors {
+		key, _ := hex.DecodeString(v.privateKey)
+		if err := multiSchemes[v.scheme].load(key); err != nil {
+			t.Errorf("%s %q: vector private key rejected: %v", v.scheme, v.seed, err)
 		}
 	}
 }
