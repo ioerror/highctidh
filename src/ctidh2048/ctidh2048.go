@@ -179,6 +179,25 @@ func (p *PrivateKey) FromBytes(data []byte) error {
 		return ErrPrivateKeySize
 	}
 
+	var bad int64
+	i := 0
+	for b := 0; b < C.primes_batches; b++ {
+		var sum int64
+		for j := 0; j < int(C.highctidh_2048_primes_batchsize[b]); j++ {
+			e := int64(int8(data[i]))
+			m := e >> 63
+			sum += (e ^ m) - m
+			i++
+		}
+		bad |= (int64(C.highctidh_2048_primes_batchbound[b]) - sum) >> 63
+	}
+	for ; i < C.primes_num; i++ {
+		bad |= int64(int8(data[i]))
+	}
+	if bad != 0 {
+		return ErrPrivateKeyValidation
+	}
+
 	p.privateKey = *((*C.private_key)(unsafe.Pointer(&data[0])))
 	return nil
 }
