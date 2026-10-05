@@ -104,10 +104,9 @@ func highctidh_1024_go_fillrandom(context unsafe.Pointer, outptr unsafe.Pointer,
 	if err != nil {
 		panic(err)
 	}
-	for i := 0; i < int(outsz); i++ {
-		p := unsafe.Pointer(uintptr(outptr) + uintptr(i))
-		*(*uint8)(p) = uint8(buf[i])
-
+	copy(unsafe.Slice((*byte)(outptr), int(outsz)), buf)
+	for i := range buf {
+		buf[i] = 0
 	}
 }
 
