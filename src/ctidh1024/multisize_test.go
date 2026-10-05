@@ -322,3 +322,14 @@ func TestMultiSizeSamplerSymbols(t *testing.T) {
 		}
 	}
 }
+
+func TestMultiSizeRNGFallbackBounds(t *testing.T) {
+	for name, s := range multiSchemes {
+		for b := range s.batchSize {
+			w, S := s.batchSize[b], s.batchBound[b]
+			if w > 32 || w+S > 254 {
+				t.Errorf("%s batch %d: w %d S %d", name, b, w, S)
+			}
+		}
+	}
+}
