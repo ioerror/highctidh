@@ -70,3 +70,23 @@ func BenchmarkGenerateKeyPair(b *testing.B) {
 		_, _ = GenerateKeyPair()
 	}
 }
+
+func BenchmarkFromBytesDeriveSecret(b *testing.B) {
+	alicePrivate, alicePublic := GenerateKeyPair()
+	bobPrivate, bobPublic := GenerateKeyPair()
+	want := DeriveSecret(bobPrivate, alicePublic)
+	publicKeyBytes := bobPublic.Bytes()
+	b.ResetTimer()
+	for n := 0; n < b.N; n++ {
+		publicKey := NewEmptyPublicKey()
+		require.NoError(b, publicKey.FromBytes(publicKeyBytes))
+		require.Equal(b, want, DeriveSecret(alicePrivate, publicKey))
+	}
+}
+
+func BenchmarkPublicKeyReset(b *testing.B) {
+	publicKey := NewEmptyPublicKey()
+	for n := 0; n < b.N; n++ {
+		publicKey.Reset()
+	}
+}

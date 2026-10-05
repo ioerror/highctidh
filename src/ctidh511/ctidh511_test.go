@@ -186,3 +186,26 @@ func TestInvalidPublicKeyGroupActionReturnsError(t *testing.T) {
 	require.PanicsWithValue(t, ErrCTIDH, func() { GroupAction(privateKey, k) })
 	require.PanicsWithValue(t, ErrCTIDH, func() { DeriveSecret(privateKey, k) })
 }
+
+func TestFromBytesPublicKeyParity(t *testing.T) {
+	alicePrivate, alicePublic := GenerateKeyPair()
+	bobPrivate, bobPublic := GenerateKeyPair()
+	want := DeriveSecret(bobPrivate, alicePublic)
+	require.Equal(t, want, DeriveSecret(alicePrivate, bobPublic))
+
+	loaded := NewEmptyPublicKey()
+	require.NoError(t, loaded.FromBytes(bobPublic.Bytes()))
+	require.Equal(t, want, DeriveSecret(alicePrivate, loaded))
+	secret, err := DeriveSecretChecked(alicePrivate, loaded)
+	require.NoError(t, err)
+	require.Equal(t, want, secret)
+	blinded, err := Blind(alicePrivate, loaded)
+	require.NoError(t, err)
+	require.Equal(t, want, blinded.Bytes())
+	require.NoError(t, loaded.Blind(alicePrivate))
+	require.Equal(t, want, loaded.Bytes())
+
+	loaded.Reset()
+	require.Equal(t, make([]byte, PublicKeySize), loaded.Bytes())
+	require.Equal(t, alicePublic.Bytes(), DeriveSecret(alicePrivate, loaded))
+}
