@@ -33,6 +33,7 @@ var (
 // PublicKey is a public CTIDH key.
 type PublicKey struct {
 	publicKey C.public_key
+	validated bool
 }
 
 // NewEmptyPublicKey returns an uninitialized
@@ -63,11 +64,8 @@ func (p *PublicKey) String() string {
 
 // Reset resets the PublicKey to all zeros.
 func (p *PublicKey) Reset() {
-	zeros := make([]byte, PublicKeySize)
-	err := p.FromBytes(zeros)
-	if err != nil {
-		panic(err)
-	}
+	p.publicKey = C.public_key{}
+	p.validated = true
 }
 
 // Bytes returns the PublicKey as a byte slice.
@@ -87,6 +85,7 @@ func (p *PublicKey) FromBytes(data []byte) error {
 	}
 
 	p.publicKey = publicKey
+	p.validated = true
 	return nil
 }
 
@@ -104,6 +103,7 @@ func (p *PublicKey) Blind(blindingFactor *PrivateKey) error {
 		return err
 	}
 	p.publicKey = blinded.publicKey
+	p.validated = blinded.validated
 	return nil
 }
 
@@ -284,6 +284,10 @@ func GroupAction(privateKey *PrivateKey, publicKey *PublicKey) *PublicKey {
 
 func GroupActionChecked(privateKey *PrivateKey, publicKey *PublicKey) (*PublicKey, error) {
 	sharedKey := new(PublicKey)
+	if publicKey.validated {
+		C.action(&sharedKey.publicKey, &publicKey.publicKey, &privateKey.privateKey)
+		return sharedKey, nil
+	}
 	ok := C.csidh(&sharedKey.publicKey, &publicKey.publicKey, &privateKey.privateKey)
 	if !ok {
 		return nil, ErrCTIDH
