@@ -124,7 +124,7 @@ static int64_t uint64mask_lessthan(uint64_t x,uint64_t y)
 {
   int64_t xy = x^y;
   int64_t c = x-y;
-  const int64_t flip = ((int64_t) 1)<<63;
+  const int64_t flip = INT64_MIN;
   c ^= xy&(c^x^flip);
   return c>>63;
 }
