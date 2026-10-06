@@ -22,7 +22,7 @@ for t in $tests; do
 done
 
 cd "$root"
-for b in 511 512 1024 2048; do
+for b in ${UBSAN_GO_SIZES-511 512 1024 2048}; do
 	echo "ubsan Go ctidh$b"
 	CGO_CFLAGS="-O2 -g $san" CGO_LDFLAGS="$san" go test -count=1 "./src/ctidh$b/"
 done

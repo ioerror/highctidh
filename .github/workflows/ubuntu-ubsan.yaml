@@ -1,0 +1,40 @@
+name: Ubuntu undefined behaviour sanitizer
+
+on:
+  push:
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  CC: clang
+
+jobs:
+  ubsan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      matrix:
+        include:
+          - C: "test512 testrandom"
+            GO: ""
+          - C: ""
+            GO: "511"
+          - C: ""
+            GO: "512"
+          - C: ""
+            GO: "1024"
+          - C: ""
+            GO: "2048"
+      fail-fast: false
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: actions/setup-go@v5
+      with:
+        go-version: stable
+
+    - name: Build and test with ubsan
+      env:
+        UBSAN_C_TESTS: ${{ matrix.C }}
+        UBSAN_GO_SIZES: ${{ matrix.GO }}
+      run: ./misc/test-ubsan.sh
