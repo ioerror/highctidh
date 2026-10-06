@@ -221,7 +221,7 @@ then
         done
         echo "$GOARCH known answers:";
         CC="clang --target=$QEMU_TRIPLE" \
-            go test -v -timeout 180m -run 'KAT/^(511|512)$' \
+            go test -v -timeout 180m -run 'KAT/^(511|512)$|Checksums' \
             -exec "qemu-$QEMU_ARCH -L /usr/$QEMU_TRIPLE" ./src/kat;
     fi
 
