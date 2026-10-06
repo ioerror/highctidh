@@ -61,6 +61,9 @@ test-quick:
 	$(MAKE) -C src testrandom test512
 	`pwd`/src/$@.sh
 
+test-ubsan:
+	./misc/test-ubsan.sh
+
 test-go:
 	cd src; go test -v ./...
 	cd src/ctidh511; go test -v ./...
