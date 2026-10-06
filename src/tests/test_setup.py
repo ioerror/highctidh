@@ -83,6 +83,20 @@ class TestSetupNoCPUTuning(unittest.TestCase):
                         self.assertEqual(bad, [])
 
 
+class TestSetupDarwinArch(unittest.TestCase):
+    def test_no_compiler_arch_macros_on_darwin(self):
+        arch = ("-D__x86_64__", "-D__AMD64__", "-D__i386__",
+                "-D__arm64__", "-D__aarch64__", "-D__arm__")
+        for machine in ("x86_64", "arm64"):
+            for cc in (None, "clang"):
+                result = build("Darwin", machine, "64", cc)
+                for bits, (sources, cflags) in result.items():
+                    with self.subTest(machine=machine, cc=cc, bits=bits):
+                        bad = [f for f in cflags if f.startswith(arch)]
+                        self.assertEqual(bad, [])
+                        self.assertIn("-D__Darwin__", cflags)
+
+
 FAKECC = """#!%s
 import json, os, sys
 args = sys.argv[1:]
