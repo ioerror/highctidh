@@ -403,12 +403,12 @@ void xISOG_matryoshka(proj *A, proj *P, long long Plen, proj const *K, long long
     proj Abatch;
     Abatch.x = fp_1;
     Abatch.z = fp_1;
-    proj Qbatch[Plen];
+    proj Qbatch[Plen + !Plen];
     for (long long h = 0;h < Plen;++h) {
       Qbatch[h].x = fp_1;
       Qbatch[h].z = fp_1;
     }
-    fp Psum[Plen], Pdif[Plen];
+    fp Psum[Plen + !Plen], Pdif[Plen + !Plen];
     for (long long h = 0;h < Plen;++h) {
       fp_add3(&Psum[h], &P[h].x, &P[h].z);   //precomputations
       fp_sub3(&Pdif[h], &P[h].x, &P[h].z);
