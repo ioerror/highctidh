@@ -1,0 +1,18 @@
+Known answers for highctidh
+
+There are no official CTIDH test vectors. The CTIDH authors' software
+(high-ctidh 20210504 and 20210523 from ctidh.isogeny.org, and the TCHES
+2021 artifact) has no known answers: its test*.exp files are test
+transcripts, and its key generation reads the system RNG. No other
+CTIDH implementation found publishes vectors independent of highctidh.
+
+The ctidh*.kat files here are therefore self-generated. Each one holds,
+for one field size, three private keys from fixed splitmix64 seeds, two
+public keys, a shared secret and a blinded key. They were generated on
+amd64 with single-size Go builds and cross-checked with:
+
+  - the Go packages linked together (kat_test.go);
+  - the C library driven through its byte helpers (../kat.c);
+  - the Python binding (../tests/test_kat.py);
+  - all three on amd64, 386, arm64, s390x, ppc64le and riscv64,
+    natively or under qemu-user (misc/test-kat-matrix.sh).
