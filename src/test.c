@@ -97,7 +97,7 @@ test_uintbig_bit(void)
 	printf("uintbig_set\n"); fflush(stdout);
 	x.c[1] = 2ULL;
 	assert(66 == uintbig_bits_vartime(&x));
-	x.c[(BITS-1)/64] = -1ULL;
+	x.c[(BITS-1)/64] = -1ULL >> (63 - (BITS-1)%64);
 	assert(BITS == uintbig_bits_vartime(&x));
 	uintbig_set(&x, 5ULL); /* should clear the high limbs */
 	assert(3 == uintbig_bits_vartime(&x));
