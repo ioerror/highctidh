@@ -16,3 +16,9 @@ amd64 with single-size Go builds and cross-checked with:
   - the Python binding (../tests/test_kat.py);
   - all three on amd64, 386, arm64, s390x, ppc64le and riscv64,
     natively or under qemu-user (misc/test-kat-matrix.sh).
+
+checksums holds, per size, checksums over a deterministic key
+generation and key agreement loop (checksum_test.go and
+../tests/test_checksum.py). They are a regression and
+cross-architecture consistency check; their correctness rests on the
+known answers above.
