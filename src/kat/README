@@ -22,3 +22,30 @@ generation and key agreement loop (checksum_test.go and
 ../tests/test_checksum.py). They are a regression and
 cross-architecture consistency check; their correctness rests on the
 known answers above.
+
+Reference values for 512 and 1024 from CSIDH
+
+highctidh's 512 and 1024 parameter sets use the same primes as CSIDH's
+p512 and p1024, and the class group action depends only on p and the
+exponent vector, so CSIDH's independent reference code is an external
+check for them. csidh-reference-512.txt and csidh-reference-1024.txt
+hold outputs of csidh-20210627 (Castryck, Lange, Martindale, Panny,
+Renes), from https://yx7.cc/code/csidh/csidh-latest.tar.xz as linked
+from csidh.isogeny.org, sha256
+565d33a8fd28f99fa1d6f6189ae965834fb599e97a4aadde20106dc65fad380f,
+built with its own sources for p512 and p1024. Only its outputs are
+used here.
+
+Each "pk e=... A=..." line is the action of the exponent vector e on
+the base curve, and each "ss e=... f=... A=..." line the action of f
+on the curve that e gives. A is CSIDH's curve coefficient converted to
+highctidh's public key encoding: Montgomery form with R = 2^512 or
+2^1024, as little-endian 64-bit limbs. All vectors but the last three
+pk lines and the last two ss lines of each file lie within both CSIDH's
+exponent bound (5 for p512, 2 for p1024) and CTIDH's batch bounds; those
+last lines use the private keys of ctidh512.kat and ctidh1024.kat, which
+exceed CSIDH's sampling bound but not its action, and reproduce their
+pk_a, pk_b, ss_a_b and blind_f_a.
+
+511 and 2048 use CTIDH-specific primes that CSIDH does not have; their
+known answers remain self-generated and cross-checked as above.
