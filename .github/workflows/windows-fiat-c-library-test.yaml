@@ -9,7 +9,7 @@ jobs:
   build:
     strategy:
       matrix:
-        OS: ["windows-2022", "windows-2019"]
+        OS: ["windows-2022", "windows-2025"]
         CC: ["clang"]
       fail-fast: false
     runs-on: ${{ matrix.OS }}
