@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - C: "test512 testrandom"
+          - C: "test511 test512 testrandom"
             GO: ""
           - C: ""
             GO: "511"

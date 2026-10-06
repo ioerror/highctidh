@@ -10,7 +10,7 @@ work=$(mktemp -d)
 trap 'rm -rf "$work"' EXIT
 cp -R "$root/src" "$work/src"
 cd "$work/src"
-tests=${UBSAN_C_TESTS-test512 test1024 test2048 testrandom}
+tests=${UBSAN_C_TESTS-test511 test512 test1024 test2048 testrandom}
 if [ -n "$tests" ]; then
 	"${MAKE:-make}" clean > /dev/null
 	CFLAGS="$san ${EXTRA_CFLAGS:-}" "${MAKE:-make}" \
