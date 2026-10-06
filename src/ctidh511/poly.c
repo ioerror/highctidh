@@ -479,6 +479,8 @@ void poly_mul_selfreciprocal(fp *c,const fp *a,long long alen,const fp *b,long l
     assert(2*(len1-1)+1 < alen);
     assert(len1 < len0);
 
+    memset(a0, 0, sizeof a0);
+    memset(b0, 0, sizeof b0);
     for (long long i = 0;i < len0;++i) a0[i] = a[2*i];
     for (long long i = 0;i < len0;++i) b0[i] = b[2*i];
     poly_mul_selfreciprocal(c0,a0,len0,b0,len0);
