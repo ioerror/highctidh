@@ -295,7 +295,7 @@ elif PLATFORM == "x86_64" or PLATFORM == "AMD64":
     if PLATFORM == "AMD64":
         cflags += ["-D__x86_64__"]
         cflags += ["-D__AMD64__"]
-    if PLATFORM == "x86_64":
+    if PLATFORM == "x86_64" and OS != "Darwin":
         cflags += ["-D__x86_64__"]
     if OS == "Darwin":
         cflags += ["-D__Darwin__"]
