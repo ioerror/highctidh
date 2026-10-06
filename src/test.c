@@ -591,6 +591,32 @@ test_deterministic_keygen(void)
 }
 
 static void
+test_public_key_bytes_unaligned(void)
+{
+	union {
+		uint64_t align;
+		unsigned char b[sizeof(uintbig) + 8];
+	} u;
+	public_key pk, back;
+	unsigned char want[sizeof(uintbig)];
+	size_t limbs = sizeof(pk.A.x.c) / sizeof(pk.A.x.c[0]);
+
+	for (size_t i = 0; i < limbs; i++)
+		pk.A.x.c[i] = 0x0102030405060708ULL * (i + 1);
+	for (size_t i = 0; i < limbs; i++)
+		for (size_t j = 0; j < 8; j++)
+			want[8 * i + j] = (unsigned char)(pk.A.x.c[i] >> (8 * j));
+	for (size_t off = 1; off < 8; off++) {
+		memset(&u, 0, sizeof(u));
+		public_key_to_bytes((char *)u.b + off, &pk);
+		assert(0 == memcmp(u.b + off, want, sizeof(want)));
+		memset(&back, 0, sizeof(back));
+		public_key_from_bytes(&back, (const char *)u.b + off);
+		assert(0 == memcmp(&back, &pk, sizeof(pk)));
+	}
+}
+
+static void
 test_fp_sq2(void)
 {
 	printf("fp_sq2\n");
@@ -1550,6 +1576,7 @@ int main(void)
   test_fillrandom();
   test_random_boundedl1();
   test_deterministic_keygen();
+  test_public_key_bytes_unaligned();
   test_fp_sq2();
   test_sqrt();
   test_dac();
