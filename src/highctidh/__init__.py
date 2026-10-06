@@ -12,7 +12,6 @@ highctidh wraps the original highctidh C implementation using ctypes.
 import ctypes
 import ctypes.util
 import hashlib
-import struct
 import sys
 import pathlib
 from importlib import util, metadata
@@ -210,7 +209,9 @@ class ctidh(object):
 
             def __bytes__(self):
                 """Pack to canonical little-endian representation."""
-                return struct.pack("<" + "Q" * (ctypes.sizeof(self) // 8), *self.A)
+                out = ctypes.create_string_buffer(ctypes.sizeof(self))
+                ctidh_self._public_key_to_bytes(out, self)
+                return out.raw
 
             def __repr__(self):
                 return f'<highctidh.ctidh({ctidh_self.field_size}).public_key>'
@@ -231,10 +232,9 @@ class ctidh(object):
                 # public keys are transferred in little-endian; we might have to
                 # byteswap to get them in native order in pk.A:
                 pk = self.public_key()
-                try:
-                    pk.A[:] = struct.unpack("<" + "Q" * (self.pk_size // 8), byt)
-                except struct.error as e:
-                    raise DecodingError(e)
+                if len(byt) != self.pk_size:
+                    raise DecodingError("Public key is not pk_size bytes")
+                ctidh_self._public_key_from_bytes(pk, byt)
                 if validate:
                     assert ctidh_self.validate(pk)
                 return pk
@@ -293,6 +293,17 @@ class ctidh(object):
         validate.restype = bool
         validate.argtypes = [ctypes.POINTER(self.public_key)]
         self._validate = validate
+        prefix = "highctidh_" + str(self.field_size)
+        to_bytes = self._lib[prefix + "_public_key_to_bytes"]
+        to_bytes.restype = None
+        to_bytes.argtypes = [
+            ctypes.c_char_p, ctypes.POINTER(self.public_key)]
+        self._public_key_to_bytes = to_bytes
+        from_bytes = self._lib[prefix + "_public_key_from_bytes"]
+        from_bytes.restype = None
+        from_bytes.argtypes = [
+            ctypes.POINTER(self.public_key), ctypes.c_char_p]
+        self._public_key_from_bytes = from_bytes
 
     def private_key_from_bytes(self, h:bytes):
         """
