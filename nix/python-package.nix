@@ -52,6 +52,7 @@
                   ) ../src)
                   (fileFilter (file: file.hasExt "kat") ../src/kat)
                   ../src/kat/checksums
+                  (fileFilter (file: file.hasExt "txt") ../src/kat)
                   ../src/VERSION
                   ../src/pyproject.toml
                   ../src/pytest.ini
