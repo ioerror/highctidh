@@ -195,6 +195,9 @@ then
             echo -e "$CHECKMARK";
             cd ../../;
         done
+        echo "$GOARCH known answers:";
+        CC="clang $TARGET $EXTRA_FLAGS $EXTRA_INCLUDE" \
+            go test -v ./src/kat;
     fi
 
     case "$ARCH" in
@@ -216,6 +219,10 @@ then
             echo -e "$CHECKMARK";
             cd ../../;
         done
+        echo "$GOARCH known answers:";
+        CC="clang --target=$QEMU_TRIPLE" \
+            go test -v -timeout 180m -run 'KAT/^(511|512)$' \
+            -exec "qemu-$QEMU_ARCH -L /usr/$QEMU_TRIPLE" ./src/kat;
     fi
 
     exit $?;
