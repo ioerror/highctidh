@@ -6,8 +6,7 @@ package ctidh512
 
 extern ctidh_fillrandom fillrandom_512_custom;
 
-__attribute__((weak))
-void custom_gen_private(void *const context, private_key *priv) {
+void highctidh_512_custom_gen_private(void *const context, private_key *priv) {
   csidh_private_withrng_bytes(priv, (uintptr_t)context, fillrandom_512_custom);
 }
 */
@@ -251,7 +250,7 @@ func GenerateKeyPair() (*PrivateKey, *PublicKey) {
 func GeneratePrivateKey(rng io.Reader) *PrivateKey {
 	privKey := &PrivateKey{}
 	p := gopointer.Save(rng)
-	C.custom_gen_private(p, &privKey.privateKey)
+	C.highctidh_512_custom_gen_private(p, &privKey.privateKey)
 	gopointer.Unref(p)
 	return privKey
 }
