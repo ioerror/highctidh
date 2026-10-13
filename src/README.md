@@ -159,25 +159,24 @@ To test without installing run the `test` target:
 ```
 
 The C library and bindings have been tested on the following operating systems:
-- AlmaLinux 9.3 (GNU libc)
+- AlmaLinux 9.3, 10.2 (GNU libc)
 - Alpine v3.17 - v3.19.1 (musl libc)
 - Arch latest (GNU libc)
-- CheriBSD 14.0-CURRENT (FreeBSD libc)
-- Clear Linux 41560 (GNU libc)
+- CheriBSD 14.0-CURRENT, 15.0-CURRENT (FreeBSD libc)
 - Debian stable, testing, unstable (GNU libc)
 - Devuan latest (GNU libc)
 - DragonFlyBSD 6.4.0 (FreeBSD libc)
 - Fedora 38, 39, 40, 41 (GNU libc)
-- FreeBSD 14.0 (FreeBSD libc)
+- FreeBSD 14.0, 16.0-CURRENT (FreeBSD libc)
 - HardenedBSD (FreeBSD libc)
-- MacOS 11, 12, 13, 14 (BSD libc)
-- NetBSD 10.0 (NetBSD libc)
+- MacOS 11, 12, 13, 14, 26 (BSD libc)
+- NetBSD 10.0, 10.1 (NetBSD libc)
 - Omnios r151046 (illumos libc)
-- OpenBSD 7.5 (OpenBSD libc)
+- OpenBSD 7.5, 7.8, 7.9 (OpenBSD libc)
 - Oracle Linux 9 (GNU libc)
 - Rockylinux 9, 9.3 (GNU libc)
 - Solaris 11.4 (Solaris libc)
-- Ubuntu 22.03, 23.10, 24.04 (GNU libc)
+- Ubuntu 22.04, 23.10, 24.04, 26.04 (GNU libc)
 - Windows Server 2019, 2022 (MSVCRT, CYGWIN, UCRT)
 
 ## Notes on building
@@ -186,10 +185,11 @@ Building on Solaris, CheriBSD, FreeBSD, NetBSD, and OpenBSD building is
 supported using the `bmake` and `gmake` commands. GNU/Linux and MacOS are
 supported with the `gmake`, `bmake`, and `make` commands.
 
-MacOS 11, 12, 13, and 14 support is functional for building the C library.
+MacOS 11, 12, 13, 14, and 26 support is functional for building the C library.
 MacOS 14 support is functional for the Golang bindings with Golang 1.20,
-1.21.x, 1.22.x, and 1.23.x.
-MacOS 14 supports the Python module with Python 3.9, 3.10, 3.11, and 3.12.
+1.21.x, 1.22.x, and 1.23.x, and MacOS 26 with Golang 1.27.x.
+MacOS 14 supports the Python module with Python 3.9, 3.10, 3.11, and 3.12,
+and MacOS 26 with Python 3.9 and 3.14.
 
 Windows support is extremely experimental.  Building the main C library on
 Windows Server 2019 and Windows Server 2022 should be possible with `clang` as
